@@ -15,7 +15,7 @@ export function Label({ text, dur }: { text: string; dur: number }) {
   const f = useCurrentFrame();
   const a = interpolate(f, [0, s(0.25), s(Math.max(0.6, dur - 0.25)), s(dur)], [0, 1, 1, 0], clamp);
   return (
-    <div style={{ position: "absolute", left: 56, bottom: 52, opacity: a, transform: `translateY(${(1 - a) * 8}px)`, fontFamily: chakra, fontSize: 28, letterSpacing: 1.5,
+    <div style={{ position: "absolute", left: "50%", bottom: 46, opacity: a, transform: `translate(-50%, ${(1 - a) * 8}px)`, whiteSpace: "nowrap", fontFamily: chakra, fontSize: 28, letterSpacing: 1.5,
       color: C.text, background: "rgba(7,6,13,0.82)", border: "1px solid rgba(255,122,26,0.45)", borderRadius: 14, padding: "12px 22px", boxShadow: "0 12px 40px rgba(0,0,0,0.5)" }}>{text}</div>
   );
 }

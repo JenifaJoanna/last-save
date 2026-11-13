@@ -17,6 +17,11 @@
   "dur": 5,
   "labels": [
    {
+    "at": 0,
+    "dur": 2.8,
+    "text": "access keys on the licence contract: 0"
+   },
+   {
     "at": 2.8,
     "dur": 2.2,
     "text": "DeleteKey: the contract keeps no keys"
@@ -109,10 +114,10 @@
   ]
  },
  "host": {
-  "dur": 13.1,
+  "dur": 11.8,
   "labels": [
    {
-    "at": 11.5,
+    "at": 10.2,
     "dur": 1.6,
     "text": "register_host"
    }
