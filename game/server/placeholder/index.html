@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Rift</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #14090a; color: #f6e3d3; font-family: system-ui, sans-serif; }
+  main { max-width: 32rem; padding: 2rem 1.5rem; }
+  h1 { margin: 0 0 .5rem; font-size: 2rem; color: #ff8a3d; }
+  code { background: #2a1512; padding: .1rem .35rem; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ember Rift</h1>
+  <p>The arena server is running. The game client has not been built into this deployment yet.</p>
+  <p>Server status: <code id="s">checking</code></p>
+</main>
+<script>
+fetch("/health").then(r => r.json()).then(h => { document.getElementById("s").textContent = h.host_id + " / " + h.players_online + " online"; })
+  .catch(() => { document.getElementById("s").textContent = "unreachable"; });
+</script>
+</body>
+</html>

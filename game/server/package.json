@@ -1,0 +1,29 @@
+{
+  "name": "@last-save/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "node scripts/prepare-assets.mjs",
+    "dev": "node scripts/prepare-assets.mjs && wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run test/unit",
+    "test:int": "vitest run test/int",
+    "bots": "node scripts/bots.mjs",
+    "deploy": "node scripts/deploy.mjs"
+  },
+  "dependencies": {
+    "@noble/curves": "1.9.2",
+    "@noble/hashes": "1.8.0",
+    "bs58": "6.0.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260702.1",
+    "@types/node": "^22.20.5",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4",
+    "wrangler": "4.88.0"
+  }
+}

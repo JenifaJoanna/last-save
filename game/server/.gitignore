@@ -1,0 +1,6 @@
+.assets/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.pages-build/
+test/.tmp/
