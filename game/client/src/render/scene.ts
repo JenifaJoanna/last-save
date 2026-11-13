@@ -50,8 +50,8 @@ export class Scene {
     const t = this.time;
     const { width: w, height: h } = this.app.screen;
     const fit = Math.min(w, h) / (ARENA_R * 2 + 170);
-    const scale = Math.max(fit, 0.5);
     const own = rs.ships.find((s) => s.id === rs.ownId);
+    const scale = own ? Math.max(fit, 0.5) : fit;
     let tx = 0, ty = 0;
     if (own && own.st === "alive") {
       const follow = scale > fit * 1.05 ? 1 : 0.08;

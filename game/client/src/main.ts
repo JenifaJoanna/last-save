@@ -97,6 +97,7 @@ async function boot(): Promise<void> {
     scene.onEvents(f.events, source.ownId);
   });
 
+  if (params.has("attract")) { hud.show(false); document.body.style.cursor = "default"; return; }
   if (params.has("practice")) { startPractice(); return; }
   const h = await health();
   const host = h?.host_id ?? "official";

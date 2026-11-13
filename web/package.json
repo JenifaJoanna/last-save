@@ -1,0 +1,33 @@
+{
+  "name": "last-save-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/copy-play.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@near-wallet-selector/core": "10.1.4",
+    "@near-wallet-selector/meteor-wallet": "10.1.4",
+    "@near-wallet-selector/modal-ui": "10.1.4",
+    "@near-wallet-selector/my-near-wallet": "10.1.4",
+    "buffer": "6.0.3",
+    "lucide-react": "1.72.0",
+    "motion": "14.14.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "wouter": "3.13.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.3.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "5.9.3",
+    "vite": "8.3.8"
+  }
+}
