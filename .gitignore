@@ -14,3 +14,8 @@ dist-web/
 *.key.json
 .near-credentials/
 local/
+game/client/dist/
+web/dist/
+game/server/dist/
+server-bundle/dist/
+.host/
