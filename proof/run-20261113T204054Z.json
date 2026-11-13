@@ -1,0 +1,652 @@
+{
+  "started_at": "2026-11-13T20:40:54.223Z",
+  "contract": "lastsave-licence.testnet",
+  "official_url": "https://emberrift.pages.dev",
+  "official_worker": "emberrift-arena",
+  "players": [
+    "lastsave-mira.testnet",
+    "lastsave-kofi.testnet",
+    "lastsave-yuna.testnet",
+    "lastsave-dario.testnet"
+  ],
+  "ops": "lastsave-kofi.testnet",
+  "fanhost": "lastsave-fanhost.testnet",
+  "network": "testnet",
+  "phases": [
+    {
+      "name": "kill",
+      "title": "official server deleted",
+      "started_at": "2026-11-13T20:41:01.097Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "kill": "deleted Worker emberrift-arena through wrangler",
+        "killed_at": "2026-11-13T20:41:04.778Z"
+      },
+      "assertions": [
+        {
+          "name": "official /health now fails",
+          "pass": true,
+          "detail": "HTTP 500"
+        }
+      ],
+      "notes": [
+        "bots stopped"
+      ],
+      "ended_at": "2026-11-13T20:41:04.778Z"
+    },
+    {
+      "name": "death",
+      "title": "probes kill the game",
+      "started_at": "2026-11-13T20:41:04.778Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "probe_official r1 #1",
+          "hash": "2dKyuwVqJT212Wcs9qjwy9nRCtxdDqMSxnST1LzHM5t2",
+          "url": "https://testnet.nearblocks.io/txns/2dKyuwVqJT212Wcs9qjwy9nRCtxdDqMSxnST1LzHM5t2",
+          "failure": null
+        },
+        {
+          "label": "probe_official r2 #1",
+          "hash": "4YYcky9AqK17NbbUhNHdaZDeii853Dvdt3uEegXM1ntk",
+          "url": "https://testnet.nearblocks.io/txns/4YYcky9AqK17NbbUhNHdaZDeii853Dvdt3uEegXM1ntk",
+          "failure": null
+        },
+        {
+          "label": "probe_official r3 #1",
+          "hash": "CiBMf7MsDgHQeEgY4jJUc88AMkRNhUBPczetp54zJvrf",
+          "url": "https://testnet.nearblocks.io/txns/CiBMf7MsDgHQeEgY4jJUc88AMkRNhUBPczetp54zJvrf",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "rounds": [
+          {
+            "round": 1,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 1,
+            "status": "Alive"
+          },
+          {
+            "round": 2,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 2,
+            "status": "Alive"
+          },
+          {
+            "round": 3,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 3,
+            "status": "Dead"
+          }
+        ],
+        "inconclusive_attempts_ignored": 0,
+        "activity": [
+          {
+            "at_ms": 1794602816109,
+            "kind": "death",
+            "outcome": "probes",
+            "detail": ""
+          },
+          {
+            "at_ms": 1794602816109,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794602689525,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794602574102,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794602242086,
+            "kind": "report",
+            "outcome": "down",
+            "detail": "licence 1: 1 of 2"
+          },
+          {
+            "at_ms": 1794602097013,
+            "kind": "report",
+            "outcome": "down",
+            "detail": "licence 1: 1 of 2"
+          },
+          {
+            "at_ms": 1794602083292,
+            "kind": "probe",
+            "outcome": "alive",
+            "detail": "4 verified sessions"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "status is Dead",
+          "pass": true,
+          "detail": "Dead"
+        },
+        {
+          "name": "cause is \"probes\"",
+          "pass": true,
+          "detail": "probes"
+        },
+        {
+          "name": "died_at_ms is set",
+          "pass": true,
+          "detail": "1794602816109"
+        },
+        {
+          "name": "consecutive_failures reached 3",
+          "pass": true,
+          "detail": "3"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:47:11.505Z"
+    },
+    {
+      "name": "release",
+      "title": "key released and verified",
+      "started_at": "2026-11-13T20:47:11.506Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "release #1",
+          "hash": "GvzwYanDDsg2QqV8xzuaErrtaYXeeLJVmtXFPXDw8S5v",
+          "url": "https://testnet.nearblocks.io/txns/GvzwYanDDsg2QqV8xzuaErrtaYXeeLJVmtXFPXDw8S5v",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "attempts": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "GvzwYanDDsg2QqV8xzuaErrtaYXeeLJVmtXFPXDw8S5v",
+            "detail": "key stored"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "release landed (conclusive)",
+          "pass": true,
+          "detail": "1 attempt(s)"
+        },
+        {
+          "name": "released_key is public on chain",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sha256(K) equals key_commitment",
+          "pass": true,
+          "detail": "commitment 3e9b46e6beb0..."
+        },
+        {
+          "name": "released_at_ms is set",
+          "pass": true,
+          "detail": "1794602884533"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:48:11.574Z"
+    },
+    {
+      "name": "choose",
+      "title": "refund and pledge",
+      "started_at": "2026-11-13T20:48:11.575Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "choose Refund lastsave-yuna.testnet",
+          "hash": "6YmDWCA3ckiBrTh2kKpcuDuP5LgW6GXE6KAEYif49Utk",
+          "url": "https://testnet.nearblocks.io/txns/6YmDWCA3ckiBrTh2kKpcuDuP5LgW6GXE6KAEYif49Utk",
+          "failure": null
+        },
+        {
+          "label": "choose Refund lastsave-dario.testnet",
+          "hash": "Ek599QDLEWo9ppT9EoQGjEoyVqQbTQrrYLHLVfAukaqx",
+          "url": "https://testnet.nearblocks.io/txns/Ek599QDLEWo9ppT9EoQGjEoyVqQbTQrrYLHLVfAukaqx",
+          "failure": null
+        },
+        {
+          "label": "choose Pledge lastsave-mira.testnet",
+          "hash": "6UYY44F2zJ2xdUR4sHLXhNKsZjZN1xNGWAxbXukqj83V",
+          "url": "https://testnet.nearblocks.io/txns/6UYY44F2zJ2xdUR4sHLXhNKsZjZN1xNGWAxbXukqj83V",
+          "failure": null
+        },
+        {
+          "label": "choose Pledge lastsave-kofi.testnet",
+          "hash": "8nRBHCSdAdygYamAHyVUpLpKqC7uGUmcsQEFRzyJfbLM",
+          "url": "https://testnet.nearblocks.io/txns/8nRBHCSdAdygYamAHyVUpLpKqC7uGUmcsQEFRzyJfbLM",
+          "failure": null
+        },
+        {
+          "label": "choose again lastsave-mira.testnet",
+          "hash": "2wKBZ1fopVSqPjrBkX2TpLb3wKxwVEjF6tqv7ku6FXwJ",
+          "url": "https://testnet.nearblocks.io/txns/2wKBZ1fopVSqPjrBkX2TpLb3wKxwVEjF6tqv7ku6FXwJ",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        },
+        {
+          "label": "choose again lastsave-yuna.testnet",
+          "hash": "43NNBwqXoAet1qKup7HUDeK1eSLAGzyxinxefRe7K35Y",
+          "url": "https://testnet.nearblocks.io/txns/43NNBwqXoAet1qKup7HUDeK1eSLAGzyxinxefRe7K35Y",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        }
+      ],
+      "readback": {
+        "pot_locked after": "0.0000 N",
+        "totals": {
+          "supply": 4,
+          "live_supply": 4,
+          "pot_locked": "0",
+          "pool": "200000000000000000000000",
+          "refunded": "200000000000000000000000",
+          "pledged": "200000000000000000000000",
+          "paid_out": "0"
+        }
+      },
+      "assertions": [
+        {
+          "name": "lastsave-yuna.testnet Refund accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-yuna.testnet choice recorded as Refund",
+          "pass": true,
+          "detail": "Refund"
+        },
+        {
+          "name": "lastsave-yuna.testnet balance rose by about the pot share",
+          "pass": true,
+          "detail": "0.0995 N vs 0.1000 N (gas tolerance 0.01 N)"
+        },
+        {
+          "name": "refunded total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-dario.testnet Refund accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-dario.testnet choice recorded as Refund",
+          "pass": true,
+          "detail": "Refund"
+        },
+        {
+          "name": "lastsave-dario.testnet balance rose by about the pot share",
+          "pass": true,
+          "detail": "0.0995 N vs 0.1000 N (gas tolerance 0.01 N)"
+        },
+        {
+          "name": "refunded total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet Pledge accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet choice recorded as Pledge",
+          "pass": true,
+          "detail": "Pledge"
+        },
+        {
+          "name": "lastsave-mira.testnet pledge moved the pot share into the pool",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N"
+        },
+        {
+          "name": "pledged total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-kofi.testnet Pledge accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-kofi.testnet choice recorded as Pledge",
+          "pass": true,
+          "detail": "Pledge"
+        },
+        {
+          "name": "lastsave-kofi.testnet pledge moved the pot share into the pool",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N"
+        },
+        {
+          "name": "pledged total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a second choose on lastsave-mira.testnet's token is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        },
+        {
+          "name": "a second choose on lastsave-yuna.testnet's token is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:49:49.823Z"
+    },
+    {
+      "name": "post-death-buy",
+      "title": "fan buys into the pool",
+      "started_at": "2026-11-13T20:49:49.824Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "buy_licence lastsave-fanhost.testnet",
+          "hash": "5HjgBpEaMLfwHxMHFjQdMLDqo22ndMS3fQKtrR3MsBFu",
+          "url": "https://testnet.nearblocks.io/txns/5HjgBpEaMLfwHxMHFjQdMLDqo22ndMS3fQKtrR3MsBFu",
+          "failure": null
+        },
+        {
+          "label": "choose (must be refused)",
+          "hash": "9qBQmr9EAo4iuNtrFeTdwkjhMY3tHWE3CTPpcCxvUW8S",
+          "url": "https://testnet.nearblocks.io/txns/9qBQmr9EAo4iuNtrFeTdwkjhMY3tHWE3CTPpcCxvUW8S",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        }
+      ],
+      "readback": {},
+      "assertions": [
+        {
+          "name": "game is Dead before the post-death buy",
+          "pass": true,
+          "detail": "Dead"
+        },
+        {
+          "name": "post-death buy accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "pool rose by the price minus mint storage",
+          "pass": true,
+          "detail": "0.2480 N of 0.2500 N"
+        },
+        {
+          "name": "locked pot unchanged",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "live supply unchanged (a post-death token is not a live holder)",
+          "pass": true,
+          "detail": "4 -> 4"
+        },
+        {
+          "name": "token minted to the fan",
+          "pass": true,
+          "detail": "token 5"
+        },
+        {
+          "name": "pot_share is 0 and the token is post_death",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a post-death licence cannot choose",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:50:02.590Z"
+    },
+    {
+      "name": "host",
+      "title": "community host restores progress",
+      "started_at": "2026-11-13T20:50:02.591Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "register_host",
+          "hash": "GW9SRwj8cSs1B78QQZUjoZF68pVTVYCAMEZWi7AVSVih",
+          "url": "https://testnet.nearblocks.io/txns/GW9SRwj8cSs1B78QQZUjoZF68pVTVYCAMEZWi7AVSVih",
+          "failure": null
+        },
+        {
+          "label": "create throwaway e2e-nl-mwfgcs4g.lastsave-fanhost.testnet",
+          "hash": "9dr29QBAo2wXnFY2hUKb2ULtbj2ZArb9Z3AWUuDVLWDb",
+          "url": "https://testnet.nearblocks.io/txns/9dr29QBAo2wXnFY2hUKb2ULtbj2ZArb9Z3AWUuDVLWDb",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "host": {
+          "endpoint": "https://tune-belkin-wholesale-radio.trycloudflare.com",
+          "registered_at_ms": 1794603094042,
+          "epoch_at_join": 1
+        },
+        "restored": {
+          "lastsave-mira.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 710
+            },
+            "host": {
+              "level": 3,
+              "xp": 710
+            }
+          },
+          "lastsave-kofi.testnet": {
+            "snapshot": {
+              "level": 4,
+              "xp": 1370
+            },
+            "host": {
+              "level": 4,
+              "xp": 1370
+            }
+          },
+          "lastsave-yuna.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 715
+            },
+            "host": {
+              "level": 3,
+              "xp": 715
+            }
+          },
+          "lastsave-dario.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 495
+            },
+            "host": {
+              "level": 3,
+              "xp": 495
+            }
+          }
+        }
+      },
+      "assertions": [
+        {
+          "name": "an on-chain snapshot exists to restore",
+          "pass": true,
+          "detail": "seq 2"
+        },
+        {
+          "name": "host registered on chain with its endpoint",
+          "pass": true,
+          "detail": "https://tune-belkin-wholesale-radio.trycloudflare.com"
+        },
+        {
+          "name": "all 4 players signed in to the community host",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/710 vs host 3/710"
+        },
+        {
+          "name": "lastsave-kofi.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 4/1370 vs host 4/1370"
+        },
+        {
+          "name": "lastsave-yuna.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/715 vs host 3/715"
+        },
+        {
+          "name": "lastsave-dario.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/495 vs host 3/495"
+        },
+        {
+          "name": "snapshot-restored xp is above the 0 of a fresh server",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a non-holder is denied with no_licence",
+          "pass": true,
+          "detail": "joined false, denied no_licence"
+        }
+      ],
+      "notes": [
+        "throwaway e2e-nl-mwfgcs4g.lastsave-fanhost.testnet not deleted: Exceeded 2 providers to execute request"
+      ],
+      "ended_at": "2026-11-13T20:52:01.941Z"
+    },
+    {
+      "name": "claim",
+      "title": "host claims an epoch",
+      "started_at": "2026-11-13T20:52:01.944Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "claim_epoch 1 #1",
+          "hash": "8HrdqMR67g7415ySYWxdQ3iqmjKRjkMpU4kdxWLDp1XF",
+          "url": "https://testnet.nearblocks.io/txns/8HrdqMR67g7415ySYWxdQ3iqmjKRjkMpU4kdxWLDp1XF",
+          "failure": null
+        },
+        {
+          "label": "claim_epoch 1 again",
+          "hash": "8VfvL8NQjCwdFWZzRGLKgRfAqpHDhduggRjN8EY3CHWx",
+          "url": "https://testnet.nearblocks.io/txns/8VfvL8NQjCwdFWZzRGLKgRfAqpHDhduggRjN8EY3CHWx",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        }
+      ],
+      "readback": {
+        "epoch_ms": 120000,
+        "attempts epoch 1": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "8HrdqMR67g7415ySYWxdQ3iqmjKRjkMpU4kdxWLDp1XF",
+            "detail": "paid 0.0300 N, 3 verified"
+          }
+        ],
+        "claim": {
+          "epoch": 1,
+          "index": 0,
+          "host_id": "lastsave-fanhost.testnet",
+          "verified": 3,
+          "paid": "30000000000000000000000",
+          "at_ms": 1794603218649
+        }
+      },
+      "assertions": [
+        {
+          "name": "claim_epoch landed for a completed epoch",
+          "pass": true,
+          "detail": "epoch 1"
+        },
+        {
+          "name": "host was paid more than 0",
+          "pass": true,
+          "detail": "0.0300 N"
+        },
+        {
+          "name": "at least one verified session behind the claim",
+          "pass": true,
+          "detail": "3"
+        },
+        {
+          "name": "host earned total matches the claim",
+          "pass": true,
+          "detail": "earned 0.0300 N, epochs_paid 1"
+        },
+        {
+          "name": "pool decreased",
+          "pass": true,
+          "detail": "0.4480 N -> 0.4161 N"
+        },
+        {
+          "name": "paid_out total rose",
+          "pass": true,
+          "detail": "0.0300 N"
+        },
+        {
+          "name": "a second claim of the same epoch is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:54:05.045Z"
+    }
+  ],
+  "unenforced": [
+    "spend cap (3 N) is only reported above, not blocked by code"
+  ],
+  "balances_start": {
+    "lastsave-mira.testnet": "0.4842 N",
+    "lastsave-kofi.testnet": "0.4970 N",
+    "lastsave-yuna.testnet": "0.4997 N",
+    "lastsave-dario.testnet": "0.4997 N",
+    "lastsave-fanhost.testnet": "0.6000 N"
+  },
+  "balances_end": {
+    "lastsave-mira.testnet": "0.4838 N",
+    "lastsave-kofi.testnet": "0.4877 N",
+    "lastsave-yuna.testnet": "0.5990 N",
+    "lastsave-dario.testnet": "0.5992 N",
+    "lastsave-fanhost.testnet": "0.3592 N"
+  },
+  "net_cost_players_and_fanhost": "0.0515 N",
+  "finished_at": "2026-11-13T20:54:18.389Z",
+  "totals": {
+    "assertions": 51,
+    "passed": 51,
+    "failed": 0,
+    "phases_passed": 7,
+    "phases_failed": 0
+  }
+}
