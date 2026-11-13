@@ -13,10 +13,12 @@ Tracks: **NFTs That Do Something** and **Games With Real Economies**. Network: *
 | | |
 |---|---|
 | Platform | https://last-save.pages.dev (live status at `/status`, judge guide at `/judges`) |
-| Official game server (Ember Rift) | https://emberrift.pages.dev |
-| Licence contract | [`lastsave-licence.testnet`](https://testnet.nearblocks.io/address/lastsave-licence.testnet) |
-| Escrow spike (day one, every tx) | [`proof/spike.md`](proof/spike.md) |
-| Launch transactions | [`proof/launch-lastsave-licence.json`](proof/launch-lastsave-licence.json) |
+| Official game server (Ember Rift) | https://emberrift.pages.dev — shut down on 14 Nov as part of the demo; it stays dead by design |
+| Community server (the released build, hosted by a fan) | https://emberrift-community.pages.dev |
+| Licence contract (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
+| The judge instance's whole life, every tx | [`proof/judge-run.md`](proof/judge-run.md) |
+| Day-one escrow spike | [`proof/spike.md`](proof/spike.md) |
+| End-to-end testnet runs (98/98 assertions) | `proof/run-*.json` |
 
 ## How it works
 
@@ -65,6 +67,38 @@ point a release at another contract (release.wasm reads its caller's own state).
 - **The whole lifecycle:** `pnpm demo:fresh` deploys a fresh licence instance with seconds-scale timers and runs
   buy → play → probes → death → release → refund/pledge → fan host → claim, printing every transaction.
 
+## Tests and runs
+
+| Suite | Result |
+|---|---|
+| Licence contract unit tests (`contracts/licence`, every edge case in the spec) | 77 / 77 |
+| near-workspaces sandbox lifecycle with a mock OutLayer (`contracts/sandbox-tests`), on the deployed binary | 1 / 1 |
+| probe.wasm unit tests incl. the canonical NEP-413 vector (`outlayer/probe`) | 33 / 33 |
+| probe.wasm under wasmtime against fixture servers (valid, stub, forged, non-holder, replay, wrong build, flaky RPC, stall…) | 13 / 13 |
+| Game server unit / integration (real `wrangler dev`, 4–9 clients, reconnect, persistence, `/attest`, snapshots) | 40 / 40 · 15 / 15 |
+| Server bundle crypto + tar, host CLI refusals | 6 / 6 · 12 / 12 |
+| End-to-end on NEAR testnet (`pnpm e2e`, dev instance: buy → play → probes → kill → death → release → refund/pledge → post-shutdown buy → fan host → claim) | 98 / 98 assertions |
+| The locked judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
+
+Not covered: wallet sign-in through Meteor / MyNearWallet was not exercised end to end by us (we do not import keys into
+third-party wallets); UI flows in the film were driven from a local build with a localhost-only test-account signer, and
+every transaction they sent is on testnet and linked above. `pnpm demo:fresh` is code-complete but needs a funder with
+about 3.4 testnet NEAR, which we did not have when this was written.
+
+## Known limits
+
+- A pilot who reconnects from a new process within the server's 20 s grace window gets their old ship back with its old
+  input counter. Clients start their input sequence from a timestamp, so this never stalls a player; the escrowed server
+  build itself is unchanged.
+- Community hosts restore the last on-chain progress snapshot, but only the studio's key can post snapshots, so progress
+  earned on a community host lives in that host's database.
+- Deleting the official Worker breaks new connections at once; an already-open WebSocket stayed up for 2 min 48 s until
+  Cloudflare evicted the Durable Object. Liveness is judged by probes, so this only affects how quickly players notice.
+- OutLayer runs occasionally time out (we saw ~10 minutes of timeouts once). Those runs are inconclusive by design and
+  can be retried by anyone; each failed attempt costs its caller 0.001 testnet NEAR.
+- A host account needs ~0.05 testnet NEAR per claim for the deposit and gas.
+- Testnet only. Demo timers are seconds-scale; production defaults are days.
+
 ## Repository
 
 | Path | What |
@@ -79,6 +113,7 @@ point a release at another contract (release.wasm reads its caller's own state).
 | `web` | Platform: landing, store, library, live licence status, community hosts, judge guide |
 | `scripts/launch` | Studio launch pipeline: bundle, mirrors, deploy, escrow, attest, snapshot key, official server, lock |
 | `scripts/e2e` | End-to-end testnet run and `demo:fresh` |
+| `scripts/ops`, `demo/` | Studio shutdown script, fan-host wrapper, film sources, narration, music, Remotion film |
 | `scripts/check-identity.mjs`, `scripts/check-secrets.mjs` | Gates run before every commit and deploy |
 
 ## FAQ
