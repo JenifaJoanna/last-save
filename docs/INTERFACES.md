@@ -152,3 +152,14 @@ then `--local` (wrangler dev + cloudflared, prints public URL) or `--deploy <nam
 | `contracts/licence/*` | contract agent |
 | `outlayer/probe/*` | probe agent |
 | `game/server/*`, `server-bundle/*`, `host/*` | game-backend agent |
+
+## 8. As built (deviations recorded at integration, 14 Nov)
+- NEP-171/177/178/181/199 are hand-rolled (same method names and JSON shapes) instead of near-contract-standards, to keep the
+  wasm deployable (434 KB with the crate, 287 KB without, wasm-opt -Oz). `nft_resolve_transfer` takes borsh args.
+- `buy_licence` requires the key to be escrowed first ("Licences are not on sale yet").
+- Dead-phase buys put `price − mint storage` (~0.004 N) into the pool; claim-record storage is paid from the pool.
+- `attest`, `probe_official`, `release`, `claim_epoch` take an optional `mirror_index`.
+- Any OutLayer output with `ok != true` is inconclusive (null, probe RPC outage, malformed): never a failure, never a record.
+- `/attest` omits `epoch` from the query when null; receipts with a missing epoch are filtered by time only.
+- `register_host` sends the host account's own access-key public key as `host_pubkey`.
+- Reproducible wasm builds use OutLayer's pinned compiler image (`scripts/outlayer-build-wasm.sh`, amd64, rustc 1.97.1).
