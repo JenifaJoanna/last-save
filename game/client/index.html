@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#07060d" />
+    <title>Ember Rift</title>
+    <meta name="description" content="Ember Rift: a fast arena game for up to eight hover-skiffs. Collect shards, knock rivals into the rift. Licensed on NEAR with Last Save." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%2307060d' stroke='%23ff7a1a' stroke-width='4'/%3E%3Cpath d='M46 32 22 44l5-12-5-12z' fill='%23ffd27a'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <div id="hud" hidden>
+      <div id="board" class="panel"></div>
+      <div id="clock" class="panel"><span id="phase">Lobby</span><b id="time">1:30</b></div>
+      <div id="net" class="panel"><i id="dot"></i><span id="hostlabel">Official server</span><span id="ping"></span></div>
+      <div id="me" class="panel">
+        <div class="me-row"><span class="lvl" id="mylvl">1</span><b id="myname">—</b><span id="myskin"></span></div>
+        <div class="xpbar"><i id="xpfill"></i></div>
+        <div class="me-sub" id="myxp">0 / 100 XP</div>
+      </div>
+      <div id="dash" class="panel"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" class="track"/><circle cx="32" cy="32" r="26" class="fill" id="dashring"/></svg><span>DASH</span><kbd>Space</kbd></div>
+      <div id="banner"></div>
+    </div>
+    <div id="results" class="overlay" hidden><div class="card"><h2>Match over</h2><ol id="rlist"></ol><div id="rme"></div><p class="hint">Next match starts automatically</p></div></div>
+    <div id="lost" class="overlay" hidden>
+      <div class="lost-card">
+        <svg class="flat" viewBox="0 0 300 60"><polyline id="flatline" points="0,30 300,30" /></svg>
+        <h1>Connection lost</h1>
+        <p id="lostmsg">The server is not responding. Retrying…</p>
+        <a id="afterlife" class="btn ghost" target="_blank" rel="noopener">Check the licence status</a>
+      </div>
+    </div>
+    <div id="signin" class="overlay" hidden><div class="card wide" id="signincard"></div></div>
+  </body>
+  <script type="module" src="/src/main.ts"></script>
+</html>
