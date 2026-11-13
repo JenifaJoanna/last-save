@@ -99,3 +99,12 @@ Release is retryable by anyone, from any of the hash-pinned mirrors.
 ## License
 
 MIT. `scripts/outlayer-build-wasm.sh` is vendored from OutLayer (MIT OR Apache-2.0) with one marked change.
+
+## Built with, and disclosure
+
+Built during the NEAR Hackathon window (repository created 13 Nov 2026; no earlier code). Libraries: near-sdk 5
+(contract), wasi-http-client, ed25519-dalek, aes-gcm, sha2 (OutLayer programs), near-api-js, @near-wallet-selector,
+@noble/curves|hashes|ciphers, PixiJS 8, React 19, Tailwind 4, motion, wouter, lucide-react, Cloudflare Workers + Durable
+Objects, wrangler, vitest, near-workspaces. AI assistance: code, tests and copy were written with AI coding agents (Claude
+Code); narration voice by ElevenLabs; the Ember Rift key art was generated with ChatGPT image generation. Ember Rift is a
+fictional studio title made for this demo.
