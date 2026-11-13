@@ -1,0 +1,27 @@
+[package]
+name = "lastsave-licence"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.86"
+resolver = "3"
+license = "MIT"
+description = "Last Save licence: a NEP-171 game licence whose escrowed server key is released by OutLayer only after the game dies."
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "5"
+hex = "0.4"
+near-sys = "0.2"
+
+[dev-dependencies]
+near-sdk = { version = "5", features = ["unit-testing"] }
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
