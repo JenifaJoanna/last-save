@@ -36,9 +36,14 @@ export interface Profile {
 export type SkinId = "standard" | "emberwing";
 export type Phase = "lobby" | "countdown" | "live" | "results";
 
+/** Fresh proof that the connecting client holds the session key named in the login.
+ * signature (base64) by session key over UTF-8 `lastsave-hello:v1|{host}|{ts_ms}|{account_id}`; |now - ts_ms| <= 60 s.
+ * This (not a one-use login nonce) is what stops a captured login being replayed, and it lets a client reconnect. */
+export interface HelloProof { ts_ms: number; signature: string }
+
 // ---------- client -> server ----------
 export type ClientMsg =
-  | { t: "hello"; v: number; login: Login }
+  | { t: "hello"; v: number; login: Login; proof: HelloProof }
   | { t: "input"; seq: number; ax: number; ay: number; dash: boolean }
   | { t: "receipt"; receipt: Receipt }
   | { t: "ping"; c: number };

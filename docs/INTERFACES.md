@@ -108,7 +108,9 @@ Payload signed: `sha256( borsh(u32 2147484061) ‖ borsh({message: String, nonce
 `message` = JSON `{"app":"ember-rift","host":"<host_id>","session_pubkey":"ed25519:<base58>","exp_ms":<ms>}`; `recipient` = licence
 contract id. Login object: `{account_id, public_key:"ed25519:<b58>", signature:<base64>, message, nonce:<base64 32 bytes>, recipient}`.
 Valid ⇔ signature verifies ∧ `public_key` is an access key of `account_id` (RPC `view_access_key`, final) ∧ `licence_of(account_id)`
-is non-null ∧ host matches ∧ `now < exp_ms ≤ now + 24 h` ∧ nonce unused (server keeps used nonces until exp).
+is non-null ∧ host matches ∧ `now < exp_ms ≤ now + 24 h`. Replay protection for joining: every `hello` carries a
+fresh `proof` signed by the session key over `lastsave-hello:v1|{host}|{ts_ms}|{account_id}` with `|now − ts_ms| ≤ 60 s` (the same
+login may reconnect any number of times; a captured login without the session key is useless).
 `host_id`: `"official"` for the studio server, else the host's account id.
 
 ### 4.3 Session receipt (signed by the session key, no wallet prompt)
