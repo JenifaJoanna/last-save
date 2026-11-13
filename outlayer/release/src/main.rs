@@ -20,10 +20,12 @@ use sha2::{Digest, Sha256};
 use std::io::Read;
 
 const SECRET_NAME: &str = "LASTSAVE_SERVER_KEY";
+/// Primary then fallback; each retried with backoff (public testnet RPCs rate-limit).
 const RPC_URLS: [&str; 2] = [
-    "https://rpc.testnet.near.org",
     "https://test.rpc.fastnear.com",
+    "https://near-testnet.drpc.org",
 ];
+const ATTEMPTS_PER_RPC: u32 = 3;
 
 #[derive(Deserialize)]
 struct Input {
@@ -121,9 +123,12 @@ fn read_status(contract: &str) -> Result<String, String> {
     .to_string();
     let mut last_err = String::from("no RPC reachable");
     for url in RPC_URLS {
-        match rpc_view(url, body.as_bytes()) {
-            Ok(s) => return Ok(s),
-            Err(e) => last_err = format!("{url}: {e}"),
+        for attempt in 0..ATTEMPTS_PER_RPC {
+            match rpc_view(url, body.as_bytes()) {
+                Ok(s) => return Ok(s),
+                Err(e) => last_err = format!("{url}: {e}"),
+            }
+            std::thread::sleep(std::time::Duration::from_millis(400 << attempt));
         }
     }
     Err(last_err)
