@@ -9,7 +9,7 @@ export class Bot {
     this.session = generateSessionKey();
     const message = buildLoginMessage({ host: hostId, sessionPubkey: this.session.public, expMs: Date.now() + ttlMs });
     this.login = signLogin({ accountId, secretKey, message, recipient });
-    this.msgs = []; this.waiters = []; this.seq = 0; this.snap = null; this.profile = null; this.denied = null;
+    this.msgs = []; this.waiters = []; this.seq = Date.now(); // above any stale server ack from an earlier process this.snap = null; this.profile = null; this.denied = null;
     this.receipts = 0; this.results = []; this.timer = null; this.closed = false;
   }
 

@@ -18,6 +18,20 @@ const CONTRACT = params.get("contract") ?? (import.meta.env.VITE_LICENCE_CONTRAC
 const PLATFORM = ((import.meta.env.VITE_PLATFORM_URL as string | undefined) ?? "https://lastsave.pages.dev").replace(/\/$/, "");
 
 const stage = document.getElementById("stage") as HTMLElement;
+// Capture aid, localhost only: steers the player's own skiff with the practice bots' logic (disclosed in the film).
+const AUTOPILOT = params.has("autopilot") && ["localhost", "127.0.0.1"].includes(location.hostname);
+let apDash = 0;
+let lastFrame: Parameters<typeof autopilot>[0] = { ships: [], shards: [] };
+function autopilot(f: { ships: { id: string; x: number; y: number; st: string }[]; shards: { x: number; y: number; v: number }[] }): { ax: number; ay: number; dash: boolean } {
+  const me = f.ships.find((s) => s.id === source.ownId);
+  if (!me) return { ax: 0, ay: 0, dash: false };
+  let tx = 0, ty = 0, best = 1e9, dash = false;
+  for (const sh of f.shards) { const d = Math.hypot(sh.x - me.x, sh.y - me.y) / sh.v; if (d < best) { best = d; tx = sh.x; ty = sh.y; } }
+  for (const o of f.ships) if (o.id !== me.id && o.st === "alive" && Math.hypot(o.x - me.x, o.y - me.y) < 120) { tx = o.x; ty = o.y; dash = ++apDash % 40 === 0; }
+  if (Math.hypot(me.x, me.y) > 500) { tx = 0; ty = 0; }
+  const dx = tx - me.x, dy = ty - me.y, l = Math.hypot(dx, dy) || 1;
+  return { ax: dx / l, ay: dy / l, dash };
+}
 const scene = new Scene();
 const hud = new Hud();
 let source: Source = new Practice(false, undefined, 4);
@@ -78,8 +92,9 @@ async function boot(): Promise<void> {
     const dt = Math.min(0.1, tk.deltaMS / 1000);
     acc += dt;
     let steps = 0;
-    while (acc >= DT && steps < 5) { acc -= DT; steps++; source.fixedTick(controls.read()); }
+    while (acc >= DT && steps < 5) { acc -= DT; steps++; source.fixedTick(AUTOPILOT ? autopilot(lastFrame) : controls.read()); }
     const f = source.frame(performance.now());
+    lastFrame = f;
     scene.frame({ ships: f.ships, shards: f.shards, ownId: source.ownId }, dt);
     const own = f.ships.find((s) => s.id === source.ownId);
     if (own) controls.shipScreen = scene.toScreen(own.x, own.y);

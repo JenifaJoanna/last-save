@@ -1,4 +1,14 @@
 {
-  "pages": ["https://last-save.pages.dev/", "https://last-save.pages.dev/play/", "https://emberrift.pages.dev/", "https://emberrift.pages.dev/health"],
-  "workers": ["emberrift-arena"]
+  "pages": [
+    "https://last-save.pages.dev/",
+    "https://last-save.pages.dev/play/",
+    "https://emberrift.pages.dev/",
+    "https://emberrift.pages.dev/health",
+    "https://emberrift-community.pages.dev/",
+    "https://emberrift-community.pages.dev/health"
+  ],
+  "workers": [
+    "emberrift-arena",
+    "emberrift-community-arena"
+  ]
 }

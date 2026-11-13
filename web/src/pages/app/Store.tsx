@@ -37,7 +37,7 @@ export default function Store() {
   return (
     <div className="mx-auto max-w-6xl">
       <p className="eyebrow">Store</p>
-      <div className="mt-4 grid gap-6 lg:grid-cols-[1.25fr_1fr]">
+      <div className="mt-4 grid items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
         <div className="card overflow-hidden">
           <div className="relative aspect-video">
             <img src="/art/ember-rift-key.jpg" alt="Ember Rift key art: hover-skiffs racing across a burning obsidian arena" className="absolute inset-0 size-full object-cover" />
@@ -53,6 +53,10 @@ export default function Store() {
               <div key={t} className="flex items-center gap-2.5 text-sm text-muted"><I className="size-4 text-ember" />{t}</div>
             ))}
           </div>
+          <p className="border-t border-line px-6 py-5 text-[15px] leading-relaxed text-muted">
+            Pilot a hover-skiff across a burning obsidian arena. Grab shards, take the ember core, and ram rivals over the edge into the rift.
+            Your level and the Emberwing skin are saved to the licence contract after every match, so they follow you to any server that hosts the game.
+          </p>
         </div>
 
         <div className="grid content-start gap-4">

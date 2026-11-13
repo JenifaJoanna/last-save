@@ -1,7 +1,7 @@
 // Verifies everything the chain commits to before anything is run: released key, artifact hash, build hash, snapshot hash.
 import { sha256 } from "@noble/hashes/sha2";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { decryptBundle } from "server-bundle/crypto";
 import { unpackTarGz } from "server-bundle/tar";
 import { Refusal } from "./refusal.mjs";
@@ -71,7 +71,7 @@ export async function prepare({ chain, fetchBytes = defaultFetchBytes, workDir, 
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, f.data);
   }
-  log(`unpacked ${files.length} files to ${dir}`);
+  log(`unpacked ${files.length} files to ${relative(process.cwd(), dir) || "."}`);
   return { buildHash, dir, restore };
 }
 

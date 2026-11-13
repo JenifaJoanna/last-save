@@ -68,9 +68,12 @@ try {
           const r = await claimEpoch({ account, contract, epoch });
           out(`claim_epoch(${epoch}): ${r.url}${r.failure ? `\n  FAILED: ${JSON.stringify(r.failure).slice(0, 300)}` : ""}`);
         }
-      } catch (e) { err(`claim pass failed: ${e.message}`); }
+      } catch (e) { err(`claim pass failed: ${e.message}${/INVALID_TRANSACTION/.test(String(e.message)) ? " (the host account likely lacks ~0.05 N for the deposit and gas)" : ""}`); }
       await new Promise((r) => setTimeout(r, 30_000));
     }
+  } else if (mode === "deploy") {
+    out("Deployed. The host keeps running on Cloudflare; run with --claim to collect epochs.");
+    process.exit(0);
   } else {
     out("Hosting. Press Ctrl+C to stop.");
     await new Promise(() => {});

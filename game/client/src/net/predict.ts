@@ -7,7 +7,8 @@ type Local = { x: number; y: number; vx: number; vy: number; a: number; dash: nu
 export class Predictor {
   private local: Local | null = null;
   private pending: { seq: number; input: Input }[] = [];
-  private seq = 0;
+  // Starts from a timestamp so a new page always outranks a stale server-side ack for the same pilot.
+  private seq = Date.now();
   private errX = 0;
   private errY = 0;
   private dashHeld = false;
