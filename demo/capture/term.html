@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>terminal replay</title>
+<link rel="stylesheet" href="node_modules/asciinema-player/dist/bundle/asciinema-player.css" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Chakra+Petch:wght@600&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; height: 100%; background: #07060d; }
+  body { display: grid; place-items: center; background: radial-gradient(60% 60% at 50% 40%, rgba(42,31,122,0.35), transparent), #07060d; }
+  .win { width: 1640px; height: 900px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 40px 120px rgba(0,0,0,0.7); background: #0d0b16; display: flex; flex-direction: column; }
+  .bar { height: 48px; display: flex; align-items: center; gap: 10px; padding: 0 18px; background: #12101d; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .bar i { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,0.14); }
+  .bar span { margin-left: 16px; font: 600 15px "JetBrains Mono", monospace; color: #9a92b8; }
+  #player { flex: 1; }
+  .ap-wrapper, .ap-player { background: #0d0b16 !important; }
+  .ap-terminal { font-family: "JetBrains Mono", ui-monospace, monospace !important; }
+  .ap-control-bar { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="win">
+    <div class="bar"><i></i><i></i><i></i><span id="title">fan host · last-save</span></div>
+    <div id="player"></div>
+  </div>
+  <script src="node_modules/asciinema-player/dist/bundle/asciinema-player.min.js"></script>
+  <script>
+    // Replays a real asciinema recording (?cast=file.cast) at real speed, idle gaps capped (?idle=seconds).
+    const q = new URLSearchParams(location.search);
+    document.getElementById("title").textContent = q.get("title") || "fan host · last-save";
+    AsciinemaPlayer.create(q.get("cast"), document.getElementById("player"), {
+      autoPlay: true, fit: "both", terminalFontSize: "20px", idleTimeLimit: Number(q.get("idle") || 2), speed: Number(q.get("speed") || 1),
+      theme: "asciinema", controls: false,
+    });
+  </script>
+</body>
+</html>

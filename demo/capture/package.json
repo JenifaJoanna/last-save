@@ -1,0 +1,5 @@
+{
+  "name": "last-save-capture",
+  "private": true,
+  "dependencies": { "asciinema-player": "3.10.0" }
+}
