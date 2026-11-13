@@ -61,7 +61,8 @@ export const normalizeHosts = (raw: unknown): HostView[] => (Array.isArray(raw) 
 export interface Activity { kind: string; at: number; text: string; detail: J }
 export const normalizeActivity = (raw: unknown): Activity[] => (Array.isArray(raw) ? raw : []).map((a) => {
   const r = o(a);
-  return { kind: s(r.kind ?? r.event ?? r.type, "event"), at: n(r.at_ms ?? r.timestamp_ms ?? r.at), text: s(r.text ?? r.summary ?? r.result), detail: r };
+  const text = [s(r.outcome), s(r.detail ?? r.text ?? r.summary ?? r.result)].filter(Boolean).join(" · ");
+  return { kind: s(r.kind ?? r.event ?? r.type, "event"), at: n(r.at_ms ?? r.timestamp_ms ?? r.at), text, detail: r };
 });
 
 export type Load<T> = { data: T | null; error: string | null; missing: boolean; loading: boolean; refresh: () => void };
