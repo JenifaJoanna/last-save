@@ -9,8 +9,9 @@ pub struct Cleaner {}
 
 #[near]
 impl Cleaner {
+    /// No `self`: near-sdk must not try to deserialize the previous contract's state as `Cleaner`.
     #[private]
-    pub fn clean(&mut self, keys: Vec<Base64VecU8>) -> u32 {
+    pub fn clean(keys: Vec<Base64VecU8>) -> u32 {
         let mut n = 0;
         for k in keys {
             if env::storage_remove(&k.0) {

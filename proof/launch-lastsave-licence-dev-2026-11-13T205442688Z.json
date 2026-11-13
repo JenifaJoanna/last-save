@@ -1,0 +1,89 @@
+{
+  "contract": "lastsave-licence.testnet",
+  "steps": [
+    {
+      "step": "bundle",
+      "at": "2026-11-13T20:17:03.245Z",
+      "build_hash": "b723c6d4854b1b8688a0a4a1191dda26d0492d6cf28a26cd1c88e7ac222bc967",
+      "artifact_sha256": "7ee9918d3b370288b7519ad7384496609a7b0a15308d865851d63c205277fe04",
+      "size": 581053,
+      "key_commitment": "3e9b46e6beb0cd7931e0b4ccb84fade3906880d10f139629347505aad26db092"
+    },
+    {
+      "step": "snapkey",
+      "at": "2026-11-13T20:18:36.592Z",
+      "hash": "9HnABXquioakcWhMfhn9y3bHdJW1f4goC6N3fBWHZmyC",
+      "url": "https://testnet.nearblocks.io/txns/9HnABXquioakcWhMfhn9y3bHdJW1f4goC6N3fBWHZmyC",
+      "public_key": "ed25519:4yemawWHL3GrBmmLndUvomMuGiiw2tNno6CBwpa1KJEC",
+      "methods": [
+        "post_snapshot"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-13T20:19:15.876Z",
+      "url": "https://emberrift.pages.dev",
+      "worker": "emberrift-arena",
+      "build_hash": "b723c6d4854b1b8688a0a4a1191dda26d0492d6cf28a26cd1c88e7ac222bc967"
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-13T20:21:41.376Z",
+      "release": {
+        "sha256": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-9fafaf8e41724533.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-9fafaf8e41724533.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-b0cb38e1bc3e77ec.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-b0cb38e1bc3e77ec.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-b723c6d4854b1b86.bin",
+        "https://last-save.pages.dev/mirror/ember-rift-b723c6d4854b1b86.bin"
+      ],
+      "note": "commit+push artifacts/ and redeploy web before attest"
+    },
+    {
+      "step": "deploy",
+      "at": "2026-11-13T20:22:30.924Z",
+      "hash": "F5Uin4kcnZHwkTC63af8TMBZ5aJi2i8cWm2jZyg3udCq",
+      "url": "https://testnet.nearblocks.io/txns/F5Uin4kcnZHwkTC63af8TMBZ5aJi2i8cWm2jZyg3udCq",
+      "code_sha256": "aa047a5daecf28df7af27c0756116d3e16e7a76c254e73164223bb36653706a7",
+      "wasm_bytes": 287205,
+      "liveness": {
+        "probe_interval_ms": 20000,
+        "fail_threshold": 3,
+        "receipt_window_ms": 180000,
+        "report_window_ms": 120000,
+        "quorum_bps": 5000
+      }
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T20:23:04.714Z",
+      "hash": "4eVWfTBX57Rb2xsEsCopwBYJyBYhABo8hHHDFJEEqmf1",
+      "url": "https://testnet.nearblocks.io/txns/4eVWfTBX57Rb2xsEsCopwBYJyBYhABo8hHHDFJEEqmf1",
+      "failure": null,
+      "storage_cost": "6790000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-13T20:24:59.645Z",
+      "hash": "5sME4GDCQkJqYydETeYvbgrgNmo24KbzorqtyF73cyvN",
+      "url": "https://testnet.nearblocks.io/txns/5sME4GDCQkJqYydETeYvbgrgNmo24KbzorqtyF73cyvN",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1187752400000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 524308922, time_ms: 1146 }, Cost: 1187752400000000000000 yoctoNEAR, Refund: 28812247600000000000000 yoctoNEAR, Freshly compiled"
+      ]
+    }
+  ]
+}

@@ -46,7 +46,7 @@ const steps = {
     sh("pnpm", ["--filter", "server-bundle", "build"], { env });
     sh("pnpm", ["--filter", "server-bundle", "encrypt", "--key-file", `../${keyFile}`], { env });
     const meta = JSON.parse(readFileSync("server-bundle/dist/artifact.json", "utf8"));
-    state.artifact = { ...meta, file: `ember-rift-${meta.build_hash.slice(0, 16)}.bin` };
+    state.artifact = { ...meta, file: `ember-rift-${meta.sha256.slice(0, 16)}.bin` };
     state.key_commitment = keyCommitment(keyHex());
     save();
     record("bundle", { build_hash: meta.build_hash, artifact_sha256: meta.sha256, size: meta.size, key_commitment: state.key_commitment });
