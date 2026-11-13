@@ -49,7 +49,7 @@ export default function Hosts() {
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
         <Card eyebrow="One command" title="Run a host">
           <div className="relative rounded-xl border border-line bg-ink p-4">
-            <pre className="mono overflow-x-auto whitespace-pre text-[13px] leading-relaxed text-text">{CMD}</pre>
+            <pre className="mono overflow-x-auto whitespace-pre pr-20 text-[13px] leading-relaxed text-text">{CMD}</pre>
             <div className="absolute right-2 top-2"><Copy text={CMD} label="copy" /></div>
           </div>
           <ol className="mt-5 grid gap-3">
@@ -103,7 +103,7 @@ export default function Hosts() {
             {(hosts.data ?? []).map((h) => (
               <li key={h.hostId} className="grid gap-2 px-6 py-4 sm:grid-cols-[1fr_auto_auto] sm:items-center sm:gap-6">
                 <span className="min-w-0"><a href={accountUrl(h.hostId)} target="_blank" rel="noopener" className="font-medium no-underline hover:underline">{h.hostId}</a><span className="mono block truncate text-faint">{h.endpoint}</span></span>
-                <span className="text-sm text-muted">{h.epochsPaid} epochs · {h.sessionsPaid} sessions · since {ago(h.registeredAt)}</span>
+                <span className="text-sm text-muted">{h.epochsPaid} {h.epochsPaid === 1 ? "epoch" : "epochs"} · {h.sessionsPaid} sessions · since {ago(h.registeredAt)}</span>
                 <span className="num text-lg font-semibold text-alive">{near(h.earned)} Ⓝ</span>
               </li>
             ))}

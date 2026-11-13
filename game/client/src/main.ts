@@ -58,13 +58,15 @@ function events(signin: SigninOpts): SourceEvents {
       online = null;
       source = new Practice(false, undefined, 4);
       hud.show(false);
-      showSignin(signin, { code, account: undefined });
+      showSignin(signin, { code, account: deniedAccount ?? undefined });
     },
     notice: (text) => hud.banner(text, true),
   };
 }
 
+let deniedAccount: string | null = null;
 function startOnline(s: Session, signin: SigninOpts): void {
+  deniedAccount = s.account_id;
   saveSession(s);
   hideSignin();
   source.stop();
