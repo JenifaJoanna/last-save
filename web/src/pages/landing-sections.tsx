@@ -25,7 +25,6 @@ export function Lifecycle() {
   return (
     <Section eyebrow="The promise is code" title={<>From purchase to afterlife,<br className="hidden sm:block" /> every step is on-chain.</>}>
       <ol className="relative grid gap-4 md:grid-cols-4">
-        <div className="pointer-events-none absolute left-0 right-0 top-[38px] hidden h-px bg-gradient-to-r from-gold/0 via-ember/50 to-alive/0 md:block" />
         {STEPS.map((s, i) => (
           <motion.li key={s.tag} initial={{ y: 14 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: i * 0.08 }} className="card relative p-6">
