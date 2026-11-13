@@ -1,0 +1,6 @@
+packages:
+  - "game/server"
+  - "game/client"
+  - "host"
+  - "server-bundle"
+  - "web"

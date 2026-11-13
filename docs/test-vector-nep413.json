@@ -1,0 +1,9 @@
+{
+ "account_pk": "ed25519:9C6hybhQ6Aycep9jaUnP6uL9ZYvDjUp1aSkFWPUFJtpj",
+ "session_pk": "ed25519:GcQfK48DV9BzDuDeCyV2sShbAAY4vqmK8JSj1NBrwoVZ",
+ "message": "{\"app\":\"ember-rift\",\"host\":\"official\",\"session_pubkey\":\"ed25519:GcQfK48DV9BzDuDeCyV2sShbAAY4vqmK8JSj1NBrwoVZ\",\"exp_ms\":1800000000000}",
+ "payload_sha256": "4bffc95dc3afbb4f265add41563ed50cc2e109928e6f07c719087e684d4e781c",
+ "login_signature_b64": "izeaYxkcBiAP+po/+GZs/ZH03idB7e2c27+xCKLLdNZB7N7bbEitm7qu0oLThe4/+0hSELvkttHawI/wGtbhCQ==",
+ "receipt_message": "lastsave-receipt:v1|official|-|00112233445566778899aabbccddeeff|1799999000000|lastsave-mira.testnet",
+ "receipt_signature_b64": "FNXzMLIv19T5f/vGThUVerhLrNG2a2e3H5Hh/GZiTLps3SZLHZaV0H6MQwntlbiq+ZivCNmLb9Jln4ydckkfBw=="
+}
