@@ -1,0 +1,19 @@
+{
+  "name": "host",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "last-save-host": "./bin/host.mjs" },
+  "scripts": {
+    "host": "node bin/host.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@noble/hashes": "1.8.0",
+    "server-bundle": "workspace:*",
+    "wrangler": "4.88.0"
+  },
+  "devDependencies": {
+    "vitest": "3.2.4"
+  }
+}

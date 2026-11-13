@@ -1,0 +1,24 @@
+# Fan-host configuration for the Ember Rift server. `pnpm host` fills in the variables; do not add account ids or routes here.
+name = "ember-rift-host"
+main = "worker/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "./assets"
+binding = "ASSETS"
+
+[[durable_objects.bindings]]
+name = "ARENA"
+class_name = "Arena"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Arena"]
+
+[vars]
+HOST_ID = "official"
+BUILD_HASH = "dev"
+LICENCE_CONTRACT = "lastsave-licence.testnet"
+RPC_URLS = "https://test.rpc.fastnear.com,https://near-testnet.drpc.org"

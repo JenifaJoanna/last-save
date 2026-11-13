@@ -1,0 +1,22 @@
+{
+  "name": "server-bundle",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tar": "./lib/tar.mjs",
+    "./crypto": "./lib/crypto.mjs"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "encrypt": "node scripts/encrypt.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@noble/ciphers": "1.3.0",
+    "@noble/hashes": "1.8.0"
+  },
+  "devDependencies": {
+    "vitest": "3.2.4"
+  }
+}
