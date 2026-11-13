@@ -13,7 +13,7 @@ import { keyCommitment, sealServerKey } from "../lib/escrow.mjs";
 const CONTRACT = process.env.CONTRACT ?? "lastsave-licence.testnet";
 const STUDIO = process.env.STUDIO ?? "lastsave-studio.testnet";
 const OFFICIAL_BASE = process.env.OFFICIAL_BASE ?? "emberrift";
-const OFFICIAL_URL = `https://${OFFICIAL_BASE}.pages.dev`;
+const OFFICIAL_URL = process.env.OFFICIAL_URL ?? `https://${OFFICIAL_BASE}.pages.dev`;
 const PLATFORM_URL = process.env.PLATFORM_URL ?? "https://last-save.pages.dev";
 const RAW = "https://raw.githubusercontent.com/JenifaJoanna/last-save/main";
 const LOCAL = `local/${CONTRACT}`;

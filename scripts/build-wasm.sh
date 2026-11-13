@@ -16,7 +16,9 @@ build_wasi() { # crate dir, binary name
 }
 build_contract() { # crate dir (cargo-near overrides RUSTFLAGS, so plain cargo + strip here)
   local name; name="$(sed -n 's/^name = "\(.*\)"/\1/p' "$ROOT/$1/Cargo.toml" | head -1 | tr - _)"
-  (cd "$ROOT/$1" && RUSTFLAGS="$RUSTFLAGS -C link-arg=-s" cargo build --quiet --target wasm32-unknown-unknown --release)
+  # --cfg near: near-sdk-env only emits host panic_utf8 (readable refusal messages) when built for the NEAR host;
+  # cargo-near passes it, plain cargo must too, or every require! becomes a bare `unreachable` trap.
+  (cd "$ROOT/$1" && RUSTFLAGS="$RUSTFLAGS -C link-arg=-s --cfg near" cargo build --quiet --target wasm32-unknown-unknown --release)
   mkdir -p "$ROOT/$1/target/near"
   cp "$ROOT/$1/target/wasm32-unknown-unknown/release/$name.wasm" "$ROOT/$1/target/near/$name.wasm"
   for w in "$ROOT/$1"/target/near/*.wasm; do printf '%s  %s\n' "$(shasum -a 256 "$w" | cut -d' ' -f1)" "${w#$ROOT/}"; done

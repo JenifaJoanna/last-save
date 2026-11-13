@@ -1,0 +1,22 @@
+{
+  "name": "last-save-film",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts LastSave out/last-save-film.mp4 --codec h264 --pixel-format yuv420p",
+    "render:vertical": "remotion render src/index.ts LastSaveVertical out/last-save-45s-vertical.mp4 --codec h264 --pixel-format yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.543",
+    "@remotion/google-fonts": "4.0.543",
+    "@remotion/media-utils": "4.0.543",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.543"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  }
+}
