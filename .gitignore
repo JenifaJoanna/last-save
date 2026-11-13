@@ -1,0 +1,16 @@
+# build output
+target/
+node_modules/
+.wrangler/
+dist-web/
+*.log
+.DS_Store
+# secrets and local state: never tracked
+.env
+.env.*
+!.env.example
+.dev.vars
+*.pem
+*.key.json
+.near-credentials/
+local/

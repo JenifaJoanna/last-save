@@ -1,0 +1,24 @@
+[package]
+name = "lastsave-release"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Last Save release program: runs inside OutLayer's TEE, hands the escrowed server key to the licence contract only once that contract says the official server is dead."
+
+[[bin]]
+name = "lastsave-release"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+hex = "0.4"
+wasi-http-client = "0.2"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"
