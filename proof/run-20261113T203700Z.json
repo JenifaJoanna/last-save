@@ -1,0 +1,103 @@
+{
+  "started_at": "2026-11-13T20:37:00.378Z",
+  "contract": "lastsave-licence.testnet",
+  "official_url": "https://emberrift.pages.dev",
+  "official_worker": "emberrift-arena",
+  "players": [
+    "lastsave-mira.testnet",
+    "lastsave-kofi.testnet",
+    "lastsave-yuna.testnet",
+    "lastsave-dario.testnet"
+  ],
+  "ops": "lastsave-kofi.testnet",
+  "fanhost": "lastsave-fanhost.testnet",
+  "network": "testnet",
+  "phases": [
+    {
+      "name": "report",
+      "title": "one report stays below quorum",
+      "started_at": "2026-11-13T20:37:08.913Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "report_down lastsave-mira.testnet",
+          "hash": "EMZkiXdzyCZX4ms3mXCbqhackE7Shqe9Zmd6tpQfnLxn",
+          "url": "https://testnet.nearblocks.io/txns/EMZkiXdzyCZX4ms3mXCbqhackE7Shqe9Zmd6tpQfnLxn",
+          "failure": null
+        },
+        {
+          "label": "report_down again lastsave-mira.testnet",
+          "hash": "B5FsBP4a2FzmpyY9zhneprhYnpRN5ucq4UF6G3LH9PMg",
+          "url": "https://testnet.nearblocks.io/txns/B5FsBP4a2FzmpyY9zhneprhYnpRN5ucq4UF6G3LH9PMg",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        }
+      ],
+      "readback": {
+        "reports": {
+          "in_window": 1,
+          "needed": 2
+        }
+      },
+      "assertions": [
+        {
+          "name": "report_down accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "one report is below quorum",
+          "pass": true,
+          "detail": "1 of 2"
+        },
+        {
+          "name": "game is still Alive",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "report counted",
+          "pass": true,
+          "detail": "0 -> 1"
+        },
+        {
+          "name": "same token reporting again in the window is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        },
+        {
+          "name": "refused report did not change the count",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:37:37.062Z"
+    }
+  ],
+  "unenforced": [
+    "spend cap (3 N) is only reported above, not blocked by code"
+  ],
+  "balances_start": {
+    "lastsave-mira.testnet": "0.4847 N",
+    "lastsave-kofi.testnet": "0.4971 N",
+    "lastsave-yuna.testnet": "0.4997 N",
+    "lastsave-dario.testnet": "0.4997 N",
+    "lastsave-fanhost.testnet": "0.6000 N"
+  },
+  "balances_end": {
+    "lastsave-mira.testnet": "0.4842 N",
+    "lastsave-kofi.testnet": "0.4971 N",
+    "lastsave-yuna.testnet": "0.4997 N",
+    "lastsave-dario.testnet": "0.4997 N",
+    "lastsave-fanhost.testnet": "0.6000 N"
+  },
+  "net_cost_players_and_fanhost": "0.0004 N",
+  "finished_at": "2026-11-13T20:37:41.236Z",
+  "totals": {
+    "assertions": 6,
+    "passed": 6,
+    "failed": 0,
+    "phases_passed": 1,
+    "phases_failed": 0
+  }
+}

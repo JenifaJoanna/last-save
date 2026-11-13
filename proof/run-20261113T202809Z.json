@@ -1,0 +1,575 @@
+{
+  "started_at": "2026-11-13T20:28:09.114Z",
+  "contract": "lastsave-licence.testnet",
+  "official_url": "https://emberrift.pages.dev",
+  "official_worker": "emberrift-arena",
+  "players": [
+    "lastsave-mira.testnet",
+    "lastsave-kofi.testnet",
+    "lastsave-yuna.testnet",
+    "lastsave-dario.testnet"
+  ],
+  "ops": "lastsave-kofi.testnet",
+  "fanhost": "lastsave-fanhost.testnet",
+  "network": "testnet",
+  "phases": [
+    {
+      "name": "preflight",
+      "title": "Alive, escrowed, verified, access keys",
+      "started_at": "2026-11-13T20:28:15.321Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "contract_access_keys": [
+          {
+            "public_key": "ed25519:5Ej4br55uemQ7St9RSHZAfXgwcadnAfBbU1wWv458vJi",
+            "permission": "FullAccess"
+          }
+        ],
+        "contract_locked": false,
+        "config": {
+          "price": "250000000000000000000000",
+          "fund_bps": 4000,
+          "liveness": {
+            "probe_interval_ms": 20000,
+            "fail_threshold": 3,
+            "receipt_window_ms": 180000,
+            "report_window_ms": 120000,
+            "quorum_bps": 5000
+          },
+          "pool": {
+            "epoch_ms": 120000,
+            "pay_per_session": "10000000000000000000000",
+            "epoch_cap": "50000000000000000000000"
+          },
+          "official_endpoint": "https://emberrift.pages.dev",
+          "studio": "lastsave-studio.testnet"
+        },
+        "totals": {
+          "supply": 0,
+          "live_supply": 0,
+          "pot_locked": "0",
+          "pool": "0",
+          "refunded": "0",
+          "pledged": "0",
+          "paid_out": "0"
+        },
+        "balances": {
+          "lastsave-mira.testnet": "0.7354 N",
+          "lastsave-kofi.testnet": "0.7500 N",
+          "lastsave-yuna.testnet": "0.7500 N",
+          "lastsave-dario.testnet": "0.7500 N",
+          "lastsave-fanhost.testnet": "0.6000 N",
+          "lastsave-studio.testnet": "1.4812 N"
+        }
+      },
+      "assertions": [
+        {
+          "name": "status is Alive",
+          "pass": true,
+          "detail": "Alive"
+        },
+        {
+          "name": "key is escrowed",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "escrow verified by attest",
+          "pass": true,
+          "detail": "attested_at_ms 1794601494977"
+        },
+        {
+          "name": "official server answers /health",
+          "pass": true,
+          "detail": "host official, build b723c6d4854b"
+        },
+        {
+          "name": "official server runs the committed build",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7354 N"
+        },
+        {
+          "name": "lastsave-kofi.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7500 N"
+        },
+        {
+          "name": "lastsave-yuna.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7500 N"
+        },
+        {
+          "name": "lastsave-dario.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7500 N"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:28:45.447Z"
+    },
+    {
+      "name": "buy",
+      "title": "four players buy a licence",
+      "started_at": "2026-11-13T20:28:45.448Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "buy_licence lastsave-mira.testnet",
+          "hash": "BQ2twjDVgzKu9LY4F2rbadjuyzwHXrX5MuEis4ASexTr",
+          "url": "https://testnet.nearblocks.io/txns/BQ2twjDVgzKu9LY4F2rbadjuyzwHXrX5MuEis4ASexTr",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-kofi.testnet",
+          "hash": "8BNHxui4391xxYgb3K7CBHK2pFbXvdWzcNWt8SB7Ywb4",
+          "url": "https://testnet.nearblocks.io/txns/8BNHxui4391xxYgb3K7CBHK2pFbXvdWzcNWt8SB7Ywb4",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-yuna.testnet",
+          "hash": "58jKTAHGwomfi3hYH6Dhd76NjeuK9LGxjXcx3hrT18Fn",
+          "url": "https://testnet.nearblocks.io/txns/58jKTAHGwomfi3hYH6Dhd76NjeuK9LGxjXcx3hrT18Fn",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-dario.testnet",
+          "hash": "8V46TAFD965w3KTBamH7V4xGWedLDjTptmM4vM2Wtiih",
+          "url": "https://testnet.nearblocks.io/txns/8V46TAFD965w3KTBamH7V4xGWedLDjTptmM4vM2Wtiih",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "spent lastsave-mira.testnet": "0.2502 N",
+        "licence lastsave-mira.testnet": {
+          "token_id": "1",
+          "owner_id": "lastsave-mira.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794601740371,
+          "post_death": false
+        },
+        "spent lastsave-kofi.testnet": "0.2502 N",
+        "licence lastsave-kofi.testnet": {
+          "token_id": "2",
+          "owner_id": "lastsave-kofi.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794601781121,
+          "post_death": false
+        },
+        "spent lastsave-yuna.testnet": "0.2502 N",
+        "licence lastsave-yuna.testnet": {
+          "token_id": "3",
+          "owner_id": "lastsave-yuna.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794601812369,
+          "post_death": false
+        },
+        "spent lastsave-dario.testnet": "0.2502 N",
+        "licence lastsave-dario.testnet": {
+          "token_id": "4",
+          "owner_id": "lastsave-dario.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794601835828,
+          "post_death": false
+        },
+        "studio balance delta": "0.5924 N (expected 0.6000 N minus mint storage)",
+        "totals after": {
+          "supply": 4,
+          "live_supply": 4,
+          "pot_locked": "400000000000000000000000",
+          "pool": "0",
+          "refunded": "0",
+          "pledged": "0",
+          "paid_out": "0"
+        }
+      },
+      "assertions": [
+        {
+          "name": "lastsave-mira.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 1"
+        },
+        {
+          "name": "lastsave-mira.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-kofi.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-kofi.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 2"
+        },
+        {
+          "name": "lastsave-kofi.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-yuna.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-yuna.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 3"
+        },
+        {
+          "name": "lastsave-yuna.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-dario.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-dario.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 4"
+        },
+        {
+          "name": "lastsave-dario.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "supply rose by the number bought",
+          "pass": true,
+          "detail": "0 -> 4"
+        },
+        {
+          "name": "locked pot rose by 40% of each price",
+          "pass": true,
+          "detail": "0.4000 N"
+        },
+        {
+          "name": "studio received the rest (60% minus mint storage)",
+          "pass": true,
+          "detail": "0.5924 N vs 0.6000 N"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:30:57.101Z"
+    },
+    {
+      "name": "play",
+      "title": "bots play, snapshot and attest",
+      "started_at": "2026-11-13T20:30:57.101Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "joined": [
+          {
+            "account": "lastsave-mira.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-kofi.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-yuna.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-dario.testnet",
+            "joined": true,
+            "denied": null
+          }
+        ],
+        "matches finished per bot": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "xp before": {
+          "lastsave-mira.testnet": 0,
+          "lastsave-kofi.testnet": 0,
+          "lastsave-yuna.testnet": 0,
+          "lastsave-dario.testnet": 0
+        },
+        "xp after": {
+          "lastsave-mira.testnet": 710,
+          "lastsave-kofi.testnet": 1370,
+          "lastsave-yuna.testnet": 715,
+          "lastsave-dario.testnet": 495
+        },
+        "snapshot": {
+          "seq": 2,
+          "hash": "2df63653f55847021d792e0c5e10009d58411c7d56107154a76f7351bf11eaf6",
+          "at_ms": 1794602054228,
+          "players": {
+            "lastsave-dario.testnet": {
+              "kos": 5,
+              "level": 3,
+              "matches": 2,
+              "shards": 28,
+              "skin": "emberwing",
+              "xp": 495
+            },
+            "lastsave-kofi.testnet": {
+              "kos": 7,
+              "level": 4,
+              "matches": 2,
+              "shards": 101,
+              "skin": "emberwing",
+              "xp": 1370
+            },
+            "lastsave-mira.testnet": {
+              "kos": 2,
+              "level": 3,
+              "matches": 2,
+              "shards": 54,
+              "skin": "emberwing",
+              "xp": 710
+            },
+            "lastsave-yuna.testnet": {
+              "kos": 7,
+              "level": 3,
+              "matches": 2,
+              "shards": 43,
+              "skin": "emberwing",
+              "xp": 715
+            }
+          }
+        }
+      },
+      "assertions": [
+        {
+          "name": "all 4 players signed in (NEP-413 login accepted)",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "/health shows 4 players online",
+          "pass": true,
+          "detail": "players_online 4"
+        },
+        {
+          "name": "every bot finished 2 matches",
+          "pass": true,
+          "detail": "2, 2, 2, 2"
+        },
+        {
+          "name": "lastsave-mira.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 710"
+        },
+        {
+          "name": "lastsave-kofi.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 1370"
+        },
+        {
+          "name": "lastsave-yuna.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 715"
+        },
+        {
+          "name": "lastsave-dario.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 495"
+        },
+        {
+          "name": "on-chain snapshot seq increased",
+          "pass": true,
+          "detail": "none -> 2"
+        },
+        {
+          "name": "snapshot hash matches its blob",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "snapshot holds all 4 accounts",
+          "pass": true,
+          "detail": "lastsave-dario.testnet, lastsave-kofi.testnet, lastsave-mira.testnet, lastsave-yuna.testnet"
+        },
+        {
+          "name": "/attest returns signed sessions",
+          "pass": true,
+          "detail": "4 sessions"
+        },
+        {
+          "name": "/attest sessions cover all 4 players",
+          "pass": true,
+          "detail": "lastsave-mira.testnet, lastsave-dario.testnet, lastsave-kofi.testnet, lastsave-yuna.testnet"
+        },
+        {
+          "name": "/attest echoes the nonce and the committed build",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:34:17.648Z"
+    },
+    {
+      "name": "probe-alive",
+      "title": "probe sees the live server",
+      "started_at": "2026-11-13T20:34:17.650Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "probe_official #1",
+          "hash": "3bU8T9TviMEfUZi3wZNPTZ4p2YEsVvPgKeXKjr5BmVXo",
+          "url": "https://testnet.nearblocks.io/txns/3bU8T9TviMEfUZi3wZNPTZ4p2YEsVvPgKeXKjr5BmVXo",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "attempts": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "3bU8T9TviMEfUZi3wZNPTZ4p2YEsVvPgKeXKjr5BmVXo",
+            "detail": "failures 0, status Alive"
+          }
+        ],
+        "activity": [
+          {
+            "at_ms": 1794602083292,
+            "kind": "probe",
+            "outcome": "alive",
+            "detail": "4 verified sessions"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "a conclusive probe landed",
+          "pass": true,
+          "detail": "1 attempt(s), 0 inconclusive"
+        },
+        {
+          "name": "consecutive_failures is 0",
+          "pass": true,
+          "detail": "0"
+        },
+        {
+          "name": "last_alive_ms updated",
+          "pass": true,
+          "detail": "none -> 1794602083292"
+        },
+        {
+          "name": "status still Alive",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:34:48.218Z"
+    },
+    {
+      "name": "report",
+      "title": "one report stays below quorum",
+      "started_at": "2026-11-13T20:34:48.219Z",
+      "status": "failed",
+      "txs": [
+        {
+          "label": "report_down lastsave-mira.testnet",
+          "hash": "ChRr5eZs4tvijrzF34Vdzcxu6RVakdDryT2cVMqSatSG",
+          "url": "https://testnet.nearblocks.io/txns/ChRr5eZs4tvijrzF34Vdzcxu6RVakdDryT2cVMqSatSG",
+          "failure": null
+        },
+        {
+          "label": "report_down again lastsave-mira.testnet",
+          "hash": "CcsLvfo9cxFfoMBKauz6aMw9uKC1RU3voPZ9RNivA4T4",
+          "url": "https://testnet.nearblocks.io/txns/CcsLvfo9cxFfoMBKauz6aMw9uKC1RU3voPZ9RNivA4T4",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was executed.\"}}}}"
+        }
+      ],
+      "readback": {
+        "reports": {
+          "in_window": 1,
+          "needed": 2
+        }
+      },
+      "assertions": [
+        {
+          "name": "report_down accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "one report is below quorum",
+          "pass": true,
+          "detail": "1 of 2"
+        },
+        {
+          "name": "game is still Alive",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "report counted",
+          "pass": true,
+          "detail": "0 -> 1"
+        },
+        {
+          "name": "same token reporting again in the window is refused",
+          "pass": false,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"WebAssembly trap: An `unreachable` opcode was e"
+        },
+        {
+          "name": "refused report did not change the count",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-13T20:35:05.295Z"
+    }
+  ],
+  "unenforced": [
+    "spend cap (3 N) is only reported above, not blocked by code"
+  ],
+  "balances_start": {
+    "lastsave-mira.testnet": "0.7354 N",
+    "lastsave-kofi.testnet": "0.7500 N",
+    "lastsave-yuna.testnet": "0.7500 N",
+    "lastsave-dario.testnet": "0.7500 N",
+    "lastsave-fanhost.testnet": "0.6000 N"
+  },
+  "balances_end": {
+    "lastsave-mira.testnet": "0.4847 N",
+    "lastsave-kofi.testnet": "0.4971 N",
+    "lastsave-yuna.testnet": "0.4997 N",
+    "lastsave-dario.testnet": "0.4997 N",
+    "lastsave-fanhost.testnet": "0.6000 N"
+  },
+  "net_cost_players_and_fanhost": "1.0040 N",
+  "finished_at": "2026-11-13T20:35:21.193Z",
+  "totals": {
+    "assertions": 47,
+    "passed": 46,
+    "failed": 1,
+    "phases_passed": 4,
+    "phases_failed": 1
+  }
+}
