@@ -1,5 +1,6 @@
 // Wallet context: wallet-selector (Meteor, MyNearWallet), account state, contract calls with tx links.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { devCall, loadDev, saveDev, type DevSession } from "./devsigner";
 import { CONTRACT, txUrl } from "./near";
 import { useToast } from "./toast";
 
@@ -14,6 +15,8 @@ interface WalletState {
   signOut: () => Promise<void>;
   call: (method: string, args: Record<string, unknown>, o: CallOpts) => Promise<string | null>;
   pending: string | null;
+  devSignIn: (s: DevSession) => void;
+  isDev: boolean;
 }
 
 const Ctx = createContext<WalletState | null>(null);
@@ -34,7 +37,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const toast = useToast();
   const ref = useRef<Awaited<ReturnType<typeof load>> | null>(null);
   const [ready, setReady] = useState(false);
-  const [accountId, setAccountId] = useState<string | null>(null);
+  const [walletAccount, setAccountId] = useState<string | null>(null);
+  const [dev, setDev] = useState<DevSession | null>(() => loadDev());
+  const accountId = dev?.accountId ?? walletAccount;
   const [pending, setPending] = useState<string | null>(null);
 
   useEffect(() => {
@@ -59,13 +64,29 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [toast]);
 
   const signIn = useCallback(() => ref.current?.modal.show(), []);
+  const devSignIn = useCallback((sess: DevSession) => { saveDev(sess); setDev(sess); }, []);
   const signOut = useCallback(async () => {
+    if (dev) { saveDev(null); setDev(null); return; }
     const w = ref.current;
     if (!w) return;
     try { await (await w.selector.wallet()).signOut(); } catch { /* already signed out */ }
-  }, []);
+  }, [dev]);
 
   const call = useCallback(async (method: string, args: Record<string, unknown>, o: CallOpts) => {
+    if (dev) {
+      setPending(method);
+      try {
+        const r = await devCall(dev, method, args, o.gasTgas ?? 100, o.deposit ?? "0");
+        if (r.failure) { toast.push({ kind: "error", title: `${o.label} failed`, body: r.failure, href: txUrl(r.hash) }); return null; }
+        toast.push({ kind: "ok", title: o.label, body: "Confirmed on NEAR testnet.", href: txUrl(r.hash) });
+        return r.hash;
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (/Exceeded|timeout|TIMEOUT|PENDING/.test(msg)) { toast.push({ kind: "info", title: `${o.label}: submitted`, body: "Still running in an OutLayer enclave. The dashboard updates when it lands." }); return "pending"; }
+        toast.push({ kind: "error", title: `${o.label} failed`, body: msg.match(/Smart contract panicked: ([^"\\]+)/)?.[1] ?? msg.slice(0, 160) });
+        return null;
+      } finally { setPending(null); }
+    }
     const w = ref.current;
     if (!w || !accountId) { ref.current?.modal.show(); return null; }
     setPending(method);
@@ -89,9 +110,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       toast.push({ kind: "error", title: `${o.label} failed`, body: smash ?? (/reject|cancel|closed/i.test(msg) ? "You cancelled in the wallet." : msg.slice(0, 160)) });
       return null;
     } finally { setPending(null); }
-  }, [accountId, toast]);
+  }, [accountId, toast, dev]);
 
-  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending }), [ready, accountId, signIn, signOut, call, pending]);
+  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending, devSignIn, isDev: !!dev }), [ready, accountId, signIn, signOut, call, pending, devSignIn, dev]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

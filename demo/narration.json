@@ -1,0 +1,17 @@
+{
+  "voice": "Evan - Calm, Grounded & Reflective (ElevenLabs premade, TWutjvRaJqAX89preB4e)",
+  "model": "eleven_multilingual_v2",
+  "lines": [
+    { "id": "01-open", "beat": "0:00 cold open", "text": "When a publisher turns off its servers, the game you paid for goes with it." },
+    { "id": "02-title", "beat": "0:12 title", "text": "Last Save is a game licence that outlives its publisher." },
+    { "id": "03-why", "beat": "0:22 why a studio opts in", "text": "Players are demanding games that can't be switched off. Last Save lets a studio prove it, and earn on every resale." },
+    { "id": "04-buy", "beat": "0:30 buy", "text": "Each licence is an NFT on NEAR. Forty percent of every sale is locked, by contract, for the day the studio leaves." },
+    { "id": "05-promise", "beat": "0:42 the promise is code", "text": "The server key sits in an enclave. Only this contract, running this exact program, can release it. Nobody can take it back. Not the studio. Not us." },
+    { "id": "06-kill", "beat": "1:10 the kill", "text": "Then the studio goes dark. No announcement. And its own word can't keep the game alive. Only players who are actually being served can." },
+    { "id": "07-release", "beat": "1:22 release", "text": "Anyone can ask the enclave to check. Three probes fail. The contract declares the studio gone, and the enclave releases the server." },
+    { "id": "08-choose", "beat": "1:40 choose", "text": "Every holder decides: take their share back, or keep the game alive. New players fund it too." },
+    { "id": "09-host", "beat": "1:55 a fan hosts", "text": "A fan runs one command. The released build checks out against the hash the studio committed to on day one." },
+    { "id": "10-back", "beat": "2:10 back in", "text": "Same players. Same progress. The host is paid per real player session, signed by the players themselves." },
+    { "id": "11-close", "beat": "2:25 close", "text": "Last Save. Built on NEAR." }
+  ]
+}
