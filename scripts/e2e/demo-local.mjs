@@ -96,9 +96,10 @@ export async function startOfficial({ scratch, port, vars, signer, clientDist })
   const wrangler = join(root, "game", "server", "node_modules", "wrangler", "bin", "wrangler.js");
   const args = [wrangler, "dev", "--port", String(port), "--ip", "127.0.0.1", ...Object.entries(vars).flatMap(([k, v]) => ["--var", `${k}:${v}`])];
   let tail = "";
-  const proc = spawn(process.execPath, args, { cwd: dir, env: { ...process.env, WRANGLER_SEND_METRICS: "false" }, stdio: ["ignore", "pipe", "pipe"] });
+  const proc = spawn(process.execPath, args, { cwd: dir, env: { ...process.env, WRANGLER_SEND_METRICS: "false" }, stdio: ["ignore", "pipe", "pipe"], detached: true });
   for (const s of [proc.stdout, proc.stderr]) s.on("data", (d) => { tail = (tail + d).slice(-600); });
-  const stop = () => { try { proc.kill("SIGTERM"); } catch { /* gone */ } };
+  // wrangler spawns its own children (cli, workerd): kill the whole process group so the port really goes quiet
+  const stop = () => { try { process.kill(-proc.pid, "SIGTERM"); } catch { /* gone */ } };
   try { await waitHealthy(`http://127.0.0.1:${port}`, vars.HOST_ID, 120_000); } catch (e) { stop(); throw new Error(`${e.message}; wrangler said: ${tail.replace(/\s+/g, " ")}`); }
   log(`  local official server healthy on port ${port}`);
   return { proc, stop };
