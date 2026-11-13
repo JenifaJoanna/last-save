@@ -31,6 +31,57 @@
         "https://last-save.pages.dev/mirror/ember-rift-ad3eb4f5560a8ae0.bin"
       ],
       "note": "commit+push artifacts/ and redeploy web before attest"
+    },
+    {
+      "step": "deploy",
+      "at": "2026-11-13T20:56:53.120Z",
+      "hash": "33hTa6khdCc94xTwPPFAC1SC7PpSwEWTkeUFN25WLxUr",
+      "url": "https://testnet.nearblocks.io/txns/33hTa6khdCc94xTwPPFAC1SC7PpSwEWTkeUFN25WLxUr",
+      "code_sha256": "c884be5a4e263cdd1d85ae63722d457961e751d6cbbe8ae190953d7c254b16d2",
+      "wasm_bytes": 284224,
+      "liveness": {
+        "probe_interval_ms": 20000,
+        "fail_threshold": 3,
+        "receipt_window_ms": 180000,
+        "report_window_ms": 120000,
+        "quorum_bps": 5000
+      }
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T20:57:01.427Z",
+      "hash": "4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+      "url": "https://testnet.nearblocks.io/txns/4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+      "failure": null,
+      "storage_cost": "6790000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-13T20:58:13.525Z",
+      "hash": "B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu",
+      "url": "https://testnet.nearblocks.io/txns/B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1115352400000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 524304981, time_ms: 1153 }, Cost: 1115352400000000000000 yoctoNEAR, Refund: 28884647600000000000000 yoctoNEAR, Cached WASM from 2026-11-13T20:23:18.422967+00:00"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-13T20:58:58.745Z",
+      "url": "https://emberrift.pages.dev",
+      "worker": "emberrift-arena",
+      "build_hash": "b723c6d4854b1b8688a0a4a1191dda26d0492d6cf28a26cd1c88e7ac222bc967"
+    },
+    {
+      "step": "lock",
+      "at": "2026-11-13T20:59:18.657Z",
+      "hash": "EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om",
+      "url": "https://testnet.nearblocks.io/txns/EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om",
+      "keys_deleted": 1,
+      "keys_left": 0
     }
   ]
 }
