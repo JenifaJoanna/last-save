@@ -15,7 +15,7 @@ export interface Info {
   releaseState: "Sealed" | "InFlight" | "Released"; releasedKey: string | null; releasedAt: number | null; releaseError: string | null;
   supply: number; liveSupply: number; potLocked: string; pool: string; refunded: string; pledged: string; paidOut: string;
   failures: number; failThreshold: number; lastAlive: number | null; lastProbe: number | null; probeInFlight: boolean; probeError: string | null;
-  probeIntervalMs: number; receiptWindowMs: number; reportWindowMs: number; quorumBps: number; reportsInWindow: number;
+  probeIntervalMs: number; receiptWindowMs: number; reportWindowMs: number; quorumBps: number; reportsInWindow: number; reportsNeeded: number | null;
   epochMs: number; payPerSession: string; epochCap: string; currentEpoch: number | null;
   officialEndpoint: string; artifactSha: string; buildHash: string; releaseSha: string; probeSha: string; keyCommitment: string;
   snapshot: { seq: number; hash: string; at: number } | null;
@@ -25,7 +25,7 @@ export function normalizeInfo(raw: unknown): Info {
   const r = o(raw), c = o(r.config), live = o(c.liveness), pool = o(c.pool), t = o(r.totals), p = o(r.probe), rel = o(r.release);
   const snap = o(r.snapshot);
   const releasedKey = s(r.released_key ?? rel.released_key) || null;
-  const state = s(rel.state ?? r.release_state, releasedKey ? "Released" : "Sealed");
+  const state = s(rel.state ?? r.release_state, releasedKey || b(rel.released) ? "Released" : b(rel.in_flight) ? "InFlight" : "Sealed");
   return {
     title: s(c.title, "Ember Rift"), studio: s(c.studio), price: s(c.price, "0"), fundBps: n(c.fund_bps), royaltyBps: n(c.royalty_bps),
     status: s(r.status) === "Dead" ? "Dead" : "Alive", cause: s(r.cause) || null, diedAt: n(r.died_at_ms) || null,
@@ -37,7 +37,7 @@ export function normalizeInfo(raw: unknown): Info {
     failures: n(p.consecutive_failures), failThreshold: n(live.fail_threshold, 3), lastAlive: n(p.last_alive_ms) || null, lastProbe: n(p.last_probe_ms) || null,
     probeInFlight: b(p.in_flight), probeError: s(p.last_error) || null,
     probeIntervalMs: n(live.probe_interval_ms), receiptWindowMs: n(live.receipt_window_ms), reportWindowMs: n(live.report_window_ms), quorumBps: n(live.quorum_bps, 5000),
-    reportsInWindow: n(r.reports_in_window), epochMs: n(pool.epoch_ms), payPerSession: s(pool.pay_per_session, "0"), epochCap: s(pool.epoch_cap, "0"),
+    reportsInWindow: n(r.reports_in_window), reportsNeeded: r.reports_needed === undefined || r.reports_needed === null ? null : n(r.reports_needed), epochMs: n(pool.epoch_ms), payPerSession: s(pool.pay_per_session, "0"), epochCap: s(pool.epoch_cap, "0"),
     currentEpoch: r.current_epoch === null || r.current_epoch === undefined ? null : n(r.current_epoch),
     officialEndpoint: s(c.official_endpoint), artifactSha: s(o(c.artifact).sha256), buildHash: s(o(c.artifact).build_hash),
     releaseSha: s(o(c.release).sha256), probeSha: s(o(c.probe).sha256), keyCommitment: s(c.key_commitment),

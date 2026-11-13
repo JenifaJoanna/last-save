@@ -23,7 +23,7 @@ export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
             className={`h-2.5 flex-1 rounded-full ${i < d.failures ? "bg-dead shadow-[0_0_12px] shadow-dead" : "bg-white/10"}`} />
         ))}
       </div>
-      <p className="mt-3 text-sm text-muted"><b className={d.failures ? "text-dead" : "text-text"}>{d.failures} of {d.failThreshold}</b> failed probes in a row · last proof of life {ago(d.lastAlive)}</p>
+      <p className="mt-3 text-sm text-muted"><b className={d.failures ? "text-dead" : "text-text"}>{d.failures} of {d.failThreshold}</b> failed probes in a row · {d.lastProbe ? `last proof of life ${ago(d.lastAlive)}` : "no probe has run yet"}</p>
       <p className="mt-1 text-xs text-faint">Probes count only when at least {duration(d.probeIntervalMs || 0)} apart. An OutLayer hiccup never counts.</p>
       {d.probeInFlight && <Note><span className="inline-flex items-center gap-2"><Loader2 className="size-4 animate-spin" />An enclave is checking the official server for signed player sessions…</span></Note>}
       {d.probeError && !d.probeInFlight && <p className="mt-2 text-xs text-faint">Last probe note: {d.probeError}</p>}
@@ -36,14 +36,14 @@ export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
 
 export function HolderVote({ d, mine, refresh }: { d: Info; mine: LicenceView | null; refresh: () => void }) {
   const { call, pending } = useWallet();
-  const needed = Math.max(1, Math.ceil((d.liveSupply * d.quorumBps) / 10000));
-  const pct = Math.min(100, (d.reportsInWindow / needed) * 100);
+  const needed = d.reportsNeeded ?? Math.max(1, Math.ceil((d.liveSupply * d.quorumBps) / 10000));
+  const pct = needed > 0 ? Math.min(100, (d.reportsInWindow / needed) * 100) : 0;
   const dead = d.status === "Dead";
   const report = async () => { if (mine && (await call("report_down", { token_id: mine.tokenId }, { gasTgas: 50, label: "Report recorded" }))) refresh(); };
   return (
     <Card eyebrow="Players decide" title="Report the server down">
       <div className="h-2.5 overflow-hidden rounded-full bg-white/10"><motion.div className="h-full bg-gradient-to-r from-ember to-dead" animate={{ width: `${pct}%` }} transition={{ duration: 0.6 }} /></div>
-      <p className="mt-3 text-sm text-muted"><b className="text-text">{d.reportsInWindow} of {needed}</b> holder reports needed within {duration(d.reportWindowMs || 0)}</p>
+      <p className="mt-3 text-sm text-muted">{d.liveSupply === 0 ? "No licences sold yet, so nobody can vote." : <><b className="text-text">{d.reportsInWindow} of {needed}</b> holder reports needed within {duration(d.reportWindowMs || 0)}</>}</p>
       <p className="mt-1 text-xs text-faint">{d.quorumBps / 100}% of the {d.liveSupply} licences sold before shutdown. One report per licence per window.</p>
       <Button className="mt-5 w-full" variant="ghost" onClick={report} disabled={dead || !mine || mine.postDeath} loading={pending === "report_down"}>
         <Megaphone className="size-4" />{dead ? "Vote closed" : mine ? "Report it down" : "Holders only"}

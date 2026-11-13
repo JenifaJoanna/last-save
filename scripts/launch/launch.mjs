@@ -54,16 +54,16 @@ const steps = {
   /** Hash-named copies of the artifact and both wasm modules: GitHub raw (main) + the platform's Pages site. */
   mirrors() {
     mkdirSync("artifacts", { recursive: true });
-    mkdirSync("web/public/mirror", { recursive: true });
+    // the platform mirror is web/dist/mirror, copied from artifacts/ at web build time
     const a = state.artifact;
     copyFileSync("server-bundle/dist/artifact.bin", `artifacts/${a.file}`);
-    copyFileSync("server-bundle/dist/artifact.bin", `web/public/mirror/${a.file}`);
+
     for (const kind of ["release", "probe"]) {
       const src = process.env[`${kind.toUpperCase()}_WASM`] ?? `outlayer/dist/lastsave-${kind}.wasm`;
       const h = sha(readFileSync(src));
       const name = `lastsave-${kind}-${h.slice(0, 16)}.wasm`;
       copyFileSync(src, `artifacts/${name}`);
-      copyFileSync(src, `web/public/mirror/${name}`);
+
       state[kind] = { sha256: h, urls: [`${RAW}/artifacts/${name}`, `${PLATFORM_URL}/mirror/${name}`] };
     }
     state.artifact.urls = [`${RAW}/artifacts/${a.file}`, `${PLATFORM_URL}/mirror/${a.file}`];

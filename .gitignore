@@ -19,3 +19,4 @@ web/dist/
 game/server/dist/
 server-bundle/dist/
 .host/
+web/public/mirror/

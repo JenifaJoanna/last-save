@@ -71,7 +71,7 @@ export function AfterlifeView() {
   }
   const sub = d.status === "Dead"
     ? `Declared ${ago(d.diedAt)} because ${causeText(d.cause)}. ${d.releasedKey ? `The server was released ${ago(d.releasedAt)}.` : "Anyone can trigger the release now."}`
-    : `Last proof of life ${ago(d.lastAlive)}. ${d.supply} licences, ${near(d.potLocked)} Ⓝ locked for holders by contract.`;
+    : `${d.lastProbe ? `Last proof of life ${ago(d.lastAlive)}.` : "No probe has run yet."} ${d.supply} licences sold, ${near(d.potLocked)} Ⓝ locked for holders by contract.`;
   return (
     <div className="grid gap-4">
       <Hero status={d.status} sub={sub} />

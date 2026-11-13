@@ -10,5 +10,7 @@ if (!existsSync(client)) {
   process.exit(1);
 }
 cpSync(client, join(root, "dist", "play"), { recursive: true });
+const artifacts = join(root, "..", "artifacts");
+if (existsSync(artifacts)) cpSync(artifacts, join(root, "dist", "mirror"), { recursive: true });
 writeFileSync(join(root, "dist", "_redirects"), "/play/* /play/index.html 200\n/* /index.html 200\n");
 process.stdout.write("copy-play: game client copied to dist/play\n");

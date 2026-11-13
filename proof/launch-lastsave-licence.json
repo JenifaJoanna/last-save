@@ -48,6 +48,42 @@
         "https://last-save.pages.dev/mirror/ember-rift-b723c6d4854b1b86.bin"
       ],
       "note": "commit+push artifacts/ and redeploy web before attest"
+    },
+    {
+      "step": "deploy",
+      "at": "2026-11-13T20:22:30.924Z",
+      "hash": "F5Uin4kcnZHwkTC63af8TMBZ5aJi2i8cWm2jZyg3udCq",
+      "url": "https://testnet.nearblocks.io/txns/F5Uin4kcnZHwkTC63af8TMBZ5aJi2i8cWm2jZyg3udCq",
+      "code_sha256": "aa047a5daecf28df7af27c0756116d3e16e7a76c254e73164223bb36653706a7",
+      "wasm_bytes": 287205,
+      "liveness": {
+        "probe_interval_ms": 20000,
+        "fail_threshold": 3,
+        "receipt_window_ms": 180000,
+        "report_window_ms": 120000,
+        "quorum_bps": 5000
+      }
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T20:23:04.714Z",
+      "hash": "4eVWfTBX57Rb2xsEsCopwBYJyBYhABo8hHHDFJEEqmf1",
+      "url": "https://testnet.nearblocks.io/txns/4eVWfTBX57Rb2xsEsCopwBYJyBYhABo8hHHDFJEEqmf1",
+      "failure": null,
+      "storage_cost": "6790000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-13T20:24:59.645Z",
+      "hash": "5sME4GDCQkJqYydETeYvbgrgNmo24KbzorqtyF73cyvN",
+      "url": "https://testnet.nearblocks.io/txns/5sME4GDCQkJqYydETeYvbgrgNmo24KbzorqtyF73cyvN",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1187752400000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 524308922, time_ms: 1146 }, Cost: 1187752400000000000000 yoctoNEAR, Refund: 28812247600000000000000 yoctoNEAR, Freshly compiled"
+      ]
     }
   ]
 }
