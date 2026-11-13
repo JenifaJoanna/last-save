@@ -29,6 +29,7 @@ for t in $TARGETS; do
     probe) build_wasi outlayer/probe lastsave-probe ;;
     spike) build_contract spike/contract ;;
     licence) build_contract contracts/licence ;;
+    cleaner) build_contract contracts/cleaner ;;
     *) echo "unknown target $t" >&2; exit 2 ;;
   esac
 done

@@ -40,8 +40,9 @@ export default function Store() {
       <div className="mt-4 grid gap-6 lg:grid-cols-[1.25fr_1fr]">
         <div className="card overflow-hidden">
           <div className="relative aspect-video">
-            <iframe src={`${PLAY_URL}?attract=1`} title="Ember Rift gameplay" className="absolute inset-0 size-full" tabIndex={-1} loading="lazy" />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
+            <img src="/art/ember-rift-key.jpg" alt="Ember Rift key art: hover-skiffs racing across a burning obsidian arena" className="absolute inset-0 size-full object-cover" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-transparent" />
+            <a href={`${PLAY_URL}?practice=1`} target="_blank" rel="noopener" className="absolute right-4 top-4 rounded-full border border-line-2 bg-ink/70 px-3 py-1.5 text-xs font-semibold text-text no-underline backdrop-blur hover:bg-ink">Try it offline</a>
             <div className="absolute bottom-5 left-6">
               <h1 className="font-display text-[clamp(32px,4.4vw,52px)] font-bold leading-none tracking-[0.04em]">EMBER RIFT</h1>
               <p className="mt-2 text-sm text-muted">Kiln Interactive · arena · 2–8 players</p>
