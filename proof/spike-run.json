@@ -1,0 +1,218 @@
+{
+  "account": "spike.lastsave-licence.testnet",
+  "steps": [
+    {
+      "step": "create",
+      "at": "2026-11-13T19:17:16.584Z",
+      "hash": "C7LwhPMncg8i2pEMaemE6bZ74XuZKf6DZmsZvE6XL8u6",
+      "url": "https://testnet.nearblocks.io/txns/C7LwhPMncg8i2pEMaemE6bZ74XuZKf6DZmsZvE6XL8u6",
+      "publicKey": "ed25519:AyMkwqxt657nELXhmHSAJXWcbeMRyxzFZPaNiozyzr4e"
+    },
+    {
+      "step": "deploy",
+      "at": "2026-11-13T19:17:20.436Z",
+      "hash": "G8YkZZTjX8j9tPumfMLe8wG2SDm8eZQLmGhtVN5s2yW4",
+      "url": "https://testnet.nearblocks.io/txns/G8YkZZTjX8j9tPumfMLe8wG2SDm8eZQLmGhtVN5s2yW4",
+      "release_url": "https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm",
+      "release_hash": "4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29",
+      "key_commitment": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T19:17:26.198Z",
+      "error": "Exceeded 2 providers to execute request"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T19:17:32.784Z",
+      "error": "Exceeded 2 providers to execute request"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-13T19:18:22.296Z",
+      "hash": "B42cqTp371TNCVYir817uXXBBkprByfwpfgfvrTUvbXd",
+      "url": "https://testnet.nearblocks.io/txns/B42cqTp371TNCVYir817uXXBBkprByfwpfgfvrTUvbXd",
+      "value": true,
+      "failure": null,
+      "logs": [
+        "Secrets stored: accessor=WasmHash { hash: \"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\" }, profile=escrow, owner=spike.lastsave-licence.testnet, deposit=6910000000000000000000 yoctoNEAR"
+      ],
+      "storage_cost": "6910000000000000000000",
+      "access": {
+        "Logic": {
+          "operator": "And",
+          "conditions": [
+            {
+              "Predecessor": {
+                "condition": {
+                  "Whitelist": {
+                    "accounts": [
+                      "spike.lastsave-licence.testnet"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "WasmHash": {
+                "hash": "4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29"
+              }
+            }
+          ]
+        }
+      },
+      "secrets_exist": true,
+      "state": {
+        "status": "Alive",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 0,
+        "attested_sha256": null,
+        "released": false,
+        "last_error": null
+      }
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-13T19:19:05.026Z",
+      "error": "Exceeded 2 providers to execute request"
+    },
+    {
+      "step": "refuse-alive",
+      "at": "2026-11-13T19:20:37.507Z",
+      "error": "{\"info\":{\"cause\":\"PENDING\",\"status\":{\"final_execution_status\":\"INCLUDED_FINAL\",\"receipts_outcome\":[{\"block_hash\":\"FHA3FWutMHXLaimeWkitnjYsEEp6MtJDBgktar5UvZc\",\"id\":\"5KJgLKxmEg9ttQVu1pyrofqV4gypSW5yGKk67gQpaMzU\",\"outcome\":{\"executor_id\":\"spike.lastsave-licence.testnet\",\"gas_burnt\":2312157559899,\"logs\":[],\"metadata\":{\"contracts\":[{\"local\":\"4MEHd4dv1RsLh4qhxkfHxP7cwgcBrRmzWtUqMFVdfpYu\"}],\"gas_profile"
+    },
+    {
+      "step": "fail",
+      "at": "2026-11-13T19:24:13.138Z",
+      "hash": "DQZ8xNxJigvSQG6bqWCS18svboKzvZnLffKooc3xGXHK",
+      "url": "https://testnet.nearblocks.io/txns/DQZ8xNxJigvSQG6bqWCS18svboKzvZnLffKooc3xGXHK",
+      "value": false,
+      "failure": null,
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":40318,\\\"sender_id\\\":\\\"lastsave-mira.testnet\\\",\\\"predecessor_id\\\":\\\"spike.lastsave-licence.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\\\",\\\"hash\\\":\\\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":1000,\\\"max_memory_mb\\\":128,\\\"max_execution_seconds\\\":40},\\\"input_data\\\":\\\"{\\\\\\\"mode\\\\\\\":\\\\\\\"attest\\\\\\\"}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"escrow\\\",\\\"account_id\\\":\\\"spike.lastsave-licence.testnet\\\"},\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"20000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794597728324934819,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[220,49,25,145,19,52,103,242,154,232,104,72,166,198,216,123,58,187,250,6,189,176,141,200,107,16,72,143,180,187,3,206],\"timestamp\":1794597728324934819}]}",
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 19000000000000000000000 yoctoNEAR"
+      ],
+      "state": {
+        "status": "Alive",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 3,
+        "attested_sha256": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305",
+        "released": false,
+        "last_error": "OutLayer run failed or timed out (null output)"
+      }
+    },
+    {
+      "step": "retry",
+      "at": "2026-11-13T19:26:32.387Z",
+      "hash": "4N3KcwFTfTxa83pwHsCjj8HUz1v3emkoCPMhJi3r8sBb",
+      "url": "https://testnet.nearblocks.io/txns/4N3KcwFTfTxa83pwHsCjj8HUz1v3emkoCPMhJi3r8sBb",
+      "value": false,
+      "failure": null,
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":40323,\\\"sender_id\\\":\\\"lastsave-mira.testnet\\\",\\\"predecessor_id\\\":\\\"spike.lastsave-licence.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\\\",\\\"hash\\\":\\\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":128,\\\"max_execution_seconds\\\":40},\\\"input_data\\\":\\\"{\\\\\\\"mode\\\\\\\":\\\\\\\"attest\\\\\\\"}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"escrow\\\",\\\"account_id\\\":\\\"spike.lastsave-licence.testnet\\\"},\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"20000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794597868738676712,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[166,239,145,105,47,57,248,203,239,223,27,30,51,177,131,136,156,92,100,53,200,162,246,243,180,154,78,223,184,182,5,193],\"timestamp\":1794597868738676712}]}",
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 19000000000000000000000 yoctoNEAR"
+      ],
+      "state": {
+        "status": "Alive",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 4,
+        "attested_sha256": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305",
+        "released": false,
+        "last_error": "OutLayer run failed or timed out (null output)"
+      }
+    },
+    {
+      "step": "kill",
+      "at": "2026-11-13T19:26:53.460Z",
+      "hash": "FJGwwDt4Eyp8BnzuPctySmPCDLG9BjyXxWXtGkFgGWUz",
+      "url": "https://testnet.nearblocks.io/txns/FJGwwDt4Eyp8BnzuPctySmPCDLG9BjyXxWXtGkFgGWUz",
+      "value": "",
+      "failure": null,
+      "logs": [],
+      "state": {
+        "status": "Dead",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 4,
+        "attested_sha256": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305",
+        "released": false,
+        "last_error": "OutLayer run failed or timed out (null output)"
+      }
+    },
+    {
+      "step": "release",
+      "at": "2026-11-13T19:29:03.465Z",
+      "hash": "3KE5EnYQVo84MViawVFTxtYRKDTPB5yUzdsjHBEKfip3",
+      "url": "https://testnet.nearblocks.io/txns/3KE5EnYQVo84MViawVFTxtYRKDTPB5yUzdsjHBEKfip3",
+      "value": false,
+      "failure": null,
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":40332,\\\"sender_id\\\":\\\"lastsave-mira.testnet\\\",\\\"predecessor_id\\\":\\\"spike.lastsave-licence.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\\\",\\\"hash\\\":\\\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":128,\\\"max_execution_seconds\\\":40},\\\"input_data\\\":\\\"{\\\\\\\"mode\\\\\\\":\\\\\\\"release\\\\\\\"}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"escrow\\\",\\\"account_id\\\":\\\"spike.lastsave-licence.testnet\\\"},\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"20000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794598017966000815,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[16,24,37,119,67,229,157,50,11,199,191,66,27,158,126,183,71,135,102,170,63,21,23,159,74,229,29,69,97,102,249,85],\"timestamp\":1794598017966000815}]}",
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 19000000000000000000000 yoctoNEAR"
+      ],
+      "released_key_matches_local_K": false,
+      "state": {
+        "status": "Dead",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 5,
+        "attested_sha256": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305",
+        "released": false,
+        "last_error": "OutLayer run failed or timed out (null output)"
+      }
+    },
+    {
+      "step": "release",
+      "at": "2026-11-13T19:31:37.975Z",
+      "hash": "HwhFnACKtBmqttDL8xvcsY8Hy4jaqvJRLDAAiKaLF3uG",
+      "url": "https://testnet.nearblocks.io/txns/HwhFnACKtBmqttDL8xvcsY8Hy4jaqvJRLDAAiKaLF3uG",
+      "value": true,
+      "failure": null,
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":40345,\\\"sender_id\\\":\\\"lastsave-mira.testnet\\\",\\\"predecessor_id\\\":\\\"spike.lastsave-licence.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\\\",\\\"hash\\\":\\\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":128,\\\"max_execution_seconds\\\":40},\\\"input_data\\\":\\\"{\\\\\\\"mode\\\\\\\":\\\\\\\"release\\\\\\\"}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"escrow\\\",\\\"account_id\\\":\\\"spike.lastsave-licence.testnet\\\"},\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"20000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794598278672473862,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[53,33,135,140,124,43,91,218,208,224,140,214,9,209,12,130,108,164,115,164,122,215,84,121,79,215,203,171,212,202,18,155],\"timestamp\":1794598278672473862}]}",
+        "[[yNEAR charged: \"1090800000000000000000\"]]",
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"lastsave-mira.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\",\"hash\":\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\",\"build_target\":\"wasm32-wasip2\"}},\"resources_used\":{\"instructions\":193825,\"time_ms\":908,\"compile_time_ms\":null},\"success\":true,\"error_message\":null,\"payment_charged\":\"1090800000000000000000\",\"payment_refunded\":\"18909200000000000000000\",\"compilation_note\":\"Cached WASM from 2026-11-13T19:18:34.089167+00:00\",\"timestamp\":1794598293308447215}]}",
+        "Execution completed successfully. Output: Json(197 bytes), Resources: { instructions: 193825, time_ms: 908 }, Cost: 1090800000000000000000 yoctoNEAR, Refund: 18909200000000000000000 yoctoNEAR, Cached WASM from 2026-11-13T19:18:34.089167+00:00",
+        "EVENT_JSON:{\"standard\":\"lastsave\",\"version\":\"0.1.0\",\"event\":\"key_released\",\"data\":[{\"key\":\"b890a445b6c4065f546e8b6c224a694c8b763b1ea28aaebd968c9c90f8b5dbb0\"}]}"
+      ],
+      "released_key_matches_local_K": true,
+      "state": {
+        "status": "Dead",
+        "escrowed": true,
+        "in_flight": false,
+        "attempts": 6,
+        "attested_sha256": "2713e759c2a812d7dac8e0345cd55204a8c8afbfcd6c7d83aeb9e599522e0305",
+        "released": true,
+        "last_error": null
+      }
+    },
+    {
+      "step": "stranger-direct",
+      "at": "2026-11-13T19:32:07.899Z",
+      "hash": "8BEx2xv23ioq7BW8vfqKqDDcpKC6uNw9J6AjM1tua1Nw",
+      "url": "https://testnet.nearblocks.io/txns/8BEx2xv23ioq7BW8vfqKqDDcpKC6uNw9J6AjM1tua1Nw",
+      "value": null,
+      "failure": null,
+      "logs": [
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_requested\",\"data\":[{\"request_data\":\"{\\\"request_id\\\":40352,\\\"sender_id\\\":\\\"lastsave-mira.testnet\\\",\\\"predecessor_id\\\":\\\"lastsave-mira.testnet\\\",\\\"code_source\\\":{\\\"WasmUrl\\\":{\\\"url\\\":\\\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\\\",\\\"hash\\\":\\\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\\\",\\\"build_target\\\":\\\"wasm32-wasip2\\\"}},\\\"resource_limits\\\":{\\\"max_instructions\\\":2000000000,\\\"max_memory_mb\\\":128,\\\"max_execution_seconds\\\":40},\\\"input_data\\\":\\\"{\\\\\\\"mode\\\\\\\":\\\\\\\"release\\\\\\\"}\\\",\\\"input_data_in_state\\\":false,\\\"secrets_ref\\\":{\\\"profile\\\":\\\"escrow\\\",\\\"account_id\\\":\\\"spike.lastsave-licence.testnet\\\"},\\\"response_format\\\":\\\"Json\\\",\\\"payment\\\":\\\"20000000000000000000000\\\",\\\"attached_usd\\\":\\\"0\\\",\\\"timestamp\\\":1794598320209127316,\\\"compile_only\\\":false,\\\"force_rebuild\\\":false,\\\"store_on_fastfs\\\":false,\\\"use_bound_identity\\\":false,\\\"project_uuid\\\":null,\\\"project_id\\\":null}\",\"data_id\":[71,3,39,70,85,76,10,116,42,164,241,191,124,57,221,199,94,127,250,68,125,106,72,212,90,95,9,42,24,78,125,138],\"timestamp\":1794598320209127316}]}",
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "EVENT_JSON:{\"standard\":\"near-outlayer\",\"version\":\"1.0.0\",\"event\":\"execution_completed\",\"data\":[{\"sender_id\":\"lastsave-mira.testnet\",\"code_source\":{\"WasmUrl\":{\"url\":\"https://raw.githubusercontent.com/JenifaJoanna/last-save/a94b1a86fd4504e25f448acd471648bbf0ff2516/outlayer/dist/lastsave-release.wasm\",\"hash\":\"4179cc41aef3d2233689c7288bfb3e50011ea93943d2bca8c0b39dae4e45bc29\",\"build_target\":\"wasm32-wasip2\"}},\"resources_used\":{\"instructions\":0,\"time_ms\":0,\"compile_time_ms\":null},\"success\":false,\"error_message\":\"Access denied by access condition — signer lastsave-mira.testnet, called from lastsave-mira.testnet. Check the access conditions configured by the secret owner.\",\"payment_charged\":\"1000000000000000000000\",\"payment_refunded\":\"19000000000000000000000\",\"compilation_note\":null,\"timestamp\":1794598324417520099}]}",
+        "Execution failed: \"Access denied by access condition — signer lastsave-mira.testnet, called from lastsave-mira.testnet. Check the access conditions configured by the secret owner.\". Resources: { instructions: 0, time_ms: 0 }. Refunded 19000000000000000000000 yoctoNEAR"
+      ]
+    },
+    {
+      "step": "cleanup",
+      "at": "2026-11-13T19:32:54.854Z",
+      "hash": "6mNhQditAEgrMLofPzDWZyNGHxF2EZH9D41ph6Dimyrh",
+      "url": "https://testnet.nearblocks.io/txns/6mNhQditAEgrMLofPzDWZyNGHxF2EZH9D41ph6Dimyrh",
+      "note": "spike account deleted, balance returned",
+      "explorer": "https://testnet.nearblocks.io/address/spike.lastsave-licence.testnet"
+    }
+  ]
+}

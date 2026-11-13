@@ -133,6 +133,22 @@ impl Spike {
         self.run("attest", "on_attest")
     }
 
+    /// SPIKE-ONLY: runs release mode while alive to prove release.wasm itself
+    /// refuses (defence in depth). The real contract has no such door.
+    #[payable]
+    pub fn release_unchecked(&mut self) -> Promise {
+        require!(self.escrowed, "nothing escrowed");
+        self.run("release", "on_release")
+    }
+
+    /// SPIKE-ONLY: starves the run of instructions so OutLayer reports a
+    /// failure; proves the contract is left retryable (in_flight cleared).
+    #[payable]
+    pub fn attest_starved(&mut self) -> Promise {
+        require!(self.escrowed, "nothing escrowed");
+        self.run_with("attest", "on_attest", 1_000)
+    }
+
     #[private]
     pub fn on_release(&mut self) -> bool {
         self.in_flight = false;
@@ -198,13 +214,17 @@ impl Spike {
 
 impl Spike {
     fn run(&mut self, mode: &str, callback: &str) -> Promise {
+        self.run_with(mode, callback, 2_000_000_000)
+    }
+
+    fn run_with(&mut self, mode: &str, callback: &str, max_instructions: u64) -> Promise {
         require!(!self.in_flight, "an execution is already in flight");
         require!(env::attached_deposit() >= NearToken::from_millinear(10), "attach at least 0.01 NEAR for OutLayer");
         self.in_flight = true;
         self.attempts += 1;
         let args = json!({
             "source": { "WasmUrl": { "url": self.release_url, "hash": self.release_hash, "build_target": "wasm32-wasip2" } },
-            "resource_limits": { "max_instructions": 2_000_000_000u64, "max_memory_mb": 128, "max_execution_seconds": 40 },
+            "resource_limits": { "max_instructions": max_instructions, "max_memory_mb": 128, "max_execution_seconds": 40 },
             "input_data": json!({ "mode": mode }).to_string(),
             "secrets_ref": { "profile": PROFILE, "account_id": env::current_account_id() },
             "response_format": "Json",
@@ -234,7 +254,12 @@ impl Spike {
     fn read_output(&self) -> Result<Value, String> {
         match env::promise_result(0) {
             PromiseResult::Successful(bytes) => {
-                serde_json::from_slice::<Value>(&bytes).map_err(|e| format!("output not json: {e}"))
+                match serde_json::from_slice::<Value>(&bytes) {
+                    // OutLayer resolves a failed or timed-out run with `null`
+                    Ok(Value::Null) => Err("OutLayer run failed or timed out (null output)".into()),
+                    Ok(v) => Ok(v),
+                    Err(e) => Err(format!("output not json: {e}")),
+                }
             }
             PromiseResult::Failed => Err("OutLayer execution failed or timed out".into()),
         }
