@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Vendored unchanged from github.com/out-layer/outlayer scripts/build_github_wasm.sh (MIT OR Apache-2.0)
 # at commit 2d50bfab14389857e6e50e84e76d5652b944e1cc. Reproducible OutLayer wasm build in the pinned compiler image.
+# One change: OUT_DIR can be set with OUTLAYER_OUT_DIR (Docker Desktop on macOS does not share /var/folders).
 #
 # Build a project reproducibly, and print the sha256 of the wasm.
 #
@@ -177,7 +178,7 @@ sha256sum /workspace/output/output.wasm | cut -d' ' -f1
 echo "toolchain $(rustc -V 2>/dev/null || echo unknown)" >&2
 INNER
 
-OUT_DIR=$(mktemp -d)
+OUT_DIR=${OUTLAYER_OUT_DIR:-$(mktemp -d)}  # Last Save change: overridable, Docker Desktop cannot mount /var/folders
 trap '[ "$KEEP" = 1 ] || rm -rf "$OUT_DIR"' EXIT
 
 run_build() {

@@ -1,4 +1,4 @@
 {
-  "pages": ["https://last-save.pages.dev/", "https://last-save.pages.dev/play/"],
-  "workers": []
+  "pages": ["https://last-save.pages.dev/", "https://last-save.pages.dev/play/", "https://emberrift.pages.dev/", "https://emberrift.pages.dev/health"],
+  "workers": ["emberrift-arena"]
 }
