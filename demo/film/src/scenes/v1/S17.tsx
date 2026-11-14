@@ -10,7 +10,7 @@ import { C, inOut } from "./g6/kit";
 import { Lockup } from "./g6/Lockup";
 import { TEXTURE } from "./g6/facts";
 import { liftShow, texture } from "./g6/Lift";
-import { s16Cam, SUM_AT, SummaryLift, VerifyContent } from "./S16";
+import { s16Cam, sumAt, SummaryLift, VerifyContent } from "./S16";
 
 const SUM_OUT = 30; // the lifted verify summary (from S16) holds through the first second of the pull-back
 
@@ -34,7 +34,7 @@ export function S17() {
   const backdrop = interpolate(f, [6, 34], [1, 0], C);
   const drift = interpolate(f, [SETTLE - 40, 263], [1, 1.025], C);
   const space = 1 - backdrop;
-  const sum = liftShow(227 + f, SUM_AT, 227 + SUM_OUT);
+  const sum = liftShow(227 + f, sumAt(), 227 + SUM_OUT);
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>

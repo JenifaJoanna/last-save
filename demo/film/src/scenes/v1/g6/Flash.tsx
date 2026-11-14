@@ -2,11 +2,11 @@
 // the one line that matters, Basescan's "Status: Success", lifts as film type at facts LIFT.status and holds ≥ 1.5 s;
 // the other fields are texture. Closes with a quick CRT collapse that ends before S15's last frame. Plays the `x-base`
 // take as the window body when it exists (the lifted line stays, values from facts.ts).
-import { Easing, interpolate } from "remotion";
+import { Easing, Freeze, interpolate } from "remotion";
 import { Label, Mono } from "../../../ds/type";
 import { stepped, T } from "../../../ds/tokens";
 import { Slot, slotSource } from "../../../film/Slot";
-import { BASESCAN_STATUS, LIFT, PAYOUT, TEXTURE } from "./facts";
+import { BASESCAN_STATUS, LIFT, PAYOUT, TAKES, TEXTURE, XBASE_STATUS_AT } from "./facts";
 import { C, printP, stepIn } from "./kit";
 import { LiftCard, liftShow } from "./Lift";
 
@@ -29,6 +29,12 @@ export function BaseFlash({ f, at }: { f: number; at: number }) {
   const bloom = interpolate(t, [FLASH.collapse + 3, FLASH.collapse + 6, FLASH.end], [0, 1, 0], C);
   const bar = stepped(interpolate(t, [2, 10], [0, 1], C), 8);
   const key = liftShow(t, FLASH.keyAt, 999);
+  // with the take, "Status: Success" rises from the receipt's own "status": "0x1" line (take px → window px)
+  const c = TAKES.xbase.crop;
+  const src = { x: LEFT + (XBASE_STATUS_AT.x - c.x * 1920) * (W / (c.w * 1920)), y: TOP + (XBASE_STATUS_AT.y - c.y * 1080) * (H / (c.h * 1080)) };
+  const rise = slotSource("x-base").kind === "raw" ? interpolate(t, [FLASH.keyAt, FLASH.keyAt + 6], [0, 1], C) : 1;
+  const kx = src.x + (LIFT.status.x - src.x) * rise;
+  const ky = src.y + (LIFT.status.y - src.y) * rise;
   const take = slotSource("x-base").kind === "raw";
   const rows: [string, string, string?][] = [
     ["Tx hash", PAYOUT.tx],
@@ -46,7 +52,7 @@ export function BaseFlash({ f, at }: { f: number; at: number }) {
         filter: t >= FLASH.collapse ? `brightness(${1 + (1 - collapse) * 1.4})` : undefined, overflow: "hidden" }}>
         <div style={{ position: "absolute", left: 0, top: 0, height: 3, width: `${bar * 100}%`, background: T.gold }} />
         <div style={{ position: "absolute", inset: 0, opacity: 1 - (1 - TEXTURE.opacity) * key, filter: key > 0.01 ? `blur(${(TEXTURE.blur * key * 0.7).toFixed(2)}px)` : undefined }}>
-          {take ? <Slot slot="x-base" tag={false} /> : (
+          {take ? <Freeze frame={0}><Slot slot="x-base" tag={false} from={TAKES.xbase.from + t / 30} crop={TAKES.xbase.crop} /></Freeze> : (
             <div style={{ padding: "30px 40px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", ...stepIn(printP(t, 4)) }}>
                 <Label size={20} color={T.cyan} track={0.18}>{"// Base Sepolia · transaction"}</Label>
@@ -64,7 +70,7 @@ export function BaseFlash({ f, at }: { f: number; at: number }) {
           )}
         </div>
         <div style={{ position: "absolute", left: -LEFT, top: -TOP, width: 1920, height: 1080 }}>
-          <LiftCard x={LIFT.status.x} y={LIFT.status.y} show={key} edge={T.alive} glow="rgba(69,227,148,0.22)">
+          <LiftCard x={kx} y={ky} show={key} edge={T.alive} glow="rgba(69,227,148,0.22)">
             <Mono size={LIFT.status.size} color={T.muted} style={{ lineHeight: 1.1 }}>
               {BASESCAN_STATUS.label} <span style={{ color: T.alive, fontWeight: 600 }}>{BASESCAN_STATUS.value}</span>
             </Mono>

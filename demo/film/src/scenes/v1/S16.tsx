@@ -1,51 +1,63 @@
-// S16 Verify (7.6 s, V15 at 0.3 s). A vertical roll (10 f, stepped) from S15's tx line lands on the terminal; `pnpm
-// verify` is typed and run; on "Run verify" the command line lifts off the glass as 64 px film type (held 1.5 s, the
-// terminal turns to texture); the rows print and scroll (real labels, real order, v2 dev marks); the summary line that
-// ends the run prints at f188 and lifts at f190 (64/56 px), held through S16's end into S17's pull-back.
-// The `t-verify` take replaces the drawn terminal (g6/VerifyTerm) when it exists; the lifted lines stay (facts.ts).
+// S16 Verify (7.6 s, V15 at 0.3 s). A vertical roll (10 f, stepped) from S15's tx line lands on the terminal. With the
+// t-verify take (`pnpm -s verify --all`, three instances): the command appears at f110 and lifts as 64 px film type on
+// "Run verify" (held 1.5 s, the terminal turns to texture); the take's idle wait is cut, so the output dumps at f151 on
+// "checks"; then the verdict across all instances lifts (58 px, f160) and holds through S17's pull-back.
+// Without the take, the drawn terminal (g6/VerifyTerm) stands in with the same lifts.
 import type { ReactNode } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Freeze, interpolate, useCurrentFrame } from "remotion";
 import { CONTENT, Camera, ScreenFrame } from "../../ds/screen";
 import { Mono } from "../../ds/type";
 import { stepped, T } from "../../ds/tokens";
 import { Slot, slotSource } from "../../film/Slot";
-import { LIFT, TEXTURE, VERIFY_SUMMARY } from "./g6/facts";
+import { LIFT, TAKES, TEXTURE, VERIFY_CMD, VERIFY_LIFT } from "./g6/facts";
 import { C, inOut, word } from "./g6/kit";
 import { LiftCard, liftShow, texture } from "./g6/Lift";
 import { PendingTag } from "./g6/PendingTag";
-import { CMD, LAST_AT, VerifyTerm } from "./g6/VerifyTerm";
-import { S15_END, S15Content } from "./S15";
+import { LAST_AT, VerifyTerm } from "./g6/VerifyTerm";
+import { s15End, S15Content } from "./S15";
 
 const ROLL = 10;
 const RUN = word("S16", 3.42); // "Run" f112
-const CMD_LIFT = { at: RUN - 8, out: RUN + 43 }; // settles f110, held to f155
-export const SUM_AT = LAST_AT + 2; // summary lifts f190, settles f196 (before "chain." f197)
+const CMD_AT = RUN - 2; // the take's command line appears at f110
+const CMD_LIFT = { at: RUN - 8, out: RUN + 41 }; // settles f110, held to f153
+const DUMP_CUT = 150; // the take jumps over its idle wait here; its output dumps 1 f later
+const hasTake = () => slotSource("t-verify").kind === "raw";
+/** Frame the final key line starts to lift: after the take's dump, or after the drawn table's last row. */
+export const sumAt = () => (hasTake() ? 160 : LAST_AT + 2);
+/** Seconds into the t-verify take shown at S16 frame f (S17 passes 227 + its frame). */
+const takeTime = (f: number) => {
+  const v = TAKES.verify;
+  if (f < CMD_AT) return v.idle;
+  if (f < DUMP_CUT) return v.cmdAt + (f - CMD_AT) / 30;
+  return Math.min(v.end, v.dumpFrom + (f - DUMP_CUT) / 30);
+};
 export const S16_CAM = { s: 1.2, fx: 756, fy: 512 };
 /** Camera at frame f (S17 starts from s16Cam(227)). */
 export function s16Cam(f: number) {
   const p = interpolate(f, [6, 40], [0, 1], { ...C, easing: inOut });
   const drift = interpolate(f, [40, 227], [0, 0.03], C);
-  return { s: S15_END.s + (S16_CAM.s + drift - S15_END.s) * p, fx: S15_END.fx + (S16_CAM.fx - S15_END.fx) * p, fy: S15_END.fy + (S16_CAM.fy - S15_END.fy) * p };
+  return { s: s15End().s + (S16_CAM.s + drift - s15End().s) * p, fx: s15End().fx + (S16_CAM.fx - s15End().fx) * p, fy: s15End().fy + (S16_CAM.fy - s15End().fy) * p };
 }
 
 /** Strength of the texture behind S16's lifted lines at frame f (S17 continues it from f = 227 + its frame). */
-export const s16Texture = (f: number) => Math.max(liftShow(f, CMD_LIFT.at, CMD_LIFT.out), liftShow(f, SUM_AT, 9999));
+export const s16Texture = (f: number) => Math.max(liftShow(f, CMD_LIFT.at, CMD_LIFT.out), liftShow(f, sumAt(), 9999));
 
-/** The summary line that ends `pnpm verify`, lifted (frame coords). `show` 0..1. Shared with S17's first frames. */
+/** The verdict across every instance plus the summed counts, lifted (frame coords). Shared with S17's first frames. */
 export function SummaryLift({ show }: { show: number }) {
   return (
     <LiftCard x={LIFT.summary.x} y={LIFT.summary.y} show={show} edge={T.alive} glow="rgba(69,227,148,0.2)">
-      <Mono size={LIFT.summary.size} weight={600} color={T.alive} style={{ lineHeight: 1.15 }}>{VERIFY_SUMMARY.head}</Mono>
-      <Mono size={Math.round(LIFT.summary.size * 0.875)} color={T.text} style={{ lineHeight: 1.25, marginTop: 6 }}>{VERIFY_SUMMARY.counts}</Mono>
+      <Mono size={LIFT.summary.size} weight={600} color={T.alive} style={{ lineHeight: 1.15 }}>{VERIFY_LIFT.head}</Mono>
+      <Mono size={LIFT.summary.size} color={T.text} style={{ lineHeight: 1.25, marginTop: 6 }}>{VERIFY_LIFT.counts}</Mono>
     </LiftCard>
   );
 }
 
 /** The terminal content at frame f: the take when it exists, else the drawn stand-in. */
 export function VerifyContent({ f }: { f: number }) {
-  if (slotSource("t-verify").kind === "raw") {
-    // term.html window: 1800×980 centred, 8 px bezel + 40 px bar; keep the player area, bottom-aligned (the table ends there)
-    return <Slot slot="t-verify" crop={{ x: 0.0354, y: 0.183, w: 0.929, h: 0.7635 }} />;
+  if (hasTake()) {
+    // each frame seeks the take's own time (frozen), so its idle wait can be cut; the crop follows the dump to the end screen
+    const crop = f < DUMP_CUT ? TAKES.verify.cropTop : TAKES.verify.cropEnd;
+    return <Freeze frame={0}><Slot slot="t-verify" from={takeTime(f)} crop={crop} /></Freeze>;
   }
   return (
     <AbsoluteFill>
@@ -56,7 +68,7 @@ export function VerifyContent({ f }: { f: number }) {
 }
 
 function Cmd(): ReactNode {
-  return <Mono size={LIFT.cmd.size} color={T.text} style={{ lineHeight: 1.15 }}><span style={{ color: T.gold, fontWeight: 600 }}>$ </span>{CMD}</Mono>;
+  return <Mono size={LIFT.cmd.size} color={T.text} style={{ lineHeight: 1.15 }}><span style={{ color: T.gold, fontWeight: 600 }}>$ </span>{VERIFY_CMD}</Mono>;
 }
 
 export function S16() {
@@ -80,7 +92,7 @@ export function S16() {
         </Camera>
       </AbsoluteFill>
       <LiftCard x={LIFT.cmd.x} y={LIFT.cmd.y} show={liftShow(f, CMD_LIFT.at, CMD_LIFT.out)}><Cmd /></LiftCard>
-      <SummaryLift show={liftShow(f, SUM_AT, 9999)} />
+      <SummaryLift show={liftShow(f, sumAt(), 9999)} />
     </AbsoluteFill>
   );
 }

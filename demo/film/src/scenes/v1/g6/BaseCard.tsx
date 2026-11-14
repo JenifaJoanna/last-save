@@ -1,7 +1,6 @@
 // Motion-graphics stand-in for the `base` take: the bottom of /app/hosts, "Get paid on Base Sepolia" (web/src/pages/app/
 // evm-payouts.tsx), drawn at 1x in ScreenFrame content coords so the real take drops in with the same framing. The payout
-// row runs Booked → Sign → "MPC signing…" → "Signed by MPC" (the transmission readout prints in) → Relay → "On Base
-// Sepolia". Values are payout #0 of the run (facts.ts PAYOUT). Shown only while public/footage has no `base`.
+// row is in its completed state: "On Base Sepolia", the signed transmission readout printed (B15 below). Values are payout #0 of the run (facts.ts PAYOUT). Shown only while public/footage has no `base`.
 import type { CSSProperties } from "react";
 import { interpolate } from "remotion";
 import { Keycap } from "../../../ds/crt";
@@ -12,7 +11,9 @@ import { PAYOUT } from "./facts";
 import { C, out, printP, stepIn } from "./kit";
 
 /** Beats (S15 frames). V14 at f9: "base" f59, "signs" f125, "no one" f174. The lifted lines are S15's overlays. */
-export const B15 = { land: 18, signPress: 56, signed: 121, relayPress: 150, relayed: 156, txHi: 214 } as const;
+// The row is shown in its completed state (the real payout was signed and relayed on 14 Nov; nothing is re-signed on
+// camera): "On Base Sepolia" with the signed transmission readout already printed. signed/relayed sit before f0.
+export const B15 = { land: 18, signPress: -99, signed: -60, relayPress: -99, relayed: -60, txHi: 214 } as const;
 
 /** Layout (content coords, px at 1x). The card sits in the app's max-w-6xl column. */
 export const CARD = { x: 363, y: 36, w: 1152 } as const;
@@ -40,7 +41,7 @@ export function BaseCard({ f }: { f: number }) {
   const chipText = relayed ? "On Base Sepolia" : signed ? "Signed by MPC" : signing ? "MPC signing…" : "Booked";
 
 
-  const amtGlow = interpolate(f, [0, B15.land, B15.land + 24], [1, 1, 0], C);
+  const amtGlow = 0; // the S14 amount no longer lands here (S14 ends on the host's total)
 
   const press = (at: number) => (f >= at && f < at + 2 ? 1 : f >= at + 2 && f < at + 4 ? 0.5 : 0);
   const valueDecode = interpolate(f, [B15.land - 2, B15.land + 9], [0, 1], C);
@@ -87,7 +88,7 @@ export function BaseCard({ f }: { f: number }) {
             <span style={{ fontSize: 12 }}>{PAYOUT.toShort}</span>
             <span style={{ color: T.faint }}>· nonce {PAYOUT.nonce}</span>
             <span style={{ color: T.faint }}>·{" "}
-              <span style={{ display: "inline-block", visibility: f < B15.land ? "hidden" : "visible", color: amtGlow > 0 ? T.alive : T.faint, fontWeight: amtGlow > 0 ? 600 : 400,
+              <span style={{ display: "inline-block", color: amtGlow > 0 ? T.alive : T.faint, fontWeight: amtGlow > 0 ? 600 : 400,
                 textShadow: amtGlow > 0 ? `0 0 ${6 * amtGlow}px rgba(69,227,148,${0.7 * amtGlow})` : undefined }}>{PAYOUT.near} Ⓝ</span>
               {" "}moved to EVM-settled</span>
           </div>

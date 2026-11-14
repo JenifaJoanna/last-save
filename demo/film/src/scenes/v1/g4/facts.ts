@@ -59,11 +59,12 @@ export const LOG_LINES = [
   { text: "> STUDIO DECLARED GONE  ", res: "DEAD", tail: "", c: "dead" },
 ] as const;
 
-/** Discord alert: scripts/alerts/discord-feed.mjs embed for the death event; its dry run prints the fallback line. */
+/** The death alert scripts/alerts/discord-feed.mjs really posted to #status for ember-rift at ~22:45 IST. Only its title
+ * is shown: the posted card's description used the feed's old "three probes failed" wording, which is false for
+ * ember-rift (holders reported it down), so the film draws the title line and claims nothing else about the post. */
 export const ALERT = {
   title: "Ember Rift: server DEAD",
-  cmd: "$ node scripts/alerts/discord-feed.mjs --dry-run",
-  line: "would post: DEAD · THE STUDIO WENT DARK",
+  line: "posted · DEAD · THE STUDIO WENT DARK",
 };
 
 /** The released server key (the run's released_key, read back from the instance). S11 splits it into four 16-char rows
