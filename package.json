@@ -10,7 +10,7 @@
     "check:identity": "node scripts/check-identity.mjs",
     "spike:encrypt": "node scripts/spike/encrypt-escrow.mjs",
     "e2e": "node scripts/e2e/e2e-testnet.mjs",
-    "demo:fresh": "node scripts/e2e/demo-fresh.mjs",
+    "demo:fresh": "node scripts/demo/fresh.mjs",
     "host": "pnpm --filter host host --",
     "verify": "node scripts/verify/index.mjs",
     "test:verify": "node --test scripts/verify/*.test.mjs",

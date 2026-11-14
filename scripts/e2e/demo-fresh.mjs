@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// One command that proves the whole thing on a brand-new instance (pnpm demo:fresh):
+// The TESTNET mode of `pnpm demo:fresh --testnet` (the default `pnpm demo:fresh` is the local sandbox: scripts/demo/fresh.mjs).
+// Proves the whole thing on a brand-new testnet instance:
 //   creates a fresh funded sub-account, runs the studio launch (bundle, deploy, escrow, attest, snapkey), serves the official
 //   game server from a local `wrangler dev` behind a cloudflared quick tunnel, then runs every e2e phase against it.
 // It never locks the account. Every transaction hash is printed and written to proof/run-<UTC timestamp>.json.

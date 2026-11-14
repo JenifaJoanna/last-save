@@ -67,8 +67,9 @@ point a release at another contract (release.wasm reads its caller's own state).
   # -> b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4  (probe.wasm)
   ```
   Compare with `release.sha256` / `probe.sha256` in `get_info` on the contract.
-- **The whole lifecycle:** `pnpm demo:fresh` deploys a fresh licence instance with seconds-scale timers and runs
-  buy → play → probes → death → release → refund/pledge → fan host → claim, printing every transaction.
+- **The whole lifecycle, no funds:** `pnpm demo:fresh` runs buy → probes → death → release → refund/pledge → fan host → claim →
+  Chain Signatures payouts on a local NEAR sandbox (real licence wasm, mock OutLayer and signer), printing every step (about 40 s once built).
+  `pnpm demo:fresh --testnet` does the same on a fresh testnet instance and prints every transaction (needs about 3.4 testnet NEAR).
 
 ## Tests and runs
 
