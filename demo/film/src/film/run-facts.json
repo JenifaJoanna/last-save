@@ -19,10 +19,11 @@
     }
   },
   "set": "judge",
-  "generated_at": "2026-11-14T18:25:18.608Z",
-  "missing": [],
+  "generated_at": "2026-11-14T18:47:58.596Z",
+  "missing": [
+    "archiveItem (launch|extra: archive step .item (ia-upload.mjs) | extra.archiveItem): no clean \"archive\" step in the launch files"
+  ],
   "unused": [
-    "archiveItem",
     "releasedKey",
     "hostPaid",
     "sessionsVerified",

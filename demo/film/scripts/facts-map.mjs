@@ -25,12 +25,15 @@ export const CONFIG = {
 /** Two sets: "judge" (ember-rift; S01-S09, S11) -> run-facts.json, "after" (v2dev's real afterlife; S10, S12-S16) ->
  * run-facts-after.json. A key outside a set's list is still written when readable, and is never reported missing. */
 export const SET_KEYS = {
-  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolBefore", "postBuyDelta", "poolTotal", "refundedNear", "refundedCount", "pledgedNear", "pledgedCount"], // exactly what S01-S11 print; runwayEpochs, epochCap and epochLen are read when present, never required
-  after: ["releasedSha", "releasedKey", "archiveItem", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce", "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyInstances", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
+  // judge: what S01-S12 print (rs()). runwayEpochs, epochCap, epochLen, releasedKey and the after keys are read when present, never required
+  judge: ["instance", "studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl",
+    "walrusBlob", "rekorIndex", "archiveItem", "poolBefore", "postBuyDelta", "poolTotal", "refundedNear", "refundedCount", "pledgedNear", "pledgedCount"],
+  // after: what S10 and S13-S16 print (ra()). hostEarned / hostSessionsPaid (S14 host card) are not in the proof: the scene uses the take's own text
+  after: ["instance", "releasedKey", "walrusHost", "workflow", "commit7", "rekorIndex", "rekorLogged", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce",
+    "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
 };
-const BOTH = ["instance", "walrusBlob", "walrusHost", "workflow", "commit7", "rekorIndex", "rekorLogged"];
 /** Is this key required in that set? */
-export const required = (key, set) => BOTH.includes(key) || SET_KEYS[set].includes(key);
+export const required = (key, set) => SET_KEYS[set].includes(key);
 
 // ---- helpers ----
 const bad = (msg) => { throw new Error(msg); };
