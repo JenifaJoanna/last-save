@@ -5,6 +5,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 WORKER="${1:-emberrift-arena}"
+OFFICIAL_URL="${OFFICIAL_URL:-https://emberrift.pages.dev}"
 set -a; . "$ROOT/.env.local"; set +a
 printf '\033[1;38;5;208m$ studio shutdown --server %s\033[0m\n' "$WORKER"
 sleep 0.6
@@ -14,6 +15,6 @@ printf '\033[38;5;203m✕ official server deleted (%s)\033[0m\n' "$WORKER"
 sleep 0.4
 printf 'No announcement. No end-of-service call.\n'
 sleep 1.2
-code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 https://emberrift.pages.dev/health || true)
-printf 'GET https://emberrift.pages.dev/health → %s\n' "$code"
+code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 "$OFFICIAL_URL/health" || true)
+printf 'GET %s/health → %s\n' "$OFFICIAL_URL" "$code"
 [ -n "${2:-}" ] && "$ROOT/scripts/ops/kill-studio-copy.sh" "$2" "${3:-}" || true

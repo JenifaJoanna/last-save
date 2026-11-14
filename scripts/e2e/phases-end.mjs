@@ -26,7 +26,13 @@ export async function deleteWorker(ctx) {
     for (const s of [p.stdout, p.stderr]) s.on("data", (d) => { tail = (tail + d).slice(-400); });
     p.on("exit", (c) => { if (c !== 0) log(`  wrangler delete exited ${c}: ${tail.replace(/\s+/g, " ")}`); resolve(c); });
   });
-  if (code !== 0) throw new Error(`wrangler delete ${ctx.officialWorker} failed (exit ${code})`);
+  if (code !== 0) {
+    // The studio's own shutdown command (scripts/ops/kill-official.sh, filmed) may have deleted it first; the health
+    // check below still has to prove the server is gone.
+    const gone = await getJson(`${ctx.officialUrl}/health`, 6000).then((h) => !(h.ok && h.body?.ok === true)).catch(() => true);
+    if (gone) return `Worker ${ctx.officialWorker} was already deleted (studio shutdown command ran first)`;
+    throw new Error(`wrangler delete ${ctx.officialWorker} failed (exit ${code})`);
+  }
   return `deleted Worker ${ctx.officialWorker} through wrangler`;
 }
 
