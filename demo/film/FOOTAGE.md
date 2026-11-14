@@ -15,6 +15,15 @@ build** (no PREVIEW pill, no preview strip). Until a take arrives, the film show
 - Terminal: a real shell recorded with asciinema and replayed by `demo/capture/term.html`. Use the terminal palette (bg
   #120e22, fg #efe5d0, prompt gold #ffc94a, ok #45e394, fail #ff4d5e), IBM Plex Mono at 26 px, 96 columns × 26 rows,
   no hostname or user in the prompt (`$ `), and no secrets or env values on screen.
+- Terminal commands run as `pnpm -s …` (without -s pnpm prints the project path) and never show a cwd or home path.
+- Sidecars the film reads (agreed with the builder, 14 Nov):
+  - `match.events.json` (and `lost`, `back`): the client's capture-only impact log (`?capture`). Format
+    `[{ "t": s from the saved mp4's first frame, "kind": "hit"|"kill"|"shard"|"dash" }]`, plus `{ "kind": "trim", "s" }`
+    if the head was cut. `node scripts/hits.mjs` writes S08's MATCH_HITS from it.
+  - `<slot>.cast` beside every terminal take: the asciinema file, so key lines are re-set as crisp type.
+  - `hostbtn` may be a screenshot burst: `hostbtn/0001.png…` + `hostbtn/frames.json` `[{ "file", "t" }]`, page content
+    only, device scale 2. `node scripts/burst.mjs hostbtn` makes the mp4, holding each shot for its real interval.
+- Intake: `node scripts/takes.mjs --sheets <dir>` checks every take against this spec and makes contact sheets.
 - Explorer flashes: testnet explorer page at browser zoom 125 %, with the field that matters (status, method, args or
   the access-key list) visible without scrolling. Hold 3 s. Name the take `x-<slot>.mp4`.
 - Players: mira, kofi, yuna and dario (holders), fanhost (the fan), plus one non-holder. Same names as the preview.
