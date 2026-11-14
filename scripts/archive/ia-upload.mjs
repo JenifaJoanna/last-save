@@ -40,14 +40,30 @@ async function put(name, body, meta, auth) {
 
 const [info, rel, snap] = await Promise.all([view(INSTANCE, "get_info"), view(INSTANCE, "release_info"), view(INSTANCE, "get_snapshot").catch(() => null)]);
 const key = info?.released_key;
-if (!key) throw new Error(`${INSTANCE} has not released its server key; nothing to preserve yet`);
+// --encrypted: preserve the ENCRYPTED artifact before the key is out (sha256 checked against the chain, never decrypted)
+const ENCRYPTED = process.argv.includes("--encrypted");
+if (!key && !ENCRYPTED) throw new Error(`${INSTANCE} has not released its server key; nothing to decrypt yet (use --encrypted to preserve the encrypted build)`);
 const got = await fetchVerifiedArtifact({ rel, log: (l) => out(`  ${l}`) });
-const plain = decryptBundle(got.encrypted, Buffer.from(key, "hex"));
-if (sha(plain) !== String(rel.build_hash).toLowerCase()) throw new Error("decrypted build does not hash to the on-chain build_hash; refusing");
-out(`build ${rel.build_hash.slice(0, 16)}… verified (${plain.length} bytes) from ${got.label}`);
+let plain = null;
+if (!ENCRYPTED) {
+  plain = decryptBundle(got.encrypted, Buffer.from(key, "hex"));
+  if (sha(plain) !== String(rel.build_hash).toLowerCase()) throw new Error("decrypted build does not hash to the on-chain build_hash; refusing");
+  out(`build ${rel.build_hash.slice(0, 16)}… verified (${plain.length} bytes) from ${got.label}`);
+} else out(`encrypted artifact sha256 ${sha(got.encrypted).slice(0, 16)}… matches the chain (${got.encrypted.length} bytes) from ${got.label}`);
 
 const snapJson = snap?.blob_base64 ? Buffer.from(snap.blob_base64, "base64") : null;
-const readme = Buffer.from([
+const readme = ENCRYPTED ? Buffer.from([
+  "Ember Rift: the encrypted server build, preserved before its key is released.",
+  "",
+  `The Last Save licence contract ${INSTANCE} (NEAR testnet) committed to this exact encrypted artifact before launch:`,
+  `artifact sha256 ${sha(got.encrypted)} (on-chain artifact hash), plaintext build sha256 ${rel.build_hash}.`,
+  "Its key is escrowed in an OutLayer enclave owned by the contract and is released on-chain once the contract declares",
+  "the studio gone; then anyone can decrypt this file and host the game.",
+  "",
+  `Contract: https://testnet.near.rocks/account/${INSTANCE}`,
+  `Code (MIT): ${REPO}`,
+  "Ember Rift and its studio are fictional, made for the Last Save demo.",
+].join("\n")) : Buffer.from([
   "Ember Rift: the community server build, preserved by its players.",
   "",
   `Released on NEAR testnet by the Last Save licence contract ${INSTANCE} after its studio went dark.`,
@@ -59,12 +75,16 @@ const readme = Buffer.from([
   "Ember Rift and its studio are fictional, made for the Last Save demo.",
 ].join("\n"));
 const meta = {
-  title: "Ember Rift: server build, preserved by its players",
-  creator: "Jenifa", mediatype: "software", collection: "opensource", licenseurl: "https://opensource.org/licenses/MIT",
+  title: ENCRYPTED ? "Ember Rift: encrypted server build, preserved before release" : "Ember Rift: server build, preserved by its players",
+  creator: "JenifaJoanna", mediatype: "software", collection: "opensource", licenseurl: "https://opensource.org/licenses/MIT",
   subject: "videogame preservation;NEAR;Last Save;game servers", date: new Date().toISOString().slice(0, 10),
-  description: `The released community server build of Ember Rift, a fictional game used to demonstrate Last Save, a NEAR game licence that outlives its publisher. Code: ${REPO} . Licence contract (NEAR testnet): https://testnet.near.rocks/account/${INSTANCE} . Build sha256 ${rel.build_hash}.`,
+  description: ENCRYPTED
+    ? `The encrypted server build of Ember Rift, a fictional game used to demonstrate Last Save, a NEAR game licence that outlives its publisher. Artifact sha256 ${sha(got.encrypted)} as committed on-chain; the key is released by the licence contract after a shutdown. Code: ${REPO} . Licence contract (NEAR testnet): https://testnet.near.rocks/account/${INSTANCE} .`
+    : `The released community server build of Ember Rift, a fictional game used to demonstrate Last Save, a NEAR game licence that outlives its publisher. Code: ${REPO} . Licence contract (NEAR testnet): https://testnet.near.rocks/account/${INSTANCE} . Build sha256 ${rel.build_hash}.`,
 };
-const files = [["README.txt", readme], [`ember-rift-server-${rel.build_hash.slice(0, 12)}.tar.gz`, plain], ...(snapJson ? [[`progress-snapshot-${snap.seq}.json`, snapJson]] : [])];
+const files = ENCRYPTED
+  ? [["README.txt", readme], [`ember-rift-server-encrypted-${sha(got.encrypted).slice(0, 16)}.bin`, got.encrypted], ...(snapJson ? [[`progress-snapshot-${snap.seq}.json`, snapJson]] : [])]
+  : [["README.txt", readme], [`ember-rift-server-${rel.build_hash.slice(0, 12)}.tar.gz`, plain], ...(snapJson ? [[`progress-snapshot-${snap.seq}.json`, snapJson]] : [])];
 out(`item https://archive.org/details/${ITEM}: ${files.map(([n]) => n).join(", ")}`);
 if (DRY) { out("dry run: nothing uploaded"); process.exit(0); }
 const auth = keys();
@@ -73,7 +93,7 @@ for (const [i, [name, body]] of files.entries()) { await put(name, body, i === 0
 // time: launch.mjs is finished by the time a build is released, so nothing else holds this file open.
 const PROOF = `proof/launch-${INSTANCE.split(".")[0]}.json`;
 const proof = existsSync(PROOF) ? JSON.parse(readFileSync(PROOF, "utf8")) : { contract: INSTANCE, steps: [] };
-proof.steps.push({ step: "archive", at: new Date().toISOString(), item: ITEM, url: `https://archive.org/details/${ITEM}`, build_hash: rel.build_hash,
+proof.steps.push({ step: "archive", at: new Date().toISOString(), encrypted: ENCRYPTED, item: ITEM, url: `https://archive.org/details/${ITEM}`, build_hash: rel.build_hash,
   files: files.map(([name, body]) => ({ name, sha256: sha(body), bytes: body.length })) });
 writeFileSync(PROOF, JSON.stringify(proof, null, 2) + "\n");
 out(`recorded in ${PROOF}`);

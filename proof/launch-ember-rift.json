@@ -131,6 +131,31 @@
       "at": "2026-11-14T15:53:17.261Z",
       "summary": "ember-rift.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x7a8e0779ba1726693dad36443b024a22d78e935a ops=1.5000 NEAR escrowed=true verified=true",
       "problems": []
+    },
+    {
+      "step": "archive",
+      "at": "2026-11-14T18:49:48.626Z",
+      "encrypted": true,
+      "item": "ember-rift-server-ember-rift-lastsave",
+      "url": "https://archive.org/details/ember-rift-server-ember-rift-lastsave",
+      "build_hash": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2",
+      "files": [
+        {
+          "name": "README.txt",
+          "sha256": "5a9de3b9a432f5cc20e5538058fbe477d10b4e62f34b84fc3b31947d5eea290b",
+          "bytes": 807
+        },
+        {
+          "name": "ember-rift-server-encrypted-49e114638d42bc0d.bin",
+          "sha256": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
+          "bytes": 271868
+        },
+        {
+          "name": "progress-snapshot-6.json",
+          "sha256": "798d96de899928e6439c9b513faa9d2d7b9c2f3fdc709a788c7816755ee907bb",
+          "bytes": 460
+        }
+      ]
     }
   ]
 }
