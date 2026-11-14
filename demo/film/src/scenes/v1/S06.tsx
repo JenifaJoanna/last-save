@@ -65,7 +65,7 @@ export function S06() {
       <AbsoluteFill style={{ clipPath: `inset(${CONTENT.y}px ${1920 - CONTENT.x - CONTENT.w}px ${1080 - CONTENT.y - CONTENT.h}px ${CONTENT.x}px)` }}>
         <AbsoluteFill style={{ transform: `translateY(${-roll}px)` }}><RefusalList f={f} toScreen={toScreen} camScale={scale} /></AbsoluteFill>
       </AbsoluteFill>
-      <Flash f={f} at={FLASH_AT} dur={30} slot="x-attack" path="testnet.nearblocks.io/txns/…" />
+      <Flash f={f} at={FLASH_AT} dur={30} slot="x-attack" path="near-testnet.drpc.org · tx 4pVpihoc… · refused" from={2.0} /> {/* public-RPC receipt of attack 1 (the refusal prints at 1.3 s) */}
     </AbsoluteFill>
   );
 }
