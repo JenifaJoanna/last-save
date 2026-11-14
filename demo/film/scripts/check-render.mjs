@@ -3,12 +3,13 @@
 //  1. dead air: no run of near-black frames (mean luma YAVG < 28 on the limited 16–235 scale, where the void is ~24)
 //     longer than 10 frames — an empty or black hold, not a transition;
 //  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "placeholder", "Take pending", the dev instance
-//     ("v2dev") or any identity term (the same base64 list as scripts/check-identity.mjs) anywhere on screen.
+//     ("v2dev") or any identity term (the repo's shared list, scripts/lib/identity-terms.mjs) anywhere on screen.
 // Usage: node scripts/check-render.mjs <video.mp4> [--ocr] [--max-dark 10]
 import { execFileSync, spawn } from "node:child_process";
 import { mkdtempSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { ON_CAMERA_TERMS, TERMS } from "../../../scripts/lib/identity-terms.mjs";
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith("--") && !/^\d+$/.test(a));
@@ -40,9 +41,9 @@ if (ocr) {
   try {
     execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-i", file, "-vf", "fps=2", "-q:v", "2", join(dir, "f%05d.jpg")]);
     const frames = readdirSync(dir).filter((n) => n.endsWith(".jpg")).sort();
-    const dec = (s) => Buffer.from(s, "base64").toString("utf8");
-    const ids = ["Z2FicmllbGF4eQ==", "Z2FicmllbA==", "YW50b255", "eGF2aW91cg==", "Y29zbWljbGFu"].map(dec);
-    const bad = new RegExp(`\\bTBD\\b|placeholder|take pending|v2dev|${ids.join("|")}`, "i");
+    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const ids = [...TERMS, ...ON_CAMERA_TERMS].map((t) => t.toLowerCase());
+    const bad = new RegExp(`\\bTBD\\b|placeholder|take pending|v2dev|${ids.map(esc).join("|")}`, "i");
     const queue = [...frames]; const hits = [];
     const worker = () => new Promise((done) => {
       const next = () => {
