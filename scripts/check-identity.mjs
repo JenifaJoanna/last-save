@@ -57,11 +57,16 @@ for (const d of BUILD_DIRS.filter(existsSync)) {
 }
 
 // 3. Worker configs: workers.dev and preview URLs off, no account id, no routes on custom zones
+const COMMUNITY_TEMPLATE = "community-host/wrangler.toml"; // the single path allowed workers_dev = true
 const wranglerFiles = files.filter((f) => /(^|\/)wrangler\.(toml|jsonc?)$/.test(f));
 for (const f of wranglerFiles) {
   const t = readFileSync(f, "utf8");
   const isPages = /pages_build_output_dir/.test(t);
-  if (!isPages) {
+  if (f === COMMUNITY_TEMPLATE) {
+    // The Deploy to Cloudflare template is the one exception: it deploys into the clicker's own account, whose workers.dev address is its URL.
+    if (!/^workers_dev\s*=\s*true\s*$/m.test(t)) fail(`${f}: the community template must state workers_dev = true explicitly`);
+    if (!/preview_urls\s*[=:]\s*false/.test(t)) fail(`${f}: preview_urls must be false`);
+  } else if (!isPages) {
     if (!/workers_dev\s*[=:]\s*false/.test(t)) fail(`${f}: workers_dev must be false`);
     if (!/preview_urls\s*[=:]\s*false/.test(t)) fail(`${f}: preview_urls must be false`);
   }

@@ -1,0 +1,31 @@
+# Community host template (Deploy to Cloudflare button). The build step (`npm run build`) downloads, verifies and unpacks the
+# released server into ./bundle; `npm run deploy` publishes it with the variables below plus BUILD_HASH and RESTORE_SNAPSHOT.
+#
+# This is the ONE wrangler config in the repository with workers_dev = true: it deploys into the account of whoever clicked the
+# button, and that account's own workers.dev address is its public URL. Never deploy it under the studio's account
+# (scripts/deploy.mjs refuses outside Workers Builds unless COMMUNITY_HOST_ALLOW_LOCAL=1).
+name = "ember-rift-community"
+main = "bundle/worker/index.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+preview_urls = false
+
+[assets]
+directory = "./bundle/assets"
+binding = "ASSETS"
+
+[[durable_objects.bindings]]
+name = "ARENA"
+class_name = "Arena"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Arena"]
+
+# Edit these two in your copy of the repository (or set them as Workers Builds build variables) before the first deploy.
+[vars]
+# The licence instance to host. It must have released its server key (status Dead).
+LICENCE_CONTRACT = "ember-rift.lastsave-factory.testnet"
+# Your NEAR testnet account. Players' sessions are receipted for this id, and it is the account that calls register_host.
+HOST_ID = "community-host.testnet"
+RPC_URLS = "https://test.rpc.fastnear.com,https://near-testnet.drpc.org"

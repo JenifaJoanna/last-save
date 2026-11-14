@@ -205,3 +205,8 @@ and instantiated by the factory. v1 (`lastsave-licence.testnet`) is unchanged.
 - Host mirrors are tried in order, one line each (`studio copy … 404 (gone)`, `walrus … 200, sha256 matches on-chain ✓`), stopping at the first verified copy.
 - Official server: each posted snapshot's canonical JSON is also PUT to Walrus (non-blocking); `/health` lists `walrus.latest[{seq, blob_id, url}]`. The on-chain snapshot stays authoritative.
 - Studio shutdown: `scripts/ops/kill-studio-copy.sh <name>` deletes `kiln-cdn-<name>`. Walrus testnet is not permanent storage (periodic wipes).
+
+**Community host template (Deploy to Cloudflare button).**
+- `community-host/` is self-contained (the button treats a subdirectory as a whole repository). `vendor/` is generated from `host/lib` and `server-bundle/lib` by `node scripts/sync-community-host.mjs` (a test fails when stale), so the build runs the same verification as `pnpm host`.
+- `npm run build` → `lib/build.mjs`: chain views over RPC, `prepare()` (released key vs commitment, mirror fallback, provenance, decrypt, build_hash, snapshot hash), unpack to `bundle/`, deploy variables to `.build/vars.json`. Any refusal exits 3 and removes any earlier bundle. `npm run deploy` runs `wrangler deploy --var …` (HOST_ID, BUILD_HASH, LICENCE_CONTRACT, RPC_URLS, RESTORE_SNAPSHOT) and refuses outside Workers Builds unless `COMMUNITY_HOST_ALLOW_LOCAL=1`.
+- `community-host/wrangler.toml` is the only config with `workers_dev = true` (`check-identity` allows exactly that path and requires the line). `register_host` is not part of it.

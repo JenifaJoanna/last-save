@@ -118,6 +118,19 @@ https://last-save.pages.dev/attack sends **real** hostile transactions to the li
 account, gas paid by the relayer): release the key early, fake a death report, drain the pool, redirect a host's payout,
 double-pay a host. Each refusal on screen is the contract's own message, with the transaction link.
 
+## Host this game
+
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/JenifaJoanna/last-save/tree/main/community-host)
+
+One click deploys the community server of a released instance into **your own Cloudflare account**. Cloudflare copies
+[`community-host/`](community-host/) into a repository of yours and Workers Builds runs its build: it reads the released key and the
+artifact mirrors from NEAR, takes the first copy whose sha256 matches the chain (studio, Walrus, GitHub), checks the Sigstore build
+provenance, decrypts, checks `build_hash`, restores the last on-chain snapshot and deploys the Worker. It refuses, and deploys nothing,
+if the instance has not released its key or any hash differs. Set `LICENCE_CONTRACT` (default `ember-rift.lastsave-factory.testnet`) and
+`HOST_ID` (your NEAR account) as described in [`community-host/README.md`](community-host/README.md).
+Registering as a host (`register_host`, a signed 0.01 N call from your own account) is a separate step: use the
+[Hosts page](https://last-save.pages.dev/app/hosts).
+
 ## Verify it yourself
 
 <!-- proof-link:start -->

@@ -1,0 +1,27 @@
+{
+  "name": "ember-rift-community-host",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Host Ember Rift in your own Cloudflare account: the build step reads the released key from the NEAR licence contract, verifies and decrypts the server build, and deploys it.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "test": "node --test test/build.test.mjs"
+  },
+  "dependencies": {
+    "@noble/ciphers": "1.3.0",
+    "@noble/hashes": "1.8.0",
+    "sigstore": "5.0.1"
+  },
+  "devDependencies": {
+    "wrangler": "4.88.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "ARENA": {
+        "description": "The game's Durable Object (SQLite storage for player progress). Created for you; the default name is fine."
+      }
+    }
+  }
+}
