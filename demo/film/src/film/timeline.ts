@@ -29,7 +29,7 @@ export const SCENES: SceneSpec[] = [
 ];
 
 export const f = (sec: number) => Math.round(sec * FPS);
-export interface Placed extends SceneSpec { from: number; frames: number }
+export interface Placed extends SceneSpec { from: number; frames: number; fadeIn?: number }
 export const PLACED: Placed[] = (() => {
   let at = 0;
   return SCENES.map((s) => { const p = { ...s, from: at, frames: f(s.dur) }; at += p.frames; return p; });

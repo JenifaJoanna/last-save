@@ -51,7 +51,8 @@ export const SFX: Cue[] = [
 
 /** Score in two acts. Act 1 is cut hard on the word "dead" (S09); act 2 enters under "The enclave confirms" and its
  * last chunk resolves on the final frame. Times are absolute film seconds. */
-export const SCORE = [
+export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number }
+export const SCORE: ScoreAct[] = [
   { file: "music/v1/c1-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
   { file: "music/v1/c1-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
 ];

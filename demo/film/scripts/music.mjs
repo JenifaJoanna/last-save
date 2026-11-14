@@ -34,6 +34,7 @@ const ACTS = {
     { section_name: "Afterlife", duration_ms: 42000, positive_local_styles: ["hopeful", "steady groove returns", "soft drums", "arpeggio", "even dynamics under speech", `in ${c.key.split(" to ")[1]}`], negative_local_styles: ["minor key", "tension"] },
     { section_name: "Resolve", duration_ms: 14400, positive_local_styles: ["resolving", "final chord", "long sustain", "gentle tail"], negative_local_styles: ["drums", "abrupt ending"] },
   ],
+  act2x: (c) => ACTS.act2(c).map((s) => s.section_name === "Afterlife" ? { ...s, duration_ms: 36500 } : s),
 };
 
 const cand = process.argv[2] ?? "1";

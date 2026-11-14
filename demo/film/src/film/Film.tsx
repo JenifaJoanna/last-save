@@ -1,10 +1,12 @@
-// The full 16:9 film: scenes S01–S17 laid end to end from timeline.ts, the eleven_v4 narration, SFX cues and the score.
-// Each scene is also its own composition, so a scene can be previewed and rendered alone.
-import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile } from "remotion";
+// Assembles a cut from placed scenes: scene video, the eleven_v4 narration, SFX cues and the two-act score, with the
+// music ducked under speech. The full film and the X cut share this code; only the edit list and score differ.
+import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
+import type { ReactNode } from "react";
 import { T } from "../ds/tokens";
 import { SCENE_COMPONENTS } from "../scenes/v1";
-import { MUSIC, SCORE, SFX } from "./cues";
-import { f, PLACED, scene } from "./timeline";
+import { MUSIC, SCORE, SFX, type ScoreAct } from "./cues";
+import { f, PLACED, type Placed } from "./timeline";
+import { X_PLACED, X_SCORE } from "./xcut";
 
 const has = (p: string) => getStaticFiles().some((x) => x.name === p);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -15,32 +17,36 @@ export const VO_LEN: Record<string, number> = {
   V09: 4.08, V10: 7.76, V11: 4.56, V12: 10.0, V13: 7.12, V14: 6.8, V15: 6.58, V16: 2.88,
 };
 
-/** VO windows in absolute frames, used to duck the music under speech. */
-const VO_WINDOWS = PLACED.filter((s) => s.vo).map((s) => [s.from + f(s.voAt ?? 0), s.from + f(s.voAt ?? 0) + f(VO_LEN[s.vo!] ?? 5)] as const);
+function FadeIn({ frames, children }: { frames: number; children: ReactNode }) {
+  const fr = useCurrentFrame();
+  return <AbsoluteFill style={{ opacity: frames ? interpolate(fr, [0, frames], [0, 1], clamp) : 1 }}>{children}</AbsoluteFill>;
+}
 
-export function Film() {
+export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[] }) {
+  const at = (id: string) => scenes.find((s) => s.id === id);
+  const voWindows = scenes.filter((s) => s.vo).map((s) => [s.from + f(s.voAt ?? 0), s.from + f(s.voAt ?? 0) + f(VO_LEN[s.vo!] ?? 5)] as const);
   return (
     <AbsoluteFill style={{ background: T.void }}>
-      {PLACED.map((s) => {
+      {scenes.map((s) => {
         const C = SCENE_COMPONENTS[s.id];
-        return <Sequence key={s.id} from={s.from} durationInFrames={s.frames} name={`${s.id} ${s.name}`}><C /></Sequence>;
+        return <Sequence key={s.id} from={s.from} durationInFrames={s.frames} name={`${s.id} ${s.name}`}><FadeIn frames={s.fadeIn ?? 0}><C /></FadeIn></Sequence>;
       })}
-      {PLACED.filter((s) => s.vo && has(`vo/v4/${s.vo}.mp3`)).map((s) => (
+      {scenes.filter((s) => s.vo && has(`vo/v4/${s.vo}.mp3`)).map((s) => (
         <Sequence key={`vo-${s.vo}`} from={s.from + f(s.voAt ?? 0)} name={`vo ${s.vo}`}><Audio src={staticFile(`vo/v4/${s.vo}.mp3`)} /></Sequence>
       ))}
-      {SFX.filter((c) => has(`sfx/v1/${c.file}`)).map((c) => (
-        <Sequence key={`${c.scene}-${c.file}-${c.at}`} from={scene(c.scene).from + f(c.at)} durationInFrames={c.dur ? f(c.dur) : undefined} name={`sfx ${c.file}`}>
+      {SFX.filter((c) => at(c.scene) && f(c.at) < at(c.scene)!.frames && has(`sfx/v1/${c.file}`)).map((c) => (
+        <Sequence key={`${c.scene}-${c.file}-${c.at}`} from={at(c.scene)!.from + f(c.at)} durationInFrames={c.dur ? f(c.dur) : undefined} name={`sfx ${c.file}`}>
           <Audio src={staticFile(`sfx/v1/${c.file}`)} playbackRate={c.rate ?? 1}
             volume={(fr) => (c.volume ?? 0.7) * (c.dur ? interpolate(fr, [f(c.dur) - 8, f(c.dur)], [1, 0], clamp) : 1)} />
         </Sequence>
       ))}
-      {SCORE.filter((m) => has(m.file)).map((m) => {
+      {score.filter((m) => has(m.file)).map((m) => {
         const a = f(m.from); const len = f(m.to) - a;
         return (
           <Sequence key={m.file} from={a} durationInFrames={len} name={`score ${m.file.split("/").pop()}`}>
             <Audio src={staticFile(m.file)} volume={(fr) => {
               const abs = a + fr;
-              const speaking = Math.max(0, ...VO_WINDOWS.map(([s0, s1]) => interpolate(abs, [s0 - 9, s0, s1, s1 + 12], [0, 1, 1, 0], clamp)));
+              const speaking = Math.max(0, ...voWindows.map(([s0, s1]) => interpolate(abs, [s0 - 9, s0, s1, s1 + 12], [0, 1, 1, 0], clamp)));
               const env = interpolate(fr, [0, Math.max(1, f(m.fadeIn)), len - Math.max(1, f(m.fadeOut)), len], [0, 1, 1, 0], clamp);
               return MUSIC.gain * env * (1 - (1 - MUSIC.duckUnderVo) * speaking);
             }} />
@@ -50,3 +56,6 @@ export function Film() {
     </AbsoluteFill>
   );
 }
+
+export const Film = () => <Assembly scenes={PLACED} score={SCORE} />;
+export const XCut = () => <Assembly scenes={X_PLACED} score={X_SCORE} />;
