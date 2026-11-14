@@ -1,8 +1,8 @@
 // Which instance a scene shows. The judge instance ember-rift is launched, played, killed and declared dead on camera
 // (S01–S09, S11). Its key release could not complete tonight (its release program reads the chain through public RPCs
-// that were rate-limiting), so S10 and S12–S16 show the dev instance v2dev's REAL afterlife on the same global code:
+// that were rate-limiting), so S10 and S13–S16 show the dev instance v2dev's REAL afterlife on the same global code:
 // its OutLayer release, Walrus/Archive copy, fan host, epoch claim and Base payout on 14 Nov. Every frame of those
-// scenes says so: S10 opens with a banner, and a corner chip stays on S10 and S12–S16 in every cut (the vertical shows
+// scenes says so: S10 opens with a banner, and a corner chip stays on S10 and S13–S16 in every cut (S12, ember-rift's stored build, carries its own) (the vertical shows
 // it in its own header instead, since its band crops the frame's edges).
 import { createContext, useContext, type FC, type ReactNode } from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
@@ -14,7 +14,9 @@ export const INSTANCE_CHIP = "v2dev · same code · real release 14 Nov";
 /** S11 returns to the judge instance (its holders choose after the kill), so it says so too. */
 export const JUDGE_CHIP = "ember-rift · judge instance · holders choose";
 /** Scenes whose run values and takes come from v2dev (src/film/run-facts-after.json). */
-export const AFTER_SCENES = new Set(["S10", "S12", "S13", "S14", "S15", "S16"]);
+export const AFTER_SCENES = new Set(["S10", "S13", "S14", "S15", "S16"]);
+/** S12 shows ember-rift's encrypted build, stored for good and waiting for its key. */
+export const JUDGE_STORED_CHIP = "ember-rift · judge instance · build stored, key not yet released";
 
 /** false inside the vertical cut, which draws the chip in its own header. */
 export const ChipInFrame = createContext(true);
@@ -47,14 +49,14 @@ function Banner() {
 }
 
 /** Wraps a scene component so it carries the instance label wherever it plays (full film, X cut, scene comps). */
-export function withInstance(Scene: FC, opts: { banner?: boolean; chipBottom?: number } = {}): FC {
+export function withInstance(Scene: FC, opts: { banner?: boolean; chipBottom?: number; text?: string } = {}): FC {
   const Wrapped: FC = () => {
     const inFrame = useContext(ChipInFrame);
     return (
       <AbsoluteFill>
         <Scene />
         {inFrame && opts.banner && <Banner />}
-        {inFrame && <InstanceChip bottom={opts.chipBottom} />}
+        {inFrame && <InstanceChip bottom={opts.chipBottom} text={opts.text} />}
       </AbsoluteFill>
     );
   };
