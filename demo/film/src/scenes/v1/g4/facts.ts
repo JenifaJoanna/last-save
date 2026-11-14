@@ -74,16 +74,16 @@ export const KEY_GROUPS = [0, 1, 2, 3].map((i) => RELEASED_KEY.slice(i * 16, i *
  * with the cyan "// Server key · decoded on-chain" eyebrow at content top 360 and nothing else on the gold screen. */
 export const KEY_POSE = { cx: 960, cy: 540, size: 36, eyebrowTop: 360, color: "#ffc94a" } as const;
 
-/** x-release (OutLayer on_execution_response receipt): the Result block (key, status). TUNE for the v2 take: v1 shows
- * it at 10 s, x 380–1540, y 780–1010. */
-export const XREL = { from: 10.0, crop: { x: 380 / 1920, y: 780 / 1080, w: 1160 / 1920, h: 230 / 1080 } };
-
-/** The release take (/status DEAD → Release → RELEASED). S10 opens on the frame the screen turns gold (preview: 6.6 s;
- * it scrolls to the escrow card at ~8 s).
- * TUNE for the v2 take. */
-export const RELEASE_FROM = 6.6;
-/** Where the take shows the decoded key after it scrolls (content px, preview). TUNE for the v2 take. */
-export const TAKE_KEY = { x: 1369, y: 546, size: 13 };
+/** S10 shows the dev instance v2dev's real, already-completed release (run-facts-after.json); the release moment itself
+ * is not replayed. x-release (raw/x-release.mp4 + .cast, 3840×2160): chain-view get_info on v2dev via public RPC; the
+ * JSON (contract, status Dead, cause probes, released_key, released_at_ms) prints at 1.26 s, rows x 252–1500, y 330–495
+ * on the 1920 basis. */
+export const XREL = { from: 1.4, crop: { x: 230 / 1920, y: 300 / 1080, w: 1300 / 1920, h: 230 / 1080 } };
+/** release (raw/release.mp4, 1920×1080, 10.7 s): v2dev /status already RELEASED, static. */
+export const RELEASE_FROM = 0.5;
+/** The take's key as it wraps in the escrow card: rows at 44 + 20 chars, left x 1230, row centres y 929 / 949 (1920
+ * basis), ~13.5 px. The lift keeps that wrap at 56 px, then the rows join into S11's one 36 px line. */
+export const TAKE_KEY = { x: 1230, y: [929, 949], size: 13.5, wrap: 44 } as const;
 /** Brief/PLAN: the status bar flips red at the collapse. Set true to step it instead with the contract (probing amber
  * while the probes take plays, red when the contract marks it dead), which matches what the take shows. */
 export const CHROME_FOLLOWS_CONTRACT = true;
