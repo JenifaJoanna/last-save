@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" role="img" aria-label="Tidebreak">
+  <title>Tidebreak: a second studio's game on the Last Save licence</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0814"/><stop offset="1" stop-color="#14223a"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fd8d0"/><stop offset="1" stop-color="#1d6f8a"/></linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fffd"/><stop offset=".55" stop-color="#4fd8d0"/><stop offset="1" stop-color="#9b4fe0"/></linearGradient>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000" opacity=".22"/></pattern>
+  </defs>
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <circle cx="480" cy="250" r="120" fill="none" stroke="#ffc94a" stroke-width="3" opacity=".7"/>
+  <circle cx="480" cy="250" r="84" fill="#ffc94a" opacity=".16"/>
+  <g fill="none" stroke="url(#sea)" stroke-width="10" stroke-linecap="round">
+    <path d="M60 330 C180 270 260 390 380 330 S580 270 700 330 S860 390 900 340"/>
+    <path d="M60 372 C180 312 260 432 380 372 S580 312 700 372 S860 432 900 382" opacity=".7"/>
+    <path d="M60 414 C180 354 260 474 380 414 S580 354 700 414 S860 474 900 424" opacity=".45"/>
+  </g>
+  <text x="480" y="150" text-anchor="middle" font-family="Archivo, 'Arial Black', sans-serif" font-weight="900" font-size="96" letter-spacing="6" fill="url(#word)">TIDEBREAK</text>
+  <text x="480" y="500" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="20" letter-spacing="4" fill="#efe5d0" opacity=".75">// SALTGLASS GAMES · ARENA</text>
+  <rect width="960" height="540" fill="url(#scan)"/>
+</svg>

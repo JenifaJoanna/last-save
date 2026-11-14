@@ -23,9 +23,9 @@ export const validName = (n) => /^[a-z0-9][a-z0-9_-]{0,30}[a-z0-9]$/.test(n);
 export const nearStr = (y) => `${(Number(BigInt(y) / 10n ** 20n) / 1e4).toFixed(4)} NEAR`;
 
 /** The v1 deploy config, field for field (launch.mjs `deploy` uses this too). */
-export function baseConfig({ state, studio, platformUrl, officialUrl, liveness, prod }) {
+export function baseConfig({ state, studio, platformUrl, officialUrl, liveness, prod, title = "Ember Rift", gameId = "ember-rift", media = `${platformUrl}/art/ember-rift-key-960.jpg` }) {
   return {
-    studio, outlayer: "outlayer.testnet", title: "Ember Rift", game_id: "ember-rift", media: `${platformUrl}/art/ember-rift-key-960.jpg`,
+    studio, outlayer: "outlayer.testnet", title, game_id: gameId, media,
     price: NEAR("0.25").toString(), fund_bps: 4000, royalty_bps: 1000,
     release: state.release, probe: state.probe, key_commitment: state.key_commitment,
     artifact: { urls: state.artifact.urls, sha256: state.artifact.sha256, build_hash: state.artifact.build_hash, size: state.artifact.size },
@@ -145,7 +145,7 @@ export const steps = {
     const problems = [];
     if (keys !== 0) problems.push(`${keys} access keys`);
     if (acc.global_contract_hash !== hash) problems.push(`code ${acc.global_contract_hash} != ${hash}`);
-    if (info.config?.game_id !== "ember-rift" || !info.status) problems.push("get_info not sane");
+    if (info.config?.game_id !== (process.env.GAME_ID ?? "ember-rift") || !info.status) problems.push("get_info not sane");
     if (!evm || evm.derivation_account !== c.contract || evm.chain_id !== 84532) problems.push("evm_payout_info wrong");
     const line = `${c.contract} keys=${keys} code=${acc.global_contract_hash} ${problems.length ? "MISMATCH" : "ok"} status=${info.status} evm=${evm?.address} ops=${nearStr(info.totals.ops_budget)} escrowed=${info.escrowed} verified=${info.escrow_verified}`;
     c.record("verify", { summary: line, problems });

@@ -1,0 +1,53 @@
+{
+  "contract": "tidebreak.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "cibuild",
+      "at": "2026-11-14T10:38:27.559Z",
+      "build_hash": "9072616be1b222b2c50ff393f60fa3f3a3f502037686500059d534b053d8fba7",
+      "attested_digest": "9072616be1b222b2c50ff393f60fa3f3a3f502037686500059d534b053d8fba7",
+      "artifact_sha256": "ce76edeadfd317d61258994c510379f999adba78e970c9d91b1a8019229c28af",
+      "size": 586852,
+      "key_commitment": "53a8472cdd9bb6f80bc4854549fc7f495fb03bc14081a0e681eb198a25c053c5",
+      "workflow": ".github/workflows/release-build.yml",
+      "commit": "dd1e80f5507c36547077954927dc4932b40514ea",
+      "run_id": "43586109204",
+      "rekor_log_index": 3875955159,
+      "rekor_integrated_time": "2026-11-14T10:37:21.000Z"
+    },
+    {
+      "step": "walrus",
+      "at": "2026-11-14T10:38:39.918Z",
+      "blob_id": "h24OReEPcP9o6A4X-yDgDEgMFeWAx3Q-Y8SqROMeMv0",
+      "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/h24OReEPcP9o6A4X-yDgDEgMFeWAx3Q-Y8SqROMeMv0",
+      "end_epoch": 634,
+      "newly_created": true,
+      "readback_sha256": "ce76edeadfd317d61258994c510379f999adba78e970c9d91b1a8019229c28af",
+      "readback_ok": true,
+      "bytes": 586852
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-14T10:38:39.927Z",
+      "release": {
+        "sha256": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-0a02917bec7e50c1.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://aggregator.walrus-testnet.walrus.space/v1/blobs/h24OReEPcP9o6A4X-yDgDEgMFeWAx3Q-Y8SqROMeMv0",
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/tidebreak-ce76edeadfd317d6.bin"
+      ],
+      "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    }
+  ]
+}

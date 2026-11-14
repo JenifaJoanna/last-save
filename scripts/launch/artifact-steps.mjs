@@ -87,7 +87,7 @@ export const steps = {
     sh("pnpm", ["--filter", "server-bundle", "encrypt", "--key-file", `../${c.keyFile}`]);
     const meta = JSON.parse(readFileSync("server-bundle/dist/artifact.json", "utf8"));
     if (meta.build_hash !== rel.digest) throw new Error("build_hash differs from the attested digest");
-    c.state.artifact = { ...meta, file: `ember-rift-${meta.sha256.slice(0, 16)}.bin` };
+    c.state.artifact = { ...meta, file: `${process.env.GAME_ID ?? "ember-rift"}-${meta.sha256.slice(0, 16)}.bin` };
     c.state.provenance = { repo, tag, workflow: proof.workflow, commit: proof.commit, run_id: proof.runId, run_url: proof.runUrl, rekor_index: proof.rekorIndex, integrated_time: proof.integratedTime, source: proof.source };
     c.state.key_commitment = c.keyCommitment();
     c.save();

@@ -57,7 +57,9 @@ const LIVENESS = process.env.LIVENESS === "prod"
   ? { probe_interval_ms: 6 * 3600_000, fail_threshold: 4, receipt_window_ms: 72 * 3600_000, report_window_ms: 72 * 3600_000, quorum_bps: 5000 }
   : { probe_interval_ms: 20_000, fail_threshold: 3, receipt_window_ms: 180_000, report_window_ms: 120_000, quorum_bps: 5000 };
 
-const baseConfig = () => v2.baseConfig({ state, studio: STUDIO, platformUrl: PLATFORM_URL, officialUrl: OFFICIAL_URL, liveness: LIVENESS, prod: process.env.LIVENESS === "prod" });
+// TITLE / GAME_ID / MEDIA launch another studio's game through the same pipeline (default: Ember Rift).
+const baseConfig = () => v2.baseConfig({ state, studio: STUDIO, platformUrl: PLATFORM_URL, officialUrl: OFFICIAL_URL, liveness: LIVENESS, prod: process.env.LIVENESS === "prod",
+  ...(process.env.TITLE && { title: process.env.TITLE }), ...(process.env.GAME_ID && { gameId: process.env.GAME_ID }), ...(process.env.MEDIA && { media: process.env.MEDIA }) });
 const ctx = {
   studio: STUDIO, factory: FACTORY, contract: CONTRACT, name: NAME, state, save, record, recordGlobal, config: baseConfig,
   licenceWasm: process.env.LICENCE_WASM ?? v2.LICENCE_WASM, factoryWasm: process.env.FACTORY_WASM ?? v2.FACTORY_WASM,
