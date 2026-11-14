@@ -14,11 +14,23 @@ export const CONFIG = {
     run: "proof/run-v2dev-20261114T0857Z.json",
     // first file wins per step: v2dev has the instance, v2walrus has the CI build, Rekor and Walrus steps v2dev predates
     launch: ["proof/launch-v2dev.json", "proof/launch-v2walrus.json"],
-    verify: null, // pass --verify <path> (pnpm -s verify --instance v2dev --json)
+    verify: "proof/verify-v2dev.json", // `pnpm -s verify --instance v2dev --json`
+    verifyAll: "proof/verify-all.json", // optional: `pnpm -s verify --all --json` (an array); S16 then shows all instances
+    extra: "proof/v2dev-extra.json", // values the proof files lack, read from the chain: releasedKey (get_info), archiveItem
     buyer: "lastsave-yuna.testnet",
   },
   studio2: "proof/launch-tidebreak.json", // the second studio's instance (S07)
 };
+
+/** Two sets: "judge" (ember-rift; S01-S09, S11) -> run-facts.json, "after" (v2dev's real afterlife; S10, S12-S16) ->
+ * run-facts-after.json. A key outside a set's list is still written when readable, and is never reported missing. */
+export const SET_KEYS = {
+  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolBefore", "postBuyDelta", "poolTotal", "runwayEpochs", "epochCap", "epochLen"],
+  after: ["releasedSha", "releasedKey", "archiveItem", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce", "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
+};
+const BOTH = ["instance", "walrusBlob", "walrusHost", "workflow", "commit7", "rekorIndex", "rekorLogged"];
+/** Is this key required in that set? */
+export const required = (key, set) => BOTH.includes(key) || SET_KEYS[set].includes(key);
 
 // ---- helpers ----
 const bad = (msg) => { throw new Error(msg); };
@@ -113,6 +125,6 @@ export const MAP = [
 
 /** Cross-checks between values (the film shows some numbers twice and they must agree). */
 export const CHECKS = [
-  (V) => (V.payoutNear === V.hostPaid ? null : `payoutNear ${V.payoutNear} != hostPaid ${V.hostPaid} (S14 lifts the amount S15 flies to the Base row)`),
-  (V) => (Math.abs(Number(V.poolBefore) + Number(V.postBuyDelta) - Number(V.poolTotal)) < 0.0015 ? null : `poolBefore + postBuyDelta (${V.poolBefore} + ${V.postBuyDelta}) != poolTotal ${V.poolTotal}`),
+  (V, set) => set !== "after" ? null : (V.payoutNear === V.hostPaid ? null : `payoutNear ${V.payoutNear} != hostPaid ${V.hostPaid} (S14 lifts the amount S15 flies to the Base row)`),
+  (V, set) => set !== "judge" ? null : (Math.abs(Number(V.poolBefore) + Number(V.postBuyDelta) - Number(V.poolTotal)) < 0.0015 ? null : `poolBefore + postBuyDelta (${V.poolBefore} + ${V.postBuyDelta}) != poolTotal ${V.poolTotal}`),
 ];

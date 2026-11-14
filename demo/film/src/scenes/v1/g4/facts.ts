@@ -2,7 +2,7 @@
 // Beat frames are scene-relative and come from the scribe_v3 word times (vo/timings/V08.json, V09.json).
 import V08 from "../../../../vo/timings/V08.json";
 import V09 from "../../../../vo/timings/V09.json";
-import { rs } from "../../../film/run";
+import { rs, ra } from "../../../film/run";
 import { voFrame } from "../../../film/timeline";
 
 const wordAt = (words: { w: string; s: number }[], w: string, n = 0) => words.filter((x) => x.w.toLowerCase().replace(/[^a-z']/g, "") === w)[n].s;
@@ -68,7 +68,7 @@ export const ALERT = {
 
 /** The released server key (the run's released_key, read back from the instance). S11 splits it into four 16-char rows
  * (g5 draws the same string). */
-export const RELEASED_KEY = rs("releasedKey");
+export const RELEASED_KEY = ra("releasedKey");
 export const KEY_GROUPS = [0, 1, 2, 3].map((i) => RELEASED_KEY.slice(i * 16, i * 16 + 16));
 /** End pose of S10 = S11's first frame (S11.tsx): one 64-char line, Plex Mono 500 36 px gold, centred on (960, 540),
  * with the cyan "// Server key · decoded on-chain" eyebrow at content top 360 and nothing else on the gold screen. */

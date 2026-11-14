@@ -1,0 +1,4 @@
+{
+  "_source": "v2dev.lastsave-factory.testnet view get_info (public RPC), read 2026-11-14; the release phase of the run proof logs only 'key stored', not the key. sha256 of this key equals key_commitment f2772b9f97d804708437485cf5ad2e6148d0b9a662d313612261c73b9badf033 (pnpm verify release.key passes).",
+  "releasedKey": "dff0a6d0fe23090ec9ec95a4f864eed5ad510fd0f13d7a044fa56dd67d009d51"
+}

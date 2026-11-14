@@ -11,6 +11,8 @@ import { stepped, T } from "../ds/tokens";
 
 export const INSTANCE_BANNER = "Real OutLayer release · dev instance v2dev · same code · 14 Nov";
 export const INSTANCE_CHIP = "v2dev · same code · real release 14 Nov";
+/** S11 returns to the judge instance (its holders choose after the kill), so it says so too. */
+export const JUDGE_CHIP = "ember-rift · judge instance · holders choose";
 /** Scenes whose run values and takes come from v2dev (src/film/run-facts-after.json). */
 export const AFTER_SCENES = new Set(["S10", "S12", "S13", "S14", "S15", "S16"]);
 
@@ -19,12 +21,12 @@ export const ChipInFrame = createContext(true);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /** The persistent chip, bottom-left under the screen's hint row (raised where a full-frame game HUD sits there). */
-export function InstanceChip({ bottom = 14, left = 24 }: { bottom?: number; left?: number }) {
+export function InstanceChip({ bottom = 14, left = 24, text = INSTANCE_CHIP }: { bottom?: number; left?: number; text?: string }) {
   return (
     <div style={{ position: "absolute", left, bottom, display: "flex", alignItems: "center", gap: 10, padding: "6px 12px",
       background: "rgba(18,14,34,0.86)", border: `1px solid ${T.line2}`, borderRadius: 3 }}>
       <div style={{ width: 9, height: 9, borderRadius: 5, background: T.gold, boxShadow: `0 0 8px ${T.gold}` }} />
-      <Label size={20} color={T.text} track={0.12}>{INSTANCE_CHIP}</Label>
+      <Label size={20} color={T.text} track={0.12}>{text}</Label>
     </div>
   );
 }

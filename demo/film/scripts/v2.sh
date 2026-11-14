@@ -39,6 +39,11 @@ if [ -f scripts/facts.mjs ] && [ -f "$REPO/proof/judge-v2.json" ]; then
   node scripts/facts.mjs || { [ $FINAL = 1 ] && exit 1; problems+=("judge facts incomplete: MISSING values render on screen"); }
 elif [ $FINAL = 1 ]; then echo "proof/judge-v2.json or scripts/facts.mjs missing: no final without the judge facts"; exit 1
 else echo "judge proof not there yet: facts stay as they are"; problems+=("judge facts not swapped"); fi
+# the afterlife set (S10, S12-S16): v2dev's real run, read from its proof files into run-facts-after.json
+if [ -f scripts/facts.mjs ] && [ -f "$REPO/proof/run-v2dev-20261114T0857Z.json" ] && [ -f "$REPO/proof/verify-v2dev.json" ]; then
+  node scripts/facts.mjs --set after || { [ $FINAL = 1 ] && exit 1; problems+=("after facts incomplete: MISSING values render on screen"); }
+elif [ $FINAL = 1 ]; then echo "v2dev proof or proof/verify-v2dev.json missing: no final without the after facts"; exit 1
+else echo "v2dev verify JSON not there yet: after facts stay as they are"; problems+=("after facts not refreshed"); fi
 
 step "typecheck, render smoke test (first/middle/last frame of every scene) and captions"
 npx tsc --noEmit -p .
@@ -50,7 +55,7 @@ if node scripts/final-gate.mjs; then :; elif [ $FINAL = 1 ]; then exit 1; else p
 
 step "commit generated files (explicit paths) and push"
 GEN=()
-for g in src/scenes/v1/g3/match.ts src/film/run-facts.json; do if [ -f "$g" ]; then GEN+=("$g"); fi; done
+for g in src/scenes/v1/g3/match.ts src/film/run-facts.json src/film/run-facts-after.json; do if [ -f "$g" ]; then GEN+=("$g"); fi; done
 if [ -n "$(git status --porcelain -- "${GEN[@]}")" ]; then
   git add -- "${GEN[@]}" && git commit -q -m "Film${SUFFIX}: judge-run facts and hit times from the capture" -- "${GEN[@]}"
 fi

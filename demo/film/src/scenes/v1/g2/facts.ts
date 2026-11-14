@@ -1,8 +1,9 @@
 // Every chain value S04, S05 and S12 draw on screen. Run values come from film/run-facts.json (scripts/facts.mjs reads
 // them from the run's proof files); only the contract config the product defines stays here.
-import { rn, rs, shortHash } from "../../../film/run";
+import { ra, rn, rs, shortHash } from "../../../film/run";
 
 export interface Fact { v: string; src: string }
+const after = (key: Parameters<typeof ra>[0], src: string): Fact => ({ v: ra(key), src });
 const run = (key: Parameters<typeof rs>[0], src: string): Fact => ({ v: rs(key), src });
 
 /** Instance config shown on the licence card: price and the locked share come from the run's config. */
@@ -24,11 +25,11 @@ export const FACTS = {
   /** S05: access keys on the instance (x-keys flash). */
   accessKeys: run("accessKeys", "run proof preflight"),
   /** S12: sha256 of the released build as recorded on chain (both plinth tags). */
-  releasedSha: run("releasedSha", "verify pins"),
+  releasedSha: after("releasedSha", "after-run verify pins"),
   /** S12: Walrus blob id of the released build. */
-  walrusBlob: run("walrusBlob", "launch proof walrus step"),
+  walrusBlob: after("walrusBlob", "after-run launch walrus step"),
   /** S12: Internet Archive item id of the released build. */
-  archiveItem: run("archiveItem", "extra proof"),
+  archiveItem: after("archiveItem", "after-run extra proof"),
   /** S12 first frame: keep-alive pool total shown at the end of S11. */
   poolTotal: run("poolTotal", "run proof claim phase"),
 };

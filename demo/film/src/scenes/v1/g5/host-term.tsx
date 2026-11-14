@@ -9,7 +9,7 @@ import { Camera, ScreenFrame } from "../../../ds/screen";
 import { Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
 import { Slot, slotSource } from "../../../film/Slot";
-import { RUN_INSTANCE } from "../../../film/run";
+import { RUN_AFTER_INSTANCE } from "../../../film/run";
 import { HOST_CMD, HOST_ROWS, KEY_PROVENANCE, KEY_WALRUS, LAYOUT, TAKE_FROM, TERM_CROP, TERM_ROW } from "./facts";
 import { c, LiftPlate, out, printIn, ramp, word } from "./kit";
 
@@ -25,7 +25,7 @@ const LIFT_Y = LAYOUT.s13LiftY; // content-space centre of the lift band
 type Kind = "walrus" | "hash" | "provenance" | "snapshot" | "register";
 interface Line { at: number; body: ReactNode; text: string; lift?: Kind; liftAt?: number }
 const ok = (s: string) => <span style={{ color: T.alive }}>{s}</span>;
-const HOST_LINE = `Last Save host for lastsave-fanhost.testnet on ${RUN_INSTANCE}`;
+const HOST_LINE = `Last Save host for lastsave-fanhost.testnet on ${RUN_AFTER_INSTANCE}`;
 const LINES: Line[] = [
   { at: TYPE_END + 4, text: HOST_LINE, body: HOST_LINE },
   { at: TYPE_END + 10, text: "  released key matches the on-chain commitment (…)", body: "  released key matches the on-chain commitment (…)" },

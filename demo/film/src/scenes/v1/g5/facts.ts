@@ -1,24 +1,28 @@
 // Every number, string and take-geometry constant that S11, S13 and S14 draw, in one place so the real v2 takes can be
 // lined up by editing this file only. Sources are noted per value; anything marked TUNE needs the real take to confirm.
 
-import { rs, rn } from "../../../film/run";
+import { ra, ran, rs, rn } from "../../../film/run";
 
 /** Seam S11: the decoded server key S10 ends on; must equal the string S10 draws on its last frame. */
-export const RELEASED_KEY = rs("releasedKey");
+export const RELEASED_KEY = ra("releasedKey");
 
 /** Keep-alive pool after the four choices and the post-shutdown buy (run proof: pool after the buy, the config epoch cap
  * and epoch length). Runway = floor(pool / epoch cap) epochs. */
 export const POOL = { total: rs("poolTotal"), runwayEpochs: rn("runwayEpochs"), epochCap: rs("epochCap"), epochLen: rs("epochLen") };
 
 /** Host epoch claim (run proof, claim phase): verified holder sessions and the NEAR paid. */
-export const CLAIM = { sessions: rn("sessionsVerified"), paid: rs("hostPaid") };
+export const CLAIM = { sessions: ran("sessionsVerified"), paid: ra("hostPaid") };
 
 /** The fan's host command, as on the Hosts page (web/src/pages/app/Hosts.tsx CMD) with the e2e host account. */
 export const HOST_CMD = "pnpm host --local --account lastsave-fanhost.testnet"; // the e2e host account (fixed by the run harness)
 
 /** Seconds into each take where the slot starts playing (the 1-s hold at the take's start is skipped). TUNE per take. */
 export const TAKE_FROM: Record<string, number> = {
-  refund: 1.9, refund2: 1.9, pledge: 1.8, pledge2: 1.8, postbuy: 2.0,
+  // S11 cut sheet (real takes, 14 Nov 23:20). pledge (mira #3): PLEDGE selected 1.9 s, relayer toast 10.9 s, card flips to
+  // "You pledged to the hosts" 13.3 s. pledge2 (kofi #4): selected 1.6 s, flips 9.5 s. postbuy (ines #5): toast ~9 s,
+  // "You own licence #5" ~11 s. In-points trim the chain wait; no cut inside a shown wait, nothing sped up.
+  // pledge in-point puts its toast on S11 f32 (toast lift); pledge2 puts kofi's flip on f143 (pledged lift).
+  pledge: 10.73, pledge2: 5.73,
   hostbtn: 1.0, "t-host": 0.6,
   backSignin: 1.0, backMatch: 9.0, bounce: 1.0, epoch: 1.0,
 };
@@ -27,17 +31,31 @@ export const TAKE_FROM: Record<string, number> = {
  * inside ScreenFrame keeps identical chrome. */
 export const CONTENT_CROP = { x: 21 / 1920, y: 102 / 1080, w: 1878 / 1920, h: 868 / 1080 };
 
-/** /app/afterlife: the "Your licence" choice card and the "Where the money is" card (row 2 of AfterlifeView, max-w-7xl
- * centred: the choice card at x ≈ 320–720), tight enough that 13 px app text reads ≥ 18 px. The take scrolls so row 2 is in
- * view (refund ≈ 1.5 s in, pledge a little further). y per slot measured on the preview captures. TUNE for the v2 takes. */
-const choose = (y: number) => ({ x: 310 / 1920, y: y / 1080, w: 522 / 1920, h: 270 / 1080 });
-export const CHOOSE_CROP: Record<string, { x: number; y: number; w: number; h: number }> = {
-  refund: choose(345), refund2: choose(345), pledge: choose(272), pledge2: choose(272), // from the preview captures
-};
+/** /app/afterlife in the real takes: the "Your licence" choice card and the "Where the money is" card (x 310–1130,
+ * y 245–703 of the 1920×1080 take). The on-chain log (y ≥ 720, with its "Release attempt" rows) and the hero's
+ * "Last attempt" line (y ≈ 120) stay outside the crop. Same scroll in both pledge takes. TUNE if a take is replaced. */
+const choose = { x: 310 / 1920, y: 245 / 1080, w: 820 / 1920, h: 458 / 1080 };
+export const CHOOSE_CROP: Record<string, { x: number; y: number; w: number; h: number }> = { pledge: choose, pledge2: choose };
+/** Points inside that crop (fractions) the S11 key lines rise from: the money card's Refunded row, the card title. */
+export const CHOOSE_POINTS = { refunded: { x: 0.96, y: 0.28 }, title: { x: 0.25, y: 0.12 }, toast: { x: 1.0, y: 1.0 } };
 
 /** /app/store after death: the licence-price card (90 % to the keep-alive pool, 10 % to the gas-free budget since commit 8c374a6), right column of
  * max-w-6xl (x ≈ 1036–1536). TUNE. */
-export const POSTBUY_CROP = { x: 880 / 1920, y: 236 / 1080, w: 860 / 1920, h: 398 / 1080 };
+/** S11 buy beat ("New players fund it too"). "demo-ember-rift": ines's post-death buy on ember-rift (postbuy.mp4,
+ * 14 Nov 23:21), signed by the in-app judge-demo signer: captioned. "wallet-v2dev": the real-wallet post-death buy on the
+ * v2dev instance (wallet approval → licence → 90/10), no caption, plus the instance chip. Swap = this one line plus the
+ * TUNE in-point/crop below once the take lands. The pool numbers stay ember-rift's (run facts). */
+export const POSTBUY: "wallet-v2dev" | "demo-ember-rift" = "demo-ember-rift";
+const STORE_CARD = { x: 880 / 1920, y: 236 / 1080, w: 860 / 1920, h: 398 / 1080 };
+export const POSTBUY_TAKE = {
+  "demo-ember-rift": { from: 8.0, crop: STORE_CARD }, // ines: buy toast ≈ 9 s, "You own licence #5" ≈ 11 s
+  "wallet-v2dev": { from: 8.0, crop: STORE_CARD }, // TUNE when the wallet take lands (in-point on the wallet approval)
+}[POSTBUY];
+/** Honest captions (S04's wording). pledge, pledge2 and ines's postbuy show no wallet approval: the judge-demo signer
+ * signed them. */
+export const DEMO_SIGNER = "signed by the judge-demo signer · no wallet";
+export const PLEDGES_DEMO_SIGNED = true;
+export const V2DEV_CHIP = "v2dev · same code";
 
 /** Game client HUD (game/client/src/ui/styles.css: --b 10, --strip 30, --pad 14): #board top-left (4 players) and #me
  * bottom-left (level box, name, "Skin · Emberwing", XP). Fractions of the 1920×1080 take. TUNE against `back`. */
@@ -56,14 +74,24 @@ export const TERM_ROW = { top: 18 / 924, h: 34.4 / 924 }; // first row offset an
 
 // ---- v2 legibility pass: key lines lifted as film type (≥ 56 px after camera, ≥ 45 f, ≤ 4 px/f). Positions are TUNE. ----
 /** S11 toast body, verbatim from web/src/lib/wallet.tsx (gasless toast). Title is texture. */
-export const KEY_TOAST = { title: "Refund sent", body: "Gas paid by the relayer: you paid 0 Ⓝ." };
+export const KEY_TOAST = { title: "Pledge added to the pool", body: "Gas paid by the relayer: you paid 0 Ⓝ." }; // pledge.mp4 10.9 s
+/** A run value, or null while the run facts list it as MISSING (then the take's own visible figure is used). */
+const known = (k: Parameters<typeof rs>[0]) => { const v = rs(k); return v.startsWith("MISSING·") ? null : v; };
+/** "take their share back": the money card's Refunded row as both pledge takes show it (0.1 Ⓝ: one refund had landed
+ * when they were recorded). */
+export const KEY_REFUNDED = { label: "Refunded", value: "0.1" };
+/** "keep the game alive": the choice card after the pledge (title + the licence's locked share). */
+export const KEY_PLEDGED = { title: "You pledged to the hosts", value: rs("lockedShare") };
 /** S11 end: the pool after the pledges, then the post-shutdown sale (run proof: 90 % to the pool, 10 % to the ops budget,
  * contracts/licence/src/ops.rs). */
-export const KEY_SPLIT = { before: rs("poolBefore"), after: rs("poolTotal"), line: `+${rs("postBuyDelta")} Ⓝ: 90% of the ${rs("price")} Ⓝ sale · 10% to ops` };
+// before: run fact, else the Keep-alive pool row in pledge2.mp4 after kofi's pledge (0.2 Ⓝ). after: run fact only (the
+// mint's storage fee comes off before the 90 %, so it is never derived here); while MISSING the number holds at `before`.
+// line: the post-shutdown store card's split legend, verbatim (postbuy.mp4).
+export const KEY_SPLIT = { before: known("poolBefore") ?? "0.2", after: known("poolTotal"), line: "90% to the keep-alive pool · 10% gas-free budget" };
 /** S13 key lines in the host CLI's own formats (host/lib/mirrors.mjs, provenance.mjs); values from the launch proof
  * (Walrus aggregator host, CI build commit, Rekor index and time). */
-export const KEY_WALRUS = [`walrus ${rs("walrusHost")} …`, "200, sha256 matches on-chain ✓"];
-export const KEY_PROVENANCE = ["provenance ✓ built by workflow", rs("workflow"), `at commit ${rs("commit7")}, logged ${rs("rekorLogged")}`, `(Rekor #${rs("rekorIndex")})`];
+export const KEY_WALRUS = [`walrus ${ra("walrusHost")} …`, "200, sha256 matches on-chain ✓"];
+export const KEY_PROVENANCE = ["provenance ✓ built by workflow", ra("workflow"), `at commit ${ra("commit7")}, logged ${ra("rekorLogged")}`, `(Rekor #${ra("rekorIndex")})`];
 /** Layout (TUNE): S11 toast centre, S13 lift band centre (content px), S12 key line top (frame px). */
 export const LAYOUT = { toast: { x: 960, y: 540 }, s13LiftY: 640, s12LineY: 880 };
 /** S14 stand-ins while `back` / `bounce` are pending, so the open never sits on a near-black "Take pending" card

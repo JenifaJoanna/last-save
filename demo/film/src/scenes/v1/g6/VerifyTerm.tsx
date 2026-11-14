@@ -5,7 +5,7 @@
 // The real command prints the whole table at once after ~2 s; the stand-in prints rows in so they read on camera.
 import { interpolate } from "remotion";
 import { FONT, T } from "../../../ds/tokens";
-import { rs, VERIFY_MARKS } from "../../../film/run";
+import { ra, RA_VERIFY_MARKS as VERIFY_MARKS } from "../../../film/run";
 import { VERIFY_INSTANCE, VERIFY_SUMMARY } from "./facts";
 import { C, printP, stepIn } from "./kit";
 
@@ -27,7 +27,7 @@ export const ROWS: Row[] = [
   R("title", `LAST SAVE verify · ${VERIFY_INSTANCE}`),
   R("blank"), R("group", "Code"),
   C_("Contract code is the published code"),
-  R("why", rs("verifyCodeWhy")),
+  R("why", ra("verifyCodeWhy")),
   C_("Published global code is readable and hashes to its id"),
   C_("0 access keys on the instance (locked)"),
   R("blank"), R("group", "Factory"),
