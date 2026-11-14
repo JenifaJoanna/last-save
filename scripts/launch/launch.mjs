@@ -3,6 +3,8 @@
 // and proof/launch-<contract>.json (tx hashes only, tracked).
 //   node scripts/launch/launch.mjs <step...>   steps: bundle mirrors deploy escrow attest snapkey official lock
 // v2 (factory, NEP-591 global contract):   publish factory (once)  |  bundle mirrors instance escrow attest snapkey official verify (per NAME)
+// v2 artifact pipeline (replaces bundle): cibuild walrus cdn mirrors instance escrow attest verify. cibuild tags build-<NAME> (plain git),
+//   waits for the CI release, verifies Sigstore provenance over public endpoints, encrypts that tarball. walrus: testnet blob; cdn: Pages kiln-cdn-<NAME>.
 //   NAME=ember-rift node scripts/launch/launch.mjs instance ...   -> CONTRACT = <NAME>.<FACTORY>, born locked (no deploy/lock steps)
 // Env: CONTRACT (lastsave-licence.testnet) STUDIO (lastsave-studio.testnet) OFFICIAL_BASE (emberrift) LIVENESS=demo|prod
 //   v2: NAME FACTORY (lastsave-factory.testnet) OPS_N (1.5) FACTORY_N (2.5) PUBLISH=yes (publish) FACTORY_LOCK=yes START_NONCE
@@ -14,6 +16,7 @@ import nearApi from "near-api-js";
 import { accountState, call, deploy, ensureKey, rpc, sendActions, view, NEAR } from "../lib/near.mjs";
 import { keyCommitment, sealServerKey } from "../lib/escrow.mjs";
 import * as v2 from "./factory-steps.mjs";
+import * as artifact from "./artifact-steps.mjs";
 
 const FACTORY = process.env.FACTORY ?? v2.FACTORY_DEFAULT;
 const NAME = process.env.NAME;
@@ -58,6 +61,7 @@ const baseConfig = () => v2.baseConfig({ state, studio: STUDIO, platformUrl: PLA
 const ctx = {
   studio: STUDIO, factory: FACTORY, contract: CONTRACT, name: NAME, state, save, record, recordGlobal, config: baseConfig,
   licenceWasm: process.env.LICENCE_WASM ?? v2.LICENCE_WASM, factoryWasm: process.env.FACTORY_WASM ?? v2.FACTORY_WASM,
+  local: LOCAL, keyFile, out: (s) => process.stdout.write(`${s}\n`), keyCommitment: () => keyCommitment(keyHex()),
   factoryN: NEAR(process.env.FACTORY_N ?? "2.5"), opsN: NEAR(process.env.OPS_N ?? "1.5"), minDeposit: v2.MIN_DEPOSIT_ESTIMATE, minEstimated: true,
 };
 
@@ -66,6 +70,9 @@ const steps = {
   factory: () => v2.steps.factory(ctx),
   instance: () => v2.steps.instance(ctx),
   verify: () => v2.steps.verify(ctx),
+  cibuild: () => artifact.steps.cibuild(ctx),
+  walrus: () => artifact.steps.walrus(ctx),
+  cdn: () => artifact.steps.cdn(ctx),
   /** Build the client + server bundle, encrypt it with K (generated once per instance). */
   bundle() {
     if (!existsSync(keyFile)) writeFileSync(keyFile, randomBytes(32).toString("hex"), { mode: 0o600 });
@@ -94,9 +101,11 @@ const steps = {
 
       state[kind] = { sha256: h, urls: [`${RAW}/artifacts/${name}`, `${PLATFORM_URL}/mirror/${name}`] };
     }
-    state.artifact.urls = [`${RAW}/artifacts/${a.file}`, `${PLATFORM_URL}/mirror/${a.file}`];
+    // v2 artifact pipeline: studio CDN copy, Walrus aggregator, GitHub raw. Without them: GitHub raw + the platform's Pages mirror (v1).
+    state.artifact.urls = state.cdn || state.walrus ? artifact.artifactMirrors({ cdn: state.cdn, walrus: state.walrus, file: a.file, platformUrl: PLATFORM_URL })
+      : [`${RAW}/artifacts/${a.file}`, `${PLATFORM_URL}/mirror/${a.file}`];
     save();
-    record("mirrors", { release: state.release, probe: state.probe, artifact_urls: state.artifact.urls, note: "commit+push artifacts/ and redeploy web before attest" });
+    record("mirrors", { release: state.release, probe: state.probe, artifact_urls: state.artifact.urls, note: "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm" });
   },
   async deploy() {
     if (BORN_LOCKED) throw new Error(`${CONTRACT} is a factory instance: use the instance step, not deploy`);

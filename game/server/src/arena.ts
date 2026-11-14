@@ -8,6 +8,7 @@ import { loadConfig, type Config, type Env } from "./env";
 import { errorJson, handleAttest, handleProfile, json } from "./http";
 import { verifyJoin } from "./login";
 import { SnapshotPoster } from "./poster";
+import { putSnapshot } from "./walrus";
 import { checkReceipt, newRequest, type Pending } from "./receipts";
 import { clientMsgSchema } from "./schemas";
 import { buildSnapshot, verifyRestore } from "./snapshot";
@@ -82,7 +83,8 @@ export class Arena extends DurableObject<Env> {
     const url = new URL(request.url);
     switch (url.pathname) {
       case "/health": return json({ ok: true, host_id: this.cfg.hostId, build_hash: this.cfg.buildHash, players_online: this.byAccount.size,
-        match: { phase: this.world.phase, t_left_ms: Math.round(this.world.phaseLeftMs), no: this.world.matchNo, ships: this.world.ships.size } });
+        match: { phase: this.world.phase, t_left_ms: Math.round(this.world.phaseLeftMs), no: this.world.matchNo, ships: this.world.ships.size },
+        walrus: { aggregator: this.cfg.walrusAggregator, latest: this.store.latestWalrus().map((r) => ({ ...r, url: `${this.cfg.walrusAggregator}/v1/blobs/${r.blob_id}` })) } });
       case "/attest": return handleAttest(url, this.store, this.cfg, Date.now());
       case "/profile": return handleProfile(url, this.store);
       case "/ws": return this.upgrade(request);
@@ -272,6 +274,8 @@ export class Arena extends DurableObject<Env> {
     if (this.poster) {
       const p = this.poster;
       this.ctx.waitUntil(p.post(seq, built.hash, built.blobBase64).then((r) => this.store.markSnapshot(seq, r.ok ? "posted" : "failed", r.tx, r.error)));
+      // Walrus copy of the same canonical JSON: independent of the chain post, failures only recorded
+      this.ctx.waitUntil(putSnapshot(built.json, this.cfg.walrusPublisher).then((w) => this.store.saveWalrus(seq, w.blobId, w.error)).catch(() => undefined));
     }
     return seq;
   }

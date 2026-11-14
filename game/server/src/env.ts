@@ -11,6 +11,9 @@ export interface Env {
   STUDIO_ACCOUNT?: string;
   /** fan host: JSON {"seq":n,"hash":"<sha256 hex>","blob_base64":"..."} verified on first boot */
   RESTORE_SNAPSHOT?: string;
+  /** studio only: Walrus publisher the snapshots are mirrored to ("off" disables; default the public testnet publisher) */
+  WALRUS_PUBLISHER?: string;
+  WALRUS_AGGREGATOR?: string;
   /** milliseconds an RPC answer stays cached (default 60000) */
   RPC_CACHE_MS?: string;
   /** base backoff between RPC retries in ms (default 400) */
@@ -27,6 +30,8 @@ export interface Config {
   snapshotSigner: string | null;
   studioAccount: string;
   restoreSnapshot: string | null;
+  walrusPublisher: string;
+  walrusAggregator: string;
   rpcCacheMs: number;
   rpcBackoffMs: number;
   timeScale: number;
@@ -47,6 +52,8 @@ export function loadConfig(env: Env): Config {
     snapshotSigner: env.SNAPSHOT_SIGNER || null,
     studioAccount: env.STUDIO_ACCOUNT || "lastsave-studio.testnet",
     restoreSnapshot: env.RESTORE_SNAPSHOT || null,
+    walrusPublisher: env.WALRUS_PUBLISHER ?? "https://publisher.walrus-testnet.walrus.space",
+    walrusAggregator: (env.WALRUS_AGGREGATOR || "https://aggregator.walrus-testnet.walrus.space").replace(/\/$/, ""),
     rpcCacheMs: int(env.RPC_CACHE_MS, 60_000, 0, 3_600_000),
     rpcBackoffMs: int(env.RPC_BACKOFF_MS, 400, 0, 10_000),
     timeScale: int(env.TIME_SCALE, 1, 1, 30),

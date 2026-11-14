@@ -10,7 +10,8 @@
     "https://last-save-preview.pages.dev/play/",
     "https://lastsave-relay.pages.dev/health",
     "https://emberrift-v2dev.pages.dev/",
-    "https://emberrift-v2dev.pages.dev/health"
+    "https://emberrift-v2dev.pages.dev/health",
+    "https://kiln-cdn-v2walrus.pages.dev/"
   ],
   "workers": [
     "emberrift-arena",

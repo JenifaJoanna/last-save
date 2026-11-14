@@ -23,6 +23,7 @@ export class Store {
     sql.exec(`CREATE INDEX IF NOT EXISTS receipts_ts ON receipts (ts_ms)`);
     sql.exec(`CREATE TABLE IF NOT EXISTS snapshots (seq INTEGER PRIMARY KEY, hash TEXT NOT NULL, json TEXT NOT NULL, at_ms INTEGER NOT NULL,
       status TEXT NOT NULL, tx TEXT, error TEXT)`);
+    sql.exec(`CREATE TABLE IF NOT EXISTS walrus_blobs (seq INTEGER PRIMARY KEY, blob_id TEXT, error TEXT, at_ms INTEGER NOT NULL)`);
   }
 
   getMeta(k: string): string | null {
@@ -119,6 +120,15 @@ export class Store {
   }
   markSnapshot(seq: number, status: string, tx: string | null, error: string | null): void {
     this.sql.exec(`UPDATE snapshots SET status = ?, tx = ?, error = ? WHERE seq = ?`, status, tx, error, seq);
+  }
+
+  saveWalrus(seq: number, blobId: string | null, error: string | null): void {
+    this.sql.exec(`INSERT OR REPLACE INTO walrus_blobs (seq, blob_id, error, at_ms) VALUES (?, ?, ?, ?)`, seq, blobId, error, Date.now());
+  }
+  /** Latest snapshots mirrored to Walrus, newest first. */
+  latestWalrus(limit = 5): { seq: number; blob_id: string }[] {
+    return this.sql.exec(`SELECT seq, blob_id FROM walrus_blobs WHERE blob_id IS NOT NULL ORDER BY seq DESC LIMIT ?`, limit)
+      .toArray().map((r) => ({ seq: Number(r.seq), blob_id: String(r.blob_id) }));
   }
 
   /** Imports a verified snapshot into an empty database; later snapshots continue from its seq. */

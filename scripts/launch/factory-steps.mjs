@@ -60,7 +60,7 @@ export function plan(step, c) {
   const wasm = (p) => { try { return readFileSync(p).length; } catch { return 0; } };
   const tx = (to, method, deposit, gas, note = "") => ({ from: c.studio, to, method, deposit: nearStr(deposit), gas_tgas: gas, note, need: deposit + tgasN(gas) });
   const P = {
-    bundle: [], mirrors: [], official: [], lock: [],
+    bundle: [], mirrors: [], official: [], lock: [], cibuild: [], walrus: [], cdn: [],
     publish: [tx(c.studio, "DeployGlobalContract(by code hash)", globalDeployCost(wasm(c.licenceWasm)), 20, "burnt, immutable; run only with PUBLISH=yes")],
     factory: [
       tx("testnet", "create_account", c.factoryN, 30, `creates ${c.factory}`),

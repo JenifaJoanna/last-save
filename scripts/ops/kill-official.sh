@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Studio shuts the official Ember Rift server down: deletes its Cloudflare Worker (and the Durable Object with it).
+# With a second argument <name>, it also takes the studio's artifact copy (Pages project kiln-cdn-<name>) offline via kill-studio-copy.sh.
 # Prints only its own lines (wrangler output, which can name the hosting account, is suppressed).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -15,3 +16,4 @@ printf 'No announcement. No end-of-service call.\n'
 sleep 1.2
 code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 https://emberrift.pages.dev/health || true)
 printf 'GET https://emberrift.pages.dev/health → %s\n' "$code"
+[ -n "${2:-}" ] && "$ROOT/scripts/ops/kill-studio-copy.sh" "$2" "${3:-}" || true
