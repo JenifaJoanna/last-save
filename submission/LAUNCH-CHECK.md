@@ -128,3 +128,14 @@
 
 52 items: PASS 30 · FAIL 9 (5 fixed in 35d1943, not deployed yet; 1 partly fixed; 3 proposed) · NOT COVERED 3 ·
 not applicable 10. Until the parent deploys 35d1943, production still shows the 6 fixed or partly fixed FAILs.
+
+## Addendum (15 Nov 2026, ~01:00 IST)
+
+- The fixes in `35d1943` are deployed: production has run builds that include them since 14 Nov 21:40 IST, and it is now
+  at `051cdce` (wired to the judge instance `ember-rift`). The 5 fixed and 1 partly fixed FAILs above are live.
+- Sign-in was rebuilt after this run (wallet-first, NEAR Connect only, header account chip with Disconnect). That
+  resolves the "No identity or sign-out anywhere" FAIL. The sign-in visual below 1024 px and the phone button label were
+  not re-checked.
+- The checklist was **not re-run** end to end after the rework. Re-verified since: the routes load on production, the
+  live identity gate passes (38 URLs), and a real Meteor Web wallet completed sign-in, a licence buy and a host
+  registration on a local production build of `051cdce` against live testnet.

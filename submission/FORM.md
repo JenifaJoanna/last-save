@@ -8,7 +8,7 @@ Form: one submission at nearhackathon.com (or POST /api/applications). One proje
 | tracks | `nfts` (NFTs That Do Something), `games` (Games With Real Economies) | agent |
 | projectUrl | https://github.com/JenifaJoanna/last-save | agent |
 | demoUrl | the public X post URL, after the submitter posts it (draft in X-POST.md) | submitter posts, agent fills |
-| idea | below (about 1,700 chars, limit 2,000) | agent |
+| idea | below (about 1,850 chars, limit 2,000) | agent |
 | leadName | **left empty — declaration, the submitter fills** | submitter |
 | email | **left empty — declaration, the submitter fills** | submitter |
 | size | **left empty — declaration, the submitter fills** | submitter |
@@ -32,3 +32,6 @@ provenance, decrypts it, restores the last on-chain progress snapshot and hosts 
 session in NEAR, or on Base Sepolia through NEAR Chain Signatures from the contract's own MPC-derived address. Holder
 actions are gas-free: NEP-366 delegates through a relayer, signed by a key the player's own wallet approved via NEAR
 Connect. Demo game: Ember Rift, a real-time 2–8 player arena. Live on NEAR testnet; every transaction is linked in the repo.
+On the judge instance the holders declared the studio gone; its key release is still pending, because the enclave's
+public-RPC reads were rate-limited on the deadline night. The released afterlife (key, fan host, Base payout) is shown on
+the dev instance, which runs the same code.
