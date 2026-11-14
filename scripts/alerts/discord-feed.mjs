@@ -36,8 +36,14 @@ export function embedFor(a, info, fails = 0) {
       if (out === "failed") return { ...base, color: COLOR.warn, title: `PROBE FAILED · ${fails}/${info?.config?.liveness?.fail_threshold ?? 3}`, description: `The enclave found no players being served (${det}).` };
       if (out === "alive") return { ...base, color: COLOR.alive, title: "PROBE · ALIVE", description: det };
       return null;
-    case "death": return { ...base, color: COLOR.dead, title: "DEAD · THE STUDIO WENT DARK", description: "Three probes failed. The contract declared the studio gone. Anyone can now trigger the release." };
-    case "release": return { ...base, color: COLOR.gold, title: "SERVER KEY RELEASED", description: "The enclave published the server key on-chain. Fans can host the game now." };
+    case "death": { // outcome is the cause the contract recorded
+      const why = out === "players" ? "Holders reported the server down: the report quorum was reached."
+        : out === "studio" ? "The studio announced end of service."
+        : "Probes failed in a row: the enclave found no players being served.";
+      return { ...base, color: COLOR.dead, title: "DEAD · THE STUDIO WENT DARK", description: `${why} The contract declared the studio gone. Anyone can now trigger the release.` };
+    }
+    case "release": // only the published key is news; "retry" records (an enclave timeout) are not announced
+      return out === "released" ? { ...base, color: COLOR.gold, title: "SERVER KEY RELEASED", description: "The enclave published the server key on-chain. Fans can host the game now." } : null;
     case "choose": return { ...base, color: COLOR.gold, title: out === "refund" ? "HOLDER TOOK A REFUND" : "HOLDER PLEDGED TO HOSTS", description: `Pledged so far ${N(t.pledged)} Ⓝ · refunded ${N(t.refunded)} Ⓝ · keep-alive pool ${N(t.pool)} Ⓝ. Hosts wanted.` };
     case "host": return { ...base, color: COLOR.alive, title: "HOST ONLINE", description: det };
     case "claim": return { ...base, color: COLOR.alive, title: out === "booked" ? "HOST PAID ON BASE (BOOKED)" : "HOST PAID", description: det.replace(/(\d{20,})/g, (m) => `${N(m)} Ⓝ`) };
