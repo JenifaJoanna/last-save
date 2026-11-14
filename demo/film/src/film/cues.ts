@@ -1,6 +1,7 @@
 // Sound cue sheet. `at` is seconds from the scene start (scene given) and is anchored to narration words where noted
 // (scene voAt + the word's scribe_v3 start). Files in public/sfx/v1/ (provenance: public/sfx/v1/sfx-provenance.json).
-// Score: Eleven Music music_v2_5, candidate 1 (warm retro synth, 84 BPM); runners-up c2/c3 kept in public/music/v1/.
+// Score: Eleven Music music_v2_5, candidate 3 (dark synthwave, 80 BPM, E minor to E major), picked 14 Nov from the score
+// pick page; runners-up c1/c2 kept in public/music/v1/. Gain and ducking unchanged (the pick was heard at this mix).
 import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
 import type { SceneId } from "./timeline";
 
@@ -59,7 +60,7 @@ export const SFX: Cue[] = [
 /** `offset`: seconds into the music file where playback starts (default 0). */
 export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number; offset?: number }
 export const SCORE: ScoreAct[] = [
-  { file: "music/v1/c1-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
-  { file: "music/v1/c1-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
+  { file: "music/v1/c3-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
+  { file: "music/v1/c3-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
 ];
 export const MUSIC = { gain: 0.24, duckUnderVo: 0.42, closeBoost: 2.4 }; // closeBoost: the resolve under the end card, after the last line

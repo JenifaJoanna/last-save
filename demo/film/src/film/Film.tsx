@@ -6,7 +6,7 @@ import { T } from "../ds/tokens";
 import { SCENE_COMPONENTS } from "../scenes/v1";
 import { MUSIC, SCORE, SFX, type ScoreAct } from "./cues";
 import { f, PLACED, type Placed } from "./timeline";
-import { type ScoreCandidate, X_PLACED, xScore } from "./xcut";
+import { X_PLACED, X_SCORE } from "./xcut";
 
 const has = (p: string) => getStaticFiles().some((x) => x.name === p);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -78,4 +78,4 @@ export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[
 }
 
 export const Film = () => <Assembly scenes={PLACED} score={SCORE} />;
-export const XCut = ({ score = "c1" }: { score?: ScoreCandidate }) => <Assembly scenes={X_PLACED} score={xScore(score)} />;
+export const XCut = () => <Assembly scenes={X_PLACED} score={X_SCORE} />;

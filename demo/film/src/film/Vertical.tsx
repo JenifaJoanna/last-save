@@ -68,14 +68,14 @@ export function Vertical() {
           </Sequence>
         );
       })}
-      {has("music/v1/c1-act1.mp3") && (
+      {has("music/v1/c3-act1.mp3") && (
         <Sequence from={placed[0].at} durationInFrames={f(15.2)} name="score act 1 tail">
-          <Audio src={staticFile("music/v1/c1-act1.mp3")} startFrom={kill} volume={MUSIC.gain * MUSIC.duckUnderVo} />
+          <Audio src={staticFile("music/v1/c3-act1.mp3")} startFrom={kill} volume={MUSIC.gain * MUSIC.duckUnderVo} />
         </Sequence>
       )}
-      {has("music/v1/c1-act2.mp3") && (
+      {has("music/v1/c3-act2.mp3") && (
         <Sequence from={placed[1].at + f(0.37)} name="score act 2">
-          <Audio src={staticFile("music/v1/c1-act2.mp3")} volume={(x) => MUSIC.gain * MUSIC.duckUnderVo * interpolate(x, [0, 18, VERTICAL_FRAMES - placed[1].at - 60, VERTICAL_FRAMES - placed[1].at - 12], [0, 1, 1, 0], clamp)} />
+          <Audio src={staticFile("music/v1/c3-act2.mp3")} volume={(x) => MUSIC.gain * MUSIC.duckUnderVo * interpolate(x, [0, 18, VERTICAL_FRAMES - placed[1].at - 60, VERTICAL_FRAMES - placed[1].at - 12], [0, 1, 1, 0], clamp)} />
         </Sequence>
       )}
       <Sequence from={0} durationInFrames={f(INTRO)} name="hook">
