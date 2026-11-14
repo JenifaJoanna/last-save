@@ -19,12 +19,13 @@ attack the live contract and watch it refuse.
 |---|---|
 | Platform | https://last-save.pages.dev (live status at `/status`, judge guide at `/judges`) |
 | Official game server (Ember Rift) | https://emberrift.pages.dev — shut down on 14 Nov as part of the demo; it stays dead by design |
-| Community server (the released build, hosted by a fan) | https://emberrift-community.pages.dev |
+| v1 community server (the released build, hosted by a fan) | https://emberrift-community.pages.dev |
 | Licence contract v1 (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
 | Licence v2, published once as a global contract | code hash `4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1` ([publish tx](https://testnet.near.rocks/tx/3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF)) |
 | Studio factory (one tx per studio, instances born with 0 keys) | [`lastsave-factory.testnet`](https://testnet.near.rocks/account/lastsave-factory.testnet) |
 | v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key released 15 Nov 01:05 IST (tx [ADPZTugj…](https://testnet.nearblocks.io/txns/ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N)). Run: `proof/judge-v2.json`, release: `proof/judge-v2-release.json` |
-| Judge instance, community host (fan-run) | registered on `ember-rift` after the release ([tx GLRfmVsb…](https://testnet.nearblocks.io/txns/GLRfmVsbb5V4htaDa5jCZJu6zKBE8Sw4vCQbBXnLyunH)); a fan's machine behind a tunnel, so the app reads its current endpoint from the contract (`get_hosts`) |
+| Community host for the judge instance | https://emberrift-community-v2.pages.dev: the released build, verified (Walrus copy, CI provenance, build hash), progress restored, registered on `ember-rift` ([tx 2Gv9w2Fm…](https://testnet.nearblocks.io/txns/2Gv9w2Fmyj7TPb1HQdCyyHpzKR3RXtxQRayxYTLpHSJf)) |
+| Community host for the dev instance | https://emberrift-community-v2dev.pages.dev, registered on `v2dev` ([tx 3w3HcBmW…](https://testnet.nearblocks.io/txns/3w3HcBmWwGgDcKsML9LC1U7RooCjevJTzTscrdC7Mend)) |
 | Encrypted judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave) (sha256 = the on-chain artifact hash) |
 | v2 dev instance (full lifecycle incl. a Base Sepolia payout) | [`v2dev.lastsave-factory.testnet`](https://testnet.near.rocks/account/v2dev.lastsave-factory.testnet) |
 | Gas-free relayer | https://lastsave-relay.pages.dev (`/health`) |

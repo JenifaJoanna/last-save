@@ -18,7 +18,8 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Gas-free relayer | https://lastsave-relay.pages.dev | live (`/relay`, `/attack`) |
 | Encrypted judge build | https://archive.org/details/ember-rift-server-ember-rift-lastsave | public; sha256 = on-chain artifact hash |
 | Judge instance | `ember-rift.lastsave-factory.testnet` | Dead (cause: players), released 15 Nov 01:05 IST |
-| Judge community host | https://license-deemed-gates-photograph.trycloudflare.com (registered on chain, tx GLRfmVsb…) | fan-run from a tunnel; the app reads the live endpoint from `get_hosts` |
+| Judge community host | https://emberrift-community-v2.pages.dev | live, registered on `ember-rift` (tx 2Gv9w2Fm…), serving the released build |
+| Dev community host | https://emberrift-community-v2dev.pages.dev | live, registered on `v2dev` (tx 3w3HcBmW…) |
 | Dev instance | `v2dev.lastsave-factory.testnet` | Dead (cause: probes), released, community host serving |
 | Second studio | `tidebreak.lastsave-factory.testnet` | Alive, launched in one transaction; not on sale (escrow needs OutLayer) |
 | Official judge server | https://emberrift-ember-rift.pages.dev | shut down 14 Nov 22:08 IST as the demo; stays dead |
@@ -74,7 +75,8 @@ deployed page; deleted pages listed as expected gone).
 ## Submission drafts
 - `submission/FORM.md`: idea text 1,883 chars. Declaration fields left EMPTY for the submitter: lead name, email, team
   size, mainnet payout address, consent. `demoUrl` = the submitter's X post (draft `submission/X-POST.md`, not posted).
-- `submission/LAUNCH-CHECK.md`: launch checklist results on the deployed site.
+- `submission/LAUNCH-CHECK.md`: re-run end to end on production on 15 Nov after the wallet-first rebuild: 57 items,
+  38 pass, 4 fail (1 fixed, 2 partly fixed, 1 proposed; fixes deployed at 1e8edfa), 5 not covered, 10 n/a.
 
 ## Known limits (details in README)
 - ember-rift's release took 14 inconclusive runs: the pinned enclave programs read the chain through public RPCs (FastNEAR,
