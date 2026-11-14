@@ -1,0 +1,14 @@
+name = "lastsave-relayer"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+workers_dev = false
+preview_urls = false
+
+# Plain vars; scripts/deploy.mjs overrides them from the environment.
+# RELAYER_KEY is a secret (wrangler secret put), never a var.
+[vars]
+RELAYER_ACCOUNT = "lastsave-relayer.testnet"
+ALLOWED_RECEIVERS = "lastsave-v2dev.lastsave-studio.testnet"
+RPC_URLS = "https://test.rpc.fastnear.com,https://near-testnet.drpc.org"
+RATE_LIMIT_PER_MIN = "20"
+GLOBAL_LIMIT_PER_MIN = "120"

@@ -1,0 +1,8 @@
+# Template. scripts/deploy.mjs copies this next to _worker.js with the service name for the project.
+name = "lastsave-relay"
+pages_build_output_dir = "./"
+compatibility_date = "2025-09-01"
+
+[[services]]
+binding = "RELAYER"
+service = "lastsave-relayer"
