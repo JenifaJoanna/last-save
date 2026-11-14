@@ -62,6 +62,46 @@
         "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-0b5bb75c051d7651.bin"
       ],
       "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-14T09:33:50.646Z",
+      "hash": "FsoHLkRxPTuyaurRxSwaaqDo5vmUuwSTHSc2zhiNqL4v",
+      "url": "https://testnet.nearblocks.io/txns/FsoHLkRxPTuyaurRxSwaaqDo5vmUuwSTHSc2zhiNqL4v",
+      "instance": "v2walrus.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "0.6737 NEAR",
+      "min_deposit": "0.3737 NEAR",
+      "evm_address": "0x4D49C88B689a9Ddd18aA69D9289DFEC934F8507F",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-14T09:34:04.331Z",
+      "hash": "9WdWagPhB36d94VYJfVdNLSeycCiEYT56h6vV9dQsWyV",
+      "url": "https://testnet.nearblocks.io/txns/9WdWagPhB36d94VYJfVdNLSeycCiEYT56h6vV9dQsWyV",
+      "failure": null,
+      "storage_cost": "6970000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T09:46:14.426Z",
+      "hash": "AbvBWuV7TPB5gmReoTiwNjvUWVCcu239huoAyabqjXEH",
+      "url": "https://testnet.nearblocks.io/txns/AbvBWuV7TPB5gmReoTiwNjvUWVCcu239huoAyabqjXEH",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1240653700000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 537284794, time_ms: 1268 }, Cost: 1240653700000000000000 yoctoNEAR, Refund: 28759346300000000000000 yoctoNEAR, Freshly compiled"
+      ]
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-14T09:46:28.448Z",
+      "summary": "v2walrus.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x4d49c88b689a9ddd18aa69d9289dfec934f8507f ops=0.3000 NEAR escrowed=true verified=true",
+      "problems": []
     }
   ]
 }

@@ -59,6 +59,12 @@ describe("mirror fallback", () => {
     const r2 = await fetchFromMirrors({ urls: [STUDIO, WALRUS, RAW], sha256: sha(good), fetchBytes: async (u: string) => (u === STUDIO ? Buffer.from("evil") : good) });
     expect(r2.label).toBe("walrus");
   });
+  it("a deleted Pages project (Cloudflare 522) is reported as gone", async () => {
+    const lines: string[] = [];
+    const r = await fetchFromMirrors({ urls: [STUDIO, WALRUS], sha256: sha(good), log: (s: string) => lines.push(s), fetchBytes: async (u: string) => { if (u === STUDIO) throw new Error("HTTP 522"); return good; } });
+    expect(lines[0]).toBe("studio copy kiln-cdn-x.pages.dev … 522 (gone)");
+    expect(r.tried[0].outcome).toBe("gone");
+  });
   it("network errors fall through too", async () => {
     const r = await fetchFromMirrors({ urls: [STUDIO, RAW], sha256: sha(good), fetchBytes: async (u: string) => { if (u === STUDIO) throw new Error("ECONNRESET"); return good; } });
     expect(r.label).toBe("github raw");

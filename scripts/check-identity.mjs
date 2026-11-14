@@ -99,12 +99,12 @@ if (live) {
       scanText(`asset ${a}`, JSON.stringify([...r.headers]) + (await r.text()));
     }
   }
-  // expected_gone: pages the studio took down on purpose (e.g. kiln-cdn-<name>). They must 404/410 or not resolve at all; a 2xx means the shutdown failed.
+  // expected_gone: pages the studio took down on purpose (e.g. kiln-cdn-<name>). They must answer 4xx/5xx (404, or 52x once Cloudflare has no origin) or not resolve; a 2xx/3xx means the shutdown failed.
   for (const url of targets.expected_gone ?? []) {
     if (!/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)?\.pages\.dev(\/|$)/.test(url)) { fail(`${url}: public URLs must be *.pages.dev`); continue; }
     const res = await fetch(url, { redirect: "manual" }).catch(() => null);
     liveChecked++;
-    if (res && !(res.status === 404 || res.status === 410)) fail(`${url}: expected gone but answers ${res.status}`);
+    if (res && res.status < 400) fail(`${url}: expected gone but answers ${res.status}`);
   }
   for (const name of targets.workers ?? []) {
     const url = `https://${name}.${WORKERS_SUB}.workers.dev/`;

@@ -23,7 +23,7 @@ fs.writeFileSync(f, JSON.stringify(t, null, 2) + "\n");
 URL="https://${PROJECT}.pages.dev/${2:-}"
 for i in 1 2 3 4 5 6; do
   code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 "$URL" || true)
-  [ "$code" = "404" ] && break
+  [ "${code:-0}" -ge 400 ] && break
   sleep 5
 done
 printf 'GET %s → %s\n' "$URL" "$code"

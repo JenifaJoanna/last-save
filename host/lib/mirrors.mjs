@@ -21,6 +21,8 @@ export function mirrorLabel(url) {
   return "mirror";
 }
 
+/** 404/410, or Cloudflare 52x/530 (a deleted Pages project: the hostname no longer has an origin). */
+const isGone = (st) => st === 404 || st === 410 || (st >= 520 && st <= 530);
 const statusOf = (e) => e.status ?? Number(/HTTP (\d{3})/.exec(String(e.message))?.[1] ?? 0);
 
 /**
@@ -44,9 +46,9 @@ export async function fetchFromMirrors({ urls, sha256, fetchBytes = defaultFetch
       tried.push({ url, label, outcome: "mismatch" });
     } catch (e) {
       const st = statusOf(e);
-      if (st === 404 || st === 410) log(`${label} ${host} … ${st} (gone)`);
+      if (isGone(st)) log(`${label} ${host} … ${st} (gone)`);
       else log(`${label} ${host} … ${st ? `HTTP ${st}` : "unreachable"}${st ? "" : ` (${String(e.message).slice(0, 80)})`}`);
-      tried.push({ url, label, outcome: st === 404 || st === 410 ? "gone" : "error", error: String(e.message).slice(0, 120) });
+      tried.push({ url, label, outcome: isGone(st) ? "gone" : "error", error: String(e.message).slice(0, 120) });
     }
   }
   return { bytes: null, url: null, label: null, tried, tampered: tried.some((t) => t.outcome === "mismatch") };
