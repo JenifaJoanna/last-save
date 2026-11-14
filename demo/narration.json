@@ -30,6 +30,12 @@
       "rev": 2
     },
     {
+      "id": "05b-factory",
+      "beat": "after keys: studio #2",
+      "text": "Any studio can do the same. The licence code lives on NEAR as one global contract, and a new game launches in a single transaction, born with no keys.",
+      "rev": 3
+    },
+    {
       "id": "06-kill",
       "beat": "1:10 the kill",
       "text": "Now the studio shuts the server down without a word. A signed heartbeat wouldn't save it: the contract only counts players who are actually being served.",
@@ -43,7 +49,8 @@
     {
       "id": "08-choose",
       "beat": "1:40 choose",
-      "text": "Every holder decides: take their share back, or keep the game alive. New players fund it too."
+      "text": "Every holder decides, without paying gas: take their share back, or keep the game alive. New players fund it too.",
+      "rev": 3
     },
     {
       "id": "09-host",
@@ -57,11 +64,18 @@
       "rev": 2
     },
     {
+      "id": "10b-base",
+      "beat": "after host paid: Base payout",
+      "text": "Hosts can even be paid on Base. NEAR's MPC network signs for the contract, so no one holds that key.",
+      "rev": 3
+    },
+    {
       "id": "11-close",
       "beat": "2:25 close",
       "text": "That's Last Save, built on NEAR. Thank you.",
       "rev": 2
     }
   ],
-  "rules": "DEMO_MAGIC_ROOM_SPEC script voice: mechanisms not claims, no UI mechanics, no punchline cadence, plain close; numbers from the live contract config (40% = fund_bps 4000, three probes = fail_threshold 3)."
+  "rules": "DEMO_MAGIC_ROOM_SPEC script voice: mechanisms not claims, no UI mechanics, no punchline cadence, plain close; numbers from the live contract config (40% = fund_bps 4000, three probes = fail_threshold 3).",
+  "approved": "v3 lines (05b, 08, 10b) approved by the owner via the coordinator, 14 Nov 12:10 IST"
 }
