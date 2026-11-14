@@ -48,9 +48,9 @@ function noise(dur: number, vol: number, freq: number): void {
 export const sfx = {
   collect: (big = false) => { tone(big ? 520 : 880, 0.09, "triangle", 0.25, big ? 1040 : 1320); if (big) tone(780, 0.18, "sine", 0.2, 1560, 0.06); },
   dash: () => { noise(0.18, 0.35, 2400); tone(220, 0.16, "sawtooth", 0.06, 520); },
-  hit: (p: number) => { noise(0.12, 0.25 + p * 0.4, 900); tone(120, 0.12, "square", 0.08 + p * 0.1, 60); },
-  ko: () => { noise(0.5, 0.6, 600); tone(300, 0.6, "sawtooth", 0.12, 40); },
-  count: (go = false) => tone(go ? 880 : 440, go ? 0.3 : 0.12, "square", 0.12),
+  hit: (p: number) => { noise(0.05, 0.3 + p * 0.3, 5200); noise(0.14, 0.25 + p * 0.4, 900); tone(120, 0.12, "square", 0.08 + p * 0.1, 60); tone(72, 0.18, "sine", 0.3 + p * 0.3, 38); },
+  ko: () => { noise(0.08, 0.5, 6000); noise(0.5, 0.6, 600); tone(300, 0.6, "sawtooth", 0.12, 40); tone(58, 0.7, "sine", 0.5, 28); tone(880, 0.25, "triangle", 0.08, 1760, 0.12); },
+  count: (go = false) => { tone(go ? 880 : 440, go ? 0.3 : 0.12, "square", 0.12); if (go) { tone(1320, 0.35, "triangle", 0.1, undefined, 0.02); tone(110, 0.4, "sine", 0.3, 55); } },
   results: () => { [523, 659, 784].forEach((f, i) => tone(f, 0.22, "triangle", 0.18, undefined, i * 0.09)); },
   lost: () => tone(880, 1.4, "sine", 0.12, 870),
 };
