@@ -40,8 +40,9 @@ if [ -f scripts/facts.mjs ] && [ -f "$REPO/proof/judge-v2.json" ]; then
 elif [ $FINAL = 1 ]; then echo "proof/judge-v2.json or scripts/facts.mjs missing: no final without the judge facts"; exit 1
 else echo "judge proof not there yet: facts stay as they are"; problems+=("judge facts not swapped"); fi
 
-step "typecheck and captions"
+step "typecheck, render smoke test (first/middle/last frame of every scene) and captions"
 npx tsc --noEmit -p .
+node scripts/smoke.mjs || { echo "a scene fails to render: fix it before anything is pushed or rendered"; exit 1; }
 node scripts/captions.mjs
 
 step "final gate"
