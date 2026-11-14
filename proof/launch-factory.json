@@ -1,0 +1,24 @@
+{
+  "factory": "lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "publish",
+      "at": "2026-11-14T07:52:29.674Z",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "tx": "https://testnet.nearblocks.io/txns/3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF",
+      "burn_cost": "33.2631 NEAR",
+      "size_bytes": 332631,
+      "now_available": true
+    },
+    {
+      "step": "factory",
+      "at": "2026-11-14T07:52:59.862Z",
+      "factory": "lastsave-factory.testnet",
+      "wasm_bytes": 184919,
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "create_tx": "https://testnet.nearblocks.io/txns/EARSd8drcwrWBgdNedohaHmrvftQpAyXQpxBr2xCyBWE",
+      "initial_balance": "2.5000 NEAR",
+      "deploy_tx": "https://testnet.nearblocks.io/txns/Ed7sMLeu1xfkHMDqzox9cupBnPRp85ij1bxAuXTvPatv"
+    }
+  ]
+}

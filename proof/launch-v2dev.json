@@ -1,0 +1,36 @@
+{
+  "contract": "v2dev.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "bundle",
+      "at": "2026-11-14T07:53:47.318Z",
+      "build_hash": "d31168055435d68224fd34f68119fdf67b7cbf2a454c9474eee0922f02f550c8",
+      "artifact_sha256": "8aed87d3d43cecffe906c621f19103fe710feac3662bcf750ebbfbd9a4208622",
+      "size": 584610,
+      "key_commitment": "f2772b9f97d804708437485cf5ad2e6148d0b9a662d313612261c73b9badf033"
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-14T07:53:47.323Z",
+      "release": {
+        "sha256": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-9fafaf8e41724533.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-9fafaf8e41724533.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-b0cb38e1bc3e77ec.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-b0cb38e1bc3e77ec.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-8aed87d3d43cecff.bin",
+        "https://last-save.pages.dev/mirror/ember-rift-8aed87d3d43cecff.bin"
+      ],
+      "note": "commit+push artifacts/ and redeploy web before attest"
+    }
+  ]
+}
