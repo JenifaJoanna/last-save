@@ -31,13 +31,13 @@ function Scramble({ frame, p }: { frame: number; p: number }) {
 }
 
 /** enc 0..1 encryption; gold 0..1 released look; art 0..1 key art present in the slot; hash shown on the front. */
-export function Cartridge({ x, y, z, enc = 0, gold = 0, art = 1, frame, hash, opacity = 1 }: {
-  x: number; y: number; z: number; enc?: number; gold?: number; art?: number; frame: number; hash: string; opacity?: number;
+export function Cartridge({ x, y, z, enc = 0, gold = 0, art = 1, frame, hash, opacity = 1, clearHash = false }: {
+  x: number; y: number; z: number; enc?: number; gold?: number; art?: number; frame: number; hash: string; opacity?: number; clearHash?: boolean;
 }) {
   const stamp = gold > 0 ? 0 : enc > 0.55 ? Math.min(1, (enc - 0.55) / 0.3) : 0;
   const stampScale = 1.7 - (0.7 * Math.floor(stamp * 4)) / 4;
   const scr = gold > 0 ? 0 : Math.min(1, enc * 1.8);
-  const text = enc <= 0 || gold >= 1 ? hash : decode(hash, 1 - Math.min(1, enc * 1.6), frame);
+  const text = clearHash || enc <= 0 || gold >= 1 ? hash : decode(hash, 1 - Math.min(1, enc * 1.6), frame); // clearHash: the encrypted artifact's own sha256
   const edge = gold > 0 ? `rgba(255,201,74,${0.3 + 0.6 * gold})` : "rgba(196,182,255,0.30)";
   const bands = `linear-gradient(180deg, ${T.gold} 0 18%, transparent 18% 27%, ${T.ember} 27% 45%, transparent 45% 54%, ${T.magenta} 54% 72%, transparent 72% 81%, ${T.violet} 81% 100%)`;
   const goldBands = `linear-gradient(180deg, #fff1c4 0 18%, transparent 18% 27%, ${T.gold} 27% 45%, transparent 45% 54%, #ffb02e 54% 72%, transparent 72% 81%, ${T.ember2} 81% 100%)`;

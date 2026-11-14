@@ -3,11 +3,11 @@
   "source": {
     "run": {
       "path": "proof/judge-v2.json",
-      "sha256": "beb61d50736fe462110e4852f6f65eabc55260ce72925a799ea06449b1ac5434"
+      "sha256": "873831aab30ea3c08ad384ac10659d7317aa91075840ad60ba4eae646e79970e"
     },
     "launch": {
       "path": "proof/launch-ember-rift.json",
-      "sha256": "a165f5b97646df5e63cf2529df73997b8661cbc642375b022c674f07dc78a32a"
+      "sha256": "e6bb249e3e047b4d2becc7356b136324516222ac24275b3350c76690a6306d18"
     },
     "verify": {
       "path": "proof/verify-ember-rift.json",
@@ -19,10 +19,8 @@
     }
   },
   "set": "judge",
-  "generated_at": "2026-11-14T18:47:58.596Z",
-  "missing": [
-    "archiveItem (launch|extra: archive step .item (ia-upload.mjs) | extra.archiveItem): no clean \"archive\" step in the launch files"
-  ],
+  "generated_at": "2026-11-14T18:51:41.461Z",
+  "missing": [],
   "unused": [
     "releasedKey",
     "hostPaid",
@@ -52,7 +50,7 @@
     "accessKeys": "0",
     "walrusBlob": "8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
     "walrusHost": "aggregator.walrus-testnet.walrus.space",
-    "archiveItem": null,
+    "archiveItem": "ember-rift-server-ember-rift-lastsave",
     "cdnUrl": "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin",
     "officialWorker": "emberrift-ember-rift-arena",
     "workflow": ".github/workflows/release-build.yml",
