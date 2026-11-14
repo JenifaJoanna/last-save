@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // Rendered-file checks (headless, file-based; nothing is played or shown). Exit 1 on any failure.
-//  1. dead air: no run of near-black frames (mean luma YAVG < 28 on the limited 16–235 scale, where the void is ~24)
-//     longer than 10 frames — an empty or black hold, not a transition;
+//  1. dead air: no run of empty frames longer than 10 frames — an empty or black hold, not a transition. Empty = dark
+//     (mean luma YAVG < 28 on the limited 16–235 scale; the void is ~24) AND flat (edge density < 0.2: mean of an
+//     edgedetect pass; void + grain measures ~0.0005, a lone red line 0.3, a dimmed dark arena with sprites 1.6). The
+//     film's palette is dark, so darkness alone is not emptiness;
 //  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "placeholder", "Take pending", the dev instance
 //     ("v2dev") or any identity term (the repo's shared list, scripts/lib/identity-terms.mjs) anywhere on screen.
 // Usage: node scripts/check-render.mjs <video.mp4> [--ocr] [--max-dark 10]
 import { execFileSync, spawn } from "node:child_process";
-import { mkdtempSync, readdirSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ON_CAMERA_TERMS, TERMS } from "../../../scripts/lib/identity-terms.mjs";
@@ -23,17 +25,27 @@ const fps = (() => {
   const [n, d] = r.split("/").map(Number); return n / (d || 1);
 })();
 
-// 1. dead air
-const stats = execFileSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-an", "-vf", "signalstats,metadata=print:key=lavfi.signalstats.YAVG:file=-", "-f", "null", "-"],
-  { maxBuffer: 1 << 28, stdio: ["ignore", "pipe", "ignore"] }).toString();
-const yavg = [...stats.matchAll(/YAVG=([\d.]+)/g)].map((m) => Number(m[1]));
+// 1. dead air (one decode: luma and edge density per frame, into two metadata files)
+const meta = mkdtempSync(join(tmpdir(), "check-render-meta-"));
+let luma = []; let edges = [];
+try {
+  const fl = join(meta, "luma.txt"); const fe = join(meta, "edges.txt");
+  execFileSync("ffmpeg", ["-hide_banner", "-nostats", "-loglevel", "error", "-i", file, "-an", "-filter_complex",
+    `[0:v]split[a][b];[a]signalstats,metadata=print:key=lavfi.signalstats.YAVG:file=${fl}[a1];` +
+    `[b]edgedetect=low=0.08:high=0.25,signalstats,metadata=print:key=lavfi.signalstats.YAVG:file=${fe}[b1]`,
+    "-map", "[a1]", "-f", "null", "-", "-map", "[b1]", "-f", "null", "-"], { stdio: "ignore" });
+  const read = (f) => [...readFileSync(f, "utf8").matchAll(/YAVG=([\d.]+)/g)].map((m) => Number(m[1]));
+  luma = read(fl); edges = read(fe);
+} finally { rmSync(meta, { recursive: true, force: true }); }
+const yavg = luma;
+const empty = luma.map((y, i) => y < 28 && (edges[i] ?? 0) < 0.2);
 let run = 0;
-yavg.forEach((y, i) => {
-  run = y < 28 ? run + 1 : 0;
-  const endsHere = run > 0 && (i === yavg.length - 1 || yavg[i + 1] >= 28);
-  if (endsHere && run > maxDark) fails.push(`dead air: ${run} near-black frames ending at ${(i / fps).toFixed(2)} s (frame ${i})`);
+empty.forEach((e, i) => {
+  run = e ? run + 1 : 0;
+  const endsHere = run > 0 && (i === empty.length - 1 || !empty[i + 1]);
+  if (endsHere && run > maxDark) fails.push(`dead air: ${run} empty frames ending at ${(i / fps).toFixed(2)} s (frame ${i})`);
 });
-process.stdout.write(`check-render: ${yavg.length} frames scanned for dead air (max ${maxDark} near-black in a row)\n`);
+process.stdout.write(`check-render: ${yavg.length} frames scanned for dead air (max ${maxDark} empty in a row)\n`);
 
 // 2. OCR sweep
 if (ocr) {
