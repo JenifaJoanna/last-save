@@ -247,6 +247,7 @@ pub struct EvmPayout {
     pub signed: Vec<Vec<u8>>,
     pub hashes: Vec<[u8; 32]>,
     pub booked_ms: u64,
+    pub last_signed_ms: u64,
     pub last_error: Option<String>,
 }
 
@@ -256,6 +257,8 @@ pub struct EvmPayout {
 pub struct EvmLock {
     pub flight: Flight,
     pub payout: u64,
+    /// Storage money set aside from the ops budget for the signed record this signing will add.
+    pub reserve: u128,
 }
 
 pub use crate::view_types::*;

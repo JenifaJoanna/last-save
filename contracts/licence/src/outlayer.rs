@@ -136,6 +136,7 @@ impl Licence {
         );
         let id = Self::begin_flight(&mut self.escrow.flight, &mut self.next_flight, "Escrow");
         let deposit = env::attached_deposit();
+        self.in_flight += deposit.as_yoctonear();
         let args = format!(
             "{{\"accessor\":{{\"WasmHash\":{{\"hash\":\"{}\"}}}},\"profile\":\"{PROFILE}\",\
              \"encrypted_secrets_base64\":\"{encrypted_secrets_base64}\",\"access\":{},\"vault_id\":null}}",
@@ -154,6 +155,7 @@ impl Licence {
 
     #[private]
     pub fn on_escrow(&mut self, #[serializer(borsh)] cb: Cb) -> bool {
+        self.in_flight = self.in_flight.saturating_sub(cb.deposit);
         Self::end_flight(&mut self.escrow.flight, cb.flight);
         match env::promise_result_checked(0, MAX_OUT) {
             Err(PromiseError::Failed) => {
@@ -176,11 +178,14 @@ impl Licence {
     pub fn attest(&mut self, mirror_index: Option<u32>) -> Promise {
         require!(self.escrow.escrowed, "Nothing is escrowed yet");
         let id = Self::begin_flight(&mut self.escrow.attest_flight, &mut self.next_flight, "Attestation");
-        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"attest\"}", true, "on_attest", &Cb::new(id))
+        let cb = Cb::new(id);
+        self.in_flight += cb.deposit;
+        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"attest\"}", true, "on_attest", &cb)
     }
 
     #[private]
     pub fn on_attest(&mut self, #[serializer(borsh)] cb: Cb) -> bool {
+        self.in_flight = self.in_flight.saturating_sub(cb.deposit);
         Self::end_flight(&mut self.escrow.attest_flight, cb.flight);
         let r = match crate::outlayer::read_out() {
             Out::Failed => {

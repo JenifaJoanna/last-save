@@ -130,14 +130,17 @@ fn zero_deposit_release_claim_and_signing_are_each_paid_from_the_budget() {
     let b0 = w.totals.ops_budget;
     env_at(FANHOST, 0, REL + EP + 1);
     let _ = w.claim_epoch(0, None);
-    assert_eq!((deposit_of("request_execution"), w.totals.ops_budget), (Some(OPS_ATTACH), b0 - OPS_ATTACH));
+    let flag = b0 - OPS_ATTACH - w.totals.ops_budget;
+    assert_eq!(deposit_of("request_execution"), Some(OPS_ATTACH));
+    assert!(flag > 0 && flag < 2 * MILLI, "the once-per-epoch flag's storage also comes from ops: {flag}");
     let mut b = booked();
     let b0 = b.totals.ops_budget;
     let k = sign_start(&mut b, 0, REL + 5 * EP, false);
-    assert_eq!(b.totals.ops_budget, b0 - 1, "the MPC fee is 1 yocto");
+    let reserve = crate::evm::SIGNED_RESERVE_BYTES as u128 * env::storage_byte_cost().as_yoctonear();
+    assert_eq!(b.totals.ops_budget, b0 - 1 - reserve, "the MPC fee and the storage reserve are set aside");
     assert!(sign_finish(&mut b, k, REL + 5 * EP, R::Json(sig_json(&vector("small")))));
     let spent = b0 - b.totals.ops_budget;
-    assert!(spent > 1 && spent < 5 * MILLI, "signed record storage comes out of ops: {spent}");
+    assert!(spent > 1 && spent < reserve, "only the real storage growth stays spent: {spent}");
 }
 
 #[test]

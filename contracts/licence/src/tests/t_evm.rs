@@ -37,7 +37,7 @@ pub fn world(cap: u128) -> Licence {
     let _ = c.escrow_key("QUJDRA==".into());
     let id = c.escrow.flight.clone().unwrap().id;
     env_cb(T0, R::Empty);
-    assert!(c.on_escrow(cb(id, STUDIO)));
+    assert!(c.on_escrow(Cb { deposit: 50 * MILLI, ..cb(id, STUDIO) }));
     for w in [MIRA, KOFI, YUNA, DARIO] {
         buy(&mut c, w, T0);
     }
@@ -80,7 +80,8 @@ pub fn sign_start(c: &mut Licence, id: u64, t: u64, bump: bool) -> EvmCb {
     env_at(MIRA, 0, t);
     let _ = if bump { c.bump_evm_payout(id) } else { c.sign_evm_payout(id) };
     let p = store::evm(id).unwrap();
-    let fee = if bump { crate::evm::bumped(p.max_fee) } else { p.max_fee };
+    let cap = c.cfg.evm_payout.as_ref().unwrap().max_fee_cap.0;
+    let fee = if bump { crate::evm::bumped(p.max_fee).min(cap) } else { p.max_fee };
     let prio = if bump { crate::evm::bumped(p.max_prio).min(fee) } else { p.max_prio };
     EvmCb { flight: lock_flight(c), id, nonce: p.nonce.unwrap(), max_fee: fee, max_prio: prio, bump }
 }

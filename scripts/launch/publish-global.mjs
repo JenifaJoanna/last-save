@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Publishes the licence wasm as an immutable global contract (NEP-591, by code hash).
 //   node scripts/launch/publish-global.mjs [--wasm <path>] [--publisher <account>] [--mode hash|account]
-//                                          [--dry-run | --publish]
+//                                          [--factory <account>] [--dry-run | --publish]
+// --factory: also checks that the factory's code_hash() equals the printed hash (exit 1 if not).
 // Default is --dry-run: prints the size, code hash, burn cost and the publisher's balance, sends nothing.
 // --publish sends one DeployGlobalContract transaction. The cost is BURNT (10 NEAR per 100 KB) and the code
 // is immutable by hash, so a re-publish burns the same amount again: check the dry run first.
@@ -10,7 +11,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { NEAR, accountState, explorerAccount } from "../lib/near.mjs";
-import { deployGlobalAction, globalCodeExists, globalDeployCost, hashB58, sendRawActions, sha256 } from "../lib/near-global.mjs";
+import { assertFactoryHash, deployGlobalAction, globalCodeExists, globalDeployCost, hashB58, sendRawActions, sha256 } from "../lib/near-global.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const args = process.argv.slice(2);
@@ -19,6 +20,7 @@ const publish = args.includes("--publish") && !args.includes("--dry-run");
 const wasmPath = resolve(opt("--wasm", join(ROOT, "contracts/licence/target/near/lastsave_licence.opt.wasm")));
 const publisher = opt("--publisher", "lastsave-studio.testnet");
 const mode = opt("--mode", "hash");
+const factory = opt("--factory", null);
 const yocto = (n) => `${(Number(n / 10n ** 20n) / 1e4).toFixed(4)} NEAR`;
 
 if (!existsSync(wasmPath)) throw new Error(`no wasm at ${wasmPath}: run ./scripts/build-wasm.sh licence and wasm-opt first`);
@@ -38,6 +40,11 @@ console.log(JSON.stringify({
   publisher_balance: yocto(balance), enough_funds: enough, already_published: exists,
 }, null, 1));
 
+if (factory) {
+  const ok = await assertFactoryHash(factory, hash).then(() => true, (e) => { console.error(e.message); return false; });
+  console.log(JSON.stringify({ factory, factory_code_hash_matches: ok }));
+  if (!ok) process.exit(1);
+}
 if (!publish) process.exit(0);
 if (exists) { console.log("already published: nothing to do"); process.exit(0); }
 if (!enough) throw new Error(`publisher has ${yocto(balance)}, needs ${yocto(cost)} plus 0.5 NEAR for gas`);

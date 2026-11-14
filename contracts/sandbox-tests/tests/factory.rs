@@ -125,6 +125,8 @@ async fn global_publish_and_born_locked_instances() -> anyhow::Result<()> {
     let raw = rpc(&worker.rpc_addr(), "query", json!({ "request_type": "view_account", "finality": "optimistic", "account_id": inst_id })).await?;
     assert_eq!(raw["global_contract_hash"].as_str(), Some(hash.to_string().as_str()), "runs the global code by hash: {raw}");
     assert!(acc.balance.as_yoctonear() > NEAR, "funded with the deposit");
+    let ops: String = worker.view(&inst_id, "ops_budget").await?.json()?;
+    assert_eq!(ops.parse::<u128>()?, 2 * NEAR - min, "the excess over the minimum became the instance's ops budget");
     let keys = worker.view_access_keys(&inst_id).await?;
     assert!(keys.is_empty(), "born locked: {} access keys", keys.len());
     let status: String = worker.view(&inst_id, "ls_status").await?.json()?;

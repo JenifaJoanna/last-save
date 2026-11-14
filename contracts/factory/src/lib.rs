@@ -1,7 +1,9 @@
 //! Last Save studio factory.
 //!
 //! `create_instance(name, config)` makes `<name>.<this account>` in ONE receipt batch:
-//! CreateAccount, Transfer(deposit), UseGlobalContract(code hash), FunctionCall `new({config})`.
+//! CreateAccount, Transfer(min deposit), UseGlobalContract(code hash), FunctionCall `new({config})`,
+//! and, when more than the minimum was attached, FunctionCall `fund_ops` with the excess so the
+//! new instance can make gas-free calls straight away.
 //! No access key is ever added, so the instance is born locked: nobody, including the studio
 //! and this factory, can sign for it, and its code is the immutable global contract named by
 //! hash (NEP-591). The batch is atomic: if `new` rejects the config the account is not created
@@ -16,6 +18,7 @@ use near_sdk::{env, near, require, AccountId, Gas, NearToken, PanicOnDefault, Pr
 pub use types::*;
 
 const INIT_GAS: Gas = Gas::from_tgas(40);
+const FUND_GAS: Gas = Gas::from_tgas(10);
 const CALLBACK_GAS: Gas = Gas::from_tgas(15);
 /// Account record, global-contract reference and the licence's fixed state (counters, flags).
 const BASE_BYTES: u64 = 200 + 512;
@@ -113,11 +116,16 @@ impl Factory {
             status: Status::Pending,
         });
         emit("instance_requested", &format!("\"account_id\":\"{account_id}\",\"creator\":\"{creator}\""));
-        Promise::new(account_id.clone())
+        let excess = deposit.as_yoctonear() - need;
+        let mut batch = Promise::new(account_id.clone())
             .create_account()
-            .transfer(deposit)
+            .transfer(NearToken::from_yoctonear(need))
             .use_global_contract(self.code_hash)
-            .function_call("new".to_string(), args, NearToken::from_yoctonear(0), INIT_GAS)
+            .function_call("new".to_string(), args, NearToken::from_yoctonear(0), INIT_GAS);
+        if excess > 0 {
+            batch = batch.function_call("fund_ops".to_string(), b"{}".to_vec(), NearToken::from_yoctonear(excess), FUND_GAS);
+        }
+        batch
             .then(Promise::new(env::current_account_id()).function_call(
                 "on_created".to_string(),
                 serde_json::to_vec(&serde_json::json!({ "account_id": account_id, "creator": creator, "deposit": U128(deposit.as_yoctonear()) })).unwrap_or_default(),
@@ -150,15 +158,32 @@ impl Factory {
         false
     }
 
-    /// Pays out deposits a failed creation could not return at once.
-    pub fn claim_refund(&mut self) -> U128 {
+    /// Pays out deposits a failed creation could not return at once. The entry is taken out first
+    /// (so two calls cannot both be paid) and put back by the callback if the transfer fails.
+    pub fn claim_refund(&mut self) -> Promise {
         let who = env::predecessor_account_id();
         let owed: u128 = self.refunds.iter().filter(|(a, _)| *a == who).map(|(_, d)| d.0).sum();
         require!(owed > 0, "Nothing to refund");
+        let storage = env::storage_usage() as u128 * env::storage_byte_cost().as_yoctonear();
+        require!(env::account_balance().as_yoctonear().saturating_sub(storage) >= owed, "The factory cannot cover this yet, try again shortly");
         self.refunds.retain(|(a, _)| *a != who);
-        Promise::new(who.clone()).transfer(NearToken::from_yoctonear(owed)).detach();
-        emit("refunded", &format!("\"to\":\"{who}\",\"amount\":\"{owed}\""));
-        U128(owed)
+        Promise::new(who.clone()).transfer(NearToken::from_yoctonear(owed)).then(Promise::new(env::current_account_id()).function_call(
+            "on_refund_paid".to_string(),
+            serde_json::to_vec(&serde_json::json!({ "who": who, "owed": U128(owed) })).unwrap_or_default(),
+            NearToken::from_yoctonear(0),
+            CALLBACK_GAS,
+        ))
+    }
+
+    #[private]
+    pub fn on_refund_paid(&mut self, who: AccountId, owed: U128) -> bool {
+        if matches!(env::promise_result_checked(0, 16), Err(PromiseError::Failed)) {
+            self.refunds.push((who.clone(), owed));
+            emit("refund_failed", &format!("\"to\":\"{who}\",\"amount\":\"{}\"", owed.0));
+            return false;
+        }
+        emit("refunded", &format!("\"to\":\"{who}\",\"amount\":\"{}\"", owed.0));
+        true
     }
 
     pub fn instances(&self, from_index: Option<u64>, limit: Option<u64>) -> Vec<Instance> {

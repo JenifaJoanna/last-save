@@ -92,6 +92,8 @@ fn views_report_the_code_hash_and_start_empty() {
 #[test]
 fn an_instance_is_created_in_one_batch_by_hash_and_born_with_no_keys() {
     let mut f = factory();
+    at(BOB, 0);
+    let min = f.min_deposit(config()).0;
     create(&mut f, BOB, "ember", 2 * NEAR);
     let a = actions();
     let kinds: Vec<&str> = a
@@ -106,12 +108,18 @@ fn an_instance_is_created_in_one_batch_by_hash_and_born_with_no_keys() {
             _ => "other",
         })
         .collect();
-    assert_eq!(kinds, vec!["create", "transfer", "use_global", "call", "call"], "instance batch, then the callback");
+    assert_eq!(kinds, vec!["create", "transfer", "use_global", "call", "call", "call"], "instance batch (new, fund_ops), then the callback");
+    match &a[4] {
+        MockAction::FunctionCallWeight { method_name, attached_deposit, .. } => {
+            assert_eq!((method_name.as_slice(), attached_deposit.as_yoctonear()), (&b"fund_ops"[..], 2 * NEAR - min), "the excess becomes the instance's ops budget");
+        }
+        _ => unreachable!(),
+    }
     assert!(!kinds.contains(&"ADD_KEY") && !kinds.contains(&"DEPLOY_CODE"), "no key, no code of its own");
     let receipts = get_created_receipts();
     assert_eq!(receipts[0].receiver_id.as_str(), "ember.studio.testnet");
     match &a[1] {
-        MockAction::Transfer { deposit, .. } => assert_eq!(deposit.as_yoctonear(), 2 * NEAR, "the whole deposit funds the instance"),
+        MockAction::Transfer { deposit, .. } => assert_eq!(deposit.as_yoctonear(), min, "the minimum funds the account"),
         _ => unreachable!(),
     }
     match &a[2] {
@@ -173,9 +181,35 @@ fn a_refund_the_factory_cannot_cover_yet_is_owed_and_claimable_once() {
     assert!(get_logs().iter().any(|l| l.contains("refund_owed")));
     at("carol.testnet", 0);
     assert!(refused(|| drop(f.claim_refund())).contains("Nothing"));
-    at(BOB, 0);
-    assert_eq!(f.claim_refund().0, 2 * NEAR);
-    assert!(refused(|| drop(f.claim_refund())).contains("Nothing"), "paid once");
+    // not yet covered: refused, entry kept
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(acct(FACTORY)).predecessor_account_id(acct(BOB)).account_balance(NearToken::from_near(1));
+    testing_env!(b.build());
+    assert!(refused(|| drop(f.claim_refund())).contains("cannot cover"));
+    // covered: the entry is removed at once, so a second call in the same block is refused
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(acct(FACTORY)).predecessor_account_id(acct(BOB)).account_balance(NearToken::from_near(50));
+    testing_env!(b.build());
+    let _ = f.claim_refund();
+    assert!(refused(|| drop(f.claim_refund())).contains("Nothing"), "cannot be claimed twice while the payment is pending");
+    let paid: Vec<u128> = get_created_receipts().iter().flat_map(|r| r.actions.iter().filter_map(|a| if let MockAction::Transfer { deposit, .. } = a { Some(deposit.as_yoctonear()) } else { None })).collect();
+    assert_eq!(paid, vec![2 * NEAR]);
+    // the transfer failed: the entry is put back and can be claimed again
+    cb_env(PromiseResult::Failed, 50);
+    assert!(!f.on_refund_paid(acct(BOB), U128(2 * NEAR)));
+    assert!(get_logs().iter().any(|l| l.contains("refund_failed")));
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(acct(FACTORY)).predecessor_account_id(acct(BOB)).account_balance(NearToken::from_near(50));
+    testing_env!(b.build());
+    let _ = f.claim_refund();
+    // paid for real this time
+    cb_env(PromiseResult::Successful(vec![]), 50);
+    assert!(f.on_refund_paid(acct(BOB), U128(2 * NEAR)));
+    assert!(get_logs().iter().any(|l| l.contains("\"refunded\"")));
+    let mut b = VMContextBuilder::new();
+    b.current_account_id(acct(FACTORY)).predecessor_account_id(acct(BOB)).account_balance(NearToken::from_near(50));
+    testing_env!(b.build());
+    assert!(refused(|| drop(f.claim_refund())).contains("Nothing"));
 }
 
 #[test]

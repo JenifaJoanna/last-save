@@ -40,8 +40,8 @@ fn bump_needs_a_signed_payout_respects_the_cap_and_a_failed_bump_changes_nothing
     assert_eq!((p.status, p.max_fee, p.signed.len()), (EvmStatus::Signed, 2_000_000_000, 1));
     env_at(MIRA, 0, REL + 7 * EP);
     assert_eq!(c.get_evm_payouts(0, 1)[0].signed_txs, before);
-    // cap 2.4 gwei: x1.25 would be 2.5 gwei
-    let mut c = world(2_400_000_000);
+    // cap 2.1 gwei: x1.25 would be 2.5 gwei and the cap leaves less than the +10% a replacement needs (2.2)
+    let mut c = world(2_100_000_000);
     set_addr(&mut c, FANHOST, TO1);
     claim(&mut c, FANHOST, 0, 2);
     let k = sign_start(&mut c, 0, REL + 5 * EP, false);
@@ -109,7 +109,7 @@ fn evm_info_reports_the_derivation_inputs() {
 
 #[test]
 fn init_rejects_bad_evm_config() {
-    for tweak in 0..5 {
+    for tweak in 0..9 {
         let mut c = evm_cfg(10_000_000_000);
         let e = c.evm_payout.as_mut().unwrap();
         match tweak {
@@ -117,6 +117,10 @@ fn init_rejects_bad_evm_config() {
             1 => e.gas_limit = 20_999,
             2 => e.max_fee_per_gas = near_sdk::json_types::U128(20_000_000_000),
             3 => e.demo_wei_per_session = near_sdk::json_types::U128(0),
+            5 => e.demo_wei_per_session = near_sdk::json_types::U128(10u128.pow(18) + 1),
+            6 => e.max_fee_cap = near_sdk::json_types::U128(2_000_000_000_000),
+            7 => e.gas_limit = 100_001,
+            8 => e.start_nonce = u32::MAX as u64,
             _ => e.max_priority_fee_per_gas = near_sdk::json_types::U128(3_000_000_000),
         }
         assert!(catch_unwind(AssertUnwindSafe(|| drop(fresh_with(c)))).is_err(), "tweak {tweak}");

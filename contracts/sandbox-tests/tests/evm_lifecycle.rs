@@ -70,7 +70,7 @@ async fn evm_payouts_and_gasless_calls() -> anyhow::Result<()> {
     let test_signer = hex::encode(keccak(b"lastsave-test-signer-v1"));
     signer.call("new").args_json(json!({ "signer_hex": test_signer })).transact().await?.into_result()?;
     let payer: String = signer.view("address").await?.json()?;
-    let lic = licence_acc.deploy(&wasm(&std::env::var("LICENCE_WASM").unwrap_or("../licence/target/near/lastsave_licence.wasm".into()))).await?.into_result()?;
+    let lic = licence_acc.deploy(&wasm(&std::env::var("LICENCE_WASM").unwrap_or("../licence/target/near/lastsave_licence.opt.wasm".into()))).await?.into_result()?;
 
     let key = [0x11u8; 32];
     let commitment = hex::encode(Sha256::digest(key));
@@ -192,7 +192,15 @@ async fn evm_payouts_and_gasless_calls() -> anyhow::Result<()> {
     assert_eq!((p1["status"].as_str(), p1["nonce"].as_u64()), (Some("Signed"), Some(1)));
     assert_eq!(lic.view("evm_payout_info").await?.json::<Value>()?["next_nonce"], 2);
 
-    // bump: same nonce, to and value, fee x1.25, history kept
+    // bump: refused inside 2 minutes of the last signature; then same nonce, to and value, fee x1.25, history kept
+    assert!(sign(&relayer, 0, "bump_evm_payout").await.is_err(), "bump gap");
+    let signed_at = payouts(&lic).await[0]["last_signed_ms"].as_u64().unwrap();
+    worker.fast_forward(1000).await?;
+    loop {
+        let now = info(&lic).await["now_ms"].as_u64().unwrap();
+        if now >= signed_at + 120_000 + 500 { break; }
+        tokio::time::sleep(Duration::from_secs(5)).await;
+    }
     let (_, g) = sign(&relayer, 0, "bump_evm_payout").await?;
     gas.push(("bump_evm_payout", g));
     let b0 = payouts(&lic).await[0].clone();
@@ -205,6 +213,18 @@ async fn evm_payouts_and_gasless_calls() -> anyhow::Result<()> {
     assert_eq!(u(&t["evm_settled"]), 40 * MILLI, "evm_settled only moves on a claim");
     assert_eq!(lic.view("evm_payout_info").await?.json::<Value>()?["next_nonce"], 2);
 
+    // sync_ops: the books are solvent as they stand, and a sweep only ever adds the strict surplus
+    let acc = lic.view_account().await?;
+    let tracked = |t: &Value| u(&t["pot_locked"]) + u(&t["pool"]) + u(&t["evm_settled"]) + u(&t["ops_budget"]);
+    let free = acc.balance.as_yoctonear() - acc.storage_usage as u128 * 10u128.pow(19);
+    let t0 = info(&lic).await["totals"].clone();
+    assert!(free >= tracked(&t0), "solvent: free {free} tracked {}", tracked(&t0));
+    let (swept, _) = call(&relayer, &lic, "sync_ops", json!({}), NO_DEPOSIT).await?;
+    let t1 = info(&lic).await["totals"].clone();
+    assert_eq!(u(&swept), free - tracked(&t0), "exactly the strict surplus");
+    assert_eq!((u(&t1["pot_locked"]), u(&t1["pool"]), u(&t1["evm_settled"])), (u(&t0["pot_locked"]), u(&t0["pool"]), u(&t0["evm_settled"])));
+    assert_eq!(u(&t1["ops_budget"]), u(&t0["ops_budget"]) + u(&swept));
+    println!("sync_ops swept {:.4} NEAR of surplus", u(&swept) as f64 / 1e24);
     println!("gas burnt per gasless call at 250 Tgas prepaid (whole receipt tree), Tgas:");
     for (m, g) in &gas {
         println!("  {m:<16} {:>6.1}", *g as f64 / 1e12);

@@ -56,13 +56,14 @@ impl Licence {
         let mut record_cost = 0;
         if let Some((to, rate)) = evm {
             let sessions = if per == 0 { verified as u128 } else { (pay / per).min(verified as u128) };
-            if sessions == 0 {
+            let value = sessions.checked_mul(rate);
+            if sessions == 0 || value.is_none() {
                 store::remove_claim(idx);
                 store::unset_epoch_paid(host_id, epoch);
                 return Self::claim_skipped(host_id, epoch, "pool is empty");
             }
             let b2 = env::storage_usage();
-            evm_id = Some(self.book_evm(host_id, epoch, to, verified, sessions * rate, pay));
+            evm_id = Some(self.book_evm(host_id, epoch, to, verified, value.unwrap_or(0), pay));
             record_cost = env::storage_usage().saturating_sub(b2) as u128 * byte;
         }
         self.totals.pool = self.totals.pool.saturating_sub(cost + record_cost + pay);
@@ -144,7 +145,19 @@ impl Licence {
         let end = released as u128 + (epoch as u128 + 1) * epoch_ms;
         require!(Self::now() as u128 >= end, "This epoch is not complete yet");
         require!(self.totals.pool > 0, "The hosting pool is empty");
+        let ops = env::attached_deposit().is_zero();
+        if ops {
+            // a budget-paid claim at most once per (host, epoch): failed or empty claims cannot loop on the budget
+            require!(!store::ops_claimed(&id, epoch), "Gas-free claim already used for this epoch, attach 0.02 NEAR to retry");
+        }
         let ops = self.take_attach();
+        if ops {
+            let before = env::storage_usage();
+            store::set_ops_claimed(&id, epoch);
+            let cost = env::storage_usage().saturating_sub(before) as u128 * env::storage_byte_cost().as_yoctonear();
+            require!(self.totals.ops_budget >= cost, "Ops budget is empty, fund it first");
+            self.totals.ops_budget -= cost;
+        }
         let flight = Self::begin_flight(&mut host.flight, &mut self.next_flight, "A claim");
         store::set_host(&id, &host);
         let from = (released as u128 + epoch as u128 * epoch_ms) as u64;
@@ -157,11 +170,13 @@ impl Licence {
             from + self.cfg.pool.epoch_ms,
         );
         let cb = Cb { host: Some(id), epoch, ..Cb::new(flight).funded(ops) };
+        self.in_flight += cb.deposit;
         self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_claim", &cb)
     }
 
     #[private]
     pub fn on_claim(&mut self, #[serializer(borsh)] cb: Cb) {
+        self.in_flight = self.in_flight.saturating_sub(cb.deposit);
         let host_id = cb.host.clone().unwrap_or_else(|| env::panic_str("Bad callback"));
         let epoch = cb.epoch;
         if let Some(mut h) = store::host(&host_id) {

@@ -14,6 +14,7 @@ mod config;
 mod events;
 mod evm;
 mod evm_sig;
+mod evm_views;
 mod hosts;
 mod liveness;
 mod nft;
@@ -58,6 +59,10 @@ pub struct Licence {
     pub(crate) next_evm_nonce: u64,
     pub(crate) evm_count: u64,
     pub(crate) evm_lock: Option<EvmLock>,
+    /// Sum of deposits riding on OutLayer calls (and pending pot refunds) that may still bounce back.
+    pub(crate) in_flight: u128,
+    pub(crate) last_ops_probe_ms: u64,
+    pub(crate) last_ops_release_ms: u64,
 }
 
 #[near]
@@ -85,6 +90,9 @@ impl Licence {
             next_evm_nonce: start_nonce,
             evm_count: 0,
             evm_lock: None,
+            in_flight: 0,
+            last_ops_probe_ms: 0,
+            last_ops_release_ms: 0,
         }
     }
 

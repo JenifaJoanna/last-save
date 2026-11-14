@@ -15,10 +15,19 @@ use crate::{Licence, LicenceExt};
 
 /// Attached to request_execution when the caller attaches nothing: 0.02 N.
 pub const OPS_ATTACH: u128 = 20_000_000_000_000_000_000_000;
+/// Ops-funded releases are at least this far apart (retries with a deposit are never limited).
+pub const OPS_RELEASE_GAP_MS: u64 = 60_000;
 /// Share of a post-death sale that goes to the ops budget (10%); the rest feeds the pool.
 pub const OPS_SALE_BPS: u128 = 1000;
 
 impl Licence {
+    /// Every yocto the contract owes or has set aside, besides storage.
+    pub(crate) fn tracked(&self) -> u128 {
+        let t = &self.totals;
+        let reserve = self.evm_lock.as_ref().map_or(0, |l| l.reserve);
+        t.pot_locked + t.pool + t.evm_settled + t.ops_budget + self.in_flight + reserve
+    }
+
     /// True when the call attached nothing and so is paid from the ops budget (debited here).
     pub(crate) fn take_attach(&mut self) -> bool {
         if !env::attached_deposit().is_zero() {
@@ -40,6 +49,23 @@ impl Licence {
         self.totals.ops_budget += paid;
         emit("ops_funded", &format!("\"from\":\"{}\",\"amount\":\"{paid}\"", env::predecessor_account_id()));
         U128(self.totals.ops_budget)
+    }
+
+    /// Credits money the contract holds beyond every obligation to the ops budget: balance minus
+    /// storage minus pot, pool, evm_settled, ops budget, deposits still riding on OutLayer calls or
+    /// pending refunds, and the storage reserve of a running signing. Only ever adds to ops_budget,
+    /// and only the strict surplus (saturating at zero), so no tracked bucket can lose money.
+    /// Anyone can call it; it takes no deposit. Outgoing transfers leave the balance when their
+    /// receipt is created, and everything that can bounce back is in `in_flight`.
+    pub fn sync_ops(&mut self) -> U128 {
+        let storage = env::storage_usage() as u128 * env::storage_byte_cost().as_yoctonear();
+        let free = env::account_balance().as_yoctonear().saturating_sub(storage);
+        let surplus = free.saturating_sub(self.tracked());
+        self.totals.ops_budget += surplus;
+        if surplus > 0 {
+            emit("ops_synced", &format!("\"amount\":\"{surplus}\""));
+        }
+        U128(surplus)
     }
 
     pub fn ops_budget(&self) -> U128 {

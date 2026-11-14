@@ -154,6 +154,7 @@ pub struct EvmPayoutView {
     pub max_fee_per_gas: U128,
     pub max_priority_fee_per_gas: U128,
     pub booked_at_ms: u64,
+    pub last_signed_ms: u64,
     pub last_error: Option<String>,
 }
 

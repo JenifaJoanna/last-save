@@ -2,6 +2,7 @@
 
 mod t_evm;
 mod t_evm_bump;
+mod t_guards;
 mod t_hosts;
 mod t_liveness;
 mod t_nft;
@@ -127,7 +128,7 @@ pub fn escrowed() -> Licence {
     let _ = c.escrow_key("QUJDRA==".into());
     let id = c.escrow.flight.clone().unwrap().id;
     env_cb(T0, R::Empty);
-    assert!(c.on_escrow(cb(id, STUDIO)));
+    assert!(c.on_escrow(Cb { deposit: 50 * MILLI, ..cb(id, STUDIO) }));
     c
 }
 

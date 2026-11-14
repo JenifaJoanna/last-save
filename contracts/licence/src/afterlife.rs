@@ -31,6 +31,7 @@ impl Licence {
             }
             Choice::Refund => {
                 self.totals.refunded += amount;
+                self.in_flight += amount;
                 let cb = Cb { flight: 0, payer: owner.clone(), deposit: amount, host: None, epoch: 0, token: n, ops: false };
                 Some(
                     Promise::new(owner)
@@ -50,6 +51,7 @@ impl Licence {
     #[private]
     pub fn on_refund(&mut self, #[serializer(borsh)] cb: Cb) -> bool {
         let (n, amount) = (cb.token, cb.deposit);
+        self.in_flight = self.in_flight.saturating_sub(amount);
         if !matches!(env::promise_result_checked(0, 16), Err(PromiseError::Failed)) {
             emit("choice", &format!("\"token_id\":\"{n}\",\"choice\":\"Refund\",\"amount\":\"{amount}\",\"to\":\"{}\"", cb.payer));
             return true;

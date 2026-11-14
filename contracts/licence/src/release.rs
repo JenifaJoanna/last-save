@@ -1,6 +1,6 @@
 //! Releasing the escrowed server key once the game is Dead.
 
-use near_sdk::{near, require, Promise};
+use near_sdk::{env, near, require, Promise};
 
 use crate::events::{emit, log_activity};
 use crate::outlayer::{read_out, Out};
@@ -22,15 +22,27 @@ impl Licence {
         require!(self.dead, "The game is still alive");
         require!(self.escrow.escrowed, "Nothing is escrowed");
         require!(self.release.released_key.is_none(), "Key is already released");
+        let now = Self::now();
+        let ops = env::attached_deposit().is_zero();
+        if ops {
+            require!(self.release.flight.is_none(), "Release is already running");
+            require!(now.saturating_sub(self.last_ops_release_ms) >= crate::ops::OPS_RELEASE_GAP_MS, "A release ran recently, try again later");
+        }
         let ops = self.take_attach();
+        if ops {
+            self.last_ops_release_ms = now;
+        }
         let id = Self::begin_flight(&mut self.release.flight, &mut self.next_flight, "Release");
         emit("release_requested", "");
-        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"release\"}", true, "on_release", &Cb::new(id).funded(ops))
+        let cb = Cb::new(id).funded(ops);
+        self.in_flight += cb.deposit;
+        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"release\"}", true, "on_release", &cb)
     }
 
     /// A key is stored only if sha256(K) equals the commitment made at init.
     #[private]
     pub fn on_release(&mut self, #[serializer(borsh)] cb: Cb) -> bool {
+        self.in_flight = self.in_flight.saturating_sub(cb.deposit);
         Self::end_flight(&mut self.release.flight, cb.flight);
         if self.release.released_key.is_some() {
             return false;

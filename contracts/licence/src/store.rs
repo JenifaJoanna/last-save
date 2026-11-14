@@ -107,3 +107,17 @@ pub fn evm(id: u64) -> Option<EvmPayout> {
 pub fn set_evm(p: &EvmPayout) {
     save(&keyed(b'e', &p.id.to_be_bytes()), p)
 }
+
+/// One budget-paid claim_epoch per (host, epoch): set when it is made, never cleared.
+pub fn ops_claimed(host: &AccountId, epoch: u64) -> bool {
+    env::storage_has_key(&ops_claim_key(host, epoch))
+}
+pub fn set_ops_claimed(host: &AccountId, epoch: u64) {
+    env::storage_write(&ops_claim_key(host, epoch), &[1]);
+}
+fn ops_claim_key(host: &AccountId, epoch: u64) -> Vec<u8> {
+    let mut tail = host.as_bytes().to_vec();
+    tail.push(b'|');
+    tail.extend_from_slice(&epoch.to_be_bytes());
+    keyed(b'q', &tail)
+}

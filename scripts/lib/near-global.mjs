@@ -5,7 +5,7 @@
 // AccountId = 1). Reuses scripts/lib/near.mjs for keys, RPC failover and polling; does not edit it.
 import { createHash } from "node:crypto";
 import nearApi from "near-api-js";
-import { NETWORK, connection, ensureKey, explorerTx, rpc } from "./near.mjs";
+import { NETWORK, connection, ensureKey, explorerTx, rpc, view } from "./near.mjs";
 
 const { utils } = nearApi;
 
@@ -84,4 +84,14 @@ export async function globalCodeExists(hashBase58) {
     if (/NO_GLOBAL_CONTRACT_CODE|never been observed|UNKNOWN|not found/i.test(String(e?.message ?? e))) return false;
     throw e;
   }
+}
+
+/** Launch-path check: the factory must point instances at exactly the code that is (or will be) published.
+ * Throws unless `factory.code_hash()` equals `expectedHashBase58` (the hash publish-global prints). */
+export async function assertFactoryHash(factoryId, expectedHashBase58) {
+  const onChain = await view(factoryId, "code_hash");
+  if (onChain !== expectedHashBase58) {
+    throw new Error(`factory ${factoryId} code_hash ${onChain} != published licence hash ${expectedHashBase58}: do not create instances`);
+  }
+  return onChain;
 }

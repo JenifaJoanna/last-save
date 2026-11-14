@@ -3,7 +3,7 @@
 //! Build the artifacts first (from the repo root):
 //!   ./scripts/build-wasm.sh licence
 //!   (cd contracts/mock-outlayer && cargo build --target wasm32-unknown-unknown --release)
-//! Set LICENCE_WASM (path relative to this crate) to test the wasm-opt output instead.
+//! Defaults to the wasm-opt output (lastsave_licence.opt.wasm), the exact file publish-global publishes.
 //! Then: cd contracts/sandbox-tests && cargo test -- --nocapture
 
 use std::path::PathBuf;
@@ -66,7 +66,7 @@ async fn full_lifecycle() -> anyhow::Result<()> {
     let licence_acc = mk("licence", 20).await;
     let mock = outlayer_acc.deploy(&wasm("../mock-outlayer/target/wasm32-unknown-unknown/release/mock_outlayer.wasm")).await?.into_result()?;
     mock.call("new").transact().await?.into_result()?;
-    let lic = licence_acc.deploy(&wasm(&std::env::var("LICENCE_WASM").unwrap_or("../licence/target/near/lastsave_licence.wasm".into()))).await?.into_result()?;
+    let lic = licence_acc.deploy(&wasm(&std::env::var("LICENCE_WASM").unwrap_or("../licence/target/near/lastsave_licence.opt.wasm".into()))).await?.into_result()?;
 
     let key = [0x11u8; 32];
     let commitment = hex::encode(Sha256::digest(key));

@@ -65,9 +65,18 @@ impl Licence {
     #[payable]
     pub fn probe_official(&mut self, mirror_index: Option<u32>) -> Promise {
         self.require_alive();
-        let ops = self.take_attach();
-        let id = Self::begin_flight(&mut self.probe.flight, &mut self.next_flight, "A probe");
         let now = Self::now();
+        let ops = env::attached_deposit().is_zero();
+        if ops {
+            // a budget-paid probe at most once per probe interval, counted from the last probe of any kind
+            let last = self.last_ops_probe_ms.max(self.probe.last_probe_ms.unwrap_or(0));
+            require!(now.saturating_sub(last) >= self.cfg.liveness.probe_interval_ms, "A probe ran recently, try again later");
+        }
+        let ops = self.take_attach();
+        if ops {
+            self.last_ops_probe_ms = now;
+        }
+        let id = Self::begin_flight(&mut self.probe.flight, &mut self.next_flight, "A probe");
         let input = format!(
             "{{\"mode\":\"official\",\"contract\":\"{}\",\"endpoint\":\"{}\",\"host_id\":\"official\",\"build_hash\":\"{}\",\"nonce\":\"{}\",\"from_ms\":{},\"to_ms\":{now},\"epoch\":null}}",
             env::current_account_id(),
@@ -76,11 +85,14 @@ impl Licence {
             nonce_hex(),
             now.saturating_sub(self.cfg.liveness.receipt_window_ms),
         );
-        self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_probe", &Cb::new(id).funded(ops))
+        let cb = Cb::new(id).funded(ops);
+        self.in_flight += cb.deposit;
+        self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_probe", &cb)
     }
 
     #[private]
     pub fn on_probe(&mut self, #[serializer(borsh)] cb: Cb) {
+        self.in_flight = self.in_flight.saturating_sub(cb.deposit);
         Self::end_flight(&mut self.probe.flight, cb.flight);
         let out = read_out();
         if let Out::Failed = out {

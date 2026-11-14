@@ -41,7 +41,13 @@ pub fn validate(c: &mut InitConfig) {
         e.address = e.address.to_ascii_lowercase();
         require!(!e.path.is_empty() && e.path.len() <= 64, "EVM path must be 1 to 64 characters");
         require!(e.gas_limit >= 21_000, "gas_limit is at least 21000");
-        require!(e.demo_wei_per_session.0 > 0, "demo_wei_per_session must be above zero");
+        require!(
+            e.demo_wei_per_session.0 > 0 && e.demo_wei_per_session.0 <= 10u128.pow(18),
+            "demo_wei_per_session must be 1 to 1e18 wei"
+        );
+        require!(e.max_fee_cap.0 <= 1_000_000_000_000, "max_fee_cap is at most 1000 gwei");
+        require!(e.gas_limit <= 100_000, "gas_limit is at most 100000");
+        require!(e.start_nonce < u32::MAX as u64, "start_nonce is out of range");
         require!(e.max_priority_fee_per_gas.0 > 0, "Priority fee must be above zero");
         require!(
             e.max_priority_fee_per_gas.0 <= e.max_fee_per_gas.0 && e.max_fee_per_gas.0 <= e.max_fee_cap.0,
