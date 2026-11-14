@@ -163,3 +163,37 @@ then `--local` (wrangler dev + cloudflared, prints public URL) or `--deploy <nam
 - `/attest` omits `epoch` from the query when null; receipts with a missing epoch are filtered by time only.
 - `register_host` sends the host account's own access-key public key as `host_pubkey`.
 - Reproducible wasm builds use OutLayer's pinned compiler image (`scripts/outlayer-build-wasm.sh`, amd64, rustc 1.97.1).
+
+## 9. v2 additions, as built (14 Nov)
+Licence v2 is published once as a NEAR global contract (code hash `4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1`, 332,631 B)
+and instantiated by the factory. v1 (`lastsave-licence.testnet`) is unchanged.
+
+**Gas-free holder actions (NEP-366).**
+- `probe_official`, `release` and `claim_epoch` accept a zero deposit; the contract then pays OutLayer 0.02 N from `ops_budget`.
+- Limits: a budget-paid probe at most once per `probe_interval_ms`; one budget-paid claim per (host, epoch); a budget-paid release only when none is in flight and ≥ 60 s after the last.
+- `fund_ops()` is payable and anyone can call it. `sync_ops()` credits only untracked surplus (balance − storage − pot − pool − evm_settled − ops_budget − in-flight deposits − signing reserve).
+- 10 % of each post-death sale goes to `ops_budget`.
+- Relayer: `https://lastsave-relay.pages.dev` `POST /relay {signed_delegate}`.
+  - Allowed: receivers from an allowlist, and methods `choose, report_down, probe_official, release, claim_epoch, sign_evm_payout, bump_evm_payout, set_payout_evm`, with zero deposit and ≤ 300 Tgas.
+  - It verifies the delegate signature, expiry and key permissions before paying. The relayer pays gas only.
+
+**Chain Signatures payouts (Base Sepolia, chainId 84532 fixed).**
+- Config: `evm_payout {mpc, path, address, demo_wei_per_session, max_fee_per_gas, max_priority_fee_per_gas, max_fee_cap, gas_limit, start_nonce}`.
+- `set_payout_evm(address)` acts on the caller's own host record only.
+- `claim_epoch` for a host with `evm_address` books an `EvmPayout`. It moves the NEAR from `pool` to `evm_settled`, which no method can withdraw. The same `epoch_paid` flag guards both rails.
+- `sign_evm_payout(id)`: anyone, zero deposit.
+  - Builds the EIP-1559 tx and calls `v1.signer-prod.testnet.sign({request:{path, payload_v2:{Ecdsa}, domain_id:0}})` with 1 yocto attached.
+  - Checks `ecrecover == address` (with a parity retry) and stores `signed_tx` and `tx_hash`.
+  - Only one payout can be Signing at a time, and the lock frees after 10 min.
+- `bump_evm_payout(id)`: same nonce, recipient and value; fee ×1.25 (clamped to `max_fee_cap`); ≥ 120 s since the last signature; at most 5 bumps.
+- Views:
+  - `get_evm_payouts(from_index, limit)`: `id, host_id, epoch, to, verified, value_wei, near_debited, nonce, status (Booked|Signing|Signed), signed_tx, tx_hash, signed_txs[], tx_hashes[], max_fee_per_gas, max_priority_fee_per_gas, booked_at_ms, last_signed_ms, last_error`.
+  - `evm_payout_info()`: `address, next_nonce, mpc, path, chain_id, derivation_account, domain_id, demo_wei_per_session, max_fee_cap, evm_settled, signing_payout, payouts`.
+- Re-derive the address from public inputs: `node scripts/chainsig/derive.mjs --contract <instance> --path lastsave/host-payouts`.
+- Relay a signed payout (anyone): `node scripts/chainsig/relay.mjs`.
+
+**Global contract + factory (NEP-591).**
+- `lastsave-factory.testnet`: `new(owner, licence_code_hash)`.
+- `create_instance(name, config)` is payable. It creates `<name>.lastsave-factory.testnet`, transfers the deposit, runs `UseGlobalContract(code hash)`, calls `new({config})`, and forwards any deposit above `min_deposit(config)` to the instance's `fund_ops`. No access key is ever added (born locked).
+- Views: `instances(from_index?, limit?)`, `code_hash()`, `owner()`, `is_open()`, `min_deposit(config)`.
+- Refunds on failure go through `claim_refund()`, which pays via a callback.
