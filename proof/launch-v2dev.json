@@ -31,6 +31,87 @@
         "https://last-save.pages.dev/mirror/ember-rift-8aed87d3d43cecff.bin"
       ],
       "note": "commit+push artifacts/ and redeploy web before attest"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-14T07:54:18.212Z",
+      "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+      "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+      "instance": "v2dev.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "1.3726 NEAR",
+      "min_deposit": "0.3726 NEAR",
+      "evm_address": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-14T07:54:25.679Z",
+      "hash": "F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+      "url": "https://testnet.nearblocks.io/txns/F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+      "failure": null,
+      "storage_cost": "6910000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T07:56:28.354Z",
+      "hash": "FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+      "url": "https://testnet.nearblocks.io/txns/FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+      "failure": null,
+      "escrow_verified": false,
+      "logs": [
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 29000000000000000000000 yoctoNEAR"
+      ]
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T07:58:47.358Z",
+      "hash": "GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+      "url": "https://testnet.nearblocks.io/txns/GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+      "failure": null,
+      "escrow_verified": false,
+      "logs": [
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 29000000000000000000000 yoctoNEAR"
+      ]
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T08:44:02.241Z",
+      "hash": "GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC",
+      "url": "https://testnet.nearblocks.io/txns/GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1149152700000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 527513780, time_ms: 1491 }, Cost: 1149152700000000000000 yoctoNEAR, Refund: 28850847300000000000000 yoctoNEAR, Cached WASM from 2026-11-13T20:23:18.422967+00:00"
+      ]
+    },
+    {
+      "step": "snapkey",
+      "at": "2026-11-14T08:46:17.863Z",
+      "hash": "EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N",
+      "url": "https://testnet.nearblocks.io/txns/EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N",
+      "public_key": "ed25519:CaupMFLJNznRJKh2ciXjWe7Nake1pjDPDfXFbwGGpTup",
+      "methods": [
+        "post_snapshot"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-14T08:48:31.995Z",
+      "url": "https://emberrift-v2dev.pages.dev",
+      "worker": "emberrift-v2dev-arena",
+      "build_hash": "d31168055435d68224fd34f68119fdf67b7cbf2a454c9474eee0922f02f550c8"
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-14T08:48:41.408Z",
+      "summary": "v2dev.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea ops=1.0000 NEAR escrowed=true verified=true",
+      "problems": []
     }
   ]
 }

@@ -8,11 +8,14 @@
     "https://emberrift-community.pages.dev/health",
     "https://last-save-preview.pages.dev/",
     "https://last-save-preview.pages.dev/play/",
-    "https://lastsave-relay.pages.dev/health"
+    "https://lastsave-relay.pages.dev/health",
+    "https://emberrift-v2dev.pages.dev/",
+    "https://emberrift-v2dev.pages.dev/health"
   ],
   "workers": [
     "emberrift-arena",
     "emberrift-community-arena",
-    "lastsave-relay-relayer"
+    "lastsave-relay-relayer",
+    "emberrift-v2dev-arena"
   ]
 }
