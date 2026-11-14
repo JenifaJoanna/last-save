@@ -26,7 +26,7 @@ attack the live contract and watch it refuse.
 | v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key released 15 Nov 01:05 IST (tx [ADPZTugj…](https://testnet.nearblocks.io/txns/ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N)). Run: `proof/judge-v2.json`, release: `proof/judge-v2-release.json` |
 | Community host for the judge instance | https://emberrift-community-v2.pages.dev: the released build, verified (Walrus copy, CI provenance, build hash), progress restored, registered on `ember-rift` ([tx 2Gv9w2Fm…](https://testnet.nearblocks.io/txns/2Gv9w2Fmyj7TPb1HQdCyyHpzKR3RXtxQRayxYTLpHSJf)) |
 | Community host for the dev instance | https://emberrift-community-v2dev.pages.dev, registered on `v2dev` ([tx 3w3HcBmW…](https://testnet.nearblocks.io/txns/3w3HcBmWwGgDcKsML9LC1U7RooCjevJTzTscrdC7Mend)) |
-| Encrypted judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave) (sha256 = the on-chain artifact hash) |
+| Judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave): the encrypted build (sha256 = the on-chain artifact hash) and the released build (sha256 = the on-chain build hash `f357f5fa…`) |
 | v2 dev instance (full lifecycle incl. a Base Sepolia payout) | [`v2dev.lastsave-factory.testnet`](https://testnet.near.rocks/account/v2dev.lastsave-factory.testnet) |
 | Gas-free relayer | https://lastsave-relay.pages.dev (`/health`) |
 | Try to kill it (real attacks, real refusals) | https://last-save.pages.dev/attack |

@@ -16,7 +16,7 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Wallet run on the dev instance | https://wallet-v2dev.last-save.pages.dev | branch preview, wired to `v2dev` |
 | Tap-through preview (no wallet) | https://last-save-preview.pages.dev | live |
 | Gas-free relayer | https://lastsave-relay.pages.dev | live (`/relay`, `/attack`) |
-| Encrypted judge build | https://archive.org/details/ember-rift-server-ember-rift-lastsave | public; sha256 = on-chain artifact hash |
+| Judge build, preserved | https://archive.org/details/ember-rift-server-ember-rift-lastsave | public: the encrypted build (sha256 = on-chain artifact hash) and, since 15 Nov 02:00 IST, the released build (sha256 f357f5fa… = on-chain build hash, re-downloaded and checked) |
 | Judge instance | `ember-rift.lastsave-factory.testnet` | Dead (cause: players), released 15 Nov 01:05 IST |
 | Judge community host | https://emberrift-community-v2.pages.dev | live, registered on `ember-rift` (tx 2Gv9w2Fm…), serving the released build |
 | Dev community host | https://emberrift-community-v2dev.pages.dev | live, registered on `v2dev` (tx 3w3HcBmW…) |
