@@ -2,7 +2,7 @@
 // pasted testnet key), and the red ACCESS DENIED readout. Digits select, Enter confirms, Esc goes back.
 import type { DeniedCode } from "../../../shared/protocol";
 import { loginMessage, newSessionKey, signLoginWithKey, type Session } from "../session";
-import { walletLogin, type WalletId } from "../wallet";
+import { walletLogin } from "../wallet";
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector(sel) as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -89,17 +89,17 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
   win(card, "Wallet", `<div class="eyebrow">Connect wallet</div>
     <p class="lede">Pick the wallet that holds your Ember Rift licence. It signs one login message; nothing goes on-chain.</p>
     <ol class="menu"></ol><p class="err" id="err" role="alert"></p>
-    <div class="actions"><button class="keycap" id="back">Back <kbd>Esc</kbd></button></div>${foot(o, "1–3 select · enter confirm")}`);
+    <div class="actions"><button class="keycap" id="back">Back <kbd>Esc</kbd></button></div>${foot(o, "1–2 select · enter confirm")}`);
   const err = $("#err", card);
   const fresh = () => { const k = newSessionKey(); return { ...k, message: loginMessage(o.host, k.pub, Date.now() + SESSION_MS) }; };
   const busy = (on: boolean) => card.querySelectorAll("button").forEach((b) => ((b as HTMLButtonElement).disabled = on));
-  const wallet = (w: WalletId) => async () => {
+  const wallet = () => async () => {
     err.className = "busy mono caret";
     err.textContent = "> waiting for the wallet signature";
     busy(true);
     const k = fresh();
     try {
-      const r = await walletLogin(w, k.message, o.contract, hex(k.secret), o.host);
+      const r = await walletLogin(k.message, o.contract, hex(k.secret), o.host);
       if (r === "redirect") return;
       hideSignin();
       o.onSession({ account_id: r.account_id, host: o.host, login: r, secret: k.secret });
@@ -111,8 +111,7 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
   };
   const back = () => mainScreen(o, card);
   menu($(".menu", card), [
-    { label: "Meteor Wallet", act: wallet("meteor-wallet") },
-    { label: "MyNearWallet", act: wallet("my-near-wallet") },
+    { label: "NEAR wallet (NEAR Connect)", act: wallet() },
     { label: "Testnet key", act: () => keyScreen(o, card) },
   ], back);
   $("#back", card).onclick = back;

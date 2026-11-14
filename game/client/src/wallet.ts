@@ -1,40 +1,39 @@
-// NEAR wallet sign-in via wallet-selector: one NEP-413 signature binds a session key to the account.
-// MyNearWallet signs on its own page and redirects back; Meteor answers in place.
+// NEAR wallet sign-in via NEAR Connect (@hot-labs/near-connect): one NEP-413 signature binds a session key to the
+// account. Wallets that can sign during sign-in do it in one step; others sign right after connecting.
+import type { NearConnector, SignedMessage } from "@hot-labs/near-connect";
 import type { Login } from "../../shared/protocol";
 
-export type WalletId = "meteor-wallet" | "my-near-wallet";
 const PENDING = "ember-rift.pending-login";
 const b64 = (u: Uint8Array) => btoa(String.fromCharCode(...u));
 
 interface Pending { message: string; nonce: string; recipient: string; secret: string; host: string }
 
-async function selector() {
-  const [{ Buffer }, core, meteor, mnw] = await Promise.all([
-    import("buffer"),
-    import("@near-wallet-selector/core"),
-    import("@near-wallet-selector/meteor-wallet"),
-    import("@near-wallet-selector/my-near-wallet"),
-  ]);
-  (globalThis as unknown as { Buffer: unknown }).Buffer ??= Buffer;
-  const sel = await core.setupWalletSelector({ network: "testnet", modules: [meteor.setupMeteorWallet(), mnw.setupMyNearWallet()] });
-  return { sel, Buffer };
+let shared: Promise<NearConnector> | null = null;
+function connector(): Promise<NearConnector> {
+  shared ??= import("@hot-labs/near-connect").then(({ NearConnector: C }) =>
+    new C({ network: "testnet", providers: { testnet: ["https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"] }, features: { testnet: true, signMessage: true }, footerBranding: null }));
+  return shared;
 }
 
-/** Asks the wallet to sign the login. Resolves with a Login, or "redirect" when the wallet navigates away. */
-export async function walletLogin(id: WalletId, message: string, recipient: string, secretHex: string, host: string): Promise<Login | "redirect"> {
-  const { sel, Buffer } = await selector();
-  const wallet = await sel.wallet(id);
+/** Asks a wallet (picked in NEAR Connect) to sign the login. Resolves with a Login, or "redirect" when the wallet navigates away. */
+export async function walletLogin(message: string, recipient: string, secretHex: string, host: string): Promise<Login | "redirect"> {
+  const c = await connector();
   const nonce = crypto.getRandomValues(new Uint8Array(32));
   const pending: Pending = { message, nonce: b64(nonce), recipient, secret: secretHex, host };
   try { localStorage.setItem(PENDING, JSON.stringify(pending)); } catch { /* private mode: redirect flow cannot resume */ }
-  const callbackUrl = location.href.split("#")[0];
-  const signed = await wallet.signMessage({ message, recipient, nonce: Buffer.from(nonce), callbackUrl });
+  const atSignIn = new Promise<SignedMessage | null>((res) => {
+    c.once("wallet:signInAndSignMessage", (p) => res(p.accounts[0]?.signedMessage ?? null));
+    setTimeout(() => res(null), 120_000);
+  });
+  const wallet = await c.connect({ signMessageParams: { message, recipient, nonce } });
+  let signed = await Promise.race([atSignIn, new Promise<null>((r) => setTimeout(() => r(null), 1500))]);
+  signed ??= await wallet.signMessage({ message, recipient, nonce });
   if (!signed) return "redirect";
   try { localStorage.removeItem(PENDING); } catch { /* ignore */ }
   return { account_id: signed.accountId, public_key: signed.publicKey, signature: signed.signature, message, nonce: pending.nonce, recipient };
 }
 
-/** After a MyNearWallet redirect: rebuild the login from the URL and the pending record. */
+/** After a wallet that signs on its own page redirects back: rebuild the login from the URL and the pending record. */
 export function resumeRedirectLogin(): { login: Login; secret: string; host: string } | { error: string } | null {
   const params = new URLSearchParams(location.hash.slice(1) || location.search.slice(1));
   const accountId = params.get("accountId"), publicKey = params.get("publicKey"), signature = params.get("signature");

@@ -115,6 +115,14 @@ export function publicKeyFromSecret(secret: string): string {
   return `ed25519:${bs58.encode(ed25519.getPublicKey(seed))}`;
 }
 
+/** A fresh ed25519 secret in NEAR's 64-byte format ("ed25519:<base58 seed ‖ public key>"). */
+export function newSecret(seed: Uint8Array = crypto.getRandomValues(new Uint8Array(32))): string {
+  const full = new Uint8Array(64);
+  full.set(seed.slice(0, 32), 0);
+  full.set(ed25519.getPublicKey(seed.slice(0, 32)), 32);
+  return `ed25519:${bs58.encode(full)}`;
+}
+
 export interface BuildInput {
   senderId: string;
   publicKey: string;

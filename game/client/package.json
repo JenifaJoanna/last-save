@@ -10,10 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@near-wallet-selector/core": "10.1.4",
-    "@near-wallet-selector/meteor-wallet": "10.1.4",
-    "@near-wallet-selector/modal-ui": "10.1.4",
-    "@near-wallet-selector/my-near-wallet": "10.1.4",
+    "@hot-labs/near-connect": "0.12.0",
     "@noble/curves": "1.9.2",
     "@noble/hashes": "1.8.0",
     "bs58": "6.0.0",

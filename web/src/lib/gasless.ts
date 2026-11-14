@@ -1,6 +1,8 @@
 // Gas-free holder actions (NEP-366): the player's key signs a delegate action, the relayer wraps it and pays gas.
 // The relayer can only pay: it cannot change the signed actions, and it only forwards zero-deposit calls.
-import { publicKeyFromSecret, relay, signDelegate, signerFromSecret } from "../../../relayer/client/delegate";
+// The key is a function-call key this app generates and asks the wallet to add at sign-in (NEAR Connect's
+// addFunctionCallKey): it can only call the zero-deposit methods below on this licence instance.
+import { newSecret, publicKeyFromSecret, relay, signDelegate, signerFromSecret } from "../../../relayer/client/delegate";
 import { CONTRACT, rpc } from "./near";
 
 export const RELAYER_URL: string = (import.meta.env.VITE_RELAYER_URL as string | undefined) ?? "";
@@ -8,13 +10,38 @@ const RELAYER_ACCOUNT: string = (import.meta.env.VITE_RELAYER_ACCOUNT as string 
 export const GASLESS_METHODS = new Set(["choose", "report_down", "probe_official", "release", "claim_epoch", "sign_evm_payout", "bump_evm_payout", "set_payout_evm"]);
 /** Inner gas ceiling: the delegate's function call plus its overhead must fit one 300 Tgas transaction. */
 const MAX_INNER_TGAS = 250;
+/** The key's own allowance only matters if the account ever sends with it directly; the relayer pays delegate gas. */
+export const KEY_ALLOWANCE_YOCTO = "250000000000000000000000";
 
-/** A function-call key the wallet left in this browser at sign-in (MyNearWallet's near-api-js keystore), if any. */
-export function browserKey(accountId: string): string | null {
+const slot = (accountId: string) => `lastsave:fckey:${CONTRACT}:${accountId}`;
+
+export { newSecret, publicKeyFromSecret };
+
+/** The function-call key this browser holds for `accountId` on this instance, if any. */
+export function loadKey(accountId: string): string | null {
+  try { const v = localStorage.getItem(slot(accountId)); return v && v.startsWith("ed25519:") ? v : null; } catch { return null; }
+}
+export function saveKey(accountId: string, secret: string | null): void {
+  try { if (secret) localStorage.setItem(slot(accountId), secret); else localStorage.removeItem(slot(accountId)); } catch { /* storage blocked: no gas-free mode */ }
+}
+
+type AccessKeyView = { nonce: number; permission: "FullAccess" | { FunctionCall: { receiver_id: string; method_names: string[] } } };
+
+/** True when `publicKey` is on `accountId` and may call this instance (full access, or a function-call key for CONTRACT). */
+export async function keyUsable(accountId: string, publicKey: string): Promise<boolean> {
   try {
-    const v = localStorage.getItem(`near-api-js:keystore:${accountId}:testnet`);
-    return v && v.startsWith("ed25519:") ? v : null;
-  } catch { return null; }
+    const ak = await rpc<AccessKeyView>("query", { request_type: "view_access_key", finality: "optimistic", account_id: accountId, public_key: publicKey });
+    return ak.permission === "FullAccess" || ak.permission.FunctionCall.receiver_id === CONTRACT;
+  } catch { return false; }
+}
+
+/** Waits for a wallet-added key to show up on chain (wallets add it in the sign-in transaction). */
+export async function waitForKey(accountId: string, publicKey: string, tries = 10): Promise<boolean> {
+  for (let i = 0; i < tries; i++) {
+    if (await keyUsable(accountId, publicKey)) return true;
+    await sleep(1500);
+  }
+  return false;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

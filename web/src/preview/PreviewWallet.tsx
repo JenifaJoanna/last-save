@@ -20,7 +20,7 @@ export function PreviewWalletProvider({ children }: { children: ReactNode }) {
   }, [toast]);
 
   const value = useMemo(() => ({
-    ready: true, accountId, pending, call, isDev: false, gasless: true,
+    ready: true, accountId, pending, call, isDev: false, gasless: true, connecting: false,
     signIn: () => setPersona("mira"),
     signOut: async () => setPersona("guest"),
     devSignIn: () => setPersona("mira"),
