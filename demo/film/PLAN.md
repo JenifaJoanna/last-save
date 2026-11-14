@@ -45,21 +45,25 @@ Wording note: V02, V13 and V16 follow the approved v3 story; demo/narration.json
 narration.json is updated to v3 before recording.
 
 ## 4. Shot list (30 fps; total 4980 f = 2:46; footage slots in FOOTAGE.md)
+Scene lengths and VO offsets now come from the recorded eleven_v4 lines: `src/film/timeline.ts` is authoritative where
+its frames differ from the ranges below (S01 0–270, S02 270–474, S03 474–852, S04 852–1230, S05 1230–1734, S06 1734–2028,
+S07 2028–2340, S08 2340–2580, S09 2580–3096, S10 3096–3258, S11 3258–3519, S12 3519–3675, S13 3675–4008, S14 4008–4260,
+S15 4260–4488, S16 4488–4716, S17 4716–4980).
 | Scene | Frames | On screen | Camera | Carries out → in | Type / colour | Kind |
 |---|---|---|---|---|---|---|
 | S01 Open | 0–270 | Three sourced quotes type on in the terminal (mono 34 px, cream), source lines in faint; at "goes with it" they grey out and a gold caret is left | locked inside the screen, +2 % push | caret █ → power-on dot | Plex Mono; cream → faint | MG |
 | S02 Title | 270–480 | CRT power-on → Ember Rift key art slow drift → boot log prints 6 lines → LAST SAVE display (sunset bands) + "A game licence that outlives its publisher" | pull back from the glass to the full bezel at f420 | display title → status bar text | Archivo 220 px sunset | MG + art |
 | S03 Why | 480–870 | Three EC quotes, one at a time, in bracket boxes; source "European Commission, IP/26/1369, 16 June 2026"; each scrolls up (teleprompter) as the next prints | inside the screen, slow push | "refund" highlight → dial-up box | Chakra labels, Plex body, gold highlight | MG |
-| S04 Buy | 870–1200 | dial-up → `store` take (BUY, sign) → `library` → `x-buy` flash 1 s; the licence card lifts off the glass (frame B) | inside → pull out to the device at 3/4 → licence lifts toward camera | licence key-art thumbnail → server cartridge | take + lift card | footage + B |
+| S04 Buy | 870–1200 | dial-up → `store` take (BUY → toast "Licence bought · Confirmed on NEAR testnet"; the test signer signs instantly) → `library` → `x-buy` flash 1 s; the licence card lifts off the glass (frame B) | inside → pull out to the device at 3/4 → licence lifts toward camera | licence key-art thumbnail → server cartridge | take + lift card | footage + B |
 | S05 Promise | 1200–1680 | Machine: the server build cartridge encrypts (glyph scramble + padlock), splits to STUDIO CDN and WALRUS plinths, Sigstore ribbon prints, the key drops into the OutLayer enclave, two lock tags, then the contract block shows "0 access keys" and `x-keys` flashes 1 s | push through the screen into the isometric world, track the cartridge left → right, rise to the enclave | contract block → screen glow | sunset faces, cyan enclave, gold key | MG (C) + flash |
 | S06 Try to kill | 1680–1980 | `attack` take: 4 attempts each refused (red line), `x-attack` flash | pull back out of the machine into the screen | 4th red line → channel roll | dead red on ink | footage |
-| S07 Any studio | 1980–2280 | `t-factory` terminal, then `x-factory` flash: same code hash, 0 keys | vertical roll channel change | key art in the device glass → arena | Plex terminal palette | footage |
+| S07 Any studio | 1980–2280 | `t-factory` terminal (studio #2 is "Tidebreak"; the real `create_instance`), then `x-factory` flash: same code hash, 0 keys | vertical roll channel change | key art in the device glass → arena | Plex terminal palette | footage |
 | S08 Match | 2280–2580 | `match` take: 4 players, hits, levels, Emberwing, "Official server" chip | pull out to the device, push into the arena (key art → game), then full-frame | the match window → kill | game art | footage |
-| S09 Kill | 2580–3120 | `t-kill` window opens over the match → `t-404` → `lost` CONNECTION LOST → CRT collapse to a line (frame A) → line becomes the red flatline → `probes` 1/3 2/3 3/3 print → GONE DARK + dead sun → `discord` alert slides in; 3060–3120 silence and hold | inside the screen; status bar flips red at the collapse | flatline → gold decode string | dead tone (red bands) | footage + MG |
+| S09 Kill | 2580–3120 | `t-kill` window opens over the match → `t-404` (shows `HTTP/2 530`, labelled "gone", never "404") → `lost` CONNECTION LOST → CRT collapse to a line (frame A) → line becomes the red flatline → `probes` 1/3 2/3 3/3 FAILED unreachable print (no session counts on failed probes; the alive probe before the kill shows "4 verified sessions") → GONE DARK + dead sun → `discord` alert slides in (fallback: terminal `discord-feed.mjs --dry-run` printing "would post: DEAD · THE STUDIO WENT DARK"); 3060–3120 silence and hold | inside the screen; status bar flips red at the collapse | flatline → gold decode string | dead tone (red bands) | footage + MG |
 | S10 Release | 3120–3300 | hard cut to gold: `release` take, key decodes char by char, `x-release` flash, status RELEASED | inside, push on the key | decoded key → 4 choice rows | gold tone | footage |
 | S11 Choose | 3300–3540 | `refund`, `refund2`, `pledge`, `pledge2`, `postbuy`: 4 holders in a 2×2 grid of mini screens, then the pool total | device grid (four terminals), pull to one | pool total → released cartridge | refund cyan, pledge gold | footage (B grid) |
-| S12 Preserved | 3540–3705 | Machine again: the cartridge, now gold and unlocked, sits on WALRUS and INTERNET ARCHIVE plinths with the same hash as the chain; `x-archive` and `x-walrus2` flash | push into the machine, orbit 20° | Walrus copy → the fan's terminal | gold, mono hashes | MG (C) + flash |
-| S13 Fan hosts | 3705–4050 | `hostbtn` (one click) then `t-host` lines with ✓ marks lifted to 1.4× as they land | inside the screen; split 50/50 at f3830 | host URL line → game client | terminal palette, alive green ✓ | footage |
+| S12 Preserved | 3540–3705 | Machine again: the cartridge, now gold and unlocked, sits on WALRUS and INTERNET ARCHIVE plinths with the same hash as the chain; `x-archive` and `x-walrus2` flash (fallback for the archive page: terminal `ia-upload.mjs` printing "build … verified" and "uploaded …") | push into the machine, orbit 20° | Walrus copy → the fan's terminal | gold, mono hashes | MG (C) + flash |
+| S13 Fan hosts | 3705–4050 | `hostbtn` (the Hosts page / README button; fallback: terminal take of the template build: fetch → walrus ✓ → provenance ✓ → decrypt ✓ → `wrangler deploy --dry-run` ✓) then `t-host` lines (studio copy 530 (gone) → walrus 200, sha256 matches on-chain ✓ → provenance ✓ … Rekor #… → snapshot restored → register_host tx) with ✓ marks lifted to 1.4× as they land | inside the screen; split 50/50 at f3830 | host URL line → game client | terminal palette, alive green ✓ | footage |
 | S14 Back in | 4050–4290 | `back` sign-in → same level/skin → match resumes; `bounce`; `epoch` 4 sessions verified, host paid | dial-up into the community host, full-frame game | the paid amount → Base row | game art, alive green | footage |
 | S15 Base | 4290–4515 | `base` Sign → Signed by MPC → Relay; `x-base` Basescan flash | inside the screen; push on the signed readout | Basescan tx line → terminal | readout prints | footage |
 | S16 Verify | 4515–4740 | `t-verify` ✓ table scrolls; card "real vs rehearsed" from the README | inside, slow scroll | last ✓ → pull-back | terminal palette | footage |
@@ -114,7 +118,7 @@ SFX: action-specific, never a repeated whoosh. Source per cue: D = the owner's D
 | 1:09 | factory tx | keyboard-press + quick-win | D |
 | 1:16–1:26 | match | hover-skiff dash, shard pickup, impact hit-stop (3 cues) | E |
 | 1:27 | kill command | keyboard-press (Enter) | D |
-| 1:30 | 404 | glitch-sound-effect | D |
+| 1:30 | studio copy gone (530) | glitch-sound-effect | D |
 | 1:32 | CRT collapse | CRT switching off: electrical pop + falling whine | E |
 | 1:34–1:38 | probes FAILED | low error blip ×3, rising pitch | E |
 | 1:40 | flatline | ECG flatline tone, 3 s, fades by 1:44 | E |
