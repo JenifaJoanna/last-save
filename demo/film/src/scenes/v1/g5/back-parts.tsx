@@ -11,8 +11,8 @@ type Crop = { x: number; y: number; w: number; h: number };
 
 /** `lift` 0..1 moves the crop from its place in the take (px of the 1920×1080 frame) to `to` at `scale`. The crop plays the
  * same take segment as the full-frame layer (same Sequence start and `from`). */
-export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag, caption }: {
-  crop: Crop; seqFrom: number; takeFrom: number; lift: number; to: { x: number; y: number }; scale: number; tag: string; caption?: string;
+export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag, caption, slot = "back" }: {
+  crop: Crop; seqFrom: number; takeFrom: number; lift: number; to: { x: number; y: number }; scale: number; tag: string; caption?: string; slot?: string;
 }) {
   if (lift <= 0.001) return null;
   const w = crop.w * 1920;
@@ -28,7 +28,7 @@ export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag, caption
       <div style={{ transformOrigin: "0 0", transform: `scale(${s})` }}>
         <LiftPlate lift={lift} edge={T.gold} style={{ width: w, height: h, overflow: "hidden", padding: 0 }}>
           <div style={{ position: "absolute", inset: 0 }}>
-            <Sequence from={seqFrom} layout="none"><Slot slot="back" from={takeFrom} crop={crop} tag={false} /></Sequence>
+            <Sequence from={seqFrom} layout="none"><Slot slot={slot} from={takeFrom} crop={crop} tag={false} /></Sequence>
           </div>
         </LiftPlate>
       </div>

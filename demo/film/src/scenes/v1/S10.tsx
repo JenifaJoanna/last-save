@@ -1,12 +1,12 @@
-// S10 Release (5.4 s, V09 from 0.4 s). Hard cut to gold: the dev instance v2dev's real release, as recorded (the release
+// S10 Release (5.4 s, V09 from 0.4 s). Hard cut to gold: a real release (g4/facts.ts RELEASE_INSTANCE), as recorded (the release
 // moment is not replayed): its /status take in the gold ScreenFrame → on "confirms" the chain read flashes (get_info
-// over public RPC: status Dead, cause probes, released_key) → on "releases the server" the take dims, RELEASED prints in
+// over public RPC: status Dead, its cause, released_key) → on "releases the server" the take dims, RELEASED prints in
 // gold bands and the key's two rows lift off the escrow card to 56 px → they join into one 36 px line, the end pose
-// S11 opens on (g4/facts.ts KEY_POSE). The v2dev banner and chip are added by withInstance (scenes/v1/index.ts).
+// S11 opens on (g4/facts.ts KEY_POSE). The instance banner and chip are added by withInstance (scenes/v1/index.ts).
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { ScreenFrame } from "../../ds/screen";
 import { stepped, T } from "../../ds/tokens";
-import { RELEASE_FROM, TAKE_KEY } from "./g4/facts";
+import { RELEASE_FROM, S10_TAKES, TAKE_KEY } from "./g4/facts";
 import { lin, SlotAt } from "./g4/kit";
 import { KeyLift, ReceiptFlash, S10T } from "./g4/Release";
 
@@ -22,7 +22,7 @@ export function S10() {
       <ScreenFrame title="Licence status" mode="released">
         <AbsoluteFill style={{ filter: `brightness(${dim})`, opacity: gone }}>
           <AbsoluteFill style={{ transform: `scale(${drift})`, transformOrigin: `${TAKE_KEY.x - 21}px ${TAKE_KEY.y[0] - 102}px` }}>
-            <SlotAt at={0} slot="release" plate="status-released.png" from={RELEASE_FROM} crop={CONTENT_CROP} />
+            <SlotAt at={0} slot={S10_TAKES.release} plate="status-released.png" from={RELEASE_FROM} crop={CONTENT_CROP} />
           </AbsoluteFill>
         </AbsoluteFill>
         <KeyLift />

@@ -146,3 +146,19 @@ export function WalletPill({ f, at }: { f: number; at: number }) {
     </div>
   );
 }
+
+/** A take's own line lifted as 56 px film type into a band below the take's subject (y 900), so the real screen above
+ * stays readable. Rises 8 f, holds, sinks 6 f at `until`. */
+export function KeyBand({ f, at, until, text }: { f: number; at: number; until: number; text: string }) {
+  const up = ramp(f, at, at + 8);
+  const down = ramp(f, until, until + 6);
+  if (up <= 0.001 || down >= 1) return null;
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, top: 900, display: "flex", justifyContent: "center", opacity: Math.min(1, up * 3) * (1 - down),
+      transform: `translateY(${-50 + (1 - up) * 30}%)` }}>
+      <LiftPlate lift={up} edge={T.alive} style={{ padding: "14px 40px 16px" }}>
+        <Mono size={56} color={T.text}>{text}</Mono>
+      </LiftPlate>
+    </div>
+  );
+}

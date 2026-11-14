@@ -5,6 +5,11 @@ import { ra, ran, rs, rn } from "../../../film/run";
 import RUN from "../../../film/run-facts.json";
 import AFTER from "../../../film/run-facts-after.json";
 
+/** Which instance S13/S14 (and S11's buy beat) show after the release. "v2dev" = the committed final (fallback).
+ * "ember-rift" = the judge instance (key released 15 Nov 01:05, community host up): t-host-er / back-er / postbuy-er,
+ * values from the judge set, no bounce; the epoch beat stays v2dev's take with its own chip. Paths: g5/after.ts. */
+export const AFTER_INSTANCE: "v2dev" | "ember-rift" = "v2dev";
+
 /** Seam S11: the decoded server key S10 ends on; must equal the string S10 draws on its last frame. */
 export const RELEASED_KEY = ra("releasedKey");
 
@@ -58,7 +63,7 @@ export const CHOOSE_POINTS = { refunded: { x: 0.5, y: 0.2 }, title: { x: 0.25, y
  * 14 Nov 23:21), signed by the in-app judge-demo signer: captioned. "wallet-v2dev": the real-wallet post-death buy on the
  * v2dev instance (wallet approval → licence → 90/10), no caption, plus the instance chip. Swap = this one line plus the
  * TUNE in-point/crop below once the take lands. The pool numbers stay ember-rift's (run facts). */
-export const POSTBUY: "wallet-v2dev" | "demo-ember-rift" = "wallet-v2dev";
+export const POSTBUY: "wallet-v2dev" | "demo-ember-rift" | "wallet-ember-rift" = "wallet-v2dev"; // committed choice; "wallet-ember-rift" (postbuy-er, not checked) and "demo-ember-rift" are the alternatives
 const STORE_CARD = { x: 880 / 1920, y: 236 / 1080, w: 860 / 1920, h: 398 / 1080 };
 export const POSTBUY_TAKE = {
   "demo-ember-rift": { slot: "postbuy", from: 8.0, crop: STORE_CARD, cutAt: null as number | null }, // ines: toast ≈ 9 s, "#5" ≈ 11 s
@@ -67,7 +72,20 @@ export const POSTBUY_TAKE = {
   // "You own licence #6.". In-point 2.24 s puts the take's cut on S11 f212 (cutAt). The card sits ~90 px lower after the
   // cut, so the crop is taller-placed than ines's.
   "wallet-v2dev": { slot: "postbuy-wallet", from: 2.24, crop: { x: 880 / 1920, y: 300 / 1080, w: 860 / 1920, h: 398 / 1080 }, cutAt: 212 as number | null },
+  // postbuy-er.mp4 (5.47 s, burst of the builder's CDP screencast, er-journey-2, real capture intervals, 3 segments in
+  // real order): store at BUY 0–1.71 s · Meteor "Approve Transaction" (send 0.25 NEAR jenifajoanna.testnet →
+  // ember-rift) 1.71–3.56 s · the store back with "You own licence #6" + "Licence bought" toast 3.56–5.47 s
+  // (tx 9oiC9dtL…, buy_licence, SuccessValue). The jumps between segments are cuts (tab switches; the approve → receipt
+  // cut is labelled). 1920×962 frames: the crop drops the app's own chrome.
+  "wallet-ember-rift": { slot: "postbuy-er", from: 0.7, crop: { x: 0.011, y: 0.1, w: 0.978, h: 0.8 }, cutAt: 282 as number | null },
 }[POSTBUY];
+/** ember-rift buy beat: the take plays untextured; its two lines lift as film type in a band below the Meteor popup.
+ * A ~1 s x-postbuy-er chain-view flash does not fit: not used. */
+export const POSTBUY_ER = {
+  approval: { line: "Approve Transaction · 0.25 NEAR → ember-rift", at: 228, until: 278 }, // Meteor screen on S11 f226–282
+  receipt: { line: "You own licence #6 · tx 9oiC9dtL…", at: 284 }, // to the scene end; needs S11 ≥ 10.7 s (+2.0 s)
+  panelAt: 1e6, // no pool panel in this mode: the beat is the approval and the receipt
+};
 /** The wallet take's header, verbatim (connected-wallet pill, top right of the page): the honest proof of a real wallet. */
 export const WALLET_PILL = { account: "jenifajoanna", wallet: "METEOR WALLET", from: { x: 1500, y: 28 } };
 export const WALLET_CUT_LABEL = "cut · approved in Meteor Wallet";
@@ -125,22 +143,24 @@ export const KEY_PLEDGED = { title: "You pledged to the hosts", value: rs("locke
 export const KEY_SPLIT = { before: loose("poolBefore") ?? "0.2", after: loose("poolTotal") ?? loose("poolAfter"), line: "90% to the keep-alive pool · 10% gas-free budget" };
 /** S13 (V12 locked 15 Nov: "A fan runs one command. It fetches a public copy, checks it against the hash from day one,
  * and restores everyone's progress."). No one-button beat: no deploy take exists, so that beat and its slot are gone. */
-/** t-host.mp4: term.html replay (3840×2160) of the real `pnpm host` run on v2dev (cast 152 s, idle capped → 21.1 s).
- * Line times in the VIDEO (s): ≈ cast − 0.2 s until the tunnel, then idle-capped. Measured from the replay's rows. */
-export const HOST_VIDEO = { command: 0.83, released: 1.64, github: 2.03, warning: 2.8, snapshot: 3.03, local: 4.78, tunnel: 7.8, serving: 10.8, register: 13.8 };
-/** One honest cut: just after "tunnel up" (video 8.0 s) to just before register_host (video 13.6 s); the real run waited
- * ≈ 81 s for the tunnel to answer (cast 11 s → 92 s). Labelled on screen. `at` is the S13 frame. */
-export const HOST_CUT = { at: 255, to: 13.6, label: "cut · 81 s later" };
-/** Rows of the replay in the 1920×1080 frame of the take: first row y 151 (centre), pitch 32.8 px. */
-export const TERM_ROWS = { y0: 151, pitch: 32.8, released: 2, github: 3, snapshot: 10, register: 14 };
-/** The take's own text for each lift (wrapped for film size, nothing added). Wanted after-set keys to replace the
- * literals: keyCommitment12 ("f2772b9f97d8"), snapshotSeq ("2"), registerHostTx ("3hQdHRjg…QJCa"), artifactMirror. */
-export const KEY_HOSTLINES = {
-  github: ["github raw raw.githubusercontent.com …", "200, sha256 matches on-chain ✓"],
-  released: ["released key matches the on-chain commitment", "(f2772b9f97d8...)"],
-  snapshot: ["restoring progress snapshot #2"],
-  register: ["register_host:", "https://testnet.nearblocks.io/txns/", "3hQdHRjgEtpCx8KQW1dm85MgMf4H3nAYhUT9r5kkQJCa"],
+/** S13 on v2dev — t-host.mp4: term.html replay (3840×2160) of the real `pnpm host` run (cast 152 s, idle capped →
+ * 21.1 s). Line times in the VIDEO (s) ≈ cast − 0.2 s until the tunnel, then idle-capped; measured from the rows. One
+ * honest cut: just after "tunnel up" (video 8.0 s) to just before register_host (13.6 s); the run waited ≈ 81 s for the
+ * tunnel (cast 11 → 92 s). Rows: first row y 151 (centre), pitch 32.8 px, in the take's 1920×1080 frame. Lift text is
+ * the take's own (wrapped, nothing added). Wanted after-set keys: keyCommitment12, snapshotSeq, registerHostTx. */
+export const V2_HOST = {
+  slot: "t-host", title: "Fan host · v2dev",
+  video: { command: 0.83, released: 1.64, copy: 2.03, warning: 2.8, snapshot: 3.03, local: 4.78, tunnel: 7.8, serving: 10.8, register: 13.8 },
+  cut: { at: 255, to: 13.6, label: "cut · 81 s later" },
+  rows: { y0: 151, pitch: 32.8, released: 2, copy: 3, snapshot: 10, register: 14 },
+  lines: {
+    copy: ["github raw raw.githubusercontent.com …", "200, sha256 matches on-chain ✓"],
+    released: ["released key matches the on-chain commitment", "(f2772b9f97d8...)"],
+    snapshot: ["restoring progress snapshot #2"],
+    register: ["register_host:", "https://testnet.nearblocks.io/txns/", "3hQdHRjgEtpCx8KQW1dm85MgMf4H3nAYhUT9r5kkQJCa"],
+  },
 };
+export type HostSpec = typeof V2_HOST;
 /** Layout (TUNE): S11 toast centre, S13 lift band centre (content px), S12 key line top (frame px). */
 export const LAYOUT = { toast: { x: 960, y: 540 }, s13LiftY: 640, s12LineY: 880 };
 /** S14 stand-ins while `back` / `bounce` are pending, so the open never sits on a near-black "Take pending" card

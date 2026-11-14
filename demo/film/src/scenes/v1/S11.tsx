@@ -14,15 +14,16 @@ import { Slot } from "../../film/Slot";
 import { InstanceChip, JUDGE_CHIP } from "../../film/Instance";
 import { Embers, Nebula } from "../../frames/b/Space";
 import { DH, DW, GLASS, HOLDERS, MiniDevice, PledgedLine, PoolPanel, RefundedLine, RelayerToast } from "./g5/choose-parts";
-import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP, WALLET_CUT_LABEL, WALLET_OWNED } from "./g5/facts";
-import { WalletPill } from "./g5/choose-parts";
+import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP, WALLET_CUT_LABEL, WALLET_OWNED, POSTBUY_ER } from "./g5/facts";
+import { KeyBand, WalletPill } from "./g5/choose-parts";
+import { scene } from "../../film/timeline";
 import { c, inOut, out, ramp, Tag, word } from "./g5/kit";
 
 const W = (s: number) => word("S11", s);
 const NEW = W(6.42); // "New players fund it too"
 const TOO = W(7.32);
 const POOL_AT = TOO - 3; // the store take gives way to the empty status screen under the panel
-const PANEL_AT = 203; // pool panel prints (film type, screen space); its 56 px line first
+const PANEL_AT = POSTBUY === "wallet-ember-rift" ? POSTBUY_ER.panelAt : 203; // pool panel prints (film type, screen space); its 56 px line first
 const FLY = 24; // key rows fly 24 f, 3 f stagger
 const KEY_SIZE = 36;
 const CH = KEY_SIZE * 0.6; // Plex Mono advance
@@ -69,7 +70,7 @@ export function S11() {
   const keyUp = Object.values(LIFTS).reduce((m, w) => Math.max(m, ramp(f, w[0], w[0] + 10) * (1 - ramp(f, w[1], w[1] + DOWN))), 0);
   const giveWay = ramp(f, NEW - 8, NEW + 12, inOut);
   const shop = ramp(f, NEW - 6, NEW + 16);
-  const push = interpolate(f, [POOL_AT, 261], [1, 1.07], { ...c, easing: out });
+  const push = interpolate(f, [POOL_AT, scene("S11").frames], [1, 1.07], { ...c, easing: out });
   const panelUp = ramp(f, PANEL_AT - 4, PANEL_AT + 6);
   const rise = ramp(f, W(6.98) - 2, TOO + 6, inOut);
   const part = Math.ceil(RELEASED_KEY.length / HOLDERS.length);
@@ -121,8 +122,8 @@ export function S11() {
       {shop > 0.001 && (
         <AbsoluteFill style={{ transform: `scale(${0.5 + 0.5 * shop})`, opacity: Math.min(1, shop * 2.2) }}>
           <Camera scale={push}>
-            <ScreenFrame title={f >= POOL_AT ? "Licence status" : "Store"} mode="dead" titleAt={f >= POOL_AT ? POOL_AT : NEW - 6}>
-              {(f < POOL_AT || POSTBUY === "wallet-v2dev") && (
+            <ScreenFrame title={f >= POOL_AT && POSTBUY !== "wallet-ember-rift" ? "Licence status" : "Store"} mode="dead" titleAt={f >= POOL_AT && POSTBUY !== "wallet-ember-rift" ? POOL_AT : NEW - 6}>
+              {(f < POOL_AT || POSTBUY !== "demo-ember-rift") && (
                 <AbsoluteFill style={{ opacity: 1 - 0.6 * panelUp, filter: panelUp > 0.01 ? `blur(${(3 * panelUp).toFixed(2)}px)` : undefined }}>
                   <Sequence from={NEW - 6} layout="none"><Slot slot={POSTBUY_TAKE.slot} from={POSTBUY_TAKE.from} crop={POSTBUY_TAKE.crop} /></Sequence>
                 </AbsoluteFill>
@@ -149,6 +150,10 @@ export function S11() {
       })()}
       {/* a real external wallet bought this licence: its header pill lifts as proof; the take's own cut is labelled */}
       {POSTBUY === "wallet-v2dev" && <WalletPill f={f} at={NEW - 4} />}
+      {POSTBUY === "wallet-ember-rift" && <>
+        <KeyBand f={f} at={POSTBUY_ER.approval.at} until={POSTBUY_ER.approval.until} text={POSTBUY_ER.approval.line} />
+        <KeyBand f={f} at={POSTBUY_ER.receipt.at} until={1e6} text={POSTBUY_ER.receipt.line} />
+      </>}
       {POSTBUY_TAKE.cutAt !== null && f >= POSTBUY_TAKE.cutAt && <Tag color={T.cyan} size={26} style={{ position: "absolute", right: 64, top: 986 }}>{WALLET_CUT_LABEL}</Tag>}
       <Embers count={8} seed={31} />
       <AbsoluteFill style={{ pointerEvents: "none", background: "radial-gradient(120% 100% at 50% 50%, transparent 62%, rgba(5,4,10,0.5) 100%)", opacity: 1 - shop }} />

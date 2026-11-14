@@ -10,7 +10,10 @@ import { Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
 import { scene } from "../../../film/timeline";
 import { Slot } from "../../../film/Slot";
-import { HOST_CUT, HOST_VIDEO, KEY_HOSTLINES, TERM_CROP, TERM_ROWS } from "./facts";
+import { HOST } from "./after";
+import { TERM_CROP } from "./facts";
+
+const HOST_VIDEO = HOST.video, HOST_CUT = HOST.cut, TERM_ROWS = HOST.rows, KEY_HOSTLINES = HOST.lines;
 import { c, LiftPlate, out, ramp, Tag, word } from "./kit";
 
 const W = (s: number) => word("S13", s);
@@ -34,7 +37,7 @@ const LIFT_Y = 760; // screen-space centre of the lift band (TUNE)
 type Kind = keyof typeof KEY_HOSTLINES;
 interface Lift { kind: Kind; row: number; at: number; until: number }
 const LIFTS: Lift[] = [
-  { kind: "github", row: TERM_ROWS.github, at: W(2.66) - 3, until: W(4.46) + 3 }, // "public copy" → "hash"
+  { kind: "copy", row: TERM_ROWS.copy, at: W(2.66) - 3, until: W(4.46) + 3 }, // "public copy" → "hash"
   { kind: "released", row: TERM_ROWS.released, at: W(4.46) + 5, until: W(4.46) + 60 }, // "from day one"
   { kind: "snapshot", row: TERM_ROWS.snapshot, at: W(7.02) - 15, until: W(7.02) + 40 }, // "progress"
   { kind: "register", row: TERM_ROWS.register, at: HOST_CUT.at + 7, until: 1e6 }, // into S14
@@ -53,7 +56,7 @@ function KeyLift({ l, f }: { l: Lift; f: number }) {
     <div style={{ position: "absolute", left: 0, right: 0, top: y, display: "flex", justifyContent: "center", opacity: Math.min(1, up * 3) * Math.max(0, 1 - 2 * down),
       transform: `translateY(-50%) scale(${interpolate(up, [0, 1], [0.43, 1])})` }}>
       <LiftPlate lift={up} edge={l.kind === "register" ? T.gold : T.alive} style={{ padding: "18px 40px 20px" }}>
-        {lines.map((t, i) => <Mono key={i} size={56} style={{ lineHeight: 1.3, color: l.kind === "github" && i === 1 ? T.alive : T.text }}>{ticked(t)}</Mono>)}
+        {lines.map((t, i) => <Mono key={i} size={56} style={{ lineHeight: 1.3, color: l.kind === "copy" && i === 1 ? T.alive : T.text }}>{ticked(t)}</Mono>)}
       </LiftPlate>
     </div>
   );
@@ -61,7 +64,7 @@ function KeyLift({ l, f }: { l: Lift; f: number }) {
 
 /** The take: two segments around the cut. With `at` (S14's frozen first pose) it shows that one frame. */
 function Take({ at }: { at?: number }) {
-  const slot = (from: number) => <Slot slot="t-host" from={from} crop={TERM_CROP} />;
+  const slot = (from: number) => <Slot slot={HOST.slot} from={from} crop={TERM_CROP} />;
   if (at !== undefined) return <Freeze frame={0}>{slot(takeAt(at))}</Freeze>;
   return (
     <>
@@ -80,7 +83,7 @@ export function HostTerminal({ at }: { at?: number }) {
   return (
     <AbsoluteFill>
       <Camera scale={push} fx={960} fy={420}>
-        <ScreenFrame title="Fan host · v2dev" mode="released" titleAt={TERM_AT - 4}>
+        <ScreenFrame title={HOST.title} mode="released" titleAt={TERM_AT - 4}>
           <div style={{ position: "absolute", left: BOX_X, top: 0, width: BOX_W, height: BOX_H, opacity: 1 - 0.6 * tex, filter: tex > 0.01 ? `blur(${(2 * tex).toFixed(2)}px)` : undefined }}>
             <Take at={at} />
           </div>

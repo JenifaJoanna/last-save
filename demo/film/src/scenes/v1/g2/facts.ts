@@ -40,3 +40,11 @@ export const short = (f: Fact, head = 8, tail = 4) => shortHash(f.v, head, tail)
 /** Who signed the `store` take's buy: "demo" = the in-app judge-demo signer (S04 says so on the buy beat), "wallet" = a
  * real external wallet (no label; the take shows the wallet approval itself). */
 export const STORE_SIGNER: "wallet" | "demo" = "demo";
+
+/** S12's closing beat: "sealed" = the committed V11 ("…waiting for its key"); "public" = the V11-keypublic variant
+ * ("…and now its key is public": the enclave opens and the released key lifts). The film owner switches the VO file,
+ * S12's length and the chip with it. */
+export const S12_KEY: "sealed" | "public" = "sealed";
+/** The judge instance's released key: rs("releasedKey") once run-facts is regenerated from the release-folded proof;
+ * until then the value proof/judge-v2.json records (release.readback.released_key). */
+export const RELEASED_KEY_PROOF = "d5080ebc3504c369f810a8a5075195171c84964e165327acad6d2e1bc59d8fe7";

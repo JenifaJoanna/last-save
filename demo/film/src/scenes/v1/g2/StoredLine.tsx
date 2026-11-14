@@ -22,3 +22,19 @@ export function StoredShaLine({ f, at, out }: { f: number; at: number; out: numb
     </div>
   );
 }
+
+/** S12 "public" mode key line: the released key, from rs("releasedKey") (else the proof's recorded value). */
+export function KeyReleasedLine({ f, at, value }: { f: number; at: number; value: string }) {
+  const up = ramp(f, at, at + 10);
+  if (up <= 0) return null;
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, top: LAYOUT.s12LineY, display: "flex", justifyContent: "center",
+      transform: `translateY(${-50 + (1 - up) * 20}%)`, opacity: Math.min(1, up * 2) }}>
+      <LiftPlate lift={up} edge={T.gold} style={{ padding: "16px 40px 18px", clipPath: `inset(0 ${(1 - printIn(f, at)) * 100}% 0 0)` }}>
+        <Mono size={56} color={T.text} style={{ lineHeight: 1.3 }}>
+          key released on chain · <span style={{ color: T.gold }}>{shortHash(value)}</span>
+        </Mono>
+      </LiftPlate>
+    </div>
+  );
+}

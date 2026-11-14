@@ -67,24 +67,45 @@ export const ALERT = {
   line: "posted · DEAD · THE STUDIO WENT DARK",
 };
 
-/** The released server key (the run's released_key, read back from the instance). S11 splits it into four 16-char rows
- * (g5 draws the same string). */
-export const RELEASED_KEY = ra("releasedKey");
+/** Which instance's real release S10 shows. "v2dev" (committed): the dev instance's completed release
+ * (run-facts-after.json). "ember-rift": the judge instance's own release, 01:05 IST 15 Nov (proof/judge-v2-release.json;
+ * key from the judge set, run-facts.json). In ember-rift mode nothing in S10 names v2dev. */
+export const RELEASE_INSTANCE: "v2dev" | "ember-rift" = "v2dev";
+const ER = (RELEASE_INSTANCE as string) === "ember-rift"; // widened: the literal type narrows the const
+
+/** The released server key. S11 splits it into rows; it must draw the same string (g5/facts.ts reads ra("releasedKey"),
+ * so S11 needs the same switch in ember-rift mode). */
+export const RELEASED_KEY = ER ? rs("releasedKey") : ra("releasedKey");
 export const KEY_GROUPS = [0, 1, 2, 3].map((i) => RELEASED_KEY.slice(i * 16, i * 16 + 16));
 /** End pose of S10 = S11's first frame (S11.tsx): one 64-char line, Plex Mono 500 36 px gold, centred on (960, 540),
  * with the cyan "// Server key · decoded on-chain" eyebrow at content top 360 and nothing else on the gold screen. */
 export const KEY_POSE = { cx: 960, cy: 540, size: 36, eyebrowTop: 360, color: "#ffc94a" } as const;
 
-/** S10 shows the dev instance v2dev's real, already-completed release (run-facts-after.json); the release moment itself
- * is not replayed. x-release (raw/x-release.mp4 + .cast, 3840×2160): chain-view get_info on v2dev via public RPC; the
- * JSON (contract, status Dead, cause probes, released_key, released_at_ms) prints at 1.26 s, rows x 252–1500, y 330–495
- * on the 1920 basis. */
-export const XREL = { from: 1.4, crop: { x: 230 / 1920, y: 300 / 1080, w: 1300 / 1920, h: 230 / 1080 } };
-/** release (raw/release.mp4, 1920×1080, 10.7 s): v2dev /status already RELEASED, static. */
-export const RELEASE_FROM = 0.5;
-/** The take's key as it wraps in the escrow card: rows at 44 + 20 chars, left x 1230, row centres y 929 / 949 (1920
- * basis), ~13.5 px. The lift keeps that wrap at 56 px, then the rows join into S11's one 36 px line. */
-export const TAKE_KEY = { x: 1230, y: [929, 949], size: 13.5, wrap: 44 } as const;
+/** S10's takes per instance; the release moment itself is not replayed in either.
+ * v2dev: x-release (raw/x-release.mp4 + .cast, 3840×2160): chain-view get_info on v2dev via public RPC; the JSON
+ * (contract, status Dead, cause probes, released_key, released_at_ms) prints at 1.26 s, rows x 252–1500, y 330–495 on
+ * the 1920 basis. release (raw/release.mp4, 1920×1080, 10.7 s): v2dev /status already RELEASED, static. The key wraps
+ * in the escrow card at 44 + 20 chars, left x 1230, row centres y 929 / 949 (1920 basis), ~13.5 px.
+ * ember-rift: slots release-er / x-release-er. TUNE every value below once those takes land (placeholders copy v2dev's
+ * layout, which is the same app and the same chain-view script). */
+const TAKES = {
+  v2dev: {
+    release: "release", xrelease: "x-release", dial: "near rpc · v2dev",
+    XREL: { from: 1.4, crop: { x: 230 / 1920, y: 300 / 1080, w: 1300 / 1920, h: 230 / 1080 } },
+    RELEASE_FROM: 0.5,
+    TAKE_KEY: { x: 1230, y: [929, 949] as [number, number], size: 13.5, wrap: 44 },
+  },
+  "ember-rift": {
+    release: "release-er", xrelease: "x-release-er", dial: "near rpc · ember-rift",
+    XREL: { from: 1.4, crop: { x: 230 / 1920, y: 300 / 1080, w: 1300 / 1920, h: 230 / 1080 } }, // TUNE
+    RELEASE_FROM: 0.5, // TUNE
+    TAKE_KEY: { x: 1230, y: [929, 949] as [number, number], size: 13.5, wrap: 44 }, // TUNE
+  },
+} as const;
+export const S10_TAKES = TAKES[RELEASE_INSTANCE as keyof typeof TAKES];
+export const XREL = S10_TAKES.XREL;
+export const RELEASE_FROM = S10_TAKES.RELEASE_FROM;
+export const TAKE_KEY = S10_TAKES.TAKE_KEY;
 /** Brief/PLAN: the status bar flips red at the collapse. Set true to step it instead with the contract (probing amber
  * while the probes take plays, red when the contract marks it dead), which matches what the take shows. */
 export const CHROME_FOLLOWS_CONTRACT = true;

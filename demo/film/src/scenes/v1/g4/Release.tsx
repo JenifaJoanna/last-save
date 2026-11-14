@@ -1,10 +1,10 @@
-// S10 pieces: the x-release flash (v2dev's release state read from the chain over public RPC, ~1 s, dial-up in, CRT
+// S10 pieces: the x-release flash (the instance's release state read from the chain over public RPC, ~1 s, dial-up in, CRT
 // collapse out at half speed) and the released key lifted off the take's escrow card as recorded (no decode replay):
 // its two rows grow to 56 px, hold, then join into S11's one 36 px line.
 import { useCurrentFrame } from "remotion";
 import { Display, Eyebrow, Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
-import { KEY_POSE, RELEASED_KEY, R, TAKE_KEY, XREL } from "./facts";
+import { KEY_POSE, RELEASED_KEY, R, S10_TAKES, TAKE_KEY, XREL } from "./facts";
 import { CrtWindow, DialBox, lin, out, printIn, SlotAt } from "./kit";
 
 export const S10T = {
@@ -19,10 +19,10 @@ export function ReceiptFlash() {
   const W = { w: 1500, h: Math.round((1500 * XREL.crop.h * 1080) / (XREL.crop.w * 1920)) };
   return (
     <>
-      <DialBox at={S10T.dial} path="near rpc · v2dev" s={1.9} />
+      <DialBox at={S10T.dial} path={S10_TAKES.dial} s={1.9} />
       <CrtWindow open={S10T.flash} close={S10T.flashOut} dur={20} x={(1920 - W.w) / 2} y={500 - W.h / 2} w={W.w} h={W.h} tilt={6}
         style={{ border: `1px solid ${T.line2}`, boxShadow: "0 40px 120px rgba(0,0,0,0.75)", background: T.ink }}>
-        <SlotAt at={S10T.flash} slot="x-release" from={XREL.from} crop={XREL.crop} tag={false} />
+        <SlotAt at={S10T.flash} slot={S10_TAKES.xrelease} from={XREL.from} crop={XREL.crop} tag={false} />
       </CrtWindow>
     </>
   );
