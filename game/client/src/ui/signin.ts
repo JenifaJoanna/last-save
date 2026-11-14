@@ -105,7 +105,8 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
       o.onSession({ account_id: r.account_id, host: o.host, login: r, secret: k.secret });
     } catch (e) {
       err.className = "err";
-      err.textContent = e instanceof Error ? e.message : "The wallet did not sign the login.";
+      const m = e instanceof Error ? e.message : "";
+      err.textContent = /reject|cancel|closed|abort/i.test(m) ? "No wallet picked. Choose one to sign in." : m || "The wallet did not sign the login.";
       busy(false);
     }
   };
