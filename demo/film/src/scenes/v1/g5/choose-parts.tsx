@@ -98,7 +98,7 @@ export function PledgedLine({ lift }: { lift: number }) {
 
 /** S11's last beat: the keep-alive pool and the store's 90/10 legend as one 56 px line; the split bar fills as the pool
  * rises. With no run total yet the number holds at the pool the takes show. `f` scene frame; `rise` 0..1. */
-export function PoolPanel({ f, at, rise }: { f: number; at: number; rise: number }) {
+export function PoolPanel({ f, at, rise, owned }: { f: number; at: number; rise: number; owned?: string }) {
   const p = (i: number) => printIn(f, at + i * 2);
   const b = Number(KEY_SPLIT.before);
   const a = KEY_SPLIT.after === null ? null : Number(KEY_SPLIT.after);
@@ -106,11 +106,15 @@ export function PoolPanel({ f, at, rise }: { f: number; at: number; rise: number
   const lit = Math.floor(stepped(rise, 10) * 10 + 1e-6);
   return (
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22 }}>
-      <div style={{ clipPath: `inset(0 0 ${(1 - p(1)) * 100}% 0)`, display: "flex", alignItems: "baseline", gap: 26 }}>
+      {owned ? (
+        <div style={{ clipPath: `inset(0 0 ${(1 - p(1)) * 100}% 0)`, borderLeft: `4px solid ${T.gold}`, padding: "10px 36px", background: "rgba(255,201,74,0.06)" }}>
+          <Mono size={72} color={T.gold}>{owned}</Mono>
+        </div>
+      ) : <div style={{ clipPath: `inset(0 0 ${(1 - p(1)) * 100}% 0)`, display: "flex", alignItems: "baseline", gap: 26 }}>
         <Mono size={170} weight={600} color={T.gold} style={{ lineHeight: 1.05, textShadow: "0 0 40px rgba(255,201,74,0.35)" }}>{v}</Mono>
         <Mono size={84} color={T.muted} style={{ lineHeight: 1 }}>Ⓝ</Mono>
         <Label size={56} track={0.1} color={T.text}>keep-alive pool</Label>
-      </div>
+      </div>}
       <div style={{ clipPath: `inset(0 0 ${(1 - p(2)) * 100}% 0)`, display: "flex", gap: 8, width: 1500 }}>
         {Array.from({ length: 10 }, (_, i) => {
           const cyan = i === 9;

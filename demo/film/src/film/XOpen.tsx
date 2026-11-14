@@ -13,6 +13,7 @@ import { EASE_OUT, Easing, stepped, T } from "../ds/tokens";
 import { TAKE_FROM } from "../scenes/v1/g5/facts";
 import { Slot, slotSource } from "./Slot";
 import { XOPEN } from "./xcut";
+import { InstanceChip } from "./Instance";
 
 export { XOPEN };
 
@@ -80,6 +81,8 @@ function ShotB() {
       <Label size={30} color={T.gold} track={0.2} style={{ position: "absolute", left: 164, top: 600, opacity: interpolate(f, [10, 16], [0, 0.95], clamp) }}>
         Ember Rift · community host · same progress
       </Label>
+      {/* the footage is v2dev's community host (ember-rift's key is still sealed): label it, as S13–S16 do */}
+      <InstanceChip />
       <CrtLayers />
     </AbsoluteFill>
   );

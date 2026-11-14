@@ -14,7 +14,7 @@ import { Slot } from "../../film/Slot";
 import { InstanceChip, JUDGE_CHIP } from "../../film/Instance";
 import { Embers, Nebula } from "../../frames/b/Space";
 import { DH, DW, GLASS, HOLDERS, MiniDevice, PledgedLine, PoolPanel, RefundedLine, RelayerToast } from "./g5/choose-parts";
-import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP, WALLET_CUT_LABEL } from "./g5/facts";
+import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP, WALLET_CUT_LABEL, WALLET_OWNED } from "./g5/facts";
 import { WalletPill } from "./g5/choose-parts";
 import { c, inOut, out, ramp, Tag, word } from "./g5/kit";
 
@@ -131,7 +131,7 @@ export function S11() {
           </Camera>
         </AbsoluteFill>
       )}
-      {f >= PANEL_AT && <AbsoluteFill style={{ transform: `scale(${push})` }}><PoolPanel f={f} at={PANEL_AT} rise={rise} /></AbsoluteFill>}
+      {f >= PANEL_AT && <AbsoluteFill style={{ transform: `scale(${push})` }}><PoolPanel f={f} at={PANEL_AT} rise={POSTBUY === "wallet-v2dev" ? 1 : rise} owned={POSTBUY === "wallet-v2dev" ? WALLET_OWNED : undefined} /></AbsoluteFill>}
       {/* back on the judge instance after S10's v2dev release: say so (hidden while a v2dev wallet buy shows its own chip) */}
       {f >= 24 && !(POSTBUY === "wallet-v2dev" && f >= NEW - 6) && <InstanceChip text={JUDGE_CHIP} />}
       {/* honest captions: demo-signed actions say so while they are on screen; a v2dev wallet buy carries its instance chip */}

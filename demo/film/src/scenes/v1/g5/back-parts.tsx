@@ -11,8 +11,8 @@ type Crop = { x: number; y: number; w: number; h: number };
 
 /** `lift` 0..1 moves the crop from its place in the take (px of the 1920×1080 frame) to `to` at `scale`. The crop plays the
  * same take segment as the full-frame layer (same Sequence start and `from`). */
-export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag }: {
-  crop: Crop; seqFrom: number; takeFrom: number; lift: number; to: { x: number; y: number }; scale: number; tag: string;
+export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag, caption }: {
+  crop: Crop; seqFrom: number; takeFrom: number; lift: number; to: { x: number; y: number }; scale: number; tag: string; caption?: string;
 }) {
   if (lift <= 0.001) return null;
   const w = crop.w * 1920;
@@ -22,8 +22,8 @@ export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag }: {
   const s = interpolate(lift, [0, 1], [1, scale]);
   return (
     <div style={{ position: "absolute", left: x, top: y }}>
-      <div style={{ position: "absolute", left: 0, top: -84, clipPath: `inset(0 0 ${(1 - stepped(Math.max(0, (lift - 0.4) / 0.6), 5)) * 100}% 0)` }}>
-        <Tag color={T.gold} size={44}>{tag}</Tag>
+      <div style={{ position: "absolute", left: 0, top: -100, clipPath: `inset(0 0 ${(1 - stepped(Math.max(0, (lift - 0.4) / 0.6), 5)) * 100}% 0)` }}>
+        <Tag color={T.gold} size={56}>{tag}</Tag>
       </div>
       <div style={{ transformOrigin: "0 0", transform: `scale(${s})` }}>
         <LiftPlate lift={lift} edge={T.gold} style={{ width: w, height: h, overflow: "hidden", padding: 0 }}>
@@ -32,6 +32,7 @@ export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag }: {
           </div>
         </LiftPlate>
       </div>
+      {caption && <Mono size={30} color={T.muted} style={{ position: "absolute", left: 0, top: h * s + 14, opacity: lift }}>{caption}</Mono>}
     </div>
   );
 }

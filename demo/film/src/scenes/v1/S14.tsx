@@ -10,17 +10,17 @@ import { T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
 import { Slot } from "../../film/Slot";
 import { DeniedLine, EpochChip, HudLift } from "./g5/back-parts";
-import { BACK_PLATE, BACK_SOURCE, SIGNIN_TAKE, WALLET_CUT_LABEL, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, KEY_DENIED, TAKE_FROM } from "./g5/facts";
+import { BACK_PLATE, BACK_SOURCE, PILOT_CAPTION, SIGNIN_TAKE, WALLET_CUT_LABEL, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, KEY_DENIED, TAKE_FROM } from "./g5/facts";
 import { HostTerminal } from "./g5/host-term";
 import { c, DialUp, inOut, out, ramp, roll, RollBand, Tag, word } from "./g5/kit";
 
 const W = (s: number) => word("S14", s);
 const S13_LAST = scene("S13").frames - 1;
-const OPEN = 27; // the dial-up box opens into the game (CRT open, 8 f)
-const MATCH = W(0.54) + 10; // cut from sign-in to the running match
-const PLAYERS = MATCH; // "Same players" lift
-const PROGRESS = W(1.82) - 6; // "Same progress" lift
-const DROP = W(2.88) - 4; // lifts sink back on "The host"
+const OPEN = 18; // the dial-up box opens into the game (CRT open, 8 f)
+const MATCH = 40; // the real-wallet sign-in cuts (wallet approval) to the running match
+const PLAYERS = MATCH; // "Same players" lifts the scoreboard
+const PROGRESS = MATCH + 12; // "Same progress" lifts the pilot card (holds ≥ 45 f)
+const DROP = W(3.74) - 24; // lifts sink as the bounce rolls in
 const BOUNCE = W(3.74) - 18; // roll to the refusal ("per real player session")
 const DENIED = [BOUNCE + 10, 186] as const; // "ACCESS DENIED · NO LICENCE" lifts above the frame, holds ≥ 45 f
 const EPOCH = BOUNCE + 48; // roll to the Hosts page (bounce on screen ≈ 1.3 s)
@@ -60,18 +60,19 @@ export function S14() {
       {/* the community host game client, full frame, opening out of a 1-px line like a CRT */}
       {f >= OPEN && f < BOUNCE + 10 && (
         <AbsoluteFill style={{ clipPath: `inset(${(1 - crt) * 49.8}% 0 ${(1 - crt) * 49.8}% 0)`, transform: `translateY(${r1.outY}px)` }}>
-          <AbsoluteFill style={{ filter: dimGame > 0.01 ? `brightness(${1 - dimGame})` : undefined, transform: `scale(${interpolate(f, [OPEN, BOUNCE], [1, 1.03], c)})` }}>
+          <AbsoluteFill style={{ filter: dimGame > 0.01 ? `brightness(${1 - dimGame})` : undefined, transform: `scale(${f < MATCH ? 1 : interpolate(f, [MATCH, BOUNCE + 10], [1, 1.12], c)})` }}> {/* one continuous slow push through the match shots */}
             {BACK_SOURCE === "signin" ? (
               <Sequence from={OPEN} layout="none"><Slot slot="signin" plate={BACK_PLATE} from={SIGNIN_TAKE.from} /></Sequence>
             ) : f < MATCH ? (
-              <Sequence from={OPEN} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backSignin} /></Sequence>
+              <Sequence from={OPEN} layout="none"><Slot slot="back-signin" plate={BACK_PLATE} from={TAKE_FROM.backSignin} /></Sequence>
             ) : (
               <Sequence from={MATCH} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backMatch} /></Sequence>
             )}
           </AbsoluteFill>
           {BACK_SOURCE === "back" && <>
-          <HudLift crop={HUD_BOARD} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={players} to={{ x: 150, y: 190 }} scale={1.9} tag="Same players" />
-          <HudLift crop={HUD_ME} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={progress} to={{ x: 150, y: 640 }} scale={1.9} tag="Same progress" />
+          <HudLift crop={HUD_BOARD} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={players} to={{ x: 70, y: 150 }} scale={3} tag="Same players" />
+          <HudLift crop={HUD_ME} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={progress} to={{ x: 1010, y: 470 }} scale={3} tag="Same progress" caption={PILOT_CAPTION} />
+          {f >= MATCH && <Tag color={T.cyan} size={26} style={{ position: "absolute", right: 64, top: 60 }}>{WALLET_CUT_LABEL}</Tag>}
           </>}
           {BACK_SOURCE === "signin" && f >= SIGNIN_CUT && <Tag color={T.cyan} size={26} style={{ position: "absolute", right: 64, top: 986 }}>{WALLET_CUT_LABEL}</Tag>}
         </AbsoluteFill>
@@ -79,7 +80,7 @@ export function S14() {
       {crt > 0 && crt < 1 && <div style={{ position: "absolute", left: 0, right: 0, top: 539, height: 2, background: T.text, opacity: 1 - crt, boxShadow: "0 0 24px rgba(239,229,208,0.8)" }} />}
       {boxGone > 0 && f >= 1 && (
         <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: boxGone }}>
-          <DialUp f={f * 1.15} cmd="open community host · lastsave-fanhost" width={1000} style={{ transform: `scale(${1 + crt * 0.6})` }} />
+          <DialUp f={f * 1.65} cmd="open community host · lastsave-fanhost" width={1000} style={{ transform: `scale(${1 + crt * 0.6})` }} />
         </AbsoluteFill>
       )}
 

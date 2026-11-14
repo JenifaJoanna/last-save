@@ -25,7 +25,11 @@ export const TAKE_FROM: Record<string, number> = {
   // refund2 (dario #2, 12.1 s): REFUND selected from 0 s, toast 9.4 s, card flips to "You took your refund" 11.7 s; its
   // in-point puts the flip on S11 f95, then the take's last frame holds (TAKE_END; no wait is skipped).
   refund2: 9.43, pledge: 10.83, pledge2: 5.83,
-  backSignin: 1.0, backMatch: 9.0, // back: pending (real-wallet take on v2dev ~00:30), TUNE when it lands
+  // back-signin.mp4 (10.1 s, real wallet, game client on v2dev's host): CONNECT YOUR WALLET 0–1.7 s → NEAR WALLET (NEAR
+  // CONNECT) 1.7 s → wallet list 4.4 s (Meteor) → Meteor Connect ≈ 7 s → ends at the wallet tab (the take's cut: Connect
+  // Request + Sign Message approved off camera). back.mp4 (10.4 s burst of real shots): the live match. backMatch keeps
+  // ≥ 3 s of footage after it for XOpen's cold open.
+  backSignin: 6.6, backMatch: 1.0,
   bounce: 0.6, epoch: 1.0, // bounce.mp4: the denied panel is up from 0.5 s; epoch.mp4: the host card is static
 };
 
@@ -67,6 +71,9 @@ export const POSTBUY_TAKE = {
 /** The wallet take's header, verbatim (connected-wallet pill, top right of the page): the honest proof of a real wallet. */
 export const WALLET_PILL = { account: "jenifajoanna", wallet: "METEOR WALLET", from: { x: 1500, y: 28 } };
 export const WALLET_CUT_LABEL = "cut · approved in Meteor Wallet";
+/** The wallet take's own note after the buy (store card, gold note), verbatim. Replaces the pool count in wallet mode:
+ * the pool numbers are ember-rift's, and this buy went into v2dev's pool. */
+export const WALLET_OWNED = "You own licence #6.";
 /** S14 fallback if the game-client `back` re-shoot fails: signin.mp4 (14.9 s: /signin 0–3 s → wallet list 3.0 s →
  * Meteor Connect 6.6 s → the take's cut 10.37 s → header "jenifajoanna · METEOR WALLET · GAS-FREE"). In-point TUNE. */
 export const BACK_SOURCE: "back" | "signin" = "back";
@@ -79,8 +86,11 @@ export const V2DEV_CHIP = "v2dev · same code";
 
 /** Game client HUD (game/client/src/ui/styles.css: --b 10, --strip 30, --pad 14): #board top-left (4 players) and #me
  * bottom-left (level box, name, "Skin · Emberwing", XP). Fractions of the 1920×1080 take. TUNE against `back`. */
-export const HUD_BOARD = { x: 10 / 1920, y: 44 / 1080, w: 300 / 1920, h: 150 / 1080 };
-export const HUD_ME = { x: 10 / 1920, y: 950 / 1080, w: 300 / 1920, h: 118 / 1080 };
+// Measured on back.mp4 (1920 scale): scoreboard box x 24–305, y 50–205; pilot card x 24–290, y 912–1055.
+export const HUD_BOARD = { x: 18 / 1920, y: 44 / 1080, w: 296 / 1920, h: 168 / 1080 };
+export const HUD_ME = { x: 16 / 1920, y: 904 / 1080, w: 284 / 1920, h: 158 / 1080 };
+/** True of THIS player's card on the community host (not the killed match's pilot: other instance, other account). */
+export const PILOT_CAPTION = "restored from the on-chain snapshot";
 
 /** /app/hosts: focus for the epoch take (the "Your host" card, right column of max-w-6xl, x ≈ 1042–1536). TUNE. */
 export const EPOCH_FOCUS = { fx: 1200, fy: 690, scale: 1.4 }; // epoch.mp4: "Your host" card x 1050–1530, y 610–800
