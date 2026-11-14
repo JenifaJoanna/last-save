@@ -40,7 +40,7 @@ function toLog(items: Activity[]): LogEntry[] {
     const tone: LogTone = a.kind === "death" || out === "failed" ? "fail" : out === "inconclusive" || a.kind === "report" ? "warn"
       : a.kind === "release" || a.kind === "evm_payout" || out === "booked" || out === "pledge" ? "gold" : out === "alive" || out === "paid" || out === "registered" ? "ok" : "info";
     // a release record with outcome "retry" is a timed-out attempt, not a published key
-    const title = a.kind === "probe" ? "Probe" : a.kind === "release" && a.outcome !== "released" ? "Release attempt" : TITLES[a.kind] ?? a.kind.replace(/_/g, " ");
+    const title = a.kind === "probe" ? "Probe" : a.kind === "release" && !a.text.startsWith("released") ? "Release attempt" : TITLES[a.kind] ?? a.kind.replace(/_/g, " ");
     return { id: `${a.at}-${i}`, title, outcome: out === "inconclusive" ? "not counted" : out === "none" ? "nothing paid" : out || undefined, detail: det.replace(/(\d{20,})/g, (m) => `${near(m)} Ⓝ`), when: ago(a.at), tone };
   });
 }
