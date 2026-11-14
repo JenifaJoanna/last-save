@@ -1,5 +1,6 @@
 // Phases a-e: everything that happens while the game is Alive. Nothing here ends the instance's life.
 import { call, rpc, view } from "../lib/near.mjs";
+import { act, assertGasless, assertOpsGasless } from "./relayed.mjs";
 import { BotPool } from "./bots.mjs";
 import { getInfo, probeVerdict, untilLanded } from "./outlayer.mjs";
 import { balance, failText, fmtN, getJson, log, refusedWith, sha256Hex, sleep } from "./util.mjs";
@@ -127,6 +128,7 @@ export async function probeAlive(ctx) {
   const before = await getInfo(ctx);
   const res = await untilLanded(ctx, { label: "probe_official", signer: ctx.ops, method: "probe_official", args: {}, verdict: probeVerdict, terminal: /already ended/i });
   r.read("attempts", res.attempts);
+  assertOpsGasless(r, "probe_official", res, ctx.ops, before.totals.ops_budget, (await getInfo(ctx)).totals.ops_budget);
   r.check("a conclusive probe landed", res.conclusive, `${res.attempts.length} attempt(s), ${res.attempts.filter((a) => a.outcome === "inconclusive").length} inconclusive`);
   const after = await getInfo(ctx);
   r.check("consecutive_failures is 0", after.probe.consecutive_failures === 0, String(after.probe.consecutive_failures));
@@ -140,17 +142,19 @@ export async function reportDown(ctx) {
   const holder = ctx.players[0];
   const lic = await view(ctx.contract, "licence_of", { account_id: holder });
   const before = await getInfo(ctx);
-  const first = await call(holder, ctx.contract, "report_down", { token_id: lic.token_id }, { gas: 50 });
+  const bal0 = await balance(holder);
+  const first = await act(ctx, holder, "report_down", { token_id: lic.token_id }, { gas: 50 });
   r.tx(`report_down ${holder}`, first);
   const already = refusedWith(first, /Already reported/);
   if (already) r.note("this token had already reported inside the window (resumed run)");
   else r.check("report_down accepted", !first.failure, failText(first).slice(0, 120));
+  await assertGasless(r, "report_down", first, holder, bal0);
   const mid = await getInfo(ctx);
   r.read("reports", { in_window: mid.reports_in_window, needed: mid.reports_needed });
   r.check("one report is below quorum", mid.reports_in_window >= 1 && mid.reports_in_window < mid.reports_needed, `${mid.reports_in_window} of ${mid.reports_needed}`);
   r.check("game is still Alive", mid.status === "Alive");
   r.check("report counted", already || mid.reports_in_window === before.reports_in_window + 1, `${before.reports_in_window} -> ${mid.reports_in_window}`);
-  const second = await call(holder, ctx.contract, "report_down", { token_id: lic.token_id }, { gas: 50 });
+  const second = await act(ctx, holder, "report_down", { token_id: lic.token_id }, { gas: 50 });
   r.tx(`report_down again ${holder}`, second);
   r.check("same token reporting again in the window is refused", refusedWith(second, /Already reported/), failText(second).slice(0, 120));
   r.check("refused report did not change the count", (await getInfo(ctx)).reports_in_window === mid.reports_in_window);

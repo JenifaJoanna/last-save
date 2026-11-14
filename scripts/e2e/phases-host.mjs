@@ -22,7 +22,14 @@ export async function postDeathBuy(ctx) {
     await sleep(3000);
     const after = await getInfo(ctx);
     const poolDelta = BigInt(after.totals.pool) - BigInt(info.totals.pool);
-    r.check("pool rose by the price minus mint storage", poolDelta <= price && poolDelta >= price - 20_000_000_000_000_000_000_000n, `${fmtN(poolDelta)} of ${fmtN(price)}`);
+    // v2: 10% of a post-death sale goes to the ops budget (gas-free calls), the rest to the pool (v1 put all of it in the pool)
+    const v2 = after.config.evm_payout !== undefined && after.config.evm_payout !== null;
+    const toPool = v2 ? (price * 9n) / 10n : price, tol = 20_000_000_000_000_000_000_000n;
+    r.check(`pool rose by ${v2 ? "90%" : "all"} of the price minus mint storage`, poolDelta <= toPool && poolDelta >= toPool - tol, `${fmtN(poolDelta)} of ${fmtN(price)}`);
+    if (v2) {
+      const opsDelta = BigInt(after.totals.ops_budget) - BigInt(info.totals.ops_budget);
+      r.check("ops budget rose by 10% of the price minus mint storage", opsDelta <= price / 10n && opsDelta >= price / 10n - tol / 5n, fmtN(opsDelta));
+    }
     r.check("locked pot unchanged", BigInt(after.totals.pot_locked) === BigInt(info.totals.pot_locked));
     r.check("live supply unchanged (a post-death token is not a live holder)", after.totals.live_supply === info.totals.live_supply, `${info.totals.live_supply} -> ${after.totals.live_supply}`);
     lic = await view(ctx.contract, "licence_of", { account_id: ctx.fanhost });
@@ -118,7 +125,7 @@ export async function claim(ctx) {
     }
     const poolBefore = BigInt((await getInfo(ctx)).totals.pool);
     const res = await untilLanded(ctx, {
-      label: `claim_epoch ${candidate}`, signer: ctx.fanhost, method: "claim_epoch", args: { epoch: candidate }, maxAttempts: 6, terminal: /already paid/i,
+      label: `claim_epoch ${candidate}`, signer: ctx.fanhost, method: "claim_epoch", args: { epoch: candidate }, maxAttempts: 6, direct: true, terminal: /already paid/i,
       verdict: async () => {
         const c = (await claimsOf()).find((x) => x.epoch === candidate);
         const act = (await view(ctx.contract, "get_activity", { limit: 1 }))[0];

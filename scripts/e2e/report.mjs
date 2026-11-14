@@ -1,19 +1,27 @@
 // Run report: phases, tx hashes with explorer links, readbacks and pass/fail per assertion. Written after every phase.
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { log, nowIso } from "./util.mjs";
 
 const safe = (_k, v) => (typeof v === "bigint" ? v.toString() : v);
 
 export class Report {
-  constructor({ file, meta }) {
+  /** `append`: continue the report already at `file` (a resumed run with --from keeps the phases that ran before). */
+  constructor({ file, meta, append = false }) {
     this.file = file;
     this.data = { started_at: nowIso(), ...meta, phases: [], unenforced: [] };
+    if (append && existsSync(file)) {
+      const old = JSON.parse(readFileSync(file, "utf8"));
+      this.data = { ...old, ...meta, started_at: old.started_at, balances_start: old.balances_start, phases: old.phases ?? [], resumed_at: [...(old.resumed_at ?? []), nowIso()] };
+      delete this.data.totals;
+    }
     this.cur = null;
     mkdirSync(dirname(file), { recursive: true });
   }
 
   phase(name, title) {
+    const old = this.data.phases.findIndex((p) => p.name === name);
+    if (old >= 0) (this.data.superseded ??= []).push(...this.data.phases.splice(old, 1)); // a rerun replaces the earlier attempt, which stays on record
     this.cur = { name, title, started_at: nowIso(), status: "running", txs: [], readback: {}, assertions: [], notes: [] };
     this.data.phases.push(this.cur);
     log(`--- phase ${name}: ${title}`);

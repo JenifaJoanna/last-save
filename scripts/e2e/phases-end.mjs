@@ -4,7 +4,8 @@ import { spawn } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { call, view } from "../lib/near.mjs";
+import { view } from "../lib/near.mjs";
+import { act, assertGasless, assertOpsGasless } from "./relayed.mjs";
 import { getInfo, probeVerdict, untilLanded } from "./outlayer.mjs";
 import { balance, failText, fmtN, getJson, log, readEnvFile, refusedWith, sha256Hex, sleep } from "./util.mjs";
 
@@ -53,7 +54,7 @@ export async function death(ctx) {
   const r = ctx.report;
   const start = await getInfo(ctx);
   const { probe_interval_ms: interval, fail_threshold: threshold } = start.config.liveness;
-  const rounds = [];
+  const rounds = [], allAttempts = [];
   for (let round = 1; round <= 10; round++) {
     const info = await getInfo(ctx);
     if (info.status === "Dead") break;
@@ -65,6 +66,7 @@ export async function death(ctx) {
         if (wait > 0) { log(`  waiting ${Math.ceil(wait / 1000)} s so the next failure is spaced by probe_interval`); await sleep(wait); }
       },
     });
+    allAttempts.push(...res.attempts);
     const after = await getInfo(ctx);
     rounds.push({ round, conclusive: res.conclusive, attempts: res.attempts.map((a) => a.outcome), consecutive_failures: after.probe.consecutive_failures, status: after.status });
     log(`  round ${round}: failures ${after.probe.consecutive_failures}/${threshold}, status ${after.status}`);
@@ -72,6 +74,7 @@ export async function death(ctx) {
   }
   r.read("rounds", rounds);
   const end = await getInfo(ctx);
+  assertOpsGasless(r, "death probes", { attempts: allAttempts }, ctx.ops, start.totals.ops_budget, end.totals.ops_budget);
   r.check("status is Dead", end.status === "Dead", end.status);
   r.check('cause is "probes"', end.cause === "probes", String(end.cause));
   r.check("died_at_ms is set", Number.isFinite(end.died_at_ms), String(end.died_at_ms));
@@ -86,10 +89,11 @@ export async function release(ctx) {
   if (info.released_key) r.note("key already released, verifying only");
   else {
     const res = await untilLanded(ctx, {
-      label: "release", signer: ctx.ops, method: "release", args: {}, maxAttempts: 14, terminal: /already released/i,
+      label: "release", signer: ctx.ops, method: "release", args: {}, maxAttempts: 14, terminal: /already released/i, fallbackAfter: 5, pauseMs: 15000,
       verdict: (_b, a) => ({ conclusive: Boolean(a.released_key), detail: a.release.last_error ?? "key stored" }),
     });
     r.read("attempts", res.attempts);
+    assertOpsGasless(r, "release", res, ctx.ops, info.totals.ops_budget, (await getInfo(ctx)).totals.ops_budget);
     r.check("release landed (conclusive)", res.conclusive || Boolean((await getInfo(ctx)).released_key), `${res.attempts.length} attempt(s)`);
   }
   const after = await getInfo(ctx);
@@ -107,16 +111,18 @@ export async function choose(ctx) {
     const pot = BigInt(lic.pot_share);
     if (lic.choice) { r.note(`${id} already chose ${lic.choice}`); continue; }
     const before = await getInfo(ctx), bal = await balance(id);
-    const res = await call(id, ctx.contract, "choose", { token_id: lic.token_id, choice }, { gas: 60 });
+    const res = await act(ctx, id, "choose", { token_id: lic.token_id, choice }, { gas: 60 });
     r.tx(`choose ${choice} ${id}`, res);
     r.check(`${id} ${choice} accepted`, !res.failure, failText(res).slice(0, 120));
+    await sleep(2500);
+    await assertGasless(r, `choose ${choice}`, res, id, bal, choice === "Refund" ? pot : 0n);
     await sleep(2500);
     const after = await getInfo(ctx), balAfter = await balance(id);
     const rec = await view(ctx.contract, "licence_of", { account_id: id });
     r.check(`${id} choice recorded as ${choice}`, rec.choice === choice, String(rec.choice));
     if (choice === "Refund") {
       const delta = balAfter - bal;
-      r.check(`${id} balance rose by about the pot share`, delta <= pot && delta >= pot - 10_000_000_000_000_000_000_000n, `${fmtN(delta)} vs ${fmtN(pot)} (gas tolerance 0.01 N)`);
+      r.check(`${id} balance rose by about the pot share`, delta <= pot && delta >= pot - 10_000_000_000_000_000_000_000n, `${fmtN(delta)} vs ${fmtN(pot)} (gas tolerance 0.01 N; exact when gas-free)`);
       r.check("refunded total rose", BigInt(after.totals.refunded) - BigInt(before.totals.refunded) === pot);
     } else {
       r.check(`${id} pledge moved the pot share into the pool`, BigInt(after.totals.pool) - BigInt(before.totals.pool) === pot, `${fmtN(BigInt(after.totals.pool) - BigInt(before.totals.pool))} vs ${fmtN(pot)}`);
@@ -125,7 +131,7 @@ export async function choose(ctx) {
   }
   for (const id of [ctx.players[0], ctx.players[2]]) {
     const lic = await view(ctx.contract, "licence_of", { account_id: id });
-    const again = await call(id, ctx.contract, "choose", { token_id: lic.token_id, choice: lic.choice === "Refund" ? "Pledge" : "Refund" }, { gas: 60 });
+    const again = await act(ctx, id, "choose", { token_id: lic.token_id, choice: lic.choice === "Refund" ? "Pledge" : "Refund" }, { gas: 60 });
     r.tx(`choose again ${id}`, again);
     r.check(`a second choose on ${id}'s token is refused`, refusedWith(again, /Choice already made/), failText(again).slice(0, 120));
   }

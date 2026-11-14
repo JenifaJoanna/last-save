@@ -1,0 +1,1817 @@
+{
+  "started_at": "2026-11-14T08:57:46.674Z",
+  "gasless": true,
+  "contract": "v2dev.lastsave-factory.testnet",
+  "official_url": "https://emberrift-v2dev.pages.dev",
+  "official_worker": "emberrift-v2dev-arena",
+  "players": [
+    "lastsave-mira.testnet",
+    "lastsave-kofi.testnet",
+    "lastsave-yuna.testnet",
+    "lastsave-dario.testnet"
+  ],
+  "ops": "lastsave-kofi.testnet",
+  "fanhost": "lastsave-fanhost.testnet",
+  "network": "testnet",
+  "phases": [
+    {
+      "name": "preflight",
+      "title": "Alive, escrowed, verified, access keys",
+      "started_at": "2026-11-14T08:57:59.153Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "contract_access_keys": [],
+        "contract_locked": true,
+        "config": {
+          "price": "250000000000000000000000",
+          "fund_bps": 4000,
+          "liveness": {
+            "probe_interval_ms": 20000,
+            "fail_threshold": 3,
+            "receipt_window_ms": 180000,
+            "report_window_ms": 120000,
+            "quorum_bps": 5000
+          },
+          "pool": {
+            "epoch_ms": 120000,
+            "pay_per_session": "10000000000000000000000",
+            "epoch_cap": "50000000000000000000000"
+          },
+          "official_endpoint": "https://emberrift-v2dev.pages.dev",
+          "studio": "lastsave-studio.testnet"
+        },
+        "totals": {
+          "supply": 0,
+          "live_supply": 0,
+          "pot_locked": "0",
+          "pool": "0",
+          "refunded": "0",
+          "pledged": "0",
+          "paid_out": "0",
+          "ops_budget": "1000000000000000000000000",
+          "evm_settled": "0"
+        },
+        "balances": {
+          "lastsave-mira.testnet": "0.7333 N",
+          "lastsave-kofi.testnet": "0.7370 N",
+          "lastsave-yuna.testnet": "0.7347 N",
+          "lastsave-dario.testnet": "0.7484 N",
+          "lastsave-fanhost.testnet": "0.9533 N",
+          "lastsave-studio.testnet": "6.3194 N"
+        }
+      },
+      "assertions": [
+        {
+          "name": "status is Alive",
+          "pass": true,
+          "detail": "Alive"
+        },
+        {
+          "name": "key is escrowed",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "escrow verified by attest",
+          "pass": true,
+          "detail": "attested_at_ms 1794645839043"
+        },
+        {
+          "name": "official server answers /health",
+          "pass": true,
+          "detail": "host official, build d31168055435"
+        },
+        {
+          "name": "official server runs the committed build",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7333 N"
+        },
+        {
+          "name": "lastsave-kofi.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7370 N"
+        },
+        {
+          "name": "lastsave-yuna.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7347 N"
+        },
+        {
+          "name": "lastsave-dario.testnet can afford a licence or holds one",
+          "pass": true,
+          "detail": "0.7484 N"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T08:58:13.474Z"
+    },
+    {
+      "name": "relayer-guards",
+      "title": "relayer refuses bad methods, deposits, receivers, signatures",
+      "started_at": "2026-11-14T08:58:13.474Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "refusal_cases": [
+          "a method outside the allowlist (buy_licence) -> METHOD_NOT_ALLOWED",
+          "a method outside the allowlist (end_of_service) -> METHOD_NOT_ALLOWED",
+          "an allowed method with a non-zero deposit (0.01 N) -> DEPOSIT_NOT_ZERO",
+          "an allowed method with a 1 yocto deposit -> DEPOSIT_NOT_ZERO",
+          "a receiver outside the allowlist -> RECEIVER_NOT_ALLOWED",
+          "a delegate with a tampered signature -> BAD_SIGNATURE",
+          "an expired delegate (max_block_height in the past) -> EXPIRED"
+        ]
+      },
+      "assertions": [
+        {
+          "name": "relayer refuses a method outside the allowlist (buy_licence)",
+          "pass": true,
+          "detail": "METHOD_NOT_ALLOWED: method buy_licence is not relayed"
+        },
+        {
+          "name": "relayer refuses a method outside the allowlist (end_of_service)",
+          "pass": true,
+          "detail": "METHOD_NOT_ALLOWED: method end_of_service is not relayed"
+        },
+        {
+          "name": "relayer refuses an allowed method with a non-zero deposit (0.01 N)",
+          "pass": true,
+          "detail": "DEPOSIT_NOT_ZERO: relayed calls must attach no deposit"
+        },
+        {
+          "name": "relayer refuses an allowed method with a 1 yocto deposit",
+          "pass": true,
+          "detail": "DEPOSIT_NOT_ZERO: relayed calls must attach no deposit"
+        },
+        {
+          "name": "relayer refuses a receiver outside the allowlist",
+          "pass": true,
+          "detail": "RECEIVER_NOT_ALLOWED: example.testnet is not a relayed contract"
+        },
+        {
+          "name": "relayer refuses a delegate with a tampered signature",
+          "pass": true,
+          "detail": "BAD_SIGNATURE: delegate signature does not verify"
+        },
+        {
+          "name": "relayer refuses an expired delegate (max_block_height in the past)",
+          "pass": true,
+          "detail": "EXPIRED: delegate action has expired (max_block_height)"
+        },
+        {
+          "name": "lastsave-dario.testnet balance unchanged by the refused calls",
+          "pass": true,
+          "detail": "0.7484 N"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T08:58:30.385Z"
+    },
+    {
+      "name": "factory",
+      "title": "factory lists the instance, global code, 0 keys",
+      "started_at": "2026-11-14T08:58:30.386Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "factory_instances": [
+          "v2dev.lastsave-factory.testnet Ready"
+        ],
+        "instance_account": {
+          "code_hash": "11111111111111111111111111111111",
+          "global_contract_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+          "global_contract_account_id": null
+        }
+      },
+      "assertions": [
+        {
+          "name": "factory instances() lists the instance, status Ready",
+          "pass": true,
+          "detail": "v2dev.lastsave-factory.testnet by lastsave-studio.testnet"
+        },
+        {
+          "name": "the instance was created through the factory (creator is the studio)",
+          "pass": true,
+          "detail": "lastsave-studio.testnet"
+        },
+        {
+          "name": "the instance runs the factory's global contract (code_hash() matches)",
+          "pass": true,
+          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 vs 4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
+        },
+        {
+          "name": "the instance has no local contract code (code_hash is all ones)",
+          "pass": true,
+          "detail": "11111111111111111111111111111111"
+        },
+        {
+          "name": "the instance has 0 access keys (born locked)",
+          "pass": true,
+          "detail": "0 keys"
+        },
+        {
+          "name": "factory code_hash() is the published licence v2 hash",
+          "pass": true,
+          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T08:58:36.340Z"
+    },
+    {
+      "name": "buy",
+      "title": "four players buy a licence",
+      "started_at": "2026-11-14T08:58:36.341Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "buy_licence lastsave-mira.testnet",
+          "hash": "DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7",
+          "url": "https://testnet.nearblocks.io/txns/DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-kofi.testnet",
+          "hash": "Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ",
+          "url": "https://testnet.nearblocks.io/txns/Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-yuna.testnet",
+          "hash": "5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+          "url": "https://testnet.nearblocks.io/txns/5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+          "failure": null
+        },
+        {
+          "label": "buy_licence lastsave-dario.testnet",
+          "hash": "5T9RaQKvs2B3fMxf2RFCDGJxaj9LccCusULNd8eL9LH8",
+          "url": "https://testnet.nearblocks.io/txns/5T9RaQKvs2B3fMxf2RFCDGJxaj9LccCusULNd8eL9LH8",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "spent lastsave-mira.testnet": "0.2502 N",
+        "licence lastsave-mira.testnet": {
+          "token_id": "1",
+          "owner_id": "lastsave-mira.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794646723099,
+          "post_death": false
+        },
+        "spent lastsave-kofi.testnet": "0.2502 N",
+        "licence lastsave-kofi.testnet": {
+          "token_id": "2",
+          "owner_id": "lastsave-kofi.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794646733381,
+          "post_death": false
+        },
+        "spent lastsave-yuna.testnet": "0.2502 N",
+        "licence lastsave-yuna.testnet": {
+          "token_id": "3",
+          "owner_id": "lastsave-yuna.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794646743069,
+          "post_death": false
+        },
+        "spent lastsave-dario.testnet": "0.2502 N",
+        "licence lastsave-dario.testnet": {
+          "token_id": "4",
+          "owner_id": "lastsave-dario.testnet",
+          "pot_share": "100000000000000000000000",
+          "choice": null,
+          "minted_at_ms": 1794646756993,
+          "post_death": false
+        },
+        "studio balance delta": "0.5924 N (expected 0.6000 N minus mint storage)",
+        "totals after": {
+          "supply": 4,
+          "live_supply": 4,
+          "pot_locked": "400000000000000000000000",
+          "pool": "0",
+          "refunded": "0",
+          "pledged": "0",
+          "paid_out": "0",
+          "ops_budget": "1000000000000000000000000",
+          "evm_settled": "0"
+        }
+      },
+      "assertions": [
+        {
+          "name": "lastsave-mira.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 1"
+        },
+        {
+          "name": "lastsave-mira.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-kofi.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-kofi.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 2"
+        },
+        {
+          "name": "lastsave-kofi.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-yuna.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-yuna.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 3"
+        },
+        {
+          "name": "lastsave-yuna.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "lastsave-dario.testnet bought: tx succeeded",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-dario.testnet holds a licence token",
+          "pass": true,
+          "detail": "token 4"
+        },
+        {
+          "name": "lastsave-dario.testnet pot_share is 40% of the price",
+          "pass": true,
+          "detail": "0.1000 N of 0.2500 N"
+        },
+        {
+          "name": "supply rose by the number bought",
+          "pass": true,
+          "detail": "0 -> 4"
+        },
+        {
+          "name": "locked pot rose by 40% of each price",
+          "pass": true,
+          "detail": "0.4000 N"
+        },
+        {
+          "name": "studio received the rest (60% minus mint storage)",
+          "pass": true,
+          "detail": "0.5924 N vs 0.6000 N"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T08:59:28.818Z"
+    },
+    {
+      "name": "play",
+      "title": "bots play, snapshot and attest",
+      "started_at": "2026-11-14T08:59:28.819Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "joined": [
+          {
+            "account": "lastsave-mira.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-kofi.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-yuna.testnet",
+            "joined": true,
+            "denied": null
+          },
+          {
+            "account": "lastsave-dario.testnet",
+            "joined": true,
+            "denied": null
+          }
+        ],
+        "matches finished per bot": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "xp before": {
+          "lastsave-mira.testnet": 0,
+          "lastsave-kofi.testnet": 0,
+          "lastsave-yuna.testnet": 0,
+          "lastsave-dario.testnet": 0
+        },
+        "xp after": {
+          "lastsave-mira.testnet": 1180,
+          "lastsave-kofi.testnet": 845,
+          "lastsave-yuna.testnet": 550,
+          "lastsave-dario.testnet": 585
+        },
+        "snapshot": {
+          "seq": 2,
+          "hash": "b5bc706556a2d9121432512f4ea83fe50b58ad800df134ddd14e36aaf7adf39d",
+          "at_ms": 1794647078055,
+          "players": {
+            "lastsave-dario.testnet": {
+              "kos": 5,
+              "level": 3,
+              "matches": 2,
+              "shards": 37,
+              "skin": "emberwing",
+              "xp": 585
+            },
+            "lastsave-kofi.testnet": {
+              "kos": 6,
+              "level": 3,
+              "matches": 2,
+              "shards": 55,
+              "skin": "emberwing",
+              "xp": 845
+            },
+            "lastsave-mira.testnet": {
+              "kos": 9,
+              "level": 4,
+              "matches": 2,
+              "shards": 81,
+              "skin": "emberwing",
+              "xp": 1180
+            },
+            "lastsave-yuna.testnet": {
+              "kos": 6,
+              "level": 3,
+              "matches": 2,
+              "shards": 30,
+              "skin": "emberwing",
+              "xp": 550
+            }
+          }
+        }
+      },
+      "assertions": [
+        {
+          "name": "all 4 players signed in (NEP-413 login accepted)",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "/health shows 4 players online",
+          "pass": true,
+          "detail": "players_online 4"
+        },
+        {
+          "name": "every bot finished 2 matches",
+          "pass": true,
+          "detail": "2, 2, 2, 2"
+        },
+        {
+          "name": "lastsave-mira.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 1180"
+        },
+        {
+          "name": "lastsave-kofi.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 845"
+        },
+        {
+          "name": "lastsave-yuna.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 550"
+        },
+        {
+          "name": "lastsave-dario.testnet xp increased",
+          "pass": true,
+          "detail": "0 -> 585"
+        },
+        {
+          "name": "on-chain snapshot seq increased",
+          "pass": true,
+          "detail": "none -> 2"
+        },
+        {
+          "name": "snapshot hash matches its blob",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "snapshot holds all 4 accounts",
+          "pass": true,
+          "detail": "lastsave-dario.testnet, lastsave-kofi.testnet, lastsave-mira.testnet, lastsave-yuna.testnet"
+        },
+        {
+          "name": "/attest returns signed sessions",
+          "pass": true,
+          "detail": "5 sessions"
+        },
+        {
+          "name": "/attest sessions cover all 4 players",
+          "pass": true,
+          "detail": "lastsave-dario.testnet, lastsave-yuna.testnet, lastsave-kofi.testnet, lastsave-mira.testnet"
+        },
+        {
+          "name": "/attest echoes the nonce and the committed build",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:04:42.522Z"
+    },
+    {
+      "name": "probe-alive",
+      "title": "probe sees the live server",
+      "started_at": "2026-11-14T09:04:42.522Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "probe_official #1 (gas-free)",
+          "hash": "3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+          "url": "https://testnet.nearblocks.io/txns/3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "attempts": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "detail": "failures 0, status Alive",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          }
+        ],
+        "activity": [
+          {
+            "at_ms": 1794647097974,
+            "kind": "probe",
+            "outcome": "alive",
+            "detail": "4 verified sessions"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "probe_official: every gas-free attempt was signed by the relayer",
+          "pass": true,
+          "detail": "1 attempt(s)"
+        },
+        {
+          "name": "probe_official: lastsave-kofi.testnet paid nothing on the gas-free attempts",
+          "pass": true,
+          "detail": "0.0000 N"
+        },
+        {
+          "name": "probe_official: the ops budget paid OutLayer (fell by at least 0.0200 N per landed call)",
+          "pass": true,
+          "detail": "0.0200 N for 1"
+        },
+        {
+          "name": "a conclusive probe landed",
+          "pass": true,
+          "detail": "1 attempt(s), 0 inconclusive"
+        },
+        {
+          "name": "consecutive_failures is 0",
+          "pass": true,
+          "detail": "0"
+        },
+        {
+          "name": "last_alive_ms updated",
+          "pass": true,
+          "detail": "none -> 1794647097974"
+        },
+        {
+          "name": "status still Alive",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:05:05.568Z"
+    },
+    {
+      "name": "report",
+      "title": "one report stays below quorum",
+      "started_at": "2026-11-14T09:05:05.568Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "report_down lastsave-mira.testnet",
+          "hash": "EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc",
+          "url": "https://testnet.nearblocks.io/txns/EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc",
+          "failure": null
+        },
+        {
+          "label": "report_down again lastsave-mira.testnet",
+          "hash": "6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj",
+          "url": "https://testnet.nearblocks.io/txns/6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Already reported in this window\"}}}}"
+        }
+      ],
+      "readback": {
+        "reports": {
+          "in_window": 1,
+          "needed": 2
+        }
+      },
+      "assertions": [
+        {
+          "name": "report_down accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "report_down: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-mira.testnet"
+        },
+        {
+          "name": "report_down: lastsave-mira.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "one report is below quorum",
+          "pass": true,
+          "detail": "1 of 2"
+        },
+        {
+          "name": "game is still Alive",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "report counted",
+          "pass": true,
+          "detail": "0 -> 1"
+        },
+        {
+          "name": "same token reporting again in the window is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Already reported in th"
+        },
+        {
+          "name": "refused report did not change the count",
+          "pass": true,
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:05:42.921Z"
+    },
+    {
+      "name": "kill",
+      "title": "official server deleted",
+      "started_at": "2026-11-14T09:05:42.922Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "kill": "deleted Worker emberrift-v2dev-arena through wrangler",
+        "killed_at": "2026-11-14T09:05:45.986Z"
+      },
+      "assertions": [
+        {
+          "name": "official /health now fails",
+          "pass": true,
+          "detail": "HTTP 500"
+        }
+      ],
+      "notes": [
+        "bots stopped"
+      ],
+      "ended_at": "2026-11-14T09:05:45.986Z"
+    },
+    {
+      "name": "death",
+      "title": "probes kill the game",
+      "started_at": "2026-11-14T09:05:45.986Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "probe_official r1 #1 (gas-free)",
+          "hash": "J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+          "url": "https://testnet.nearblocks.io/txns/J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+          "failure": null
+        },
+        {
+          "label": "probe_official r2 #1 (gas-free)",
+          "hash": "6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+          "url": "https://testnet.nearblocks.io/txns/6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+          "failure": null
+        },
+        {
+          "label": "probe_official r3 #1 (gas-free)",
+          "hash": "13LRSaUHm81qH1Wa3aKbbM4sXdaYjVeF9CFtCu8kCFtL",
+          "url": "https://testnet.nearblocks.io/txns/13LRSaUHm81qH1Wa3aKbbM4sXdaYjVeF9CFtCu8kCFtL",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "rounds": [
+          {
+            "round": 1,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 1,
+            "status": "Alive"
+          },
+          {
+            "round": 2,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 2,
+            "status": "Alive"
+          },
+          {
+            "round": 3,
+            "conclusive": true,
+            "attempts": [
+              "conclusive"
+            ],
+            "consecutive_failures": 3,
+            "status": "Dead"
+          }
+        ],
+        "inconclusive_attempts_ignored": 0,
+        "activity": [
+          {
+            "at_ms": 1794647228687,
+            "kind": "death",
+            "outcome": "probes",
+            "detail": ""
+          },
+          {
+            "at_ms": 1794647228687,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794647195978,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794647162708,
+            "kind": "probe",
+            "outcome": "failed",
+            "detail": "unreachable"
+          },
+          {
+            "at_ms": 1794647113041,
+            "kind": "report",
+            "outcome": "down",
+            "detail": "licence 1: 1 of 2"
+          },
+          {
+            "at_ms": 1794647097974,
+            "kind": "probe",
+            "outcome": "alive",
+            "detail": "4 verified sessions"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "death probes: every gas-free attempt was signed by the relayer",
+          "pass": true,
+          "detail": "3 attempt(s)"
+        },
+        {
+          "name": "death probes: lastsave-kofi.testnet paid nothing on the gas-free attempts",
+          "pass": true,
+          "detail": "0.0000 N, 0.0000 N, 0.0000 N"
+        },
+        {
+          "name": "death probes: the ops budget paid OutLayer (fell by at least 0.0200 N per landed call)",
+          "pass": true,
+          "detail": "0.0600 N for 3"
+        },
+        {
+          "name": "status is Dead",
+          "pass": true,
+          "detail": "Dead"
+        },
+        {
+          "name": "cause is \"probes\"",
+          "pass": true,
+          "detail": "probes"
+        },
+        {
+          "name": "died_at_ms is set",
+          "pass": true,
+          "detail": "1794647228687"
+        },
+        {
+          "name": "consecutive_failures reached 3",
+          "pass": true,
+          "detail": "3"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:07:32.134Z"
+    },
+    {
+      "name": "release",
+      "title": "key released and verified",
+      "started_at": "2026-11-14T09:07:32.135Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "release #1 (gas-free)",
+          "hash": "ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+          "url": "https://testnet.nearblocks.io/txns/ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "attempts": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+            "detail": "key stored",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "release: every gas-free attempt was signed by the relayer",
+          "pass": true,
+          "detail": "1 attempt(s)"
+        },
+        {
+          "name": "release: lastsave-kofi.testnet paid nothing on the gas-free attempts",
+          "pass": true,
+          "detail": "0.0000 N"
+        },
+        {
+          "name": "release: the ops budget paid OutLayer (fell by at least 0.0200 N per landed call)",
+          "pass": true,
+          "detail": "0.0200 N for 1"
+        },
+        {
+          "name": "release landed (conclusive)",
+          "pass": true,
+          "detail": "1 attempt(s)"
+        },
+        {
+          "name": "released_key is public on chain",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sha256(K) equals key_commitment",
+          "pass": true,
+          "detail": "commitment f2772b9f97d8..."
+        },
+        {
+          "name": "released_at_ms is set",
+          "pass": true,
+          "detail": "1794647272617"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:08:11.374Z"
+    },
+    {
+      "name": "choose",
+      "title": "refund and pledge",
+      "started_at": "2026-11-14T09:08:11.375Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "choose Refund lastsave-yuna.testnet",
+          "hash": "14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG",
+          "url": "https://testnet.nearblocks.io/txns/14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG",
+          "failure": null
+        },
+        {
+          "label": "choose Refund lastsave-dario.testnet",
+          "hash": "4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x",
+          "url": "https://testnet.nearblocks.io/txns/4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x",
+          "failure": null
+        },
+        {
+          "label": "choose Pledge lastsave-mira.testnet",
+          "hash": "6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC",
+          "url": "https://testnet.nearblocks.io/txns/6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC",
+          "failure": null
+        },
+        {
+          "label": "choose Pledge lastsave-kofi.testnet",
+          "hash": "239XVX2fkA96jpGLgd1xpa9dtzaXuggGm8dix86E217b",
+          "url": "https://testnet.nearblocks.io/txns/239XVX2fkA96jpGLgd1xpa9dtzaXuggGm8dix86E217b",
+          "failure": null
+        },
+        {
+          "label": "choose again lastsave-mira.testnet",
+          "hash": "8cLny67JuTPBgHmgJ8USxZoNtKaAf49ftAkQgFDEqyLV",
+          "url": "https://testnet.nearblocks.io/txns/8cLny67JuTPBgHmgJ8USxZoNtKaAf49ftAkQgFDEqyLV",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}}}"
+        },
+        {
+          "label": "choose again lastsave-yuna.testnet",
+          "hash": "2TVWuLdHKHWnEftfgSt4csCtykQJbLLa3itop1JWsCyC",
+          "url": "https://testnet.nearblocks.io/txns/2TVWuLdHKHWnEftfgSt4csCtykQJbLLa3itop1JWsCyC",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}}}"
+        }
+      ],
+      "readback": {
+        "pot_locked after": "0.0000 N",
+        "totals": {
+          "supply": 4,
+          "live_supply": 4,
+          "pot_locked": "0",
+          "pool": "200000000000000000000000",
+          "refunded": "200000000000000000000000",
+          "pledged": "200000000000000000000000",
+          "paid_out": "0",
+          "ops_budget": "900000000000000000000000",
+          "evm_settled": "0"
+        }
+      },
+      "assertions": [
+        {
+          "name": "lastsave-yuna.testnet Refund accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "choose Refund: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-yuna.testnet"
+        },
+        {
+          "name": "choose Refund: lastsave-yuna.testnet paid nothing (balance up exactly 0.1000 N)",
+          "pass": true,
+          "detail": "delta 0.1000 N"
+        },
+        {
+          "name": "lastsave-yuna.testnet choice recorded as Refund",
+          "pass": true,
+          "detail": "Refund"
+        },
+        {
+          "name": "lastsave-yuna.testnet balance rose by about the pot share",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N (gas tolerance 0.01 N; exact when gas-free)"
+        },
+        {
+          "name": "refunded total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-dario.testnet Refund accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "choose Refund: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-dario.testnet"
+        },
+        {
+          "name": "choose Refund: lastsave-dario.testnet paid nothing (balance up exactly 0.1000 N)",
+          "pass": true,
+          "detail": "delta 0.1000 N"
+        },
+        {
+          "name": "lastsave-dario.testnet choice recorded as Refund",
+          "pass": true,
+          "detail": "Refund"
+        },
+        {
+          "name": "lastsave-dario.testnet balance rose by about the pot share",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N (gas tolerance 0.01 N; exact when gas-free)"
+        },
+        {
+          "name": "refunded total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet Pledge accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "choose Pledge: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-mira.testnet"
+        },
+        {
+          "name": "choose Pledge: lastsave-mira.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "lastsave-mira.testnet choice recorded as Pledge",
+          "pass": true,
+          "detail": "Pledge"
+        },
+        {
+          "name": "lastsave-mira.testnet pledge moved the pot share into the pool",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N"
+        },
+        {
+          "name": "pledged total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-kofi.testnet Pledge accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "choose Pledge: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-kofi.testnet"
+        },
+        {
+          "name": "choose Pledge: lastsave-kofi.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "lastsave-kofi.testnet choice recorded as Pledge",
+          "pass": true,
+          "detail": "Pledge"
+        },
+        {
+          "name": "lastsave-kofi.testnet pledge moved the pot share into the pool",
+          "pass": true,
+          "detail": "0.1000 N vs 0.1000 N"
+        },
+        {
+          "name": "pledged total rose",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a second choose on lastsave-mira.testnet's token is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}"
+        },
+        {
+          "name": "a second choose on lastsave-yuna.testnet's token is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:09:42.956Z"
+    },
+    {
+      "name": "post-death-buy",
+      "title": "fan buys into the pool",
+      "started_at": "2026-11-14T09:09:42.957Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "buy_licence lastsave-fanhost.testnet",
+          "hash": "HszrLpFGCYgVkoY9dfF3jVSJhHArq31wPU8hsFNDquWx",
+          "url": "https://testnet.nearblocks.io/txns/HszrLpFGCYgVkoY9dfF3jVSJhHArq31wPU8hsFNDquWx",
+          "failure": null
+        },
+        {
+          "label": "choose (must be refused)",
+          "hash": "9Mvz2AH68rgrMiiZDJxzBzwsGzTMjzyHN2ch2dqDtyag",
+          "url": "https://testnet.nearblocks.io/txns/9Mvz2AH68rgrMiiZDJxzBzwsGzTMjzyHN2ch2dqDtyag",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This licence has no locked share\"}}}}"
+        }
+      ],
+      "readback": {},
+      "assertions": [
+        {
+          "name": "game is Dead before the post-death buy",
+          "pass": true,
+          "detail": "Dead"
+        },
+        {
+          "name": "post-death buy accepted",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "pool rose by 90% of the price minus mint storage",
+          "pass": true,
+          "detail": "0.2232 N of 0.2500 N"
+        },
+        {
+          "name": "ops budget rose by 10% of the price minus mint storage",
+          "pass": true,
+          "detail": "0.0248 N"
+        },
+        {
+          "name": "locked pot unchanged",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "live supply unchanged (a post-death token is not a live holder)",
+          "pass": true,
+          "detail": "4 -> 4"
+        },
+        {
+          "name": "token minted to the fan",
+          "pass": true,
+          "detail": "token 5"
+        },
+        {
+          "name": "pot_share is 0 and the token is post_death",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a post-death licence cannot choose",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This licence has no lo"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:10:03.088Z"
+    },
+    {
+      "name": "host",
+      "title": "community host restores progress",
+      "started_at": "2026-11-14T09:27:58.469Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "register_host",
+          "hash": "GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+          "url": "https://testnet.nearblocks.io/txns/GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+          "failure": null
+        },
+        {
+          "label": "create throwaway e2e-nl-mwg7fc6x.lastsave-fanhost.testnet",
+          "hash": "CzRjx4Y5RPMxH9T8bzxs46bvnYT8GVv6Gtzs9uT5kGrY",
+          "url": "https://testnet.nearblocks.io/txns/CzRjx4Y5RPMxH9T8bzxs46bvnYT8GVv6Gtzs9uT5kGrY",
+          "failure": null
+        },
+        {
+          "label": "delete throwaway e2e-nl-mwg7fc6x.lastsave-fanhost.testnet",
+          "hash": "E2eWm7zEdD8i8crCw1AiqQnDzwNLUX4MTzqYuc7shsHP",
+          "url": "https://testnet.nearblocks.io/txns/E2eWm7zEdD8i8crCw1AiqQnDzwNLUX4MTzqYuc7shsHP",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "host": {
+          "endpoint": "https://billy-permitted-instrumentation-martha.trycloudflare.com",
+          "registered_at_ms": 1794648569579,
+          "epoch_at_join": 10
+        },
+        "restored": {
+          "lastsave-mira.testnet": {
+            "snapshot": {
+              "level": 4,
+              "xp": 1180
+            },
+            "host": {
+              "level": 4,
+              "xp": 1180
+            }
+          },
+          "lastsave-kofi.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 845
+            },
+            "host": {
+              "level": 3,
+              "xp": 845
+            }
+          },
+          "lastsave-yuna.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 550
+            },
+            "host": {
+              "level": 3,
+              "xp": 550
+            }
+          },
+          "lastsave-dario.testnet": {
+            "snapshot": {
+              "level": 3,
+              "xp": 585
+            },
+            "host": {
+              "level": 3,
+              "xp": 585
+            }
+          }
+        }
+      },
+      "assertions": [
+        {
+          "name": "an on-chain snapshot exists to restore",
+          "pass": true,
+          "detail": "seq 2"
+        },
+        {
+          "name": "host registered on chain with its endpoint",
+          "pass": true,
+          "detail": "https://billy-permitted-instrumentation-martha.trycloudflare.com"
+        },
+        {
+          "name": "all 4 players signed in to the community host",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "lastsave-mira.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 4/1180 vs host 4/1180"
+        },
+        {
+          "name": "lastsave-kofi.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/845 vs host 3/845"
+        },
+        {
+          "name": "lastsave-yuna.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/550 vs host 3/550"
+        },
+        {
+          "name": "lastsave-dario.testnet progress restored (same level and xp as the last on-chain snapshot)",
+          "pass": true,
+          "detail": "snapshot 3/585 vs host 3/585"
+        },
+        {
+          "name": "snapshot-restored xp is above the 0 of a fresh server",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "a non-holder is denied with no_licence",
+          "pass": true,
+          "detail": "joined false, denied no_licence"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:29:47.226Z"
+    },
+    {
+      "name": "claim",
+      "title": "host claims an epoch",
+      "started_at": "2026-11-14T09:29:47.227Z",
+      "status": "passed",
+      "txs": [
+        {
+          "label": "claim_epoch 10 #1",
+          "hash": "cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+          "url": "https://testnet.nearblocks.io/txns/cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+          "failure": null
+        },
+        {
+          "label": "claim_epoch 10 again",
+          "hash": "8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+          "url": "https://testnet.nearblocks.io/txns/8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This epoch is already paid\"}}}}"
+        }
+      ],
+      "readback": {
+        "epoch_ms": 120000,
+        "attempts epoch 10": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "detail": "paid 0.0400 N, 4 verified",
+            "relayed": false,
+            "outer_signer": null,
+            "signer_delta": "37481413608315800000000"
+          }
+        ],
+        "claim": {
+          "epoch": 10,
+          "index": 0,
+          "host_id": "lastsave-fanhost.testnet",
+          "verified": 4,
+          "paid": "40000000000000000000000",
+          "at_ms": 1794648632611,
+          "evm_payout": null
+        }
+      },
+      "assertions": [
+        {
+          "name": "claim_epoch landed for a completed epoch",
+          "pass": true,
+          "detail": "epoch 10"
+        },
+        {
+          "name": "host was paid more than 0",
+          "pass": true,
+          "detail": "0.0400 N"
+        },
+        {
+          "name": "at least one verified session behind the claim",
+          "pass": true,
+          "detail": "4"
+        },
+        {
+          "name": "host earned total matches the claim",
+          "pass": true,
+          "detail": "earned 0.0400 N, epochs_paid 1"
+        },
+        {
+          "name": "pool decreased",
+          "pass": true,
+          "detail": "0.4232 N -> 0.3812 N"
+        },
+        {
+          "name": "paid_out total rose",
+          "pass": true,
+          "detail": "0.0400 N"
+        },
+        {
+          "name": "a second claim of the same epoch is refused",
+          "pass": true,
+          "detail": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This epoch is already "
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:30:42.565Z"
+    },
+    {
+      "name": "evm-payout",
+      "title": "claim pays ETH on Base Sepolia through chain signatures",
+      "started_at": "2026-11-14T09:30:42.566Z",
+      "status": "failed",
+      "txs": [
+        {
+          "label": "set_payout_evm (gas-free)",
+          "hash": "4SMyfs7t7bAzcNgRSdGReaKvxhmzmS4FEVKvt5zfGuhD",
+          "url": "https://testnet.nearblocks.io/txns/4SMyfs7t7bAzcNgRSdGReaKvxhmzmS4FEVKvt5zfGuhD",
+          "failure": null
+        },
+        {
+          "label": "set_payout_evm with a malformed address (must be refused)",
+          "hash": "7bzn8WJQ2VUkeGRBQLg8PPYGMZiApqr5Xhc98yV8ZjsL",
+          "url": "https://testnet.nearblocks.io/txns/7bzn8WJQ2VUkeGRBQLg8PPYGMZiApqr5Xhc98yV8ZjsL",
+          "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Address must be 0x plus 40 hex characters\"}}}}"
+        },
+        {
+          "label": "claim_epoch 11 (EVM rail) #1 (gas-free)",
+          "hash": "2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
+          "url": "https://testnet.nearblocks.io/txns/2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
+          "failure": null
+        },
+        {
+          "label": "sign_evm_payout #1 (gas-free)",
+          "hash": "4VkUpQJkRB4HruwFW3X1ot1vXebB5i5pZCezviN45vgE",
+          "url": "https://testnet.nearblocks.io/txns/4VkUpQJkRB4HruwFW3X1ot1vXebB5i5pZCezviN45vgE",
+          "failure": null
+        },
+        {
+          "label": "bump_evm_payout #1 (gas-free)",
+          "hash": "4rWMQp2ubNw4w33uzRhZmP5EKHzKQ16oQSwLXyRGMN9Z",
+          "url": "https://testnet.nearblocks.io/txns/4rWMQp2ubNw4w33uzRhZmP5EKHzKQ16oQSwLXyRGMN9Z",
+          "failure": null
+        },
+        {
+          "label": "Base Sepolia payout",
+          "hash": "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+          "url": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "host_evm_address": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3",
+        "payer_address": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea",
+        "host_evm_key_file": "local/evm/fanhost.key (0600, gitignored, never printed)",
+        "host_eth_before": "0.0",
+        "payer_eth_before": "0.02",
+        "claim attempts epoch 11": [
+          {
+            "n": 1,
+            "outcome": "conclusive",
+            "hash": "2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
+            "detail": "paid 0.0400 N, 4 verified",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          }
+        ],
+        "evm_payout_booked": {
+          "id": 0,
+          "host_id": "lastsave-fanhost.testnet",
+          "epoch": 11,
+          "to": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3",
+          "verified": 4,
+          "value_wei": "40000000000000",
+          "near_debited": "40000000000000000000000",
+          "nonce": null,
+          "status": "Booked",
+          "signed_tx": null,
+          "signed_txs": [],
+          "tx_hash": null,
+          "tx_hashes": [],
+          "max_fee_per_gas": "1000000000",
+          "max_priority_fee_per_gas": "1000000",
+          "booked_at_ms": 1794648730413,
+          "last_signed_ms": 0,
+          "last_error": null
+        },
+        "sign_evm_payout #1": {
+          "status": "Signed",
+          "versions": 1,
+          "last_error": null,
+          "ops_budget_spent": "0.0015 N"
+        },
+        "bump_evm_payout #1": {
+          "status": "Signed",
+          "versions": 2,
+          "last_error": null,
+          "ops_budget_spent": "0.0015 N"
+        },
+        "relay_script_output": [
+          "contract v2dev.lastsave-factory.testnet  EVM address 0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea  next nonce 1  chain 84532",
+          "1 payouts: 0 owed, 0 signing, 1 signed. Base Sepolia head 58635201.",
+          "payout #0 (host lastsave-fanhost.testnet, epoch 11, 0.00004 ETH, nonce 0): broadcast 0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+          "  mined in block 58635246 (success) https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb"
+        ],
+        "basescan": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+        "tx_hash": "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+        "final_payout": {
+          "id": 0,
+          "host_id": "lastsave-fanhost.testnet",
+          "epoch": 11,
+          "to": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3",
+          "verified": 4,
+          "value_wei": "40000000000000",
+          "near_debited": "40000000000000000000000",
+          "nonce": 0,
+          "status": "Signed",
+          "signed_tx": "0x02f87283014a3480831312d0844a817c8082520894fc2c2fe195675cc0f3852eb2813d6877d54026a386246139ca800080c001a018969738274dfc3407fe725976b88cd2eb4d3a96b7865730c0f81207159865f0a00e9e83b24e0e6c26d49fca5b71258b5429bca35950a02cc83cd8883c236576f3",
+          "signed_txs": [
+            "0x02f87283014a3480830f4240843b9aca0082520894fc2c2fe195675cc0f3852eb2813d6877d54026a386246139ca800080c001a014917c899994a40bedfa2aaf2ac5d7ed660509bc16490993c8877d312b4009c2a06378b73d1adcf9dc910b45dac34b6bd002c697270ab4d09313b9c6715eacd08f",
+            "0x02f87283014a3480831312d0844a817c8082520894fc2c2fe195675cc0f3852eb2813d6877d54026a386246139ca800080c001a018969738274dfc3407fe725976b88cd2eb4d3a96b7865730c0f81207159865f0a00e9e83b24e0e6c26d49fca5b71258b5429bca35950a02cc83cd8883c236576f3"
+          ],
+          "tx_hash": "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+          "tx_hashes": [
+            "0x2c988e9de24e39574bed2ec76710e07506a846bd97532a6faea6aa849c3347b6",
+            "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb"
+          ],
+          "max_fee_per_gas": "1250000000",
+          "max_priority_fee_per_gas": "1250000",
+          "booked_at_ms": 1794648730413,
+          "last_signed_ms": 1794648877659,
+          "last_error": null
+        }
+      },
+      "assertions": [
+        {
+          "name": "the payer address (MPC-derived) holds ETH for the payout",
+          "pass": true,
+          "detail": "0.02 ETH https://sepolia.basescan.org/address/0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea"
+        },
+        {
+          "name": "set_payout_evm accepted",
+          "pass": true,
+          "detail": "\"\""
+        },
+        {
+          "name": "set_payout_evm: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-fanhost.testnet"
+        },
+        {
+          "name": "set_payout_evm: lastsave-fanhost.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "host record now holds the EVM address",
+          "pass": true,
+          "detail": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3"
+        },
+        {
+          "name": "a malformed address is refused by the contract",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "claim_epoch 11: every gas-free attempt was signed by the relayer",
+          "pass": true,
+          "detail": "1 attempt(s)"
+        },
+        {
+          "name": "claim_epoch 11: lastsave-fanhost.testnet paid nothing on the gas-free attempts",
+          "pass": true,
+          "detail": "0.0000 N"
+        },
+        {
+          "name": "claim_epoch 11: the ops budget paid OutLayer (fell by at least 0.0200 N per landed call)",
+          "pass": true,
+          "detail": "0.0207 N for 1"
+        },
+        {
+          "name": "claim_epoch landed for a completed epoch on the EVM rail",
+          "pass": true,
+          "detail": "epoch 11"
+        },
+        {
+          "name": "the claim carries an EvmPayout id",
+          "pass": true,
+          "detail": "0"
+        },
+        {
+          "name": "an EvmPayout is Booked for this host and epoch",
+          "pass": true,
+          "detail": "id 0 Booked"
+        },
+        {
+          "name": "the payout goes to the host's EVM address",
+          "pass": true,
+          "detail": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3"
+        },
+        {
+          "name": "value_wei is sessions x demo wei per session",
+          "pass": true,
+          "detail": "40000000000000 wei for 4 verified (0.0400 N debited)"
+        },
+        {
+          "name": "near_debited equals the claim's paid amount",
+          "pass": true,
+          "detail": "0.0400 N"
+        },
+        {
+          "name": "evm_settled rose by exactly the debited NEAR",
+          "pass": true,
+          "detail": "0.0400 N vs 0.0400 N"
+        },
+        {
+          "name": "the pool fell by the debited NEAR plus record storage",
+          "pass": true,
+          "detail": "0.0440 N (debit 0.0400 N)"
+        },
+        {
+          "name": "paid_out (the NEAR rail) did not move",
+          "pass": true,
+          "detail": "0.0400 N"
+        },
+        {
+          "name": "payer address in evm_payout_info matches the config",
+          "pass": true,
+          "detail": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea"
+        },
+        {
+          "name": "sign_evm_payout #1: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-dario.testnet"
+        },
+        {
+          "name": "sign_evm_payout #1: lastsave-dario.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "the payout is Signed by the MPC signer",
+          "pass": true,
+          "detail": "Signed"
+        },
+        {
+          "name": "signed tx: ecrecover gives the contract's payer address",
+          "pass": true,
+          "detail": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea vs 0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea"
+        },
+        {
+          "name": "signed tx: chain 84532, nonce, recipient and value match the payout record",
+          "pass": true,
+          "detail": "nonce 0, to 0xfc2c2fe195675cc0f3852eb2813d6877d54026a3, value 40000000000000"
+        },
+        {
+          "name": "tx_hash stored on chain is keccak(raw)",
+          "pass": true,
+          "detail": "0x2c988e9de24e39574bed2ec76710e07506a846bd97532a6faea6aa849c3347b6"
+        },
+        {
+          "name": "the payout nonce equals the payer's current Base Sepolia nonce",
+          "pass": true,
+          "detail": "0 vs 0"
+        },
+        {
+          "name": "max fee per gas is the configured 1 gwei",
+          "pass": true,
+          "detail": "1000000000"
+        },
+        {
+          "name": "bump_evm_payout #1: outer transaction signed by the relayer",
+          "pass": true,
+          "detail": "relay.lastsave-studio.testnet -> lastsave-dario.testnet"
+        },
+        {
+          "name": "bump_evm_payout #1: lastsave-dario.testnet paid nothing (balance unchanged)",
+          "pass": true,
+          "detail": "delta 0.0000 N"
+        },
+        {
+          "name": "bump_evm_payout re-signed (2 versions on chain)",
+          "pass": true,
+          "detail": "2 versions, Signed"
+        },
+        {
+          "name": "bumped tx: ecrecover gives the contract's payer address",
+          "pass": true,
+          "detail": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea vs 0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea"
+        },
+        {
+          "name": "bumped tx: chain 84532, nonce, recipient and value match the payout record",
+          "pass": true,
+          "detail": "nonce 0, to 0xfc2c2fe195675cc0f3852eb2813d6877d54026a3, value 40000000000000"
+        },
+        {
+          "name": "the bump keeps the nonce and raises the fee by x1.25",
+          "pass": true,
+          "detail": "1000000000 -> 1250000000"
+        },
+        {
+          "name": "the two versions are different transactions",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "relay.mjs broadcast the newest signed tx and it was mined",
+          "pass": true,
+          "detail": "payout #0 (host lastsave-fanhost.testnet, epoch 11, 0.00004 ETH, nonce 0): broadcast 0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb |   mined in block 58635246 (success) https://se"
+        },
+        {
+          "name": "the Base Sepolia receipt is a success",
+          "pass": true,
+          "detail": "block 58635246"
+        },
+        {
+          "name": "the superseded first version has no receipt (only one tx can land)",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "the host's EVM balance rose by exactly value_wei",
+          "pass": true,
+          "detail": "0.00004 ETH vs 0.00004 (https://sepolia.basescan.org/address/0xfc2c2fe195675cc0f3852eb2813d6877d54026a3)"
+        },
+        {
+          "name": "the payer paid value_wei plus gas, nothing else",
+          "pass": false,
+          "detail": "0.000040131250000092 ETH = 0.00004 + gas 0.00000013125"
+        },
+        {
+          "name": "the contract's next_nonce moved past the paid nonce",
+          "pass": true,
+          "detail": "1"
+        }
+      ],
+      "notes": [
+        "the first version was never broadcast, so the bump re-signed an unconfirmed payout without a mempool race (Base confirms in seconds)"
+      ],
+      "ended_at": "2026-11-14T09:35:27.481Z"
+    },
+    {
+      "name": "evm-payout-recheck",
+      "title": "payer cost re-checked with the L1 data fee, payout state read back",
+      "started_at": "2026-11-14T09:55:46.059Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "payer_cost_breakdown_wei": {
+          "value": "40000000000000",
+          "execution_gas": "131250000000",
+          "l1_data_fee": "92",
+          "total": "40131250000092"
+        },
+        "basescan": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb"
+      },
+      "assertions": [
+        {
+          "name": "payout #0 is Signed with 2 versions and its newest hash has a successful receipt",
+          "pass": true,
+          "detail": "block 58635246"
+        },
+        {
+          "name": "payer's funded 0.02 ETH minus its current balance equals value + gas + L1 fee, exactly",
+          "pass": true,
+          "detail": "0.000040131250000092 ETH = 40131250000092 wei"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:55:47.037Z"
+    }
+  ],
+  "unenforced": [
+    "spend cap is only reported (balances_start/end), not blocked by code"
+  ],
+  "v2": true,
+  "balances_start": {
+    "lastsave-mira.testnet": "0.7333 N",
+    "lastsave-kofi.testnet": "0.7370 N",
+    "lastsave-yuna.testnet": "0.7347 N",
+    "lastsave-dario.testnet": "0.7484 N",
+    "lastsave-fanhost.testnet": "0.9533 N"
+  },
+  "resumed_at": [
+    "2026-11-14T09:27:57.088Z",
+    "2026-11-14T09:35:43.667Z",
+    "2026-11-14T09:55:46.059Z"
+  ],
+  "superseded": [
+    {
+      "name": "host",
+      "title": "community host restores progress",
+      "started_at": "2026-11-14T09:10:03.088Z",
+      "status": "error",
+      "txs": [],
+      "readback": {},
+      "assertions": [
+        {
+          "name": "an on-chain snapshot exists to restore",
+          "pass": true,
+          "detail": "seq 2"
+        },
+        {
+          "name": "phase completed without an unexpected error",
+          "pass": false,
+          "detail": "host failed: fetch failed"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T09:12:51.610Z"
+    }
+  ],
+  "balances_end": {
+    "lastsave-mira.testnet": "0.4831 N",
+    "lastsave-kofi.testnet": "0.4867 N",
+    "lastsave-yuna.testnet": "0.5844 N",
+    "lastsave-dario.testnet": "0.5981 N",
+    "lastsave-fanhost.testnet": "0.3932 N",
+    "lastsave-studio.testnet": "6.1613 N",
+    "relay.lastsave-studio.testnet": "0.5815 N"
+  },
+  "net_cost_players_and_fanhost": "-0.0196 N",
+  "finished_at": "2026-11-14T09:56:00.228Z",
+  "aborted_reruns": [
+    {
+      "name": "evm-payout",
+      "title": "claim pays ETH on Base Sepolia through chain signatures",
+      "started_at": "2026-11-14T09:36:00.881Z",
+      "status": "aborted",
+      "txs": [],
+      "readback": {},
+      "assertions": [],
+      "notes": [
+        "rerun stopped by the operator: epochs 12 and 13 had no verified sessions on the restarted host; the first run's payout #0 already settled"
+      ]
+    }
+  ],
+  "totals": {
+    "assertions": 174,
+    "passed": 173,
+    "failed": 1,
+    "phases_passed": 15,
+    "phases_failed": 1
+  }
+}
