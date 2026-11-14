@@ -18,7 +18,7 @@ export function Root() {
   return (
     <>
       <Composition id="LastSave" component={Film} durationInFrames={TOTAL_FRAMES} fps={30} width={1920} height={1080} />
-      <Composition id="LastSaveX" component={XCut} durationInFrames={X_TOTAL} fps={30} width={1920} height={1080} />
+      <Composition id="LastSaveX" component={XCut} defaultProps={{ score: "c1" as const }} durationInFrames={X_TOTAL} fps={30} width={1920} height={1080} />
       <Composition id="LastSaveVertical" component={Vertical} durationInFrames={VERTICAL_FRAMES} fps={30} width={1080} height={1920} />
       <Folder name="Scenes">
         <Composition id="XO" component={XOpen} durationInFrames={f(XOPEN.dur)} fps={30} width={1920} height={1080} />

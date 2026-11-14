@@ -32,3 +32,8 @@ export const X_SCORE: ScoreAct[] = [
   { file: "music/v1/c1-act1x.mp3", from: 0, to: sec("S09") + 15.2, fadeIn: 0.6, fadeOut: 0.1, offset: SCORE_SKIP },
   { file: "music/v1/c1-act2x.mp3", from: sec("S10") + 0.37, to: X_TOTAL / 30, fadeIn: 0.6, fadeOut: 2.0 },
 ];
+export type ScoreCandidate = "c1" | "c2" | "c3";
+/** The X score with another candidate under it (for the final score pick). c2/c3 have no X-length re-compositions yet, so
+ * they use their full-film acts: act 1's opening sections are the same plan, act 2 won't resolve on the last frame. */
+export const xScore = (c: ScoreCandidate): ScoreAct[] =>
+  c === "c1" ? X_SCORE : X_SCORE.map((m) => ({ ...m, file: m.file.replace("c1-act1x", `${c}-act1`).replace("c1-act2x", `${c}-act2`) }));
