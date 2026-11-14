@@ -10,7 +10,7 @@ import { Slot, slotSource } from "../../film/Slot";
 import { DialupBox, DIALUP_FRAMES } from "./g2/Dialup";
 import { scene } from "../../film/timeline";
 import { S03 } from "./S03";
-import { short, FACTS } from "./g2/facts";
+import { short, FACTS, STORE_SIGNER } from "./g2/facts";
 import { Flash } from "./g2/Flash";
 import { CardInSpace, HELD, heldPose } from "./g2/heldCard";
 import { CARD_H } from "./g2/Licence";
@@ -105,6 +105,11 @@ export function S04() {
           {f >= STORE_CUT && f < LIB && <Sequence from={STORE_CUT} layout="none"><Slot slot="store" plate="store.png" from={STORE_B_FROM} /></Sequence>}
           {f >= LIB && f < PRINT && <Sequence from={LIB} layout="none"><Slot slot="library" plate="library.png" from={LIB_FROM} /></Sequence>}
           {f < LIB && plateStore && <StandInToast f={f} />}
+          {STORE_SIGNER === "demo" && f >= BUY && f < LIB && ( // honest caption on the buy beat (22 page px = 28.6 px at 1.3×), held from the click to the library cut so it can be read (~1.4 s)
+            <div style={{ position: "absolute", left: 1552, top: 452, opacity: stepped(prog(f, BUY, BUY + 4), 4) * (1 - prog(f, LIB - 4, LIB)) }}>
+              <Mono size={22} color={T.muted} style={{ lineHeight: 1.35 }}>{"signed by the judge-demo\nsigner · no wallet"}</Mono>
+            </div>
+          )}
           {f < STORE + 12 && ( // the status title decodes WHY STUDIOS OPT IN → STORE as the take arrives (25 ms/char)
             <div style={{ position: "absolute", left: 660, top: 70, width: 600, height: 32, background: T.ember, display: "grid", placeItems: "center" }}>
               <Label size={12} color={T.statusInk}>{decode("STORE", prog(f, STORE, STORE + 8), f)}</Label>

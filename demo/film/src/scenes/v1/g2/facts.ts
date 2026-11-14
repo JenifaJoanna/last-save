@@ -35,3 +35,7 @@ export const FACTS = {
 
 /** Short hash form `abcd1234…wxyz`. */
 export const short = (f: Fact, head = 8, tail = 4) => shortHash(f.v, head, tail);
+
+/** Who signed the `store` take's buy: "demo" = the in-app judge-demo signer (S04 says so on the buy beat), "wallet" = a
+ * real external wallet (no label; the take shows the wallet approval itself). */
+export const STORE_SIGNER: "wallet" | "demo" = "demo";
