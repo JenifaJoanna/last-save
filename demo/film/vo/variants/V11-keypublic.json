@@ -1,0 +1,106 @@
+{
+ "id": "V11",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "The build is stored for good, on Walrus and on the Internet Archive, and now its key is public.",
+ "heard": "The build is stored for good on Walrus and on the Internet Archive, and now its key is public.",
+ "match": true,
+ "lastWordEnd": 6.68,
+ "words": [
+  {
+   "w": "The",
+   "s": 0.16,
+   "e": 0.2
+  },
+  {
+   "w": "build",
+   "s": 0.28,
+   "e": 0.58
+  },
+  {
+   "w": "is",
+   "s": 0.64,
+   "e": 0.74
+  },
+  {
+   "w": "stored",
+   "s": 0.82,
+   "e": 1.06
+  },
+  {
+   "w": "for",
+   "s": 1.14,
+   "e": 1.22
+  },
+  {
+   "w": "good",
+   "s": 1.32,
+   "e": 1.54
+  },
+  {
+   "w": "on",
+   "s": 2.08,
+   "e": 2.2
+  },
+  {
+   "w": "Walrus",
+   "s": 2.26,
+   "e": 2.74
+  },
+  {
+   "w": "and",
+   "s": 2.96,
+   "e": 3.18
+  },
+  {
+   "w": "on",
+   "s": 3.22,
+   "e": 3.3
+  },
+  {
+   "w": "the",
+   "s": 3.34,
+   "e": 3.4
+  },
+  {
+   "w": "Internet",
+   "s": 3.44,
+   "e": 3.72
+  },
+  {
+   "w": "Archive,",
+   "s": 3.82,
+   "e": 4.26
+  },
+  {
+   "w": "and",
+   "s": 4.84,
+   "e": 4.96
+  },
+  {
+   "w": "now",
+   "s": 5.02,
+   "e": 5.26
+  },
+  {
+   "w": "its",
+   "s": 5.56,
+   "e": 5.74
+  },
+  {
+   "w": "key",
+   "s": 5.8,
+   "e": 6.04
+  },
+  {
+   "w": "is",
+   "s": 6.1,
+   "e": 6.24
+  },
+  {
+   "w": "public.",
+   "s": 6.3,
+   "e": 6.68
+  }
+ ]
+}
