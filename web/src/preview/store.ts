@@ -100,7 +100,7 @@ export async function act(method: string, args: Record<string, unknown>, label: 
       sfx("scan"); await wait(2400); sfx("confirm"); if (i < at("paid")) goto("paid", "fanhost");
       return { ok: true, title: label, body: `The enclave verified 3 holder sessions. ${gasless}` };
     case "set_payout_evm":
-      await wait(700); sfx("confirm"); if (world.hosts[0]) { world.hosts[0].payout_evm = args.address; emit(); }
+      await wait(700); sfx("confirm"); if (world.hosts[0]) { world.hosts[0].evm_address = args.address; emit(); }
       return { ok: true, title: label, body: `Future epochs pay out on Base Sepolia. ${gasless}` };
     case "sign_evm_payout": case "bump_evm_payout":
       sfx("scan"); await wait(2400); sfx("unlock"); if (i < at("evm")) goto("evm", "fanhost");

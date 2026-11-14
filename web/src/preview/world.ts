@@ -42,7 +42,7 @@ function base(now: number): World {
       reports_in_window: 0, reports_needed: 2, current_epoch: 0,
     },
     licences: {}, hosts: [], activity: [], tokens: [], snapshot: null, keys: 0,
-    evmInfo: { address: EVM_ADDRESS, next_nonce: 0, mpc: "v1.signer-prod.testnet", path: "lastsave/host-payouts", chain_id: 84532, contract: "lastsave-licence.testnet", demo_wei_per_session: "10000000000000" },
+    evmInfo: { address: EVM_ADDRESS, next_nonce: 0, mpc: "v1.signer-prod.testnet", path: "lastsave/host-payouts", chain_id: 84532, derivation_account: "lastsave-licence.testnet", demo_wei_per_session: "10000000000000" },
     evmPayouts: [],
     instances: [
       { name: "lastsave-licence", account_id: "lastsave-licence.lastsave-factory.testnet", title: "Ember Rift", studio: acct("studio"), keys: 0, created_at_ms: now - 3 * 3600e3 },
@@ -121,7 +121,7 @@ export const STEPS: Step[] = [
     ev(w, t - 30e3, "claim", "paid", `${acct("fanhost")} epoch 8: 3 verified, paid ${Y(0.03)}`);
   } },
   { id: "evm", label: "Next epoch paid on Base Sepolia, signed by NEAR's MPC network", short: "Paid (Base)", persona: "fanhost", apply: (w, t) => {
-    Object.assign(w.hosts[0], { epochs_paid: 2, sessions_paid: 6, payout_evm: HOST_EVM });
+    Object.assign(w.hosts[0], { epochs_paid: 2, sessions_paid: 6, evm_address: HOST_EVM });
     Object.assign(w.info.totals, { pool: Y(0.388), evm_settled: Y(0.03) });
     w.evmInfo.next_nonce = 1;
     w.evmPayouts.push({ id: 0, host_id: acct("fanhost"), epoch: 9, to: HOST_EVM, verified: 3, value_wei: "30000000000000", near_debited: Y(0.03), nonce: 0, status: "Signed",

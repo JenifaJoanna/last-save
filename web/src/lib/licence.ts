@@ -58,7 +58,7 @@ export const normalizeLicence = (raw: unknown): LicenceView | null => {
 export interface HostView { hostId: string; endpoint: string; registeredAt: number; epochsPaid: number; sessionsPaid: number; earned: string; payoutEvm: string | null }
 export const normalizeHosts = (raw: unknown): HostView[] => (Array.isArray(raw) ? raw : []).map((h) => {
   const r = o(h);
-  return { hostId: s(r.host_id), endpoint: s(r.endpoint), registeredAt: n(r.registered_at_ms), epochsPaid: n(r.epochs_paid), sessionsPaid: n(r.sessions_paid), earned: s(r.earned, "0"), payoutEvm: s(r.payout_evm) || null };
+  return { hostId: s(r.host_id), endpoint: s(r.endpoint), registeredAt: n(r.registered_at_ms), epochsPaid: n(r.epochs_paid), sessionsPaid: n(r.sessions_paid), earned: s(r.earned, "0"), payoutEvm: s(r.evm_address ?? r.payout_evm) || null };
 });
 
 export interface Activity { kind: string; at: number; text: string; detail: J }
@@ -128,14 +128,27 @@ export const useEvm = (ms = 6000) => usePoll(async () => {
   const [i, p] = await Promise.all([view("evm_payout_info"), view<unknown[]>("get_evm_payouts", { from_index: 0, limit: 20 })]);
   if (!i) return null;
   const r = o(i);
-  const info: EvmInfo = { address: s(r.address), nextNonce: n(r.next_nonce), mpc: s(r.mpc), path: s(r.path), chainId: n(r.chain_id, 84532), contract: s(r.contract, CONTRACT), weiPerSession: s(r.demo_wei_per_session ?? r.wei_per_session, "0") };
+  const info: EvmInfo = { address: s(r.address), nextNonce: n(r.next_nonce), mpc: s(r.mpc), path: s(r.path), chainId: n(r.chain_id, 84532), contract: s(r.derivation_account ?? r.contract, CONTRACT), weiPerSession: s(r.demo_wei_per_session ?? r.wei_per_session, "0") };
   const payouts: EvmPayout[] = (Array.isArray(p) ? p : []).map((x) => {
     const q = o(x);
     return { id: n(q.id), hostId: s(q.host_id), epoch: n(q.epoch), to: s(q.to), verified: n(q.verified), valueWei: s(q.value_wei, "0"), nearDebited: s(q.near_debited, "0"),
       nonce: q.nonce === null || q.nonce === undefined ? null : n(q.nonce), status: s(q.status, "Owed"), signedTx: s(q.signed_tx) || null, txHash: s(q.tx_hash) || null, relayed: q.relayed === true };
   });
-  return { info, payouts };
+  return { info, payouts: await withReceipts(payouts) };
 }, ms);
+
+/** A payout counts as landed once Base Sepolia has a receipt for any of its signed versions (checked live, cached). */
+const landed = new Set<string>();
+async function withReceipts(ps: EvmPayout[]): Promise<EvmPayout[]> {
+  if (PREVIEW) return ps;
+  await Promise.all(ps.filter((p) => p.txHash && !p.relayed && !landed.has(p.txHash)).map(async (p) => {
+    try {
+      const r = await fetch("https://sepolia.base.org", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_getTransactionReceipt", params: [p.txHash] }) });
+      if ((await r.json())?.result) landed.add(p.txHash!);
+    } catch { /* RPC unreachable: show as signed */ }
+  }));
+  return ps.map((p) => (p.txHash && landed.has(p.txHash) ? { ...p, relayed: true } : p));
+}
 
 export const FACTORY: string = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
 export interface Instance { name: string; accountId: string; title: string; studio: string; keys: number; createdAt: number }
