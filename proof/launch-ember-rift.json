@@ -156,6 +156,31 @@
           "bytes": 460
         }
       ]
+    },
+    {
+      "step": "archive",
+      "at": "2026-11-14T20:30:01.627Z",
+      "encrypted": false,
+      "item": "ember-rift-server-ember-rift-lastsave",
+      "url": "https://archive.org/details/ember-rift-server-ember-rift-lastsave",
+      "build_hash": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2",
+      "files": [
+        {
+          "name": "README.txt",
+          "sha256": "ea38eb58bcd1e46345cd6dc3cd335b8e42942bcd6eee143c29a7d5903ef8a9d6",
+          "bytes": 633
+        },
+        {
+          "name": "ember-rift-server-f357f5fa0fa4.tar.gz",
+          "sha256": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2",
+          "bytes": 271836
+        },
+        {
+          "name": "progress-snapshot-6.json",
+          "sha256": "798d96de899928e6439c9b513faa9d2d7b9c2f3fdc709a788c7816755ee907bb",
+          "bytes": 460
+        }
+      ]
     }
   ]
 }

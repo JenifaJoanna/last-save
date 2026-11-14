@@ -29,10 +29,16 @@ function keys() {
 async function put(name, body, meta, auth) {
   const headers = { authorization: auth, "x-amz-auto-make-bucket": "1", "x-archive-queue-derive": "0", "x-archive-size-hint": String(body.length), "content-type": "application/octet-stream" };
   if (meta) for (const [k, v] of Object.entries(meta)) headers[`x-archive-meta-${k}`] = `uri(${encodeURIComponent(v)})`;
-  for (let attempt = 0; attempt < 5; attempt++) {
+  // SlowDown (503) is archive.org's global rationing (its whole task queue at the limit), not this item: back off up to
+  // ~15 min, honouring Retry-After when sent.
+  for (let attempt = 0; attempt < 20; attempt++) {
     const r = await fetch(`https://s3.us.archive.org/${ITEM}/${encodeURIComponent(name)}`, { method: "PUT", headers, body });
     if (r.ok) return;
-    if (r.status === 503) { await new Promise((res) => setTimeout(res, 4000 * (attempt + 1))); continue; } // SlowDown
+    if (r.status === 503) {
+      const after = Number(r.headers.get("retry-after")) * 1000;
+      await new Promise((res) => setTimeout(res, Math.min(60_000, after > 0 ? after : 5000 * 2 ** Math.min(attempt, 4))));
+      continue;
+    }
     throw new Error(`upload ${name} failed: ${r.status} ${(await r.text()).slice(0, 200)}`);
   }
   throw new Error(`upload ${name}: archive.org kept answering SlowDown`);
