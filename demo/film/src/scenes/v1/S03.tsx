@@ -17,16 +17,18 @@ import { S02_END_VEIL } from "./S02";
 const S02_LEN = 204;
 /** Each EC card's backdrop (AI-generated line-art textures, see SOURCES.md): fixed behind the scrolling cards, tinted,
  * at low opacity, crossfading as each card arrives. Drawn only once the files exist. */
-const BACKDROPS = ["plates/eu/law", "plates/eu/ask", "plates/eu/refund"].map((b) =>
-  getStaticFiles().find((x) => x.name === `${b}.png` || x.name === `${b}.jpg`)?.name ?? null);
+const BACKDROP_NAMES = ["plates/eu/law", "plates/eu/ask", "plates/eu/refund"];
 function Backdrops({ page }: { page: number }) {
+  // read the static-file list at render time (at module load it can still be empty)
+  const files = getStaticFiles();
+  const BACKDROPS = BACKDROP_NAMES.map((b) => files.find((x) => x.name === `${b}.png` || x.name === `${b}.jpg`)?.name ?? null);
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       {BACKDROPS.map((file, i) => {
         const o = file ? Math.max(0, 1 - Math.abs(page - (i + 1))) : 0;
         return o > 0.001 && file ? (
           <Img key={file} src={staticFile(file)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
-            opacity: 0.2 * o, filter: "saturate(0.8) sepia(0.15) hue-rotate(-12deg)", mixBlendMode: "screen" }} />
+            opacity: 0.6 * o, filter: "saturate(0.9)", mixBlendMode: "screen" }} />
         ) : null;
       })}
     </AbsoluteFill>
