@@ -164,6 +164,7 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 | Game server unit / integration (real `wrangler dev`, 4–9 clients, reconnect, persistence, `/attest`, snapshots) | 40 / 40 · 15 / 15 |
 | Server bundle crypto + tar; host CLI incl. mirror fallback and provenance | 6 / 6 · 30 / 30 |
 | End-to-end on NEAR testnet (`pnpm e2e`, dev instance: buy → play → probes → kill → death → release → refund/pledge → post-shutdown buy → fan host → claim) | 98 / 98 assertions |
+| End-to-end on the v2 dev instance (`proof/v2-e2e.md`): v1 lifecycle + gas-free relayer + relayer refusals + factory + an MPC-signed, fee-bumped Base Sepolia payout mined on-chain | 173 / 174 (the one miss is a test assertion that ignored Base's L1 data fee; re-verified to the wei) |
 | The locked judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
 
 ## What is real and what is rehearsed
