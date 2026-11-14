@@ -23,25 +23,23 @@ export const R = { enclave: r("enclave"), confirms: r("confirms"), gone: r("gone
 /** Flatline height inside the ScreenFrame content area (px from the content top). The dead sun sits on it. */
 export const FL = 400;
 
-/** Studio terminal takes are replayed by demo/capture/term.html: an 1800x980 window centred in 1920x1080. We show its
- * top 420 px (status bar + 10 rows), where every line of these short takes prints. */
-export const TERM_CROP = { x: 60 / 1920, y: 50 / 1080, w: 1800 / 1920, h: 420 / 1080 };
+/** Studio terminal takes (raw/t-kill.mp4, raw/t-404.mp4: 3840×2160, term.html replay). Window x 62–1858 on the 1920
+ * basis; text from x 252, rows 33 px apart from y 151. We show the bar and the first ~6 rows. */
+export const TERM_CROP = { x: 62 / 1920, y: 52 / 1080, w: 1796 / 1920, h: 290 / 1080 };
+/** Take rows (1920 basis): left x and row centre y of row i. */
+export const TERM_ROW = (i: number) => ({ x: 252, y: 151 + 33 * i });
 
-/** Stand-in drawings used only while the t-kill / t-404 takes are missing (the take replaces them, lines and all).
- * t-kill lines are scripts/ops/kill-official.sh's own output. The worker and the CDN URL are the run's (run-facts.json). */
-export const KILL_LINES: { t: string; c: "gold" | "text" | "dead" | "muted" }[] = [
-  { t: `$ studio shutdown --server ${rs("officialWorker")}`, c: "gold" },
-  { t: "Stopping the official Ember Rift server…", c: "text" },
-  { t: `✕ official server deleted (${rs("officialWorker")})`, c: "dead" },
-  { t: "No announcement. No end-of-service call.", c: "muted" },
-];
-export const GONE_LINES: { t: string; c: "gold" | "text" | "dead" | "muted" }[] = [
-  { t: `$ curl -I ${rs("cdnUrl")}`, c: "gold" },
-  { t: "HTTP/2 530", c: "dead" },
-];
-/** Where "HTTP/2 530" sits in the t-404 take, as a row index of TERM rows (row 0 = first line under the bar). The
- * "gone" label hangs to the right of that row. TUNE: check against the real take. */
-export const GONE_ROW = 1;
+/** Cut sheet, from the .casts. Scene frames → take seconds. Only idle prompt time is dropped, plus one labelled jump
+ * inside t-kill: the wrangler delete runs 2.9 s (1.65 → 4.54 s); we keep 1.0 s of it and label the rest. */
+export const KILL_CUTS = [
+  { at: K.dark - 1, from: 0.85 }, //  command prints 1.04 s (f62), "Stopping…" 1.65 s (f80)
+  { at: K.stop - 14, from: 4.2, label: "+2.2 s" }, // "✕ official server deleted" 4.54 s → f100, on "servers stop"
+] as const;
+export const GONE_CUT = { at: K.disappears - 10, from: 0.7 }; // curl + "HTTP/2 530" print at 1.01/1.05 s → f151
+/** The two lines lifted out of the takes (their own text), ≥ 56 px, each held ≥ 45 f. */
+export const LIFT = { deleted: "✕ official server deleted", status: "HTTP/2 530", tag: "gone", deletedRow: 2, statusRow: 1 };
+/** lost (raw/lost.mp4, 4.1 s): after the kill, a new sign-in to the official server; the client's own overlay. */
+export const LOST = { from: 0, overlay: "Connection lost — reconnecting", sub: "the server is not responding", lead: "Rejoin after the shutdown" };
 
 /** The probes take: segments cut in at `at` (scene frame; clamped to the power-on), playing from `from` s. A label marks
  * every real time jump. `from` values fit the preview capture (17.5 s: alive probe 0–2 s, enclave checking 2–5 s,
@@ -73,13 +71,6 @@ export const KEY_POSE = { cx: 960, cy: 540, size: 36, eyebrowTop: 360, color: "#
 /** x-release (OutLayer on_execution_response receipt): the Result block (key, status). TUNE for the v2 take: v1 shows
  * it at 10 s, x 380–1540, y 780–1010. */
 export const XREL = { from: 10.0, crop: { x: 380 / 1920, y: 780 / 1080, w: 1160 / 1920, h: 230 / 1080 } };
-
-/** Take in-points (seconds) for the opening of S09. match continues S08 exactly: S08 plays the take from
- * MATCH_FROM − 32/30 s (4 − 1.067) for 240 f and ends at scale 1.02 about the arena (980, 560). TUNE for the v2
- * takes: KILL so the delete line prints near "stop"; GONE so `HTTP/2 530` prints on "disappears"; LOST so the
- * CONNECTION LOST overlay is already up when the terminal window closes. */
-export const TAKE_FROM = { match: 4 - 32 / 30 + 8, kill: 0, gone: 0, lost: 0 } as const;
-export const ARENA = { x: 980, y: 560, scale: 1.02 } as const;
 
 /** The release take (/status DEAD → Release → RELEASED). S10 opens on the frame the screen turns gold (preview: 6.6 s;
  * it scrolls to the escrow card at ~8 s).

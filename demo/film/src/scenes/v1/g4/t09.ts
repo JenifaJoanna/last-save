@@ -4,15 +4,17 @@ import { K } from "./facts";
 export const S9 = {
   dial: K.goes - 12, //            dial-up box (720 ms) types the studio-ops request
   win: K.dark - 1, //              terminal window opens on "dark"
-  killAt: K.dark + 2, //           t-kill command types; the delete line lands on "servers stop"
-  chipOff: K.stop - 2, //          S08's "Official server · Online" chip flips to Offline
-  goneAt: K.disappears - 20, //    t-404: curl types, HTTP/2 530 prints on "disappears"
-  goneTag: K.disappears + 2, //    the "gone" label
-  winClose: K.word - 31, //        window collapses (8 f), CONNECTION LOST underneath
-  collapse: K.alive + 2, //        the whole game client powers off (10 f) + bloom
-  redden: K.alive + 12, //         the line stretches to the screen and turns red (10 f)
-  drop: K.alive + 22, //           the line drops onto the flatline (16 f)
-  powerOn: K.only + 18, //         the status page opens vertically out of the flatline (8 f)
+  pull: [4, K.dark - 4] as const, // the camera eases out of S08's 1.75× player crop to the whole match
+  lift1: K.stop - 4, //            "✕ official server deleted" prints in the take (f100) and lifts to 64 px
+  lift2: K.disappears, //          "HTTP/2 530 · gone" lifts (the take prints it on f151)
+  liftOut: K.disappears + 46, //   both lifted lines print out (held 97 f and 46 f)
+  winClose: K.disappears + 49, //         the terminal window collapses (8 f)
+  lost: K.disappears + 57, //            hard cut to the lost take: a new sign-in after the shutdown
+  rejoin: K.disappears + 59, //          "Rejoin after the shutdown → Connection lost — reconnecting" (≥ 56 px)
+  collapse: K.alive + 14, //       the client powers off (10 f) + bloom
+  redden: K.alive + 24, //         the line reddens and narrows to the screen (10 f)
+  drop: K.alive + 34, //           the line drops onto the flatline (12 f)
+  powerOn: K.only + 20, //         the status page opens vertically out of the flatline (8 f)
   lift: K.checks - 4, //           the take dims, the probe log lifts over it
   probe: [K.fail - 3, K.three - 2, K.times - 2], // PROBE 1/3, 2/3, 3/3 print
   fold: K.contract - 9, //         the status page folds back into the flatline (8 f)

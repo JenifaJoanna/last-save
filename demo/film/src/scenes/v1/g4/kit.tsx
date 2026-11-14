@@ -2,10 +2,9 @@
 // (with a drawn stand-in until the take lands), the dead sun and the bracket corners. All frame-driven.
 import type { CSSProperties, ReactNode } from "react";
 import { Easing, interpolate, Sequence, useCurrentFrame } from "remotion";
-import { Slot, slotSource } from "../../../film/Slot";
+import { Slot } from "../../../film/Slot";
 import { Label, Mono } from "../../../ds/type";
 import { EASE_OUT, stepped, T } from "../../../ds/tokens";
-import { TERM_CROP } from "./facts";
 
 export const out = Easing.bezier(...EASE_OUT);
 const cl = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -64,42 +63,6 @@ export function CrtWindow({ open, close, dur = 8, x, y, w, h, tilt = 0, children
         <div style={{ position: "absolute", left: -40, right: -40, top: h / 2 - 2, height: 4, borderRadius: 2, background: "#fff4ee", opacity: bloom,
           boxShadow: "0 0 24px rgba(255,236,228,0.9), 0 0 60px rgba(255,201,74,0.35)" }} />
       )}
-    </div>
-  );
-}
-
-const TONE = { gold: T.gold, text: T.text, dead: T.dead, muted: T.muted } as const;
-type Line = { t: string; c: keyof typeof TONE };
-
-/** A studio terminal take (term.html replay), cropped to its top rows. While the take is missing it draws the same
- * window in take pixels (1800×420) with the lines printing from `at`, gap `gap` frames; the first line types. */
-export function TermTake({ slot, from = 0, lines, at, gap = 9, title, w, startAt = at }: { slot: string; from?: number; lines: Line[]; at: number; gap?: number; title: string; w: number; startAt?: number }) {
-  const f = useCurrentFrame();
-  if (slotSource(slot).kind !== "none") return <SlotAt at={startAt} slot={slot} from={from} crop={TERM_CROP} />;
-  const s = w / 1800;
-  const typedN = Math.floor(lin(f, at, at + 10) * lines[0].t.length);
-  return (
-    <div style={{ position: "absolute", inset: 0, background: T.bezel }}>
-      <div style={{ position: "absolute", left: 0, top: 0, width: 1800, height: 420, transform: `scale(${s})`, transformOrigin: "0 0", padding: 10, boxSizing: "border-box" }}>
-        <div style={{ height: 410, borderRadius: "14px 14px 0 0", overflow: "hidden", background: T.ink }}>
-          <div style={{ height: 40, background: T.ember, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", padding: "0 22px" }}>
-            <Label size={15} weight={700} color={T.statusInk}>LS-0001 · Terminal</Label>
-            <Label size={15} weight={700} color={T.statusInk}>{title}</Label>
-            <Label size={15} weight={700} color={T.statusInk} style={{ justifySelf: "end" }}>Online</Label>
-          </div>
-          <div style={{ padding: "18px 26px" }}>
-            {lines.map((l, i) => {
-              const show = i === 0 ? f >= at : f >= at + 10 + i * gap;
-              if (!show) return null;
-              const txt = i === 0 ? l.t.slice(0, typedN) : l.t;
-              const caret = i === 0 && typedN < l.t.length;
-              return <Mono key={l.t} size={26} color={TONE[l.c]} weight={l.c === "gold" ? 600 : 400} style={{ lineHeight: "34px" }}>{txt}{caret && <span style={{ color: T.gold }}>█</span>}</Mono>;
-            })}
-            {f >= at + 10 + lines.length * gap && Math.floor(f / 8) % 2 === 0 && <Mono size={26} color={T.text} style={{ lineHeight: "34px" }}>█</Mono>}
-          </div>
-        </div>
-      </div>
-      <Label size={14} color={T.faint} style={{ position: "absolute", right: 14, bottom: 10, background: "rgba(10,8,20,0.7)", padding: "3px 8px", borderRadius: 3 }}>placeholder · {slot}</Label>
     </div>
   );
 }

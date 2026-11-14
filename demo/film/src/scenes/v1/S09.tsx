@@ -14,13 +14,13 @@ import { CHROME_FOLLOWS_CONTRACT } from "./g4/facts";
 
 function Dead() {
   const f = useCurrentFrame();
-  const lineOn = (f >= S9.drop + 16 && f < S9.powerOn + 4) || f >= S9.fold + 6;
+  const lineOn = (f >= S9.drop + 12 && f < S9.powerOn + 4) || f >= S9.fold + 6;
   const dip = S9.flicker.some((d) => f >= d && f < d + 2);
   return (
     <AbsoluteFill>
       <StatusTake />
       <Hero />
-      {lineOn && <Flatline from={S9.drop + 16} />}
+      {lineOn && <Flatline from={S9.drop + 12} />}
       <ProbeLog />
       {dip && <AbsoluteFill style={{ background: T.void, opacity: 0.88 }} />}
     </AbsoluteFill>
@@ -37,7 +37,7 @@ export function S09() {
           <Dead />
         </ScreenFrame>
       )}
-      {f < S9.drop + 18 && <KillOpen />}
+      {f < S9.drop + 14 && <KillOpen />}
     </AbsoluteFill>
   );
 }

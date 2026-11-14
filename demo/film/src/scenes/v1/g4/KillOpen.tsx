@@ -1,75 +1,64 @@
-// S09 part 1: the live match full-frame; on "goes dark" the studio's terminal dials up over it (t-kill, then t-404
-// with HTTP/2 530 labelled "gone"); the window collapses onto CONNECTION LOST; then the whole game client powers off
-// like a CRT into a white line that reddens and drops onto the flatline (style frame A, at full-frame scale).
+// S09 part 1: the live match (S08's last pose, then a pull back to the whole arena); on "goes dark" the studio's
+// terminal dials up over it: t-kill ("✕ official server deleted" lifted on "servers stop"), t-404 ("HTTP/2 530 · gone"
+// lifted on "disappears"). The match in progress keeps playing behind the window (deleting the Worker drops new
+// connections only). The window closes on a hard cut to the lost take, a new sign-in after the shutdown, labelled as
+// such; then that client powers off like a CRT into a line that reddens and drops onto the flatline (style frame A).
+import type { ReactNode } from "react";
 import { AbsoluteFill, Easing, useCurrentFrame } from "remotion";
-import { slotSource } from "../../../film/Slot";
-import { Label, Mono } from "../../../ds/type";
+import { Label } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
-import { ARENA, FL, GONE_LINES, GONE_ROW, KILL_LINES, TAKE_FROM } from "./facts";
-import { Bracket, CrtWindow, DialBox, lin, out, printIn, SlotAt, TermTake } from "./kit";
+import { scene } from "../../../film/timeline";
+import { MATCH_CROP, MATCH_CUT, MATCH_FROM, playerAt } from "../g3/match";
+import { FL, GONE_CUT, KILL_CUTS, LOST, TERM_CROP } from "./facts";
+import { KillLines, RejoinLabel, WIN } from "./KillLift";
+import { Bracket, CrtWindow, DialBox, lin, out, printIn, SlotAt } from "./kit";
 import { S9 } from "./t09";
 
-const WIN = { x: 120, y: 344, w: 1680, h: 392 }; // term take top band (1800×420) at 0.933
-const s = WIN.w / 1800;
+const inOut = Easing.inOut(Easing.cubic);
+const S08_END = scene("S08").frames; // S09 f0 continues S08's take time and its 1.75× player crop
+const MATCH_AT0 = MATCH_FROM + (S08_END - MATCH_CUT) / 30;
+const START = (() => {
+  const p = playerAt(MATCH_AT0), m = 8 / MATCH_CROP;
+  return { x: Math.min(1920 - 960 / MATCH_CROP - m, Math.max(960 / MATCH_CROP + m, p.x)), y: Math.min(1080 - 540 / MATCH_CROP - m, Math.max(540 / MATCH_CROP + m, p.y)) };
+})();
 
-/** Stand-in for the game client's CONNECTION LOST overlay, drawn only while the `lost` take is missing. */
-function LostStandIn({ at }: { at: number }) {
+function MatchCam({ children }: { children: ReactNode }) {
   const f = useCurrentFrame();
-  if (slotSource("lost").kind === "raw" || f < at) return null;
-  return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", background: `rgba(10,8,20,${0.55 * printIn(f, at)})` }}>
-      <div style={{ opacity: printIn(f, at), textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-        <Label size={64} weight={700} color={T.text} track={0.14}>Connection lost</Label>
-        <Mono size={24} color={T.muted}>official server unreachable · reconnecting…</Mono>
-      </div>
-    </AbsoluteFill>
-  );
-}
-
-/** S08's LS-0001 chip under the game's own server chip, carried over; it flips to Offline when the servers stop. */
-function ServerChip() {
-  const f = useCurrentFrame();
-  const off = f >= S9.chipOff;
-  const c = off ? T.dead : T.alive;
-  const blink = Math.floor(f / 36) % 2 === 0;
-  const p = off ? printIn(f, S9.chipOff) : 1;
-  return (
-    <div style={{ position: "absolute", right: 18, top: 64, display: "flex", alignItems: "center", gap: 10, padding: "9px 14px",
-      background: "rgba(18,14,34,0.88)", border: `1px solid ${T.line2}`, borderLeft: `3px solid ${c}`, borderRadius: 4 }}>
-      <span style={{ width: 9, height: 9, borderRadius: 5, background: c, opacity: blink ? 1 : 0.4, boxShadow: `0 0 8px ${c}` }} />
-      <Label size={18} color={T.text}>Official server · <span style={{ color: c, opacity: 0.4 + 0.6 * p }}>{off ? "Offline" : "Online"}</span></Label>
-    </div>
-  );
+  const e = lin(f, S9.pull[0], S9.pull[1], 0, 1, inOut);
+  const s = MATCH_CROP + (1 - MATCH_CROP) * e, cx = START.x + (960 - START.x) * e, cy = START.y + (540 - START.y) * e;
+  return <AbsoluteFill style={{ transformOrigin: "0 0", transform: `translate(${960 - cx * s}px, ${540 - cy * s}px) scale(${s})` }}>{children}</AbsoluteFill>;
 }
 
 export function KillOpen() {
   const f = useCurrentFrame();
-  // the game client: match (continuing S08), then the take recorded through the kill once the window covers the cut
-  const lost = f >= S9.goneAt;
-  const push = lost ? lin(f, S9.winClose, S9.collapse, 1.04, 1.09, out) : lin(f, 0, S9.goneAt, ARENA.scale, 1.04);
-  const dim = f < S9.winClose + 8 ? lin(f, S9.dial, S9.win, 1, 0.42) : lin(f, S9.winClose + 4, S9.winClose + 12, 0.42, 1);
-  // CRT power-off of the whole client: scaleY 1 → 0.006 (10 f, ease-in cubic) with a white bloom
+  const lost = f >= S9.lost;
+  const push = lin(f, S9.lost, S9.collapse, 1, 1.05);
+  const dim = lost ? 1 : lin(f, S9.dial, S9.win, 1, 0.42);
+  // CRT power-off of the lost client: scaleY 1 → 0.006 (10 f, ease-in cubic) with a white bloom
   const sy = lin(f, S9.collapse, S9.collapse + 10, 1, 0.006, Easing.in(Easing.cubic));
   const flash = lin(f, S9.collapse + 4, S9.collapse + 10, 0, 1);
   const gone = f >= S9.collapse + 10;
   // the line: white, full width; reddens and narrows to the screen width; drops onto the flatline (content y FL)
   const red = lin(f, S9.redden, S9.redden + 10, 0, 1);
   const inset = lin(f, S9.redden, S9.redden + 10, 0, 21, out);
-  const lineY = lin(f, S9.drop, S9.drop + 16, 540, 102 + FL, out);
-  const lineOn = f >= S9.collapse + 6 && f < S9.drop + 18;
+  const lineY = lin(f, S9.drop, S9.drop + 12, 540, 102 + FL, out);
+  const lineOn = f >= S9.collapse + 6 && f < S9.drop + 14;
   const bloomW = lin(f, S9.collapse + 6, S9.redden + 6, 1, 0);
-  const tagP = printIn(f, S9.goneTag);
-  const rowY = (10 + 40 + 18 + 34 * GONE_ROW + 17) * s;
+  const k2 = KILL_CUTS[1];
+  const jump = f >= k2.at && f < GONE_CUT.at ? printIn(f, k2.at) * lin(f, k2.at + 30, k2.at + 36, 1, 0) : 0;
 
   return (
     <AbsoluteFill>
       {!gone && (
         <AbsoluteFill style={{ transform: `scaleY(${sy})`, transformOrigin: "50% 50%", filter: `brightness(${dim * (1 + flash * 1.6)}) saturate(${1 + flash})` }}>
-          <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: `${ARENA.x}px ${ARENA.y}px` }}>
-            {lost ? <SlotAt at={S9.goneAt} slot="lost" plate="kill-lost.png" from={TAKE_FROM.lost} /> : <SlotAt at={0} slot="match" plate="match.png" from={TAKE_FROM.match} />}
-            {lost && <LostStandIn at={S9.winClose + 13} />}
-          </AbsoluteFill>
-          <ServerChip />
+          {lost ? (
+            <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: "960px 400px" }}>
+              <SlotAt at={S9.lost} slot="lost" plate="kill-lost.png" from={LOST.from} />
+              <RejoinLabel />
+            </AbsoluteFill>
+          ) : (
+            <MatchCam><SlotAt at={0} slot="match" plate="match.png" from={MATCH_AT0} /></MatchCam>
+          )}
           <AbsoluteFill style={{ opacity: flash, background: "linear-gradient(180deg, transparent 10%, rgba(255,236,228,0.55) 40%, #fff4ee 50%, rgba(255,236,228,0.55) 60%, transparent 90%)", mixBlendMode: "screen" }} />
         </AbsoluteFill>
       )}
@@ -83,21 +72,18 @@ export function KillOpen() {
         </>
       )}
       <DialBox at={S9.dial} path="studio-ops" s={1.9} />
-      <CrtWindow open={S9.win} close={S9.winClose} x={WIN.x} y={WIN.y} w={WIN.w} h={WIN.h} style={{ boxShadow: "0 40px 120px rgba(0,0,0,0.75)", borderRadius: 14 }}>
-        {f < S9.goneAt
-          ? <TermTake slot="t-kill" from={TAKE_FROM.kill} lines={KILL_LINES} at={S9.killAt} startAt={S9.win} gap={12} title="Studio ops" w={WIN.w} />
-          : <TermTake slot="t-404" from={TAKE_FROM.gone} lines={GONE_LINES} at={S9.goneAt} gap={9} title="Studio download" w={WIN.w} />}
-        {f >= S9.goneTag && (
-          <div style={{ position: "absolute", left: 250 * s + 36, top: rowY - 20, height: 40, display: "flex", alignItems: "center", gap: 12, opacity: tagP,
-            transform: `translateX(${(1 - tagP) * -14}px)` }}>
-            <Mono size={26} color={T.dead}>◂</Mono>
-            <div style={{ position: "relative", border: `2px solid ${T.dead}`, padding: "2px 14px" }}>
-              <Label size={22} weight={700} color={T.dead}>gone</Label>
-            </div>
+      <CrtWindow open={S9.win} close={S9.winClose} x={WIN.x} y={WIN.y} w={WIN.w} h={WIN.h} style={{ boxShadow: "0 40px 120px rgba(0,0,0,0.75)", borderRadius: 14, background: T.ink }}>
+        {f < KILL_CUTS[1].at && <SlotAt at={KILL_CUTS[0].at} slot="t-kill" from={KILL_CUTS[0].from} crop={TERM_CROP} tag={false} />}
+        {f >= KILL_CUTS[1].at && f < GONE_CUT.at && <SlotAt at={KILL_CUTS[1].at} slot="t-kill" from={KILL_CUTS[1].from} crop={TERM_CROP} tag={false} />}
+        {f >= GONE_CUT.at && <SlotAt at={GONE_CUT.at} slot="t-404" from={GONE_CUT.from} crop={TERM_CROP} tag={false} />}
+        {jump > 0 && (
+          <div style={{ position: "absolute", right: 28, top: 52, opacity: jump, background: "rgba(10,8,20,0.72)", padding: "4px 10px", borderRadius: 3 }}>
+            <Label size={18} color={T.faint}>{k2.label}</Label>
           </div>
         )}
         <div style={{ position: "absolute", inset: 3 }}><Bracket color={T.ember} /></div>
       </CrtWindow>
+      <KillLines />
     </AbsoluteFill>
   );
 }
