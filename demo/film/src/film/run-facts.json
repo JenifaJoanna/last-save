@@ -1,0 +1,106 @@
+{
+  "instance": "v2dev.lastsave-factory.testnet",
+  "source": {
+    "run": {
+      "path": "proof/run-v2dev-20261114T0857Z.json",
+      "sha256": "4897819407f5393415105cb7c98e31c87817a334c51306ece1f6d1c4ef83d72b"
+    },
+    "launch": {
+      "path": "proof/launch-v2dev.json",
+      "sha256": "ed54748c834b73a54a23d93fad988c5476fed38f823d07087acc6da410a920ad"
+    },
+    "launch_more": [
+      {
+        "path": "proof/launch-v2walrus.json",
+        "sha256": "cd2bb530434df13548f0cf511a1468fe2636125af4a4432d957ed6869a760ff2"
+      }
+    ],
+    "verify": {
+      "path": "external/verify-v2dev.json",
+      "sha256": "3ae78ca1780e8510c8d48cd9a71132378d1dfd9a15a9d7304f3f703b45d87fe4"
+    },
+    "studio2": {
+      "path": "proof/launch-tidebreak.json",
+      "sha256": "6a40acea3e39dd1c9deedb381dea4e1c5f2b19d481128b43b48436da7ba4f0d2"
+    },
+    "extra": {
+      "path": "external/dev-extra.json",
+      "sha256": "1815149d07f904f504a4015eaa934491512b701aa9eaacb45cc64598aadfe790"
+    }
+  },
+  "generated_at": "2026-11-14T14:30:45.911Z",
+  "missing": [
+    "archiveItem (extra: archiveItem): empty"
+  ],
+  "values": {
+    "instance": "v2dev.lastsave-factory.testnet",
+    "studio2Account": "tidebreak.lastsave-factory.testnet",
+    "price": "0.25",
+    "fundPct": 40,
+    "lockedShare": "0.1",
+    "licenceNo": "3",
+    "buyTx": "5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+    "buildSha": "8aed87d3d43cecffe906c621f19103fe710feac3662bcf750ebbfbd9a4208622",
+    "releasedSha": "8aed87d3d43cecffe906c621f19103fe710feac3662bcf750ebbfbd9a4208622",
+    "releaseWasm": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+    "accessKeys": "0",
+    "walrusBlob": "AaiTfFH8cOJQ51cx1cqvPRYQrC59_WDOTeS0fZ4KHLw",
+    "walrusHost": "aggregator.walrus-testnet.walrus.space",
+    "archiveItem": null,
+    "cdnUrl": "https://kiln-cdn-v2walrus.pages.dev/ember-rift-0b5bb75c051d7651.bin",
+    "officialWorker": "emberrift-v2dev-arena",
+    "workflow": ".github/workflows/release-build.yml",
+    "commit7": "c47563b",
+    "rekorIndex": "3874867299",
+    "rekorLogged": "2026-11-14 09:30 UTC",
+    "releasedKey": "dff0a6d0fe23090ec9ec95a4f864eed5ad510fd0f13d7a044fa56dd67d009d51",
+    "poolBefore": "0.200",
+    "postBuyDelta": "0.223",
+    "poolTotal": "0.423",
+    "runwayEpochs": 8,
+    "epochCap": "0.05",
+    "epochLen": "2 min",
+    "hostPaid": "0.04",
+    "sessionsVerified": 4,
+    "payoutEpoch": 11,
+    "payoutSessions": 4,
+    "payoutNear": "0.04",
+    "payoutNonce": 0,
+    "payoutValue": "0.00004 ETH",
+    "payoutTo": "0xfc2c2fe195675cc0f3852eb2813d6877d54026a3",
+    "payoutToShort": "0xfc2c…4026a3",
+    "payoutPayer": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA",
+    "basePayoutTx": "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+    "basePayoutBlock": "58635246",
+    "baseStatus": "Success",
+    "verifyInstance": "v2dev.lastsave-factory.testnet",
+    "verifyHead": "ALL CHECKS THAT RAN HELD",
+    "verifySummary": "18 ✓   0 ✗   0 !   5 n/a   ·  2.6 s",
+    "verifyCodeWhy": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code",
+    "verifyMarks": {
+      "Contract code is the published code": "pass",
+      "Published global code is readable and hashes to its id": "pass",
+      "0 access keys on the instance (locked)": "pass",
+      "Factory points at the same global hash": "pass",
+      "Instance listed by the factory": "pass",
+      "Escrow attested by the enclave": "pass",
+      "Keystore access rule is exactly release.wasm + this contract": "pass",
+      "Buckets non-negative and covered by the balance": "pass",
+      "release/probe wasm hashes = committed artifacts/ files": "pass",
+      "Key commitment, artifact hash and build hash are set": "pass",
+      "Encrypted artifact = committed file": "pass",
+      "Enclave programs download from every mirror": "pass",
+      "Encrypted artifact: every mirror's sha256 = on-chain": "pass",
+      "Walrus mirror serves it": "na",
+      "Released key hashes to the commitment": "pass",
+      "Released key decrypts the artifact to build_hash": "pass",
+      "Payer address re-derived from public inputs": "pass",
+      "Signed payouts mined on Base Sepolia": "pass",
+      "Build attested by GitHub Actions (Sigstore) for the on-chain build hash": "na",
+      "Every tx in the proof manifests resolves on RPC": "pass",
+      "release.wasm rebuilds to the on-chain hash": "na",
+      "probe.wasm rebuilds to the on-chain hash": "na",
+      "Licence wasm rebuild": "na"
+    }
+  }
+}

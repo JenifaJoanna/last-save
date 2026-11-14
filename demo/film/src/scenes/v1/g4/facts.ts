@@ -2,6 +2,7 @@
 // Beat frames are scene-relative and come from the scribe_v3 word times (vo/timings/V08.json, V09.json).
 import V08 from "../../../../vo/timings/V08.json";
 import V09 from "../../../../vo/timings/V09.json";
+import { rs } from "../../../film/run";
 import { voFrame } from "../../../film/timeline";
 
 const wordAt = (words: { w: string; s: number }[], w: string, n = 0) => words.filter((x) => x.w.toLowerCase().replace(/[^a-z']/g, "") === w)[n].s;
@@ -26,26 +27,25 @@ export const FL = 400;
  * top 420 px (status bar + 10 rows), where every line of these short takes prints. */
 export const TERM_CROP = { x: 60 / 1920, y: 50 / 1080, w: 1800 / 1920, h: 420 / 1080 };
 
-/** Placeholder drawings used only while the t-kill / t-404 takes are missing (the take replaces them, lines and all).
- * t-kill lines are scripts/ops/kill-official.sh's own output. The CDN URL is the judge instance's studio copy: TBD
- * until proof/judge-v2.json lands. */
+/** Stand-in drawings used only while the t-kill / t-404 takes are missing (the take replaces them, lines and all).
+ * t-kill lines are scripts/ops/kill-official.sh's own output. The worker and the CDN URL are the run's (run-facts.json). */
 export const KILL_LINES: { t: string; c: "gold" | "text" | "dead" | "muted" }[] = [
-  { t: "$ studio shutdown --server emberrift-arena", c: "gold" },
+  { t: `$ studio shutdown --server ${rs("officialWorker")}`, c: "gold" },
   { t: "Stopping the official Ember Rift server…", c: "text" },
-  { t: "✕ official server deleted (emberrift-arena)", c: "dead" },
+  { t: `✕ official server deleted (${rs("officialWorker")})`, c: "dead" },
   { t: "No announcement. No end-of-service call.", c: "muted" },
 ];
 export const GONE_LINES: { t: string; c: "gold" | "text" | "dead" | "muted" }[] = [
-  { t: "$ curl -I https://kiln-cdn-TBD.pages.dev/ember-rift-TBD.bin", c: "gold" },
+  { t: `$ curl -I ${rs("cdnUrl")}`, c: "gold" },
   { t: "HTTP/2 530", c: "dead" },
 ];
 /** Where "HTTP/2 530" sits in the t-404 take, as a row index of TERM rows (row 0 = first line under the bar). The
- * "gone" label hangs to the right of that row. TBD: check against the real take. */
+ * "gone" label hangs to the right of that row. TUNE: check against the real take. */
 export const GONE_ROW = 1;
 
 /** The probes take: segments cut in at `at` (scene frame; clamped to the power-on), playing from `from` s. A label marks
  * every real time jump. `from` values fit the preview capture (17.5 s: alive probe 0–2 s, enclave checking 2–5 s,
- * 1/3 at 5.5 s, 2/3 at 8.5 s, 3/3 + DEAD at 12.5 s). TBD for the v2 take (1–2 min, probes ≥ 20 s apart): reset `from`
+ * 1/3 at 5.5 s, 2/3 at 8.5 s, 3/3 + DEAD at 12.5 s). TUNE for the v2 take (1–2 min, probes ≥ 20 s apart): reset `from`
  * and the jump labels to the take's real gaps. */
 export const PROBE_CUTS: { at: number; from: number; label?: string }[] = [
   { at: 0, from: 0.6 },
@@ -62,21 +62,20 @@ export const ALERT = {
   line: "would post: DEAD · THE STUDIO WENT DARK",
 };
 
-/** The released server key. TBD: placeholder = the 14 Nov v1 run's released key (x-release v1 take, plate
- * status-released.png); replace with the v2 judge instance's key from proof/judge-v2.json. S11 splits it into four
- * 16-char rows (g5 draws the same string). */
-export const KEY_TBD = "fb0ac47f464bb2c8d5cb1b162c35185bd9c965b9278e8bf95c136c642717e490";
-export const KEY_GROUPS = [0, 1, 2, 3].map((i) => KEY_TBD.slice(i * 16, i * 16 + 16));
+/** The released server key (the run's released_key, read back from the instance). S11 splits it into four 16-char rows
+ * (g5 draws the same string). */
+export const RELEASED_KEY = rs("releasedKey");
+export const KEY_GROUPS = [0, 1, 2, 3].map((i) => RELEASED_KEY.slice(i * 16, i * 16 + 16));
 /** End pose of S10 = S11's first frame (S11.tsx): one 64-char line, Plex Mono 500 36 px gold, centred on (960, 540),
  * with the cyan "// Server key · decoded on-chain" eyebrow at content top 360 and nothing else on the gold screen. */
 export const KEY_POSE = { cx: 960, cy: 540, size: 36, eyebrowTop: 360, color: "#ffc94a" } as const;
 
-/** x-release (OutLayer on_execution_response receipt): the Result block (key, status). TBD for the v2 take: v1 shows
+/** x-release (OutLayer on_execution_response receipt): the Result block (key, status). TUNE for the v2 take: v1 shows
  * it at 10 s, x 380–1540, y 780–1010. */
 export const XREL = { from: 10.0, crop: { x: 380 / 1920, y: 780 / 1080, w: 1160 / 1920, h: 230 / 1080 } };
 
 /** Take in-points (seconds) for the opening of S09. match continues S08 exactly: S08 plays the take from
- * MATCH_FROM − 32/30 s (4 − 1.067) for 240 f and ends at scale 1.02 about the arena (980, 560). TBD for the v2
+ * MATCH_FROM − 32/30 s (4 − 1.067) for 240 f and ends at scale 1.02 about the arena (980, 560). TUNE for the v2
  * takes: KILL so the delete line prints near "stop"; GONE so `HTTP/2 530` prints on "disappears"; LOST so the
  * CONNECTION LOST overlay is already up when the terminal window closes. */
 export const TAKE_FROM = { match: 4 - 32 / 30 + 8, kill: 0, gone: 0, lost: 0 } as const;
@@ -84,9 +83,9 @@ export const ARENA = { x: 980, y: 560, scale: 1.02 } as const;
 
 /** The release take (/status DEAD → Release → RELEASED). S10 opens on the frame the screen turns gold (preview: 6.6 s;
  * it scrolls to the escrow card at ~8 s).
- * TBD for the v2 take. */
+ * TUNE for the v2 take. */
 export const RELEASE_FROM = 6.6;
-/** Where the take shows the decoded key after it scrolls (content px, preview). TBD for the v2 take. */
+/** Where the take shows the decoded key after it scrolls (content px, preview). TUNE for the v2 take. */
 export const TAKE_KEY = { x: 1369, y: 546, size: 13 };
 /** Brief/PLAN: the status bar flips red at the collapse. Set true to step it instead with the contract (probing amber
  * while the probes take plays, red when the contract marks it dead), which matches what the take shows. */

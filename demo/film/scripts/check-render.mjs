@@ -4,7 +4,7 @@
 //     (mean luma YAVG < 28 on the limited 16–235 scale; the void is ~24) AND flat (edge density < 0.2: mean of an
 //     edgedetect pass; void + grain measures ~0.0005, a lone red line 0.3, a dimmed dark arena with sprites 1.6). The
 //     film's palette is dark, so darkness alone is not emptiness;
-//  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "placeholder", "Take pending", the dev instance
+//  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "MISSING" (a run value scripts/facts.mjs could not read), "placeholder", "Take pending", the dev instance
 //     ("v2dev") or any identity term (the repo's shared list, scripts/lib/identity-terms.mjs) anywhere on screen.
 // Usage: node scripts/check-render.mjs <video.mp4> [--ocr] [--max-dark 10]
 import { execFileSync, spawn } from "node:child_process";
@@ -55,7 +55,7 @@ if (ocr) {
     const frames = readdirSync(dir).filter((n) => n.endsWith(".jpg")).sort();
     const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const ids = [...TERMS, ...ON_CAMERA_TERMS].map((t) => t.toLowerCase());
-    const bad = new RegExp(`\\bTBD\\b|placeholder|take pending|v2dev|${ids.map(esc).join("|")}`, "i");
+    const bad = new RegExp(`\\bTBD\\b|\\bMISSING\\b|placeholder|take pending|v2dev|${ids.map(esc).join("|")}`, "i");
     const queue = [...frames]; const hits = [];
     const worker = () => new Promise((done) => {
       const next = () => {

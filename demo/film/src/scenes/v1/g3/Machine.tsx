@@ -5,6 +5,7 @@ import { AbsoluteFill } from "remotion";
 import { Box, Grid, HALF } from "../../../frames/c/iso";
 import { FONT, T } from "../../../ds/tokens";
 import { Label } from "../../../ds/type";
+import { RUN_INSTANCE } from "../../../film/run";
 import { easeInOut, lerp, prog } from "./motion";
 
 const W = 1878;
@@ -52,7 +53,7 @@ export function Machine({ f }: { f: number }) {
         <div style={{ position: "absolute", left: 300 + 120 * p, top: 250 + 60 * p, opacity: tag, background: "rgba(18,14,34,0.94)", border: "1px solid rgba(255,201,74,0.6)",
           borderRadius: 4, padding: "12px 18px", boxShadow: "0 10px 30px rgba(0,0,0,0.45)" }}>
           <Label size={18} color={T.gold}>Licence contract</Label>
-          <div style={{ fontFamily: FONT.mono, fontSize: 15, color: T.muted, marginTop: 6 }}>ember-rift.lastsave-factory.testnet</div>
+          <div style={{ fontFamily: FONT.mono, fontSize: 15, color: T.muted, marginTop: 6 }}>{RUN_INSTANCE}</div>
           <div style={{ fontFamily: FONT.label, fontWeight: 700, fontSize: 30, color: T.text, marginTop: 6, letterSpacing: "0.04em" }}><span style={{ color: T.gold }}>0</span> access keys</div>
         </div>
       )}

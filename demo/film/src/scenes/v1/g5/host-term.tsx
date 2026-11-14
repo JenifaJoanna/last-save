@@ -9,6 +9,7 @@ import { Camera, ScreenFrame } from "../../../ds/screen";
 import { Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
 import { Slot, slotSource } from "../../../film/Slot";
+import { RUN_INSTANCE } from "../../../film/run";
 import { HOST_CMD, HOST_ROWS, KEY_PROVENANCE, KEY_WALRUS, LAYOUT, TAKE_FROM, TERM_CROP, TERM_ROW } from "./facts";
 import { c, LiftPlate, out, printIn, ramp, word } from "./kit";
 
@@ -24,8 +25,9 @@ const LIFT_Y = LAYOUT.s13LiftY; // content-space centre of the lift band
 type Kind = "walrus" | "hash" | "provenance" | "snapshot" | "register";
 interface Line { at: number; body: ReactNode; text: string; lift?: Kind; liftAt?: number }
 const ok = (s: string) => <span style={{ color: T.alive }}>{s}</span>;
+const HOST_LINE = `Last Save host for lastsave-fanhost.testnet on ${RUN_INSTANCE}`;
 const LINES: Line[] = [
-  { at: TYPE_END + 4, text: "Last Save host for lastsave-fanhost.testnet on ember-rift.lastsave-factory.testnet", body: "Last Save host for lastsave-fanhost.testnet on ember-rift.lastsave-factory.testnet" },
+  { at: TYPE_END + 4, text: HOST_LINE, body: HOST_LINE },
   { at: TYPE_END + 10, text: "  released key matches the on-chain commitment (…)", body: "  released key matches the on-chain commitment (…)" },
   { at: W(3.42), text: "  studio copy … 530 (gone)", body: <>{"  studio copy … "}<span style={{ color: T.dead }}>530 (gone)</span></> },
   { at: W(4.06) - 6, text: "  walrus … 200, sha256 matches on-chain ✓", body: <>{"  walrus … "}{ok("200, sha256 matches on-chain ✓")}</>, lift: "walrus", liftAt: W(4.06) - 2 },

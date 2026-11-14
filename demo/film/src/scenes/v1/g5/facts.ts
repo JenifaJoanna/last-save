@@ -1,23 +1,20 @@
 // Every number, string and take-geometry constant that S11, S13 and S14 draw, in one place so the real v2 takes can be
 // lined up by editing this file only. Sources are noted per value; anything marked TUNE needs the real take to confirm.
 
-/** Seam S10→S11: the decoded server key S10 ends on. Preview-site value (plates/status-released.png); must equal the
- * string S10 draws on its last frame and, in the final cut, the judge run's released key. TUNE. */
-export const RELEASED_KEY = "fb0ac47f464bb2c8d5cb1b162c35185bd9c965b9278e8bf95c136c642717e490";
+import { rs, rn } from "../../../film/run";
 
-/** Keep-alive pool after the four choices and the post-shutdown buy, from the contract config in
- * proof/run-v2dev-20261114T0857Z.json: price 0.25 Ⓝ, fund_bps 4000 (0.1 Ⓝ pot share), two pledges → pool 0.2 Ⓝ (readback
- * phase 10), plus a post-death sale of 0.25 Ⓝ of which 10 % goes to the ops budget (contracts/licence/src/ops.rs) →
- * +0.225 Ⓝ. Runway = floor(0.425 / epoch_cap 0.05) = 8 epochs of 2 min (epoch_ms 120000). Replace with the judge run's
- * Money card values when the takes land. */
-export const POOL = { total: "0.425", runwayEpochs: 8, epochCap: "0.05", epochLen: "2 min" };
+/** Seam S11: the decoded server key S10 ends on; must equal the string S10 draws on its last frame. */
+export const RELEASED_KEY = rs("releasedKey");
 
-/** Host epoch claim, proof/run-v2dev-20261114T0857Z.json phase 13: epoch 10, 4 verified holder sessions, paid 0.04 Ⓝ
- * (tx cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7). The judge run's epoch take supersedes these. */
-export const CLAIM = { sessions: 4, paid: "0.04" };
+/** Keep-alive pool after the four choices and the post-shutdown buy (run proof: pool after the buy, the config epoch cap
+ * and epoch length). Runway = floor(pool / epoch cap) epochs. */
+export const POOL = { total: rs("poolTotal"), runwayEpochs: rn("runwayEpochs"), epochCap: rs("epochCap"), epochLen: rs("epochLen") };
+
+/** Host epoch claim (run proof, claim phase): verified holder sessions and the NEAR paid. */
+export const CLAIM = { sessions: rn("sessionsVerified"), paid: rs("hostPaid") };
 
 /** The fan's host command, as on the Hosts page (web/src/pages/app/Hosts.tsx CMD) with the e2e host account. */
-export const HOST_CMD = "pnpm host --local --account lastsave-fanhost.testnet";
+export const HOST_CMD = "pnpm host --local --account lastsave-fanhost.testnet"; // the e2e host account (fixed by the run harness)
 
 /** Seconds into each take where the slot starts playing (the 1-s hold at the take's start is skipped). TUNE per take. */
 export const TAKE_FROM: Record<string, number> = {
@@ -60,17 +57,17 @@ export const TERM_ROW = { top: 18 / 924, h: 34.4 / 924 }; // first row offset an
 // ---- v2 legibility pass: key lines lifted as film type (≥ 56 px after camera, ≥ 45 f, ≤ 4 px/f). Positions are TUNE. ----
 /** S11 toast body, verbatim from web/src/lib/wallet.tsx (gasless toast). Title is texture. */
 export const KEY_TOAST = { title: "Refund sent", body: "Gas paid by the relayer: you paid 0 Ⓝ." };
-/** S11 end: the pool after the pledges (0.2, proof readback phase 10), then the post-shutdown sale split from
- * contracts/licence/src/ops.rs (10 % ops budget, the rest to the pool). TBD (dev run config) until the judge proof. */
-export const KEY_SPLIT = { before: "0.200", after: "0.425", line: "+0.225 Ⓝ: 90% of the 0.25 Ⓝ sale · 10% to ops" };
-/** S13 key lines in the host CLI's own formats (host/lib/mirrors.mjs, provenance.mjs). TBD (dev run): values from
- * proof/launch-v2walrus.json (walrus aggregator mirror; commit c47563b, Rekor 3874867299, logged 09:30 UTC). */
-export const KEY_WALRUS = ["walrus aggregator.walrus-testnet.walrus.space …", "200, sha256 matches on-chain ✓"];
-export const KEY_PROVENANCE = ["provenance ✓ built by workflow", ".github/workflows/release-build.yml", "at commit c47563b, logged 2026-11-14 09:30 UTC", "(Rekor #3874867299)"];
+/** S11 end: the pool after the pledges, then the post-shutdown sale (run proof: 90 % to the pool, 10 % to the ops budget,
+ * contracts/licence/src/ops.rs). */
+export const KEY_SPLIT = { before: rs("poolBefore"), after: rs("poolTotal"), line: `+${rs("postBuyDelta")} Ⓝ: 90% of the ${rs("price")} Ⓝ sale · 10% to ops` };
+/** S13 key lines in the host CLI's own formats (host/lib/mirrors.mjs, provenance.mjs); values from the launch proof
+ * (Walrus aggregator host, CI build commit, Rekor index and time). */
+export const KEY_WALRUS = [`walrus ${rs("walrusHost")} …`, "200, sha256 matches on-chain ✓"];
+export const KEY_PROVENANCE = ["provenance ✓ built by workflow", rs("workflow"), `at commit ${rs("commit7")}, logged ${rs("rekorLogged")}`, `(Rekor #${rs("rekorIndex")})`];
 /** Layout (TUNE): S11 toast centre, S13 lift band centre (content px), S12 key line top (frame px). */
 export const LAYOUT = { toast: { x: 960, y: 540 }, s13LiftY: 640, s12LineY: 880 };
 /** S14 stand-ins while `back` / `bounce` are pending, so the open never sits on a near-black "Take pending" card
- * (scripts/check-dead-air). Game-client plates from public/plates; tagged as placeholders by Slot. */
+ * (scripts/check-dead-air). Game-client plates from public/plates; tagged as stand-ins by Slot. */
 export const BACK_PLATE = "match.png";
 export const BOUNCE_PLATE = "kill-lost.png";
 export const HOSTBTN_PLATE = "status-released.png"; // S13 stand-in while `hostbtn` is pending (no dead air)

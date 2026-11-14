@@ -1,10 +1,11 @@
 // Motion-graphics stand-in for the `t-verify` take: `pnpm verify` in the terminal palette (IBM Plex Mono 26 px, gold
 // prompt, green ✓), drawn in ScreenFrame content coords. Row labels and group names are the real ones from
 // scripts/verify (checks-chain/artifact/evm/proof.mjs) in their real order; the two reason lines are instance-independent
-// (global code hash from scripts/verify/instances.json). Marks and the summary are the v2 dev run's real output (facts.ts, TBD).
+// (global code hash from scripts/verify/instances.json). Marks, the "why" line and the summary are the run's verify JSON (run-facts.json).
 // The real command prints the whole table at once after ~2 s; the stand-in prints rows in so they read on camera.
 import { interpolate } from "remotion";
 import { FONT, T } from "../../../ds/tokens";
+import { rs, VERIFY_MARKS } from "../../../film/run";
 import { VERIFY_INSTANCE, VERIFY_SUMMARY } from "./facts";
 import { C, printP, stepIn } from "./kit";
 
@@ -19,39 +20,42 @@ const VISIBLE = 22; // rows that fit before the terminal scrolls
 
 type Row = { kind: "title" | "group" | "ok" | "na" | "warn" | "why" | "blank" | "sum"; text: string };
 const R = (kind: Row["kind"], text = ""): Row => ({ kind, text });
+/** A check row: the mark (✓, n/a, !) is the verify JSON's status for that label. A label the JSON lacks prints as a warning. */
+const MARK: Record<string, Row["kind"]> = { pass: "ok", na: "na", warn: "warn", fail: "warn" };
+const C_ = (text: string): Row => R(MARK[VERIFY_MARKS[text]] ?? "warn", text);
 export const ROWS: Row[] = [
   R("title", `LAST SAVE verify · ${VERIFY_INSTANCE}`),
   R("blank"), R("group", "Code"),
-  R("ok", "Contract code is the published code"),
-  R("why", "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code"),
-  R("ok", "Published global code is readable and hashes to its id"),
-  R("ok", "0 access keys on the instance (locked)"),
+  C_("Contract code is the published code"),
+  R("why", rs("verifyCodeWhy")),
+  C_("Published global code is readable and hashes to its id"),
+  C_("0 access keys on the instance (locked)"),
   R("blank"), R("group", "Factory"),
-  R("ok", "Factory points at the same global hash"),
-  R("ok", "Instance listed by the factory"),
+  C_("Factory points at the same global hash"),
+  C_("Instance listed by the factory"),
   R("blank"), R("group", "Escrow"),
-  R("ok", "Escrow attested by the enclave"),
-  R("ok", "Keystore access rule is exactly release.wasm + this contract"),
+  C_("Escrow attested by the enclave"),
+  C_("Keystore access rule is exactly release.wasm + this contract"),
   R("blank"), R("group", "Money"),
-  R("ok", "Buckets non-negative and covered by the balance"),
+  C_("Buckets non-negative and covered by the balance"),
   R("blank"), R("group", "Pins"),
-  R("ok", "release/probe wasm hashes = committed artifacts/ files"),
-  R("ok", "Key commitment, artifact hash and build hash are set"),
-  R("ok", "Encrypted artifact = committed file"),
+  C_("release/probe wasm hashes = committed artifacts/ files"),
+  C_("Key commitment, artifact hash and build hash are set"),
+  C_("Encrypted artifact = committed file"),
   R("blank"), R("group", "Artifacts"),
-  R("ok", "Enclave programs download from every mirror"),
-  R("ok", "Encrypted artifact: every mirror's sha256 = on-chain"),
-  R("na", "Walrus mirror serves it"),
+  C_("Enclave programs download from every mirror"),
+  C_("Encrypted artifact: every mirror's sha256 = on-chain"),
+  C_("Walrus mirror serves it"),
   R("blank"), R("group", "Release"),
-  R("ok", "Released key hashes to the commitment"),
-  R("ok", "Released key decrypts the artifact to build_hash"),
+  C_("Released key hashes to the commitment"),
+  C_("Released key decrypts the artifact to build_hash"),
   R("blank"), R("group", "Chain Signatures"),
-  R("ok", "Payer address re-derived from public inputs"),
-  R("ok", "Signed payouts mined on Base Sepolia"),
+  C_("Payer address re-derived from public inputs"),
+  C_("Signed payouts mined on Base Sepolia"),
   R("blank"), R("group", "Provenance"),
-  R("warn", "Build attested by GitHub Actions (Sigstore) for the on-chain build hash"),
+  C_("Build attested by GitHub Actions (Sigstore) for the on-chain build hash"),
   R("blank"), R("group", "Proof"),
-  R("ok", "Every tx in the proof manifests resolves on RPC"),
+  C_("Every tx in the proof manifests resolves on RPC"),
   R("blank"),
   R("sum", `${VERIFY_SUMMARY.head}  ·  ${VERIFY_SUMMARY.counts}`),
 ];

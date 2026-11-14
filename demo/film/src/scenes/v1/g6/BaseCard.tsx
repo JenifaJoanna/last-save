@@ -1,7 +1,7 @@
 // Motion-graphics stand-in for the `base` take: the bottom of /app/hosts, "Get paid on Base Sepolia" (web/src/pages/app/
 // evm-payouts.tsx), drawn at 1x in ScreenFrame content coords so the real take drops in with the same framing. The payout
 // row runs Booked → Sign → "MPC signing…" → "Signed by MPC" (the transmission readout prints in) → Relay → "On Base
-// Sepolia". Values are payout #0 of the v2 dev instance (facts.ts PAYOUT, TBD). Shown only while public/footage has no `base`.
+// Sepolia". Values are payout #0 of the run (facts.ts PAYOUT). Shown only while public/footage has no `base`.
 import type { CSSProperties } from "react";
 import { interpolate } from "remotion";
 import { Keycap } from "../../../ds/crt";

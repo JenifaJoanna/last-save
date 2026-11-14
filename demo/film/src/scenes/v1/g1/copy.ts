@@ -2,6 +2,7 @@
 // Timings are scene frames (30 fps). VO word starts: V01 "goes" = S01 f224; V02 "Last" f84, "licence" f118,
 // "outlives" f143; V03 "law" f94, "code" f169, "Last Save" f209, "refund" f315.
 
+import { RUN_INSTANCE, rs } from "../../../film/run";
 export interface OpenQuote { lines: string[]; source: string; start: number; rate: number }
 
 /** S01: three player quotes, typed one after another. Line 2 of the BBC quote hangs one space past the opening mark. */
@@ -18,9 +19,9 @@ export const S01_GREY = 222; // 2 f before "goes"
 /** S02 boot log: web/src/components/terminal/Terminal.tsx bootLines with the live contract's values. */
 export const BOOT_LINES = [
   "LS-0001  LAST SAVE TERMINAL  v2.0",
-  "Licence contract ......... ember-rift.lastsave-factory.testnet",
+  `Licence contract ......... ${RUN_INSTANCE}`,
   "Server key ............... SEALED IN ENCLAVE",
-  "Access keys on contract .. 0 (LOCKED)",
+  `Access keys on contract .. ${rs("accessKeys")} (LOCKED)`,
   "Link NEAR testnet ........ CONNECTED",
   "Hello. The game outlives its studio.",
 ];

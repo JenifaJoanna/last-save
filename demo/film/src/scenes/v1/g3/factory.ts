@@ -1,13 +1,14 @@
 // S07 cut sheet and key lines for the `t-factory` terminal take (the real `create_instance` on lastsave-factory.testnet
 // for studio #2 "Tidebreak") and the `x-factory` explorer flash. TUNE WHEN THE TAKES LAND: `from` = take second shown
 // at S07 f0; `account.y` = top of the new-account line in take px (26 px rows ≈ 35 px); `account.text` must be the
-// exact account the take prints (create_instance makes `<name>.lastsave-factory.testnet`; name assumed "tidebreak").
+// exact account the take prints (create_instance makes `<name>.lastsave-factory.testnet`; the text is the second studio's launch proof).
 import { beat } from "./motion";
+import { rs } from "../../../film/run";
 
 export const FACTORY = {
   slot: "t-factory",
   from: 0.8,
-  account: { text: "tidebreak.lastsave-factory.testnet", y: 250 },
+  account: { text: rs("studio2Account"), y: 250 },
 } as const;
 
 /** "0 access keys": the x-factory explorer's access-key count for the new instance (FOOTAGE x-factory row). */

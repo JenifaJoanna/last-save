@@ -4,7 +4,7 @@ import { useCurrentFrame } from "remotion";
 import { slotSource } from "../../../film/Slot";
 import { Display, Eyebrow, Label, Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
-import { KEY_POSE, KEY_TBD, R, TAKE_KEY, XREL } from "./facts";
+import { KEY_POSE, RELEASED_KEY, R, TAKE_KEY, XREL } from "./facts";
 import { CrtWindow, DialBox, lin, noise, out, printIn, SlotAt } from "./kit";
 
 export const S10T = {
@@ -25,7 +25,7 @@ function ReceiptStandIn() {
     <div style={{ position: "absolute", inset: 0, background: T.ink2, padding: "18px 30px", boxSizing: "border-box" }}>
       <Label size={18} color={T.faint}>Result · on_execution_response · OutLayer</Label>
       <div style={{ marginTop: 10 }}>
-        {row("key", `"${KEY_TBD.slice(0, 40)}…"`, T.ember2)}
+        {row("key", `"${RELEASED_KEY.slice(0, 40)}…"`, T.ember2)}
         {row("mode", '"release"', T.ember2)}
         {row("ok", "true", T.alive)}
         {row("status", '"Dead"', T.ember2)}
@@ -59,7 +59,7 @@ function decodeHex(text: string, at: number, f: number) {
 export function KeyLift() {
   const f = useCurrentFrame();
   if (f < S10T.lift) return null;
-  const line = KEY_TBD;
+  const line = RELEASED_KEY;
   const p = lin(f, S10T.lift, S10T.lift + 16, 0, 1, out);
   const from = { x: TAKE_KEY.x, y: TAKE_KEY.y, s: TAKE_KEY.size / KEY_POSE.size }; // the take's key (escrow card)
   const to = { x: KEY_POSE.cx - 21, y: KEY_POSE.cy - 102 };

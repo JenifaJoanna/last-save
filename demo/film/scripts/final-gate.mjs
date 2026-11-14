@@ -6,8 +6,11 @@
 //  2b. facts files carry no dev-run marker at all (TBD, v2dev, dev-run, placeholder), even in comments, and no other
 //      scene source names the dev instance (v2dev) outside a comment;
 //  3. no "100%" claim about the post-shutdown sale (the contract sends 90 % to the pool, 10 % to the ops budget);
+//  3b. src/film/run-facts.json (scripts/facts.mjs) exists, is for the judge instance, was built from proof/judge-v2.json,
+//      lists nothing missing, has no empty value, and every source file still matches its recorded sha256;
 //  4. the narration files exist for every line the timeline places.
 // Usage: node scripts/final-gate.mjs   (run before rendering a deliverable; prints every failure, not just the first)
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,6 +32,27 @@ for (const p of sources) {
     else if (/facts\.ts$/.test(p) && /\bTBD\b|v2dev|dev[- ]run|placeholder/i.test(line)) fails.push(`unverified fact: ${relative(root, p)}:${i + 1}`);
     if (/100\s?%[^)]*(pool|keep-alive)/i.test(line)) fails.push(`100% pool claim: ${relative(root, p)}:${i + 1}`);
   });
+}
+
+// 3b. the run facts the film prints must come from the judge run's proof files, unchanged since they were read
+const JUDGE_INSTANCE = "ember-rift.lastsave-factory.testnet";
+const factsPath = join(root, "src", "film", "run-facts.json");
+if (!existsSync(factsPath)) fails.push("run facts missing: run node scripts/facts.mjs (src/film/run-facts.json)");
+else {
+  const rf = JSON.parse(readFileSync(factsPath, "utf8"));
+  if (rf.instance !== JUDGE_INSTANCE) fails.push(`run facts are for ${rf.instance}, not the judge instance ${JUDGE_INSTANCE}`);
+  if (!String(rf.source?.run?.path ?? "").endsWith("judge-v2.json")) fails.push(`run facts built from ${rf.source?.run?.path}, not judge-v2.json`);
+  for (const m of rf.missing ?? []) fails.push(`run fact missing: ${m}`);
+  for (const [k, v] of Object.entries(rf.values ?? {})) {
+    const empty = v === null || v === undefined || v === "" || (typeof v === "object" && !Object.keys(v).length);
+    if (empty) fails.push(`run fact empty: ${k}`);
+  }
+  for (const src of Object.values(rf.source ?? {}).flat()) {
+    const file = join(root, "..", "..", src.path);
+    if (src.path.startsWith("external/")) fails.push(`run facts source is outside the repo (proof/ only): ${src.path}`);
+    else if (!existsSync(file)) fails.push(`run facts source gone: ${src.path}`);
+    else if (createHash("sha256").update(readFileSync(file)).digest("hex") !== src.sha256) fails.push(`run facts source changed since facts.mjs ran: ${src.path}`);
+  }
 }
 
 const timeline = readFileSync(join(root, "src", "film", "timeline.ts"), "utf8");
