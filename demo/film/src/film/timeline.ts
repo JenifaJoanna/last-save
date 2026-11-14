@@ -7,7 +7,7 @@ export type SceneId = "XO" | "S01" | "S02" | "S03" | "S04" | "S05" | "S06" | "S0
 export interface SceneSpec { id: SceneId; name: string; dur: number; vo?: string; voAt?: number }
 
 /** dur and voAt in seconds; voAt is relative to the scene start. VO lengths (s): V01 4.80, V02 3.68, V03 11.68,
- * V04 10.88, V05 15.76, V06 8.88, V07 9.52, V08 14.88, V09 4.08, V10 7.76, V11 4.56, V12 10.0, V13 7.12, V14 6.80,
+ * V04 10.88, V05 15.76, V06 8.88, V07 9.52, V08 14.40, V09 4.08, V10 7.76, V11 4.56, V12 10.0, V13 7.12, V14 6.80,
  * V15 6.58, V16 2.88. */
 export const SCENES: SceneSpec[] = [
   { id: "S01", name: "Open", dur: 9.0, vo: "V01", voAt: 3.6 },

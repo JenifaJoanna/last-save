@@ -2,35 +2,35 @@
  "id": "V08",
  "tts": "eleven_v4",
  "stt": "scribe_v3",
- "text": "Then the studio goes dark. Its servers stop, and its download link disappears with them. The studio's word can't keep a game alive here, only players actually being served can, so when the checks fail three times, the contract marks it dead.",
- "heard": "Then the studio goes dark. Its servers stop, and its download link disappears with them. The studio's word can't keep a game alive here. Only players actually being served can. So when the checks fail three times, the contract marks it dead.",
+ "text": "Then the studio goes dark. Its servers stop, and its download link disappears with them. The studio's word can't keep a game alive here, only players actually being served can, so when they report it down, the contract marks it dead.",
+ "heard": "Then the studio goes dark. Its servers stop, and its download link disappears with them. The studio's word can't keep a game alive here. Only players actually being served can. So when they report it down, the contract marks it dead.",
  "match": true,
- "lastWordEnd": 14.7,
+ "lastWordEnd": 14.2,
  "words": [
   {
    "w": "Then",
-   "s": 0.18,
+   "s": 0.2,
    "e": 0.36
   },
   {
    "w": "the",
-   "s": 0.38,
-   "e": 0.48
+   "s": 0.4,
+   "e": 0.5
   },
   {
    "w": "studio",
-   "s": 0.56,
-   "e": 0.9
+   "s": 0.6,
+   "e": 0.96
   },
   {
    "w": "goes",
-   "s": 1,
+   "s": 1.08,
    "e": 1.26
   },
   {
    "w": "dark.",
-   "s": 1.3,
-   "e": 1.6
+   "s": 1.4,
+   "e": 1.7
   },
   {
    "w": "Its",
@@ -39,17 +39,17 @@
   },
   {
    "w": "servers",
-   "s": 2.42,
-   "e": 2.76
+   "s": 2.44,
+   "e": 2.78
   },
   {
    "w": "stop,",
-   "s": 2.86,
+   "s": 2.88,
    "e": 3.14
   },
   {
    "w": "and",
-   "s": 3.44,
+   "s": 3.46,
    "e": 3.52
   },
   {
@@ -64,23 +64,23 @@
   },
   {
    "w": "link",
-   "s": 4.2,
+   "s": 4.18,
    "e": 4.42
   },
   {
    "w": "disappears",
-   "s": 4.44,
-   "e": 5
+   "s": 4.46,
+   "e": 5.02
   },
   {
    "w": "with",
-   "s": 5.06,
-   "e": 5.22
+   "s": 5.08,
+   "e": 5.26
   },
   {
    "w": "them.",
-   "s": 5.26,
-   "e": 5.42
+   "s": 5.28,
+   "e": 5.46
   },
   {
    "w": "The",
@@ -89,133 +89,128 @@
   },
   {
    "w": "studio's",
-   "s": 6.16,
-   "e": 6.6
+   "s": 6.18,
+   "e": 6.66
   },
   {
    "w": "word",
-   "s": 6.64,
-   "e": 6.9
+   "s": 6.7,
+   "e": 6.98
   },
   {
    "w": "can't",
-   "s": 6.96,
-   "e": 7.14
+   "s": 7.04,
+   "e": 7.24
   },
   {
    "w": "keep",
-   "s": 7.2,
-   "e": 7.34
-  },
-  {
-   "w": "a",
-   "s": 7.38,
+   "s": 7.28,
    "e": 7.42
   },
   {
-   "w": "game",
+   "w": "a",
    "s": 7.46,
-   "e": 7.62
+   "e": 7.52
+  },
+  {
+   "w": "game",
+   "s": 7.56,
+   "e": 7.72
   },
   {
    "w": "alive",
-   "s": 7.66,
-   "e": 7.96
+   "s": 7.78,
+   "e": 8.1
   },
   {
    "w": "here.",
-   "s": 8,
-   "e": 8.18
+   "s": 8.14,
+   "e": 8.34
   },
   {
    "w": "Only",
-   "s": 8.66,
-   "e": 8.9
+   "s": 8.78,
+   "e": 9
   },
   {
    "w": "players",
-   "s": 8.94,
-   "e": 9.3
+   "s": 9.04,
+   "e": 9.42
   },
   {
    "w": "actually",
-   "s": 9.38,
-   "e": 9.72
+   "s": 9.5,
+   "e": 9.84
   },
   {
    "w": "being",
-   "s": 9.74,
-   "e": 9.9
+   "s": 9.86,
+   "e": 10.14
   },
   {
    "w": "served",
-   "s": 10.08,
-   "e": 10.4
+   "s": 10.22,
+   "e": 10.56
   },
   {
    "w": "can.",
-   "s": 10.46,
-   "e": 10.72
+   "s": 10.6,
+   "e": 10.84
   },
   {
    "w": "So",
-   "s": 11.16,
-   "e": 11.4
+   "s": 11.3,
+   "e": 11.38
   },
   {
    "w": "when",
-   "s": 11.44,
+   "s": 11.42,
    "e": 11.52
   },
   {
-   "w": "the",
-   "s": 11.54,
+   "w": "they",
+   "s": 11.56,
    "e": 11.64
   },
   {
-   "w": "checks",
+   "w": "report",
    "s": 11.68,
    "e": 11.94
   },
   {
-   "w": "fail",
+   "w": "it",
    "s": 11.98,
-   "e": 12.24
+   "e": 12.08
   },
   {
-   "w": "three",
-   "s": 12.28,
-   "e": 12.46
-  },
-  {
-   "w": "times,",
-   "s": 12.56,
-   "e": 12.94
+   "w": "down,",
+   "s": 12.12,
+   "e": 12.38
   },
   {
    "w": "the",
-   "s": 13.28,
-   "e": 13.36
+   "s": 12.76,
+   "e": 12.84
   },
   {
    "w": "contract",
-   "s": 13.42,
-   "e": 13.84
+   "s": 12.9,
+   "e": 13.34
   },
   {
    "w": "marks",
-   "s": 13.96,
-   "e": 14.18
+   "s": 13.46,
+   "e": 13.66
   },
   {
    "w": "it",
-   "s": 14.22,
-   "e": 14.4
+   "s": 13.7,
+   "e": 13.92
   },
   {
    "w": "dead.",
-   "s": 14.44,
-   "e": 14.7
+   "s": 13.96,
+   "e": 14.2
   }
  ]
 }

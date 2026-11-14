@@ -3,7 +3,7 @@
 // and crossfades 10 frames at the two seams those removals create. Score (candidate 3): act 1 composed at X length
 // (c3-act1x, 75.8 s: a 5.4-s cold-open section under XO, so "Title" lands on S02) and cut on "dead"; act 2 enters
 // under the release and resolves on the last frame (c3-act2x, 56.9 s).
-import type { ScoreAct } from "./cues";
+import { S09_DEAD, type ScoreAct } from "./cues";
 import { f, type Placed, SCENES } from "./timeline";
 
 /** The cold open (src/film/XOpen.tsx): length, V01 start, the line's single kick and the cut to shot B (frames). */
@@ -25,8 +25,8 @@ export const X_PLACED: Placed[] = (() => {
 })();
 export const X_TOTAL = X_PLACED[X_PLACED.length - 1].from + X_PLACED[X_PLACED.length - 1].frames;
 const sec = (id: string) => X_PLACED.find((s) => s.id === id)!.from / 30;
-// "dead" is 15.04 s into S09; the release VO starts 0.4 s into S10.
+// act 1 cuts 0.16 s after "dead" (S09_DEAD, from V08's word timings); the release VO starts 0.4 s into S10.
 export const X_SCORE: ScoreAct[] = [
-  { file: "music/v1/c3-act1x.mp3", from: 0, to: sec("S09") + 15.2, fadeIn: 0.6, fadeOut: 0.1 },
+  { file: "music/v1/c3-act1x.mp3", from: 0, to: sec("S09") + S09_DEAD + 0.16, fadeIn: 0.6, fadeOut: 0.1 },
   { file: "music/v1/c3-act2x.mp3", from: sec("S10") + 0.37, to: X_TOTAL / 30, fadeIn: 0.6, fadeOut: 2.0 },
 ];

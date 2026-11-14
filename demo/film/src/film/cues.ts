@@ -3,7 +3,14 @@
 // Score: Eleven Music music_v2_5, candidate 3 (dark synthwave, 80 BPM, E minor to E major), picked 14 Nov from the score
 // pick page; runners-up c1/c2 kept in public/music/v1/. Gain and ducking unchanged (the pick was heard at this mix).
 import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
-import type { SceneId } from "./timeline";
+import { scene, type SceneId } from "./timeline";
+import V08 from "../../vo/timings/V08.json";
+
+/** Seconds into S09 where a V08 word starts (V08 plays from 0.6 s); the kill's sounds and act 1's cut follow the words. */
+const V08_AT = 0.6;
+const w08 = (word: string) => V08_AT + (V08.words.find((x) => x.w.toLowerCase().replace(/[^a-z]/g, "") === word)?.s ?? NaN);
+/** "dead" in S09 (act 1 cuts 0.16 s after it, in every cut). */
+export const S09_DEAD = w08("dead");
 
 export interface Cue { file: string; at: number; scene: SceneId; volume?: number; dur?: number; rate?: number; fadeOut?: number }
 
@@ -30,11 +37,10 @@ export const SFX: Cue[] = [
   { scene: "S09", file: "key.mp3", at: 1.9, volume: 0.55 },                // "goes dark": the delete command
   { scene: "S09", file: "glitch.mp3", at: 5.04, volume: 0.45 },            // "disappears": studio copy gone
   { scene: "S09", file: "crt-off.mp3", at: 7.1, volume: 0.6 },             // CONNECTION LOST collapse
-  { scene: "S09", file: "probe-fail.mp3", at: 12.88, volume: 0.5 },        // "three times"
-  { scene: "S09", file: "probe-fail.mp3", at: 13.4, volume: 0.5, rate: 1.12 },
-  { scene: "S09", file: "probe-fail.mp3", at: 13.92, volume: 0.5, rate: 1.25 },
-  { scene: "S09", file: "flatline.mp3", at: 15.04, volume: 0.035, dur: 2.2, fadeOut: 1.9 }, // "dead"; the tone fades to silence (source is -4.8 LUFS)
-  { scene: "S09", file: "alert.mp3", at: 15.6, volume: 0.22 },
+  { scene: "S09", file: "stamp.wav", at: w08("report"), volume: 0.5 },                  // holder report 1/2 ("report")
+  { scene: "S09", file: "stamp.wav", at: w08("down"), volume: 0.5, rate: 0.92 },       // report 2/2, quorum ("down")
+  { scene: "S09", file: "flatline.mp3", at: S09_DEAD, volume: 0.035, dur: 2.2, fadeOut: 1.9 }, // "dead"; the tone fades to silence (source is -4.8 LUFS)
+  { scene: "S09", file: "alert.mp3", at: S09_DEAD + 0.56, volume: 0.22 },
   { scene: "S10", file: "decode.mp3", at: 3.36, volume: 0.5 },             // "releases"
   { scene: "S10", file: "unlock.mp3", at: 4.0, volume: 0.45 },
   { scene: "S11", file: "refund.mp3", at: 4.1, volume: 0.5 },              // "share back"
@@ -60,7 +66,7 @@ export const SFX: Cue[] = [
 /** `offset`: seconds into the music file where playback starts (default 0). */
 export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number; offset?: number }
 export const SCORE: ScoreAct[] = [
-  { file: "music/v1/c3-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
+  { file: "music/v1/c3-act1.mp3", from: 0, to: scene("S09").from / 30 + S09_DEAD + 0.16, fadeIn: 1.2, fadeOut: 0.1 },
   { file: "music/v1/c3-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
 ];
 export const MUSIC = { gain: 0.24, duckUnderVo: 0.42, closeBoost: 2.4 }; // closeBoost: the resolve under the end card, after the last line

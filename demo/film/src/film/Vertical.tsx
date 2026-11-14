@@ -9,7 +9,7 @@ import V08 from "../../vo/timings/V08.json";
 import V09 from "../../vo/timings/V09.json";
 import V12 from "../../vo/timings/V12.json";
 import V13 from "../../vo/timings/V13.json";
-import { MUSIC, SFX } from "./cues";
+import { MUSIC, S09_DEAD, SFX } from "./cues";
 import { f, scene, type SceneId } from "./timeline";
 
 const has = (p: string) => getStaticFiles().some((x) => x.name === p);
@@ -69,7 +69,7 @@ export function Vertical() {
         );
       })}
       {has("music/v1/c3-act1.mp3") && (
-        <Sequence from={placed[0].at} durationInFrames={f(15.2)} name="score act 1 tail">
+        <Sequence from={placed[0].at} durationInFrames={f(S09_DEAD + 0.16)} name="score act 1 tail">
           <Audio src={staticFile("music/v1/c3-act1.mp3")} startFrom={kill} volume={MUSIC.gain * MUSIC.duckUnderVo} />
         </Sequence>
       )}
