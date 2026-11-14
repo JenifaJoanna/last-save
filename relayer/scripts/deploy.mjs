@@ -31,10 +31,11 @@ const run = (a, opts = {}) => {
   return r;
 };
 
-const vars = ["RELAYER_ACCOUNT", "ALLOWED_RECEIVERS", "RPC_URLS", "RATE_LIMIT_PER_MIN", "GLOBAL_LIMIT_PER_MIN", "MAX_GAS_TGAS"]
+const vars = ["RELAYER_ACCOUNT", "ALLOWED_RECEIVERS", "ATTACKER_ACCOUNT", "RPC_URLS", "RATE_LIMIT_PER_MIN", "GLOBAL_LIMIT_PER_MIN", "MAX_GAS_TGAS"]
   .filter((k) => process.env[k]).flatMap((k) => ["--var", `${k}:${process.env[k]}`]);
 run(["deploy", "--name", worker, ...vars]);
 run(["secret", "put", "RELAYER_KEY", "--name", worker], { input: process.env.RELAYER_KEY });
+if (process.env.ATTACKER_KEY) run(["secret", "put", "ATTACKER_KEY", "--name", worker], { input: process.env.ATTACKER_KEY });
 
 const build = join(root, ".pages-build");
 rmSync(build, { recursive: true, force: true });

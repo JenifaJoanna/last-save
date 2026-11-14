@@ -3,7 +3,7 @@
 export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url);
-    if (pathname === "/relay" || pathname === "/health") return env.RELAYER.fetch(request);
+    if (pathname === "/relay" || pathname === "/health" || pathname === "/attack") return env.RELAYER.fetch(request);
     if (request.method === "OPTIONS") return env.RELAYER.fetch(request);
     return new Response("Last Save relayer. POST /relay, GET /health.\n", { status: 200, headers: { "content-type": "text/plain" } });
   },
