@@ -1,0 +1,93 @@
+# Release build with build provenance. Push a tag build-<name> (for example build-ember-rift) and this workflow
+#   1. builds the plaintext server bundle exactly as `launch.mjs bundle` does, for <name>.lastsave-factory.testnet,
+#   2. attests it (SLSA provenance, signed with Sigstore, logged in the public Rekor transparency log),
+#   3. publishes the tarball, its sha256 and the Sigstore bundle as assets of a public GitHub Release.
+# The studio's launch step `cibuild` downloads that tarball over plain HTTPS, verifies the attestation with public endpoints only,
+# then encrypts it: build_hash on the licence contract is the attested digest.
+name: release-build
+
+on:
+  push:
+    tags:
+      - "build-*"
+
+permissions: {}
+
+concurrency:
+  group: release-build-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the tagged commit
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Instance name from the tag
+        id: name
+        run: |
+          name="${GITHUB_REF_NAME#build-}"
+          if ! printf '%s' "$name" | grep -Eq '^[a-z0-9][a-z0-9_-]{0,30}[a-z0-9]$'; then
+            echo "tag ${GITHUB_REF_NAME} does not carry a valid instance name" >&2
+            exit 1
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6.1.1
+
+      - name: Set up Node
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the game client
+        working-directory: game/client
+        env:
+          VITE_LICENCE_CONTRACT: ${{ steps.name.outputs.name }}.lastsave-factory.testnet
+          VITE_PLATFORM_URL: https://last-save.pages.dev
+        run: npx vite build --logLevel warn
+
+      - name: Build the server bundle
+        env:
+          VITE_LICENCE_CONTRACT: ${{ steps.name.outputs.name }}.lastsave-factory.testnet
+          VITE_PLATFORM_URL: https://last-save.pages.dev
+        run: pnpm --filter server-bundle build
+
+      - name: Stage release files
+        run: |
+          mkdir release
+          cp server-bundle/dist/server-bundle.tar.gz release/server-bundle.tar.gz
+          (cd release && sha256sum server-bundle.tar.gz > server-bundle.tar.gz.sha256 && cat server-bundle.tar.gz.sha256)
+
+      - name: Attest build provenance
+        id: attest
+        uses: actions/attest-build-provenance@v4.2.2
+        with:
+          subject-path: release/server-bundle.tar.gz
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          cp "$BUNDLE_PATH" release/server-bundle.tar.gz.sigstore.json
+          digest="$(cut -d' ' -f1 release/server-bundle.tar.gz.sha256)"
+          gh release create "$GITHUB_REF_NAME" \
+            release/server-bundle.tar.gz release/server-bundle.tar.gz.sha256 release/server-bundle.tar.gz.sigstore.json \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "Server bundle ${GITHUB_REF_NAME}" \
+            --notes "Plaintext server bundle for the ${{ steps.name.outputs.name }} licence instance, built by the release-build workflow at commit ${GITHUB_SHA}. SHA-256: ${digest}. The build is attested with Sigstore provenance (GitHub artifact attestations); the attestation is public and independent of this release."
