@@ -10,15 +10,8 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-const dec = (s) => Buffer.from(s, "base64").toString("utf8");
-const TERMS = [
-  "Z2FicmllbGF4eQ==", "Z2FicmllbA==", "YW50b255", "eGF2aW91cg==", "Y29zbWljbGFu",
-  "aW5qZWN0LnNo", "LmVudi5tYXN0ZXI=", "Y2xhdWRlL3ZhdWx0",
-  "Ym9ubmV5", "bWFyc2VsYQ==", "amVza2lucw==", "a2Fpem9rdWpvZWw=", "cmF0bmE=",
-  "Y2lwaGVya3VtYQ==", "Y2lwaGVyIGt1bWE=", "am9lbG9mZmJlYXQ=", "c3Bpbm9sYQ==",
-  "ZGFydGhzdG9ybWVy", "ZGFydGggc3Rvcm1lcg==",
-].map(dec);
-const WORKERS_SUB = dec("Z2FicmllbGF4eQ==");
+import { TERMS, WORKERS_SUB } from "./lib/identity-terms.mjs";
+
 const ALLOWED_AUTHOR = /^Jenifa ?Joanna <[^>]+>$/;
 const BINARY = /\.(wasm|png|jpe?g|webp|gif|mp[34]|wav|ogg|woff2?|ttf|ico|zip|gz|br)$/i;
 const BUILD_DIRS = ["web/dist", "web/dist-preview", "game/client/dist", "game/server/dist", "server-bundle/dist", "demo/out", "outlayer/dist"];
