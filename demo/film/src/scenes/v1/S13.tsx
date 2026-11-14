@@ -33,7 +33,7 @@ function WalrusCopy() {
 
 export function S13() {
   const f = useCurrentFrame();
-  const fly = ramp(f, 0, 18);
+  const fly = ramp(f, 0, 18, inOut); // leaves S12's held pose gently (ease-in-out, no frame-1 jump)
   const copyOut = interpolate(f, [8, 14], [1, 0], c);
   const open = ramp(f, OPEN_AT, OPEN_AT + 14, inOut);
   const r = roll(f, ROLL_AT);

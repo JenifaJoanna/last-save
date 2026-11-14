@@ -6,7 +6,7 @@
 //   card 3 scrolls in f260–276, line 1 f274, "proportionate refund" prints f308, gold block grows f315–329 ("refund" f315)
 // Camera (all ease-out): push into the glass f20–58, drift +4 % inside, pull back to the bezel f336–374.
 // End pose: settled ScreenFrame (scale 1, WHY STUDIOS OPT IN, online, HOME hints/keys) with card 3, "refund" in gold.
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { T } from "../../ds/tokens";
 import { CardPage } from "./g1/Card";
 import { EC_CARDS } from "./g1/copy";
@@ -20,7 +20,8 @@ const TITLE = "WHY STUDIOS OPT IN";
 
 export function S03() {
   const f = useCurrentFrame();
-  const page = SCROLLS.reduce((n, [a, b]) => n + ramp(f, a, b, easeOut), 0);
+  // the first scroll leaves S02's held title page, so it eases in as well as out (no frame-1 jump at the seam)
+  const page = SCROLLS.reduce((n, [a, b]) => n + ramp(f, a, b, a === 0 ? Easing.bezier(0.65, 0, 0.35, 1) : easeOut), 0);
   // Hold the bezel while the status title decodes, push through the glass (chrome leaves frame mid-move, never on a
   // hold), drift inside, then pull back out to the bezel for the end pose.
   const inGlass = mix(1.02, IN_GLASS, ramp(f, 20, 58, easeOut)) + interpolate(f, [58, 336], [0, 0.04], cl);

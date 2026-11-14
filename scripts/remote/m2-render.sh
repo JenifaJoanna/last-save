@@ -21,8 +21,11 @@ if ssh "$SSH_HOST" "pgrep -f 'remotion render' >/dev/null"; then
 fi
 
 echo "[m2-render] rendering $COMP -> out/$OUT (concurrency 1) $EXTRA"
+# Render with the box's full Google Chrome: the bundled headless shell drops some CSS-3D billboards (S12's plinth
+# tags rendered blank on 14 Nov), and every scene was reviewed on full Chrome. Override with M2_BROWSER.
+BROWSER="${M2_BROWSER:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 ssh "$SSH_HOST" "zsh -lc 'cd ~/$REMOTE_DIR/demo/film && mkdir -p out && \
-  npx remotion render src/index.ts $COMP out/$OUT --codec h264 --pixel-format yuv420p --concurrency=1 $EXTRA'"
+  npx remotion render src/index.ts $COMP out/$OUT --codec h264 --pixel-format yuv420p --concurrency=1 \"--browser-executable=$BROWSER\" $EXTRA'"
 
 echo "[m2-render] pulling out/$OUT to $LOCAL_OUT"
 rsync -a --progress "$LAN_HOST:$REMOTE_DIR/demo/film/out/$OUT" "$LOCAL_OUT/"
