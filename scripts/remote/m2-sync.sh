@@ -17,7 +17,7 @@ echo "[m2-sync] install deps if lockfile changed"
 ssh "$SSH_HOST" "zsh -lc 'cd ~/$REMOTE_DIR/demo/film && pnpm install --frozen-lockfile --ignore-workspace --silent'"
 
 echo "[m2-sync] rsync untracked inputs (public/footage, public/plates) over $LAN_HOST"
-rsync -a --itemize-changes \
+rsync -a --delete --itemize-changes \
   --exclude='.env*' --exclude='*.pem' --exclude='*.key*' --exclude='node_modules' --exclude='out' \
   "$FILM/public/footage/" "$LAN_HOST:$REMOTE_DIR/demo/film/public/footage/"
 # placeholder stills used by footage slots until the real takes land (gitignored like footage)
