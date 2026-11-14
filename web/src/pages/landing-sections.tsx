@@ -28,9 +28,9 @@ export function Lifecycle() {
         {STEPS.map((s, i) => (
           <motion.li key={s.tag} initial={{ y: 14 }} whileInView={{ y: 0 }} viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: i * 0.08 }} className="card relative p-6">
-            <span className={`grid size-12 place-items-center rounded-xl border border-line bg-ink-2 ${s.tone}`}><s.icon className="size-5" /></span>
+            <span className={`grid size-12 place-items-center rounded-[3px] border border-line bg-ink-2 ${s.tone}`}><s.icon className="size-5" /></span>
             <p className="eyebrow mt-5 text-[11px]">{String(i + 1).padStart(2, "0")} · {s.tag}</p>
-            <h3 className="mt-2 text-lg font-semibold tracking-tight">{s.title}</h3>
+            <h3 className="mt-2 label text-[15px]">{s.title}</h3>
             <p className="mt-2 text-[15px] leading-relaxed text-muted">{s.body}</p>
           </motion.li>
         ))}
@@ -51,7 +51,7 @@ export function StudioCase() {
         {cards.map((c) => (
           <div key={c.title} className="card p-6">
             <c.icon className="size-6 text-ember" />
-            <h3 className="mt-4 text-lg font-semibold tracking-tight">{c.title}</h3>
+            <h3 className="mt-4 label text-[15px]">{c.title}</h3>
             <p className="mt-2 text-[15px] leading-relaxed text-muted">{c.body}</p>
           </div>
         ))}
@@ -89,7 +89,7 @@ export function Trust() {
           <ul className="mt-5 grid gap-5">
             {trust.map((t) => (
               <li key={t.name} className="flex gap-4">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-line bg-ink-2"><t.icon className="size-5 text-gold" /></span>
+                <span className="grid size-10 shrink-0 place-items-center rounded-[3px] border border-line bg-ink-2"><t.icon className="size-5 text-gold" /></span>
                 <span><b className="block text-[15px]">{t.name}</b><span className="text-[15px] text-muted">{t.body}</span></span>
               </li>
             ))}

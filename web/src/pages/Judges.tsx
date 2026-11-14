@@ -2,8 +2,7 @@
 import { BadgeCheck, CircleDashed, Factory, FileCode2, GitBranch, PlayCircle, Terminal } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
-import { SiteFooter, SiteNav } from "../components/SiteNav";
-import { Card, Copy, Ext, Skeleton } from "../components/ui";
+import { Card, Copy, Ext, ScreenTitle, Skeleton } from "../components/ui";
 import { FACTORY, useInfo, useInstances, useLockedKeys } from "../lib/licence";
 import { accountUrl, ago, codeHash, CONTRACT } from "../lib/near";
 
@@ -81,14 +80,11 @@ function Body() {
   );
 }
 
-export default function Judges({ inApp = false }: { inApp?: boolean }) {
-  const head = (
-    <div className="mb-6">
-      <p className="eyebrow">Judge guide</p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Verify every claim in five minutes</h1>
-      <p className="mt-3 max-w-2xl text-muted">Nothing here asks you to trust our words: each line links to chain state, a hash you can rebuild, or a proof file.</p>
+export default function Judges() {
+  return (
+    <div className="mx-auto max-w-6xl">
+      <ScreenTitle eyebrow="Judge guide" sub="Nothing here asks you to trust our words: each line links to chain state, a hash you can rebuild, or a proof file.">Verify every claim</ScreenTitle>
+      <Body />
     </div>
   );
-  if (inApp) return <div className="mx-auto max-w-6xl">{head}<Body /></div>;
-  return <div className="min-h-dvh"><SiteNav /><main className="mx-auto max-w-6xl px-4 py-12 sm:px-6">{head}<Body /></main><SiteFooter /></div>;
 }

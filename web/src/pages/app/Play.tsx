@@ -1,7 +1,7 @@
 // Play: pick a server. Official while the studio lives; community hosts registered on-chain after release.
 import { Gamepad2, Radio, Server, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Card, LinkButton, Note, Skeleton, StatusBadge } from "../../components/ui";
+import { Card, LinkButton, Note, ScreenTitle, Skeleton, StatusBadge } from "../../components/ui";
 import { useHosts, useInfo } from "../../lib/licence";
 import { OFFICIAL_URL, shortAcct } from "../../lib/near";
 import { PLAY_URL } from "../Landing";
@@ -38,9 +38,9 @@ function ServerRow({ name, kind, url }: { name: string; kind: "official" | "comm
   const h = useHealth(url);
   return (
     <li className="flex flex-wrap items-center gap-4 px-5 py-4">
-      <span className={`grid size-10 place-items-center rounded-xl border border-line bg-ink-2 ${kind === "official" ? "text-ember" : "text-cyan"}`}>{kind === "official" ? <Radio className="size-5" /> : <Server className="size-5" />}</span>
+      <span className={`grid size-10 place-items-center border border-line-2 bg-ink-2 ${kind === "official" ? "text-ember" : "text-cyan"}`}>{kind === "official" ? <Radio className="size-5" /> : <Server className="size-5" />}</span>
       <div className="min-w-0 flex-1">
-        <p className="font-medium">{name}</p>
+        <p className="label text-[13px]">{name}</p>
         <p className="mono truncate text-muted">{url || "no endpoint"}</p>
       </div>
       <div className="text-right text-sm">
@@ -61,10 +61,10 @@ export default function Play() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="eyebrow">Play</p><h1 className="mt-2 text-3xl font-semibold tracking-tight">Choose a server</h1></div>
-        {d && <StatusBadge status={d.status} />}
+        <ScreenTitle eyebrow="Choose a server">Play</ScreenTitle>
+        {d && <StatusBadge status={d.status} released={!!d.releasedKey} />}
       </div>
-      <p className="mt-3 max-w-2xl text-muted">Every server checks your licence when you sign in and restores the same progress from the on-chain snapshot. The game opens in a new tab and asks your wallet for one signature.</p>
+      <p data-print className="max-w-2xl text-[13px] text-muted">Every server checks your licence when you sign in and restores the same progress from the on-chain snapshot. The game opens in a new tab and asks your wallet for one signature.</p>
       <Card className="mt-6 !p-0">
         <ul className="divide-y divide-line">
           {!d ? <li className="p-5"><Skeleton className="h-10 w-full" /></li> : <ServerRow name={d.status === "Dead" ? "Official server (studio gone dark)" : "Official server · Kiln Interactive"} kind="official" url={official} />}

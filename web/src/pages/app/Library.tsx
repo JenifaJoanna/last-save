@@ -2,7 +2,9 @@
 import { motion } from "motion/react";
 import { Flame, Gamepad2, HeartPulse, ShoppingBag } from "lucide-react";
 import { Link } from "wouter";
-import { Button, Card, LinkButton, Skeleton, Stat, StatusBadge } from "../../components/ui";
+import { useLocation } from "wouter";
+import { usePrimary } from "../../components/terminal/nav";
+import { Button, Card, LinkButton, ScreenTitle, Skeleton, Stat, StatusBadge } from "../../components/ui";
 import { useInfo, useMyLicence, useSnapshot } from "../../lib/licence";
 import { ago, near, shortHash } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
@@ -16,6 +18,8 @@ export default function LibraryPage() {
   const snap = useSnapshot();
   const d = info.data;
   const me = accountId && snap.data ? snap.data.players[accountId] : undefined;
+  const [, navigate] = useLocation();
+  usePrimary(lic.data ? { label: "Play", run: () => navigate("/app/play") } : lic.loading ? null : { label: "Go to store", run: () => navigate("/app/store") }, [!!lic.data, lic.loading]);
 
   if (lic.loading) return <div className="mx-auto grid max-w-5xl gap-4"><Skeleton className="h-10 w-48" /><Skeleton className="h-64 w-full" /></div>;
 
@@ -23,8 +27,8 @@ export default function LibraryPage() {
     return (
       <div className="mx-auto grid min-h-[70dvh] max-w-xl place-items-center text-center">
         <div>
-          <span className="mx-auto grid size-16 place-items-center rounded-2xl border border-line bg-ink-2"><ShoppingBag className="size-7 text-ember" /></span>
-          <h1 className="mt-6 text-3xl font-semibold tracking-tight">Your library is empty</h1>
+          <span className="mx-auto grid size-16 place-items-center border border-line-2 bg-ink-2"><ShoppingBag className="size-7 text-ember" /></span>
+          <h1 className="display mt-6 text-3xl">Empty library</h1>
           <p className="mt-3 text-muted">{accountId} has no Ember Rift licence yet. Buy one and part of the price is locked for you by contract.</p>
           <LinkButton href="/app/store" size="lg" className="mt-8">Go to the store</LinkButton>
         </div>
@@ -36,16 +40,16 @@ export default function LibraryPage() {
   const dead = d?.status === "Dead";
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="eyebrow">Library</p><h1 className="mt-2 text-3xl font-semibold tracking-tight">Your games</h1></div>
-        {d && <StatusBadge status={d.status} />}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <ScreenTitle eyebrow="Your games">Library</ScreenTitle>
+        {d && <StatusBadge status={d.status} released={!!d.releasedKey} />}
       </div>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="card relative mt-6 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,rgb(255_122_26/0.18),transparent)]" />
+      <motion.div data-print className="card relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_80%_at_100%_0%,rgb(255_107_43/0.14),transparent)]" />
         <div className="relative grid gap-8 p-6 sm:p-8 md:grid-cols-[1fr_auto]">
           <div>
-            <p className="font-display text-sm tracking-[0.2em] text-muted">LICENCE #{l.tokenId}</p>
-            <h2 className="mt-2 font-display text-4xl font-bold tracking-[0.04em]">EMBER RIFT</h2>
+            <p className="eyebrow">Licence #{l.tokenId}</p>
+            <h2 className="display mt-2 text-[clamp(30px,4vw,46px)]">Ember Rift</h2>
             <p className="mt-2 text-sm text-muted">Held by {accountId}{l.mintedAt ? ` · bought ${ago(l.mintedAt)}` : ""}{l.postDeath ? " · bought after shutdown" : ""}</p>
             <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
               <Stat label="Locked for you" value={`${near(l.potShare)} Ⓝ`} tone="gold" sub={l.choice ? CHOICE_TEXT[l.choice] ?? l.choice : dead ? "Yours to decide" : "Released only on shutdown"} />
@@ -66,7 +70,7 @@ export default function LibraryPage() {
         </Card>
         <Card eyebrow="If the studio goes dark" title={dead ? "It has. Your share is unlocked." : "Your share unlocks automatically"}>
           <p className="text-[15px] leading-relaxed text-muted">{dead ? "Take your locked share back as a refund, or pledge it to the pool that pays fans to host the game for everyone." : "Nobody has to announce anything. When probes fail or holders report it down, the contract flips and you choose: refund or pledge."}</p>
-          <Link href="/app/afterlife" className="mt-4 inline-block text-sm text-ember no-underline hover:underline">Open the licence status →</Link>
+          <Link href="/app/afterlife" className="label mt-4 inline-block text-[12px] text-gold no-underline hover:underline">Open the licence status ▸</Link>
         </Card>
       </div>
     </div>

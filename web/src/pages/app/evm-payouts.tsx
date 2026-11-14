@@ -34,6 +34,25 @@ async function relayRaw(raw: string): Promise<string> {
   throw new Error(last);
 }
 
+/** The signed transfer as a transmission readout: each field prints in like a received line. */
+function Transmission({ p }: { p: EvmPayout }) {
+  const lines: [string, string][] = [
+    ["type", "0x02 · EIP-1559 · chainId 84532 (Base Sepolia)"],
+    ["nonce", String(p.nonce ?? "—")],
+    ["to", p.to],
+    ["value", `${eth(p.valueWei)} ETH`],
+    ["signed by", "NEAR MPC network for the licence contract"],
+    ["tx", p.txHash ?? "—"],
+  ];
+  return (
+    <div className="mono mt-3 border-l-2 border-gold/70 bg-void/60 px-3 py-2 text-[11.5px] leading-5">
+      <p className="label text-[10px] text-gold">// Signed transmission received</p>
+      {lines.map(([k, v], i) => <p key={k} className="step-in truncate" style={{ animationDelay: `${i * 70}ms` }}><span className="text-faint">&gt; {k.padEnd(9, " ")}</span> <span className="text-text">{v}</span></p>)}
+      {p.txHash && !PREVIEW && <a href={`${SCAN}/tx/${p.txHash}`} target="_blank" rel="noopener" className="label mt-1 inline-flex items-center gap-1 text-[10px] text-gold hover:underline">Open on Basescan<ExternalLink className="size-3" /></a>}
+    </div>
+  );
+}
+
 function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
   const { call, pending } = useWallet();
   const toast = useToast();
@@ -52,11 +71,11 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
   return (
     <li className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
       <div className="min-w-0">
-        <p className="flex flex-wrap items-center gap-2 text-[15px]"><b className="num">Epoch {p.epoch}</b><span className="text-muted">{p.verified} verified sessions</span>
-          <span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${st.c}`}>{p.relayed ? "On Base Sepolia" : st.label}</span></p>
-        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted"><span className="num font-semibold text-text">{eth(p.valueWei)} ETH</span><ArrowRightLeft className="size-3.5" /><span className="mono">{shortHash(p.to, 6)}</span>
+        <p className="flex flex-wrap items-center gap-2 text-[15px]"><b className="label text-[13px]">Epoch {p.epoch}</b><span className="text-muted">{p.verified} verified sessions</span>
+          <span className={`label border px-1.5 py-0.5 text-[10px] ${st.c}`}>{p.relayed ? "On Base Sepolia" : st.label}</span></p>
+        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted"><span className="num text-text">{eth(p.valueWei)} ETH</span><ArrowRightLeft className="size-3.5" /><span className="mono">{shortHash(p.to, 6)}</span>
           {p.nonce !== null && <span className="text-faint">· nonce {p.nonce}</span>}<span className="text-faint">· {near(p.nearDebited)} Ⓝ moved to EVM-settled</span></p>
-        {p.txHash && <p className="mt-1 text-xs text-faint">tx <span className="mono">{shortHash(p.txHash, 10)}</span>{!PREVIEW && <a href={`${SCAN}/tx/${p.txHash}`} target="_blank" rel="noopener" className="ml-1 inline-flex items-center gap-1 text-ember hover:underline">Basescan<ExternalLink className="size-3" /></a>}</p>}
+        {p.status === "Signed" && <Transmission p={p} />}
       </div>
       <div className="flex gap-2">
         {p.status === "Owed" && <Button size="sm" onClick={async () => { if (await call("sign_evm_payout", { id: p.id }, { gasTgas: 300, label: "Signed by NEAR's MPC network" })) onAct(); }} loading={pending === "sign_evm_payout"}><Fingerprint className="size-4" />Sign</Button>}
@@ -79,17 +98,17 @@ export function EvmPayouts({ mine }: { mine: HostView | undefined }) {
       <div className="grid gap-4 px-5 pb-5 lg:grid-cols-[1.2fr_1fr]">
         <div className="text-[15px] leading-relaxed text-muted">
           <p>The licence contract controls one Base Sepolia address through NEAR Chain Signatures. NEAR's MPC network signs for the contract; no person or server holds the key.</p>
-          <div className="mt-3 rounded-xl border border-line bg-ink p-3">
+          <div className="bracket mt-3 p-3">
             <p className="eyebrow text-[10px]">Contract's Base address</p>
             <Copy text={info.address} className="mt-1 !px-0" />
             <p className="mt-1 text-xs text-faint">derived from <span className="mono">{info.contract}</span> + path <span className="mono">{info.path}</span> on <span className="mono">{info.mpc}</span> · chain {info.chainId}</p>
           </div>
         </div>
         {mine && (
-          <motion.div layout className="grid content-start gap-2">
-            <p className="text-sm text-muted">{mine.payoutEvm ? <>Your epochs pay out to <span className="mono text-text">{shortHash(mine.payoutEvm, 6)}</span> on Base Sepolia.</> : "Your epochs pay out in NEAR. Switch to Base Sepolia:"}</p>
+          <motion.div layout className="grid min-w-0 content-start gap-2">
+            <p className="break-words text-[13px] text-muted">{mine.payoutEvm ? <>Your epochs pay out to <span className="mono text-text">{shortHash(mine.payoutEvm, 6)}</span> on Base Sepolia.</> : "Your epochs pay out in NEAR. Switch to Base Sepolia:"}</p>
             {!mine.payoutEvm && (<>
-              <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="0x… your Base Sepolia address" spellCheck={false} className="mono h-11 rounded-xl border border-line bg-white/[0.03] px-3 text-text outline-none focus:border-cyan/60" />
+              <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="0x… your Base Sepolia address" spellCheck={false} className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold" />
               <Button variant="ghost" disabled={!valid} loading={pending === "set_payout_evm"} onClick={async () => { if (await call("set_payout_evm", { address: addr.trim() }, { gasTgas: 30, label: "Payout address set" })) evm.refresh(); }}>Pay me on Base Sepolia{gasless ? " · gas-free" : ""}</Button>
             </>)}
           </motion.div>

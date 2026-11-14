@@ -55,8 +55,30 @@ export function Heartbeat({ alive, className = "" }: { alive: boolean; className
         <path key={phase} d={beat} fill="none" stroke={`url(#${id})`} strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"
           style={{ strokeDasharray: 600, animation: "sweep 1.4s cubic-bezier(.4,0,.2,1) both", filter: "drop-shadow(0 0 6px currentColor)" }} />
       ) : (
-        <path d="M0 40 H240" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ filter: "drop-shadow(0 0 6px currentColor)" }} />
+        <path d="M0 40 H240" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ strokeDasharray: 600, animation: "sweep 900ms steps(12) both", filter: "drop-shadow(0 0 6px currentColor)" }} />
       )}
+    </svg>
+  );
+}
+
+/** Home emblem: a banded sunset sun crossed by the ECG trace; dead turns it red with a flat line. Pulses while alive. */
+export function SunEmblem({ dead, className = "" }: { dead: boolean; className?: string }) {
+  const id = `sun${useId().replace(/:/g, "")}`;
+  const bands = [62, 70, 77, 83, 88];
+  return (
+    <svg viewBox="0 0 240 200" className={className} role="img" aria-label={dead ? "Flat line: the studio is gone" : "Heartbeat: the game is alive"}>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+          {dead ? <><stop offset="0" stopColor="#ff8a7a" /><stop offset="1" stopColor="#8f1d2c" /></>
+            : <><stop offset="0" stopColor="#ffd86b" /><stop offset=".5" stopColor="#ff6b2b" /><stop offset="1" stopColor="#e8407e" /></>}
+        </linearGradient>
+        <mask id={`${id}m`}><rect width="240" height="200" fill="#fff" />{bands.map((y, i) => <rect key={y} x="0" y={y * 2 - 20} width="240" height={2 + i * 1.6} fill="#000" />)}</mask>
+      </defs>
+      <g className={dead ? "" : "emblem-pulse"} style={{ transformOrigin: "120px 100px" }}>
+        <circle cx="120" cy="100" r="74" fill={`url(#${id})`} mask={`url(#${id}m)`} />
+      </g>
+      <path d={dead ? "M8 100 H232" : "M8 100 H78 l8 -6 8 6 H104 l7 -38 9 70 8 -46 6 14 H166 l8 -6 8 6 H232"} fill="none" stroke="#efe5d0" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx="8" cy="100" r="4" fill="#efe5d0" /><circle cx="232" cy="100" r="4" fill="#efe5d0" />
     </svg>
   );
 }

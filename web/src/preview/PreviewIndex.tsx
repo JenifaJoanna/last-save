@@ -1,9 +1,8 @@
 // Preview index: every screen in every state, one tap each. Sets the lifecycle step + persona, then opens the screen.
-import { motion } from "motion/react";
 import { ArrowUpRight, Gamepad2, HeartPulse, Landmark, Scale, Server, Store, Terminal } from "lucide-react";
 import type { ReactNode } from "react";
 import { useLocation } from "wouter";
-import { Heartbeat, Wordmark } from "../components/brand";
+import { ScreenTitle } from "../components/ui";
 import { arrive } from "./PreviewDock";
 import { goto } from "./store";
 import { STEPS, type Persona } from "./world";
@@ -36,8 +35,8 @@ const SECTIONS: { name: string; icon: typeof Store; tiles: Tile[] }[] = [
     { title: "Play on a community host", sub: "Official dead, fan server online", step: "paid", as: "mira", path: "/app/play" },
   ] },
   { name: "Front door and judges", icon: Scale, tiles: [
-    { title: "Landing · alive", sub: "The pitch with a live heartbeat", step: "sold", path: "/home" },
-    { title: "Landing · gone dark", sub: "Same page after the shutdown", step: "evm", path: "/home" },
+    { title: "Landing · alive", sub: "The pitch with a live heartbeat", step: "sold", path: "/" },
+    { title: "Landing · gone dark", sub: "Same page after the shutdown", step: "evm", path: "/" },
     { title: "Sign in", sub: "Wallet sign-in screen", step: "sold", as: "guest", path: "/signin" },
     { title: "How it works", sub: "The lifecycle explained", step: "sold", path: "/how" },
     { title: "Public status page", sub: "Shareable licence status", step: "paid", path: "/status" },
@@ -55,42 +54,37 @@ export default function PreviewIndex() {
     navigate(t.path);
   };
   return (
-    <div className="min-h-dvh pb-32">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 pt-6 sm:px-6"><Wordmark /><span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.16em] text-gold">Preview</span></header>
-      <section className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
-        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl text-[clamp(30px,4.6vw,54px)] font-semibold leading-[1.05] tracking-tight">
-          Every screen, every state. <span className="ember-text">No wallet needed.</span>
-        </motion.h1>
-        <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">Real numbers from the locked judge instance; nothing here touches the chain. Buttons work and move the story on. The dock at the bottom steps through the lifecycle and switches who is signed in. Sound is on (tap anywhere once).</p>
-        <div className="mt-6 flex flex-wrap gap-1.5">
+    <div className="mx-auto max-w-6xl pb-8">
+      <section>
+        <ScreenTitle eyebrow="Preview · no wallet · nothing is sent to chain" sub="Real numbers from the locked judge instance. Buttons work and move the story on. The PREVIEW strip at the top steps through the lifecycle (, and .) and switches who is signed in. Sound is on after your first tap.">Every screen</ScreenTitle>
+        <div data-print className="flex flex-wrap gap-1.5">
           {STEPS.map((s, i) => (
             <button key={s.id} onClick={() => open({ title: s.label, sub: "", step: s.id, path: s.id === "studio2" ? "/judges" : ["hosted", "paid", "evm"].includes(s.id) ? "/app/hosts" : "/app/afterlife" })}
-              className="group flex items-center gap-2 rounded-full border border-line bg-white/[0.02] py-1.5 pl-1.5 pr-3 text-[13px] text-muted transition-colors hover:border-ember/50 hover:text-text">
-              <span className="num grid size-6 place-items-center rounded-full bg-white/[0.06] text-[11px] group-hover:bg-ember group-hover:text-ink">{i + 1}</span>{s.short}
+              className="group label flex items-center gap-2 border border-line-2 py-1 pl-1 pr-3 text-[11px] text-muted hover:border-gold hover:text-text">
+              <span className="num grid size-6 place-items-center bg-white/[0.06] text-[11px] text-gold group-hover:bg-gold group-hover:text-key-ink">{String(i + 1).padStart(2, "0")}</span>{s.short}
             </button>
           ))}
         </div>
       </section>
-      <div className="mx-auto mt-10 grid max-w-6xl gap-10 px-4 sm:px-6">
+      <div className="mt-10 grid gap-10">
         {SECTIONS.map((sec, si) => (
           <section key={sec.name}>
             <h2 className="eyebrow flex items-center gap-2"><sec.icon className="size-4 text-ember" />{sec.name}</h2>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {sec.tiles.map((t, ti) => (
-                <motion.button key={t.title} onClick={() => open(t)} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.03 * (si * 4 + ti), duration: 0.3 }}
-                  className="card group flex items-start gap-3 p-4 text-left transition-[border-color,transform] duration-150 hover:border-ember/40 active:scale-[0.99]">
+                <button key={t.title} onClick={() => open(t)}
+                  data-print className="card group flex items-start gap-3 p-4 text-left hover:bg-[var(--color-text)] hover:text-key-ink">
                   <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2 font-medium">{ICON[t.path]}{t.title}</span>
-                    <span className="mt-1 block text-sm text-muted">{t.sub}</span>
+                    <span className="label flex items-center gap-2 text-[13px]">{ICON[t.path]}{t.title}</span>
+                    <span className="mt-1 block text-[12.5px] text-muted group-hover:text-key-ink/75">{t.sub}</span>
                   </span>
-                  <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-faint transition-colors group-hover:text-ember" />
-                </motion.button>
+                  <ArrowUpRight className="mt-0.5 size-4 shrink-0 text-faint group-hover:text-key-ink" />
+                </button>
               ))}
             </div>
           </section>
         ))}
       </div>
-      <div className="mx-auto mt-14 flex max-w-6xl items-center gap-3 px-4 text-xs text-faint sm:px-6"><Heartbeat alive className="h-5 w-16 text-alive" />Last Save · NEAR testnet · preview build</div>
     </div>
   );
 }

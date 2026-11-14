@@ -1,15 +1,15 @@
 // How it works: the lifecycle diagram, the trust model and the FAQ. Public at /how, in-app at /app/how.
-import { SiteFooter, SiteNav } from "../components/SiteNav";
+import { ScreenTitle } from "../components/ui";
 import { Faq, Lifecycle, Trust } from "./landing-sections";
 
 function Diagram() {
-  const box = "fill-[#12101d] stroke-[rgba(255,255,255,0.14)]";
+  const box = "fill-[#19142e] stroke-[rgba(196,182,255,0.24)]";
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6">
-      <div className="card overflow-x-auto p-4 sm:p-8">
+    <section>
+      <div data-print className="card overflow-x-auto p-4 sm:p-8">
         <svg viewBox="0 0 980 300" className="min-w-[760px]" role="img" aria-label="Diagram: studio escrows the server key in an OutLayer enclave owned by the licence contract; on death the enclave releases it; holders refund or pledge; fans host and are paid per signed player session.">
           <defs>
-            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#ff7a1a" /></marker>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#ff6b2b" /></marker>
           </defs>
           {[
             { x: 10, y: 40, w: 170, t: "Studio", s: "encrypts the server build" },
@@ -21,9 +21,9 @@ function Diagram() {
             { x: 800, y: 190, w: 170, t: "Players", s: "same progress, back in" },
           ].map((b) => (
             <g key={b.t}>
-              <rect x={b.x} y={b.y} width={b.w} height="70" rx="14" className={box} strokeWidth="1.2" />
-              <text x={b.x + 16} y={b.y + 30} fill="#efeaff" fontSize="16" fontWeight="600" fontFamily="Inter">{b.t}</text>
-              <text x={b.x + 16} y={b.y + 52} fill="#9a92b8" fontSize="12.5" fontFamily="Inter">{b.s}</text>
+              <rect x={b.x} y={b.y} width={b.w} height="70" rx="4" className={box} strokeWidth="1.2" />
+              <text x={b.x + 16} y={b.y + 30} fill="#efe5d0" fontSize="15" fontWeight="600" fontFamily="Chakra Petch" letterSpacing="1.5">{b.t.toUpperCase()}</text>
+              <text x={b.x + 16} y={b.y + 52} fill="#b0a7cc" fontSize="12" fontFamily="IBM Plex Mono">{b.s}</text>
             </g>
           ))}
           {[
@@ -35,32 +35,26 @@ function Diagram() {
             const lx = dir === "H" ? (x + end) / 2 : x + 8, ly = dir === "H" ? y - 8 : (y + end) / 2;
             return (
               <g key={d}>
-                <path d={d} stroke="#ff7a1a" strokeWidth="1.6" fill="none" markerEnd="url(#ar)" />
-                <text x={lx} y={ly} fill="#ffd27a" fontSize="11.5" fontFamily="Chakra Petch" textAnchor={dir === "H" ? "middle" : "start"}>{label}</text>
+                <path d={d} stroke="#ff6b2b" strokeWidth="1.6" fill="none" markerEnd="url(#ar)" />
+                <text x={lx} y={ly} fill="#ffc94a" fontSize="11.5" fontFamily="Chakra Petch" letterSpacing="1" textAnchor={dir === "H" ? "middle" : "start"}>{label}</text>
               </g>
             );
           })}
-          <text x="10" y="290" fill="#6b6488" fontSize="12" fontFamily="Inter">Death = failed enclave probes spaced in time, a quorum of holders, or the studio's own end_of_service. The studio's word alone can never keep it alive.</text>
+          <text x="10" y="290" fill="#8f86ad" fontSize="11.5" fontFamily="IBM Plex Mono">Death = failed enclave probes spaced in time, a quorum of holders, or the studio's own end_of_service. The studio's word alone can never keep it alive.</text>
         </svg>
       </div>
     </section>
   );
 }
 
-export default function How({ inApp = false }: { inApp?: boolean }) {
-  const body = (
-    <>
-      <div className={inApp ? "" : "mx-auto max-w-7xl px-4 pt-14 sm:px-6"}>
-        <p className="eyebrow">How it works</p>
-        <h1 className="mt-3 max-w-3xl text-[clamp(32px,4.6vw,56px)] font-semibold leading-[1.05] tracking-[-0.03em]">A licence that keeps working after the company stops.</h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted">Four parts: an NFT licence, a sealed server key, liveness that players prove, and an afterlife that pays the people who keep the game running.</p>
-      </div>
-      <div className="mt-10"><Diagram /></div>
+export default function How() {
+  return (
+    <div className="mx-auto max-w-7xl [&_section]:px-0">
+      <ScreenTitle eyebrow="How it works" sub="Four parts: an NFT licence, a sealed server key, liveness that players prove, and an afterlife that pays the people who keep the game running.">A licence that keeps working</ScreenTitle>
+      <Diagram />
       <Lifecycle />
       <Trust />
       <Faq />
-    </>
+    </div>
   );
-  if (inApp) return <div className="mx-auto max-w-7xl [&_section]:px-0">{body}</div>;
-  return <div className="min-h-dvh"><SiteNav />{body}<SiteFooter /></div>;
 }

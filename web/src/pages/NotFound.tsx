@@ -1,18 +1,15 @@
-import { SiteNav } from "../components/SiteNav";
+// Unknown route: an empty save slot.
 import { LinkButton } from "../components/ui";
 
 export default function NotFound() {
   return (
-    <div className="min-h-dvh">
-      <SiteNav />
-      <main className="grid min-h-[calc(100dvh-64px)] place-items-center px-4 text-center">
-        <div>
-          <p className="num text-7xl font-bold text-ember">404</p>
-          <h1 className="mt-4 text-2xl font-semibold">This save slot is empty</h1>
-          <p className="mt-2 text-muted">The page you asked for does not exist.</p>
-          <div className="mt-8 flex justify-center gap-3"><LinkButton href="/">Home</LinkButton><LinkButton href="/status" variant="ghost">Live status</LinkButton></div>
-        </div>
-      </main>
+    <div className="grid min-h-full place-items-center text-center">
+      <div data-print>
+        <p className="num text-[clamp(64px,12vw,120px)] leading-none text-dead">404</p>
+        <h1 className="display mt-4 text-2xl">Empty save slot</h1>
+        <p className="mt-3 text-muted">&gt; no screen at this address<span className="caret" /></p>
+        <div className="mt-8 flex justify-center gap-3"><LinkButton href="/">Summary</LinkButton><LinkButton href="/status" variant="ghost">Live status</LinkButton></div>
+      </div>
     </div>
   );
 }

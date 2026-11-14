@@ -1,10 +1,10 @@
-import { lazy, StrictMode, Suspense } from "react";
+import { lazy, StrictMode, Suspense, useEffect, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { Redirect, Route, Switch } from "wouter";
-import { AppShell } from "./components/AppShell";
+import { Redirect, Route, Switch, useLocation } from "wouter";
+import { Terminal } from "./components/terminal/Terminal";
 import { ToastProvider } from "./lib/toast";
-import { WalletProvider } from "./lib/wallet";
-import Landing from "./pages/Landing";
+import { useWallet, WalletProvider } from "./lib/wallet";
+import Home from "./pages/Landing";
 import "./styles.css";
 import { PREVIEW } from "./preview/store";
 import { PreviewWalletProvider } from "./preview/PreviewWallet";
@@ -21,43 +21,48 @@ const Hosts = lazy(() => import("./pages/app/Hosts"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const PreviewIndex = lazy(() => import("./preview/PreviewIndex"));
 const HostRun = lazy(() => import("./preview/HostRun"));
-const PreviewDock = lazy(() => import("./preview/PreviewDock").then((m) => ({ default: m.PreviewDock })));
 
-const Fallback = () => <div className="grid min-h-dvh place-items-center"><div className="skeleton h-8 w-40" /></div>;
+const Fallback = () => <div className="grid gap-3"><div className="skeleton h-10 w-56" /><div className="skeleton h-40 w-full" /></div>;
+
+/** App screens need a signed-in account; otherwise the terminal opens the sign-in screen. */
+function RequireAccount({ children }: { children: ReactNode }) {
+  const { ready, accountId } = useWallet();
+  const [loc, navigate] = useLocation();
+  useEffect(() => { if (ready && !accountId) navigate(`/signin?next=${encodeURIComponent(loc)}`, { replace: true }); }, [ready, accountId, loc, navigate]);
+  return ready && accountId ? <>{children}</> : <Fallback />;
+}
 
 function App() {
   return (
-    <Suspense fallback={<Fallback />}>
-      {PREVIEW && <PreviewDock />}
-      <Switch>
-        {PREVIEW && <Route path="/" component={PreviewIndex} />}
-        {PREVIEW && <Route path="/home" component={Landing} />}
-        {PREVIEW && <Route path="/host-run" component={HostRun} />}
-        <Route path="/" component={Landing} />
-        <Route path="/how"><How /></Route>
-        <Route path="/signin" component={Signin} />
-        <Route path="/judges"><Judges /></Route>
-        <Route path="/status" component={Status} />
-        <Route path="/app"><Redirect to="/app/library" replace /></Route>
-        <Route path="/app/:rest*">
-          <AppShell>
-            <Suspense fallback={<div className="skeleton h-40 w-full" />}>
+    <Terminal>
+      <Suspense fallback={<Fallback />}>
+        <Switch>
+          <Route path="/" component={Home} />
+          {PREVIEW && <Route path="/preview" component={PreviewIndex} />}
+          {PREVIEW && <Route path="/host-run" component={HostRun} />}
+          <Route path="/how"><How /></Route>
+          <Route path="/signin" component={Signin} />
+          <Route path="/judges"><Judges /></Route>
+          <Route path="/status" component={Status} />
+          <Route path="/app"><Redirect to="/app/library" replace /></Route>
+          <Route path="/app/how"><Redirect to="/how" replace /></Route>
+          <Route path="/app/judges"><Redirect to="/judges" replace /></Route>
+          <Route path="/app/:rest*">
+            <RequireAccount>
               <Switch>
                 <Route path="/app/store" component={Store} />
                 <Route path="/app/library" component={LibraryPage} />
                 <Route path="/app/play" component={Play} />
                 <Route path="/app/afterlife" component={Afterlife} />
                 <Route path="/app/hosts" component={Hosts} />
-                <Route path="/app/how"><How inApp /></Route>
-                <Route path="/app/judges"><Judges inApp /></Route>
                 <Route><Redirect to="/app/library" replace /></Route>
               </Switch>
-            </Suspense>
-          </AppShell>
-        </Route>
-        <Route component={NotFound} />
-      </Switch>
-    </Suspense>
+            </RequireAccount>
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
+    </Terminal>
   );
 }
 

@@ -1,10 +1,8 @@
 // Fan-host terminal view: the real `pnpm host` output from the judge run, replayed line by line with sound.
 import { motion } from "motion/react";
-import { ArrowLeft, Check, Download, KeyRound, RotateCcw, ShieldCheck, Upload } from "lucide-react";
+import { Check, Download, KeyRound, RotateCcw, ShieldCheck, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
-import { Wordmark } from "../components/brand";
-import { Button } from "../components/ui";
+import { Button, ScreenTitle } from "../components/ui";
 import { goto } from "./store";
 import { sfx } from "./sound";
 
@@ -62,15 +60,12 @@ export default function HostRun() {
   const doneSteps = LINES.slice(0, shown).reduce((m, l) => (l.done !== undefined ? Math.max(m, l.done + 1) : m), 0);
 
   return (
-    <div className="min-h-dvh pb-32">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 pt-6 sm:px-6">
-        <Wordmark />
-        <Link href="/app/hosts" className="inline-flex items-center gap-1.5 text-sm text-muted no-underline hover:text-text"><ArrowLeft className="size-4" />Community hosts</Link>
-      </header>
-      <main className="mx-auto mt-8 grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[1.6fr_1fr]">
-        <div className="overflow-hidden rounded-2xl border border-line bg-[#05040a] shadow-[0_30px_80px_-20px_rgb(0_0_0/0.9)]">
+    <div className="mx-auto max-w-6xl">
+      <ScreenTitle eyebrow="One command · the real run, replayed">Fan host</ScreenTitle>
+      <main className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <div data-print className="overflow-hidden border border-line-2 bg-void">
           <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-            <span className="size-3 rounded-full bg-[#ff5f57]" /><span className="size-3 rounded-full bg-[#febc2e]" /><span className="size-3 rounded-full bg-[#28c840]" />
+            <span className="size-2.5 bg-ember" /><span className="size-2.5 bg-gold" /><span className="size-2.5 bg-alive" />
             <span className="mono ml-3 truncate text-faint">fan host · last-save</span>
           </div>
           <div ref={box} className="mono h-[min(62vh,520px)] overflow-y-auto p-4 text-[12.5px] leading-[1.7] text-muted sm:p-5">
@@ -81,13 +76,13 @@ export default function HostRun() {
           </div>
         </div>
         <div className="grid content-start gap-4">
-          <div className="card p-5 sm:p-6">
+          <div data-print className="card p-5 sm:p-6">
             <p className="eyebrow">One command</p>
-            <h1 className="mt-1 text-xl font-semibold tracking-tight">A fan brings the game back</h1>
+            <h2 className="label mt-1 text-[15px]">A fan brings the game back</h2>
             <ol className="mt-5 grid gap-3">
               {STEPS.map((s, i) => (
                 <li key={s.t} className="flex items-start gap-3 text-[15px]">
-                  <span className={`grid size-7 shrink-0 place-items-center rounded-lg border transition-colors ${i < doneSteps ? "border-alive/40 bg-alive/15 text-alive" : "border-line bg-ink-2 text-faint"}`}>{i < doneSteps ? <Check className="size-4" /> : <s.icon className="size-4" />}</span>
+                  <span className={`grid size-7 shrink-0 place-items-center border ${i < doneSteps ? "border-alive/40 bg-alive/15 text-alive" : "border-line bg-ink-2 text-faint"}`}>{i < doneSteps ? <Check className="size-4" /> : <s.icon className="size-4" />}</span>
                   <span className={i < doneSteps ? "text-text" : "text-muted"}>{s.t}</span>
                 </li>
               ))}

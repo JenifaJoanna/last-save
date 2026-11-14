@@ -1,58 +1,126 @@
 @import "tailwindcss";
 
-/* Theme tokens. Dark is the product's native look; a light variant keeps text legible if forced. */
+/* The Last Save terminal: a CRT-era transmission terminal. Our own palette (sunset on ink), stepped motion. */
 @theme {
-  --color-ink: #07060d;
-  --color-ink-2: #0d0b16;
-  --color-panel: #12101d;
-  --color-panel-2: #181527;
-  --color-line: rgb(255 255 255 / 0.08);
-  --color-line-2: rgb(255 255 255 / 0.14);
-  --color-text: #efeaff;
-  --color-muted: #9a92b8;
-  --color-faint: #6b6488;
-  --color-ember: #ff7a1a;
-  --color-ember-2: #ff9a3d;
-  --color-gold: #ffd27a;
-  --color-cyan: #5ef0ff;
-  --color-alive: #42ffc9;
-  --color-dead: #ff4d6d;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius-card: 16px;
+  --color-void: #0a0814;
+  --color-ink: #120e22;
+  --color-ink-2: #19142e;
+  --color-panel: #1f1938;
+  --color-panel-2: #2a2248;
+  --color-line: rgb(196 182 255 / 0.13);
+  --color-line-2: rgb(196 182 255 / 0.24);
+  --color-text: #efe5d0;
+  --color-muted: #b0a7cc;
+  --color-faint: #8f86ad;
+  --color-ember: #ff6b2b;
+  --color-ember-2: #ff8a4c;
+  --color-gold: #ffc94a;
+  --color-magenta: #e8407e;
+  --color-violet: #9b4fe0;
+  --color-cyan: #4fd8d0;
+  --color-alive: #45e394;
+  --color-amber: #ffb02e;
+  --color-dead: #ff4d5e;
+  --color-key: #d9d0ea;
+  --color-key-ink: #1b1530;
+  --font-sans: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Archivo", "Arial Black", sans-serif;
+  --font-label: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 6px;
+  /* shadcn / ReUI semantic aliases, mapped onto the terminal palette */
+  --color-background: #120e22;
+  --color-foreground: #efe5d0;
+  --color-primary: #ff6b2b;
+  --color-primary-foreground: #160b05;
+  --color-muted-foreground: #b0a7cc;
+  --color-accent: #2a2248;
+  --color-accent-foreground: #efe5d0;
+  --color-border: rgb(196 182 255 / 0.24);
+  --color-ring: #ffc94a;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-:root { color-scheme: dark; }
+:root { color-scheme: dark; --sunset: linear-gradient(90deg, var(--color-gold), var(--color-ember) 50%, var(--color-magenta)); }
 html, body, #root { min-height: 100dvh; }
-body {
-  margin: 0;
-  background: var(--color-ink);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-::selection { background: rgb(255 122 26 / 0.35); }
+body { margin: 0; background: var(--color-void); color: var(--color-text); font-family: var(--font-mono); font-size: 14px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: rgb(255 107 43 / 0.4); color: var(--color-text); }
 a { color: inherit; }
 button { font: inherit; }
-:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 4px; }
 
-.glass { background: rgb(18 16 29 / 0.72); border: 1px solid var(--color-line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-.card { background: linear-gradient(180deg, rgb(255 255 255 / 0.025), rgb(255 255 255 / 0.01)); border: 1px solid var(--color-line); border-radius: var(--radius-card); }
-.hairline { border-color: var(--color-line); }
-.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+/* Type */
+.display { font-family: var(--font-display); font-stretch: 125%; font-weight: 900; text-transform: uppercase; letter-spacing: -0.005em; line-height: 0.92; }
+/* Sunset bands cut through the letters: solid cream top, then gold / ember / magenta / violet bands with thin gaps. */
+.display-sunset { color: transparent; -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 18px rgb(255 107 43 / 0.18));
+  background-image: linear-gradient(180deg, var(--color-text) 0 47%, var(--color-gold) 47% 59%, transparent 59% 62%, var(--color-ember) 62% 72%,
+    transparent 72% 75%, var(--color-magenta) 75% 85%, transparent 85% 88%, var(--color-violet) 88% 100%);
+  background-size: 100% 1lh; background-repeat: repeat-y; }
+.stripes { height: 26px; background: linear-gradient(180deg, var(--color-gold) 0 16%, transparent 16% 28%, var(--color-ember) 28% 44%, transparent 44% 56%,
+    var(--color-magenta) 56% 72%, transparent 72% 84%, var(--color-violet) 84% 100%); }
+.label { font-family: var(--font-label); font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; }
+.eyebrow { font-family: var(--font-label); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-cyan); }
+.eyebrow::before { content: "// "; }
+.num { font-family: var(--font-mono); font-weight: 600; font-variant-numeric: tabular-nums; }
 .mono { font-family: var(--font-mono); font-size: 0.86em; }
-.eyebrow { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); }
-.ember-text { background: linear-gradient(90deg, #ffd27a, #ff7a1a 55%, #ff4d6d); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.grain { position: fixed; inset: 0; pointer-events: none; opacity: 0.05; z-index: 1; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.ember-text { background: var(--sunset); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-@keyframes beat { 0%, 100% { transform: scale(1); opacity: 0.9; } 12% { transform: scale(1.35); opacity: 1; } 24% { transform: scale(1); } 36% { transform: scale(1.2); } }
-.beat { animation: beat 1.4s ease-in-out infinite; }
+/* Surfaces */
+.card { background: rgb(255 255 255 / 0.018); border: 1px solid var(--color-line); border-radius: var(--radius-card); }
+.glass { background: rgb(25 20 46 / 0.94); border: 1px solid var(--color-line-2); }
+.bracket { position: relative; border: 1px solid var(--color-line-2); border-radius: 2px; }
+.bracket::before, .bracket::after { content: ""; position: absolute; width: 12px; height: 12px; pointer-events: none; }
+.bracket::before { left: -2px; top: -2px; border-left: 2px solid var(--color-ember); border-top: 2px solid var(--color-ember); }
+.bracket::after { right: -2px; bottom: -2px; border-right: 2px solid var(--color-ember); border-bottom: 2px solid var(--color-ember); }
+/* Selected row: a cream slab with fine print lines. */
+.row-sel { color: var(--color-key-ink); background: repeating-linear-gradient(180deg, rgb(27 21 48 / 0.06) 0 1px, transparent 1px 3px), var(--color-text); }
+
+/* Keycaps: a two-layer bottom edge; press sinks 3 px in 60 ms (measured on the reference). */
+.keycap { background: var(--color-key); color: var(--color-key-ink); font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+  border-radius: 5px; box-shadow: 0 4px 0 #5e5578, 0 5px 0 #05040a; transition: transform 60ms ease, box-shadow 60ms ease; }
+.keycap:active:not(:disabled), .keycap[data-pressed="true"] { transform: translateY(3px); box-shadow: 0 1px 0 #5e5578, 0 2px 0 #05040a; }
+.keycap-primary { background: var(--color-ember); color: #160b05; box-shadow: 0 4px 0 #8f3311, 0 5px 0 #05040a; }
+.keycap-primary:active:not(:disabled), .keycap-primary[data-pressed="true"] { box-shadow: 0 1px 0 #8f3311, 0 2px 0 #05040a; }
+.keycap:disabled { opacity: 0.45; cursor: not-allowed; }
+kbd { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--color-gold); }
+
+/* CRT layers (inside the bezel). Timings measured on the reference; stepped where it steps. */
+.crt-scan { position: absolute; inset: 0; pointer-events: none; z-index: 40; background: repeating-linear-gradient(180deg, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+.crt-grain { position: absolute; inset: -40px; pointer-events: none; z-index: 41; opacity: 0.07; animation: grain 3.6s steps(8) infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.crt-vignette { position: absolute; inset: 0; pointer-events: none; z-index: 42; box-shadow: inset 0 0 120px rgb(0 0 0 / 0.55); border-radius: inherit; }
+.crt-flicker { animation: flicker 11s ease infinite; }
+.crt-roll { position: absolute; left: 0; right: 0; height: 22%; pointer-events: none; z-index: 43; top: 104%;
+  background: linear-gradient(180deg, transparent, rgb(239 229 208 / 0.035) 45%, rgb(239 229 208 / 0.06) 50%, transparent); animation: roll 2.4s linear 1; }
+.crt-load { position: absolute; left: 0; top: 0; height: 2px; background: var(--color-gold); z-index: 44; animation: load 380ms steps(8) 1 forwards; }
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-30px, 18px); } 40% { transform: translate(22px, -36px); } 60% { transform: translate(-14px, 32px); } 80% { transform: translate(36px, 8px); } 100% { transform: translate(0, 0); } }
+@keyframes flicker { 0%, 96.8% { opacity: 1; } 98.4% { opacity: 0.93; } 100% { opacity: 1; } }
+@keyframes roll { 0% { top: -24%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 104%; opacity: 0; } }
 @keyframes sweep { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
-@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
-.skeleton { background: linear-gradient(90deg, rgb(255 255 255 / 0.04), rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.04)); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; border-radius: 8px; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+@keyframes load { from { width: 0; opacity: 1; } to { width: 100%; opacity: 0; } }
 
-/* wallet-selector modal, themed to the product */
-.nws-modal-wrapper .nws-modal { background: var(--color-panel) !important; color: var(--color-text) !important; border: 1px solid var(--color-line) !important; }
+/* Stepped entrances and blinks */
+.step-in { animation: step-in 400ms steps(5) both; }
+@keyframes step-in { from { transform: translateX(-14px); opacity: 0; } to { transform: none; opacity: 1; } }
+.blink { animation: blink 2.4s steps(2, jump-none) infinite; }
+.blink-fast { animation: blink 1.6s steps(2, jump-none) infinite; }
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.35; } }
+.beat { animation: blink 1.2s steps(2, jump-none) infinite; }
+.caret::after { content: "█"; margin-left: 2px; animation: blink 1s steps(2, jump-none) infinite; color: var(--color-gold); }
+.emblem-pulse { animation: emblem 3.4s ease-in-out infinite; }
+@keyframes emblem { 50% { transform: rotate(6deg) scale(1.08); } }
+.dead-flicker { animation: dead-flicker 600ms steps(1) 1; }
+@keyframes dead-flicker { 0% { opacity: 1; } 15% { opacity: 0.2; } 30% { opacity: 1; } 45% { opacity: 0.35; } 60% { opacity: 1; } 75% { opacity: 0.15; } 100% { opacity: 1; } }
+.skeleton { background: repeating-linear-gradient(90deg, rgb(196 182 255 / 0.08) 0 8px, rgb(196 182 255 / 0.03) 8px 16px); border-radius: 2px; animation: skel 1.2s steps(4) infinite; }
+@keyframes skel { to { background-position: 64px 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-grain, .crt-flicker, .crt-roll, .blink, .blink-fast, .beat, .emblem-pulse, .skeleton, .caret::after, .dead-flicker, .step-in { animation: none !important; }
+  .crt-roll { display: none; }
+  svg, svg * { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}
+
+/* wallet-selector modal, themed to the terminal */
+.nws-modal-wrapper .nws-modal { background: var(--color-ink-2) !important; color: var(--color-text) !important; border: 1px solid var(--color-line-2) !important; font-family: var(--font-mono) !important; }

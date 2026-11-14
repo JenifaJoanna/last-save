@@ -2,7 +2,8 @@
 import { motion } from "motion/react";
 import { BadgeCheck, CircleDashed, Gamepad2, Repeat, Timer, Trophy, Users } from "lucide-react";
 import { Link } from "wouter";
-import { Button, Card, Ext, Note, Skeleton } from "../../components/ui";
+import { usePrimary } from "../../components/terminal/nav";
+import { Button, Card, Ext, Note, ScreenTitle, Skeleton } from "../../components/ui";
 import { useInfo, useLockedKeys, useMyLicence } from "../../lib/licence";
 import { accountUrl, CONTRACT, near, shortHash } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
@@ -33,18 +34,19 @@ export default function Store() {
     const hash = await call("buy_licence", {}, { deposit: d.price, gasTgas: 60, label: "Licence bought" });
     if (hash) { info.refresh(); mine.refresh(); }
   };
+  usePrimary(d && !mine.data && accountId ? { label: dead ? "Buy · fund hosts" : `Buy ${near(d.price)} Ⓝ`, run: () => void buy(), busy: pending === "buy_licence" } : null, [d?.price, dead, !!mine.data, accountId, pending]);
 
   return (
     <div className="mx-auto max-w-6xl">
-      <p className="eyebrow">Store</p>
-      <div className="mt-4 grid items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
-        <div className="card overflow-hidden">
+      <ScreenTitle eyebrow="Ember Rift · Kiln Interactive">Store</ScreenTitle>
+      <div className="grid items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
+        <div data-print className="card overflow-hidden">
           <div className="relative aspect-video">
             <img src="/art/ember-rift-key.jpg" alt="Ember Rift key art: hover-skiffs racing across a burning obsidian arena" className="absolute inset-0 size-full object-cover" />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-transparent" />
-            <a href={`${PLAY_URL}?practice=1`} target="_blank" rel="noopener" className="absolute right-4 top-4 rounded-full border border-line-2 bg-ink/70 px-3 py-1.5 text-xs font-semibold text-text no-underline backdrop-blur hover:bg-ink">Try it offline</a>
+            <a href={`${PLAY_URL}?practice=1`} target="_blank" rel="noopener" className="label absolute right-4 top-4 border border-gold/60 bg-ink/80 px-3 py-1.5 text-[11px] text-gold no-underline hover:bg-ink">Try it offline ▸</a>
             <div className="absolute bottom-5 left-6">
-              <h1 className="font-display text-[clamp(32px,4.4vw,52px)] font-bold leading-none tracking-[0.04em]">EMBER RIFT</h1>
+              <h2 className="display text-[clamp(30px,4.4vw,54px)]">Ember Rift</h2>
               <p className="mt-2 text-sm text-muted">Kiln Interactive · arena · 2–8 players</p>
             </div>
           </div>
@@ -64,16 +66,15 @@ export default function Store() {
             {!d ? <div className="grid gap-3"><Skeleton className="h-10 w-32" /><Skeleton className="h-4 w-full" /><Skeleton className="h-11 w-full" /></div> : (
               <>
                 <div className="flex items-end justify-between gap-3">
-                  <div><p className="eyebrow">Licence price</p><p className="num mt-1 text-4xl font-semibold">{near(d.price)} <span className="text-2xl text-muted">Ⓝ</span></p></div>
-                  {guaranteed && <span className="inline-flex items-center gap-1.5 rounded-full border border-alive/30 bg-alive/10 px-3 py-1 text-xs font-semibold text-alive"><BadgeCheck className="size-3.5" />Forever Guarantee</span>}
+                  <div><p className="eyebrow">Licence price</p><p className="num mt-1 text-4xl text-text">{near(d.price)} <span className="text-2xl text-muted">Ⓝ</span></p></div>
+                  {guaranteed && <span className="label inline-flex items-center gap-1.5 border border-alive/60 px-2 py-1 text-[10px] text-alive"><BadgeCheck className="size-3.5" />Forever guarantee</span>}
                 </div>
                 {dead ? (
                   <p className="mt-4 text-sm text-muted">The studio has gone dark. <b className="text-text">100% of this price goes to the keep-alive pool</b> that pays community hosts for every licence holder they serve.</p>
                 ) : (
                   <div className="mt-5">
-                    <div className="flex h-2.5 overflow-hidden rounded-full bg-white/5">
-                      <motion.div className="bg-white/25" initial={{ width: 0 }} animate={{ width: `${100 - lockedPct}%` }} transition={{ duration: 0.7 }} />
-                      <motion.div className="bg-gradient-to-r from-ember to-gold" initial={{ width: 0 }} animate={{ width: `${lockedPct}%` }} transition={{ duration: 0.7, delay: 0.15 }} />
+                    <div className="flex gap-1" aria-label={`${100 - lockedPct}% to the studio, ${lockedPct}% locked for you`}>
+                      {Array.from({ length: 10 }, (_, i) => <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05, duration: 0 }} className={`h-3 flex-1 ${i < 10 - lockedPct / 10 ? "bg-white/15" : "bg-gold"}`} />)}
                     </div>
                     <div className="mt-2 flex justify-between text-xs text-muted"><span>{100 - lockedPct}% to the studio</span><span className="text-gold">{lockedPct}% locked for you</span></div>
                   </div>
