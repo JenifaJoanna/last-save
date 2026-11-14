@@ -24,6 +24,7 @@ attack the live contract and watch it refuse.
 | Licence v2, published once as a global contract | code hash `4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1` ([publish tx](https://testnet.near.rocks/tx/3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF)) |
 | Studio factory (one tx per studio, instances born with 0 keys) | [`lastsave-factory.testnet`](https://testnet.near.rocks/account/lastsave-factory.testnet) |
 | v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key released 15 Nov 01:05 IST (tx [ADPZTugj…](https://testnet.nearblocks.io/txns/ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N)). Run: `proof/judge-v2.json`, release: `proof/judge-v2-release.json` |
+| Judge instance, community host (fan-run) | registered on `ember-rift` after the release ([tx GLRfmVsb…](https://testnet.nearblocks.io/txns/GLRfmVsbb5V4htaDa5jCZJu6zKBE8Sw4vCQbBXnLyunH)); a fan's machine behind a tunnel, so the app reads its current endpoint from the contract (`get_hosts`) |
 | Encrypted judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave) (sha256 = the on-chain artifact hash) |
 | v2 dev instance (full lifecycle incl. a Base Sepolia payout) | [`v2dev.lastsave-factory.testnet`](https://testnet.near.rocks/account/v2dev.lastsave-factory.testnet) |
 | Gas-free relayer | https://lastsave-relay.pages.dev (`/health`) |

@@ -18,6 +18,7 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Gas-free relayer | https://lastsave-relay.pages.dev | live (`/relay`, `/attack`) |
 | Encrypted judge build | https://archive.org/details/ember-rift-server-ember-rift-lastsave | public; sha256 = on-chain artifact hash |
 | Judge instance | `ember-rift.lastsave-factory.testnet` | Dead (cause: players), released 15 Nov 01:05 IST |
+| Judge community host | https://license-deemed-gates-photograph.trycloudflare.com (registered on chain, tx GLRfmVsb…) | fan-run from a tunnel; the app reads the live endpoint from `get_hosts` |
 | Dev instance | `v2dev.lastsave-factory.testnet` | Dead (cause: probes), released, community host serving |
 | Second studio | `tidebreak.lastsave-factory.testnet` | Alive, launched in one transaction; not on sale (escrow needs OutLayer) |
 | Official judge server | https://emberrift-ember-rift.pages.dev | shut down 14 Nov 22:08 IST as the demo; stays dead |
@@ -57,7 +58,7 @@ All film takes are delivered. Nothing has been posted or submitted.
 | v2dev e2e (full lifecycle) | 173 | 1 (a test that ignored Base's L1 data fee; re-verified) |
 
 Not covered: a person running the MetaMask paths (sign-in, payout address by signature); the 0x-account game login (not
-built); hosting and claims on ember-rift after its release (being set up).
+built); paid claims on ember-rift's community host (hosting is live; claims need OutLayer runs).
 
 ## Real vs rehearsed
 Real: every contract call, enclave run, MPC signature, Base transfer, relayed attack and refusal; the locked instances;
