@@ -31,6 +31,7 @@ function FrozenTail({ last, show, children }: { last: number; show: number; chil
 
 export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[] }) {
   const at = (id: string) => scenes.find((s) => s.id === id);
+  const end = Math.max(...scenes.map((s) => s.from + s.frames));
   const voWindows = scenes.filter((s) => s.vo).map((s) => [s.from + f(s.voAt ?? 0), s.from + f(s.voAt ?? 0) + f(VO_LEN[s.vo!] ?? 5)] as const);
   return (
     <AbsoluteFill style={{ background: T.void }}>
@@ -55,7 +56,7 @@ export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[
       {SFX.filter((c) => at(c.scene) && f(c.at) < at(c.scene)!.frames && has(`sfx/v1/${c.file}`)).map((c) => (
         <Sequence key={`${c.scene}-${c.file}-${c.at}`} from={at(c.scene)!.from + f(c.at)} durationInFrames={c.dur ? f(c.dur) : undefined} name={`sfx ${c.file}`}>
           <Audio src={staticFile(`sfx/v1/${c.file}`)} playbackRate={c.rate ?? 1}
-            volume={(fr) => (c.volume ?? 0.7) * (c.dur ? interpolate(fr, [f(c.dur) - 8, f(c.dur)], [1, 0], clamp) : 1)} />
+            volume={(fr) => (c.volume ?? 0.7) * (c.dur ? interpolate(fr, [f(c.dur) - (c.fadeOut ? f(c.fadeOut) : 8), f(c.dur)], [1, 0], clamp) : 1)} />
         </Sequence>
       ))}
       {score.filter((m) => has(m.file)).map((m) => {
@@ -66,7 +67,8 @@ export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[
               const abs = a + fr;
               const speaking = Math.max(0, ...voWindows.map(([s0, s1]) => interpolate(abs, [s0 - 9, s0, s1, s1 + 12], [0, 1, 1, 0], clamp)));
               const env = interpolate(fr, [0, Math.max(1, f(m.fadeIn)), len - Math.max(1, f(m.fadeOut)), len], [0, 1, 1, 0], clamp);
-              return MUSIC.gain * env * (1 - (1 - MUSIC.duckUnderVo) * speaking);
+              const close = interpolate(abs, [end - f(4), end - f(3)], [1, MUSIC.closeBoost], clamp);
+              return MUSIC.gain * env * close * (1 - (1 - MUSIC.duckUnderVo) * speaking);
             }} />
           </Sequence>
         );

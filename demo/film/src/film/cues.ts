@@ -3,7 +3,7 @@
 // Score: Eleven Music music_v2_5, candidate 1 (warm retro synth, 84 BPM); runners-up c2/c3 kept in public/music/v1/.
 import type { SceneId } from "./timeline";
 
-export interface Cue { file: string; at: number; scene: SceneId; volume?: number; dur?: number; rate?: number }
+export interface Cue { file: string; at: number; scene: SceneId; volume?: number; dur?: number; rate?: number; fadeOut?: number }
 
 export const SFX: Cue[] = [
   { scene: "S01", file: "typing.mp3", at: 0.2, volume: 0.3, dur: 3.2 },
@@ -27,8 +27,8 @@ export const SFX: Cue[] = [
   { scene: "S09", file: "probe-fail.mp3", at: 12.88, volume: 0.5 },        // "three times"
   { scene: "S09", file: "probe-fail.mp3", at: 13.4, volume: 0.5, rate: 1.12 },
   { scene: "S09", file: "probe-fail.mp3", at: 13.92, volume: 0.5, rate: 1.25 },
-  { scene: "S09", file: "flatline.mp3", at: 15.04, volume: 0.1, dur: 2.15 }, // "dead"; fades into the silence
-  { scene: "S09", file: "alert.mp3", at: 15.6, volume: 0.4 },
+  { scene: "S09", file: "flatline.mp3", at: 15.04, volume: 0.035, dur: 2.2, fadeOut: 1.9 }, // "dead"; the tone fades to silence (source is -4.8 LUFS)
+  { scene: "S09", file: "alert.mp3", at: 15.6, volume: 0.22 },
   { scene: "S10", file: "decode.mp3", at: 3.36, volume: 0.5 },             // "releases"
   { scene: "S10", file: "unlock.mp3", at: 4.0, volume: 0.45 },
   { scene: "S11", file: "refund.mp3", at: 4.1, volume: 0.5 },              // "share back"
@@ -56,4 +56,4 @@ export const SCORE: ScoreAct[] = [
   { file: "music/v1/c1-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
   { file: "music/v1/c1-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
 ];
-export const MUSIC = { gain: 0.24, duckUnderVo: 0.42 };
+export const MUSIC = { gain: 0.24, duckUnderVo: 0.42, closeBoost: 2.4 }; // closeBoost: the resolve under the end card, after the last line
