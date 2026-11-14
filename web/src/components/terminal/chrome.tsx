@@ -40,24 +40,27 @@ export function SoundToggle() {
 
 type Actions = { summary: () => void; back: () => void; prev: () => void; next: () => void; primary: () => void };
 export function KeycapBar({ actions, primary, pressed, hasPrev, hasNext }: { actions: Actions; primary: Primary | null; pressed: string | null; hasPrev: boolean; hasNext: boolean }) {
-  const keys: { id: keyof Actions; label: string; short: string; kbd: string; disabled?: boolean }[] = [
-    { id: "summary", label: "Summary", short: "Menu", kbd: "S" },
-    { id: "back", label: "Back", short: "Back", kbd: "Esc" },
-    { id: "prev", label: "◂ Prev", short: "◂", kbd: "←", disabled: !hasPrev },
-    { id: "next", label: "Next ▸", short: "▸", kbd: "→", disabled: !hasNext },
+  // Phone: ◂ ▸ show one glyph, so they take a narrower share and the primary keycap gets the room for its label.
+  const keys: { id: keyof Actions; label: string; short: string; kbd: string; disabled?: boolean; grow: string }[] = [
+    { id: "summary", label: "Summary", short: "Menu", kbd: "S", grow: "flex-1" },
+    { id: "back", label: "Back", short: "Back", kbd: "Esc", grow: "flex-1" },
+    { id: "prev", label: "◂ Prev", short: "◂", kbd: "←", disabled: !hasPrev, grow: "flex-[0.7]" },
+    { id: "next", label: "Next ▸", short: "▸", kbd: "→", disabled: !hasNext, grow: "flex-[0.7]" },
   ];
   return (
     <nav className="flex shrink-0 items-center justify-center gap-1.5 pb-[max(env(safe-area-inset-bottom),4px)] sm:gap-3" aria-label="Terminal keys">
       {keys.map((k) => (
         <button key={k.id} onClick={actions[k.id]} disabled={k.disabled} data-pressed={pressed === k.id} title={`${k.label} (${k.kbd})`}
-          className="keycap h-10 min-w-0 flex-1 px-2 text-[12px] sm:h-9 sm:flex-none sm:px-4">
+          className={`keycap h-10 min-w-0 ${k.grow} px-2 text-[12px] sm:h-9 sm:flex-none sm:px-4`}>
           <span className="sm:hidden">{k.short}</span><span className="hidden sm:inline">{k.label}</span>
         </button>
       ))}
       {primary && (
         <button onClick={actions.primary} disabled={primary.disabled || primary.busy} data-pressed={pressed === "primary"} title={`${primary.label} (Enter)`}
-          className="keycap keycap-primary h-10 min-w-0 flex-[1.6] truncate px-3 text-[12px] sm:h-9 sm:flex-none sm:px-5">
-          {primary.busy ? "Working…" : primary.label}
+          className="keycap keycap-primary h-10 min-w-0 flex-[2.2] px-2 text-[12px] sm:h-9 sm:flex-none sm:px-5">
+          {/* phone: up to two lines (size and leading in styles.css), ellipsis past that; sm+: the key sizes to its label on
+              one line. The full label is in the title either way. */}
+          <span className="line-clamp-2 break-words sm:whitespace-nowrap">{primary.busy ? "Working…" : primary.label}</span>
         </button>
       )}
     </nav>

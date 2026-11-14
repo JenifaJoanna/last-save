@@ -83,6 +83,9 @@ button { font: inherit; }
 .keycap-primary { background: var(--color-ember); color: #160b05; box-shadow: 0 4px 0 #8f3311, 0 5px 0 #05040a; }
 .keycap-primary:active:not(:disabled), .keycap-primary[data-pressed="true"] { box-shadow: 0 1px 0 #8f3311, 0 2px 0 #05040a; }
 .keycap:disabled { opacity: 0.45; cursor: not-allowed; }
+/* Phone: the primary keycap's label may take two lines (chrome.tsx). Set here, not with utilities: `button { font: inherit }`
+   above is unlayered and beats them. */
+@media (max-width: 639.98px) { .keycap-primary { font-size: 13px; line-height: 1.1; letter-spacing: 0.06em; } }
 kbd { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--color-gold); }
 
 /* CRT layers (inside the bezel). Timings measured on the reference; stepped where it steps. */
