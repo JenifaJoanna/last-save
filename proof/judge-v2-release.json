@@ -1,0 +1,41 @@
+{
+  "contract": "ember-rift.lastsave-factory.testnet",
+  "event": "key_released",
+  "released_key": "d5080ebc3504c369f810a8a5075195171c84964e165327acad6d2e1bc59d8fe7",
+  "released_at_ms": 1794684901833,
+  "released_at": "2026-11-14T19:35:01Z (15 Nov 01:05:01 IST)",
+  "tx": "ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N",
+  "tx_url": "https://testnet.nearblocks.io/txns/ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N",
+  "signer": "relay.lastsave-studio.testnet (gas-free NEP-366 delegate from lastsave-kofi.testnet)",
+  "outlayer_request_id": 47773,
+  "logs": [
+    "release_requested",
+    "execution_requested",
+    "execution_completed",
+    "key_released"
+  ],
+  "sha256_key": "6144be6dd6022300a40fd892949ae50b1c17aa42083abcef60651636e471ef7d",
+  "key_commitment_matches": true,
+  "attempts_before_success": "14 inconclusive OutLayer runs from ~22:45 IST (the enclave's public-RPC reads were rate-limited); attempt 8 of the 10-minute retry loop landed",
+  "e2e_release_phase": {
+    "status": "passed",
+    "assertions": [
+      {
+        "name": "released_key is public on chain",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "name": "sha256(K) equals key_commitment",
+        "pass": true,
+        "detail": "commitment 6144be6dd602..."
+      },
+      {
+        "name": "released_at_ms is set",
+        "pass": true,
+        "detail": "1794684901833"
+      }
+    ]
+  },
+  "note": "Recorded separately so the film-pinned proof/judge-v2.json stays byte-identical until the final film is promoted; it will be folded in afterwards."
+}
