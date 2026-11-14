@@ -54,6 +54,9 @@ point a release at another contract (release.wasm reads its caller's own state).
 
 ## Verify it yourself
 
+<!-- proof-link:start -->
+- **One command, no funds, no keys:** `pnpm verify` re-checks every claim from chain in about 2 s. The claim map is [`JUDGE.md`](JUDGE.md) and machine-readable at [`/proof.json`](https://last-save.pages.dev/proof.json) (`web/public/proof.json`).
+<!-- proof-link:end -->
 - **The escrow rule is real.** The spike shows a stranger calling OutLayer with our secret reference being refused by
   the keystore, and release.wasm refusing while alive. See [`proof/spike.md`](proof/spike.md).
 - **The wasm is reproducible.** Both OutLayer programs are built in OutLayer's pinned compiler image:

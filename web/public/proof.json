@@ -1,0 +1,1794 @@
+{
+  "schema": "lastsave-proof/1",
+  "generated_at": "2026-11-14T09:34:10.864Z",
+  "repo": "https://github.com/JenifaJoanna/last-save",
+  "commit": "ade624fa45fe5d2a6bf277fb43fbf55bb6eb4a31",
+  "network": "NEAR testnet (+ Base Sepolia for payouts)",
+  "verify": {
+    "command": "pnpm verify",
+    "read_only": true,
+    "needs": "nothing: no keys, no funds",
+    "judge_guide": "https://github.com/JenifaJoanna/last-save/blob/main/JUDGE.md"
+  },
+  "v2_judge_instance": "pending judge v2 launch",
+  "instances": [
+    {
+      "id": "ember-rift.lastsave-factory.testnet",
+      "kind": "factory",
+      "label": "v2 judge instance (factory, global contract, Chain Signatures, Walrus, provenance)",
+      "exists": false,
+      "status": "pending launch",
+      "counts": null,
+      "checks": []
+    },
+    {
+      "id": "v2dev.lastsave-factory.testnet",
+      "kind": "factory",
+      "label": "v2 dev instance (same code as the judge instance; built before the CI pipeline)",
+      "exists": true,
+      "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3372 N · 1 host(s), 2 claim(s)",
+      "checked_at": "2026-11-14T09:33:59.735Z",
+      "counts": {
+        "pass": 16,
+        "fail": 0,
+        "na": 5,
+        "warn": 2
+      },
+      "pins": {
+        "codeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "release": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "probe": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "keyCommitment": "f2772b9f97d804708437485cf5ad2e6148d0b9a662d313612261c73b9badf033",
+        "artifactSha256": "8aed87d3d43cecffe906c621f19103fe710feac3662bcf750ebbfbd9a4208622",
+        "buildHash": "d31168055435d68224fd34f68119fdf67b7cbf2a454c9474eee0922f02f550c8"
+      },
+      "checks": [
+        {
+          "id": "code.hash",
+          "group": "Code",
+          "label": "Contract code is the published code",
+          "status": "pass",
+          "reason": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code"
+        },
+        {
+          "id": "code.global_bytes",
+          "group": "Code",
+          "label": "Published global code is readable and hashes to its id",
+          "status": "pass",
+          "reason": "anyone can read the code: 332,631 B, sha256 2f1f41ee…f7ca = its hash (immutable, by hash)"
+        },
+        {
+          "id": "keys.none",
+          "group": "Code",
+          "label": "0 access keys on the instance (locked)",
+          "status": "pass",
+          "reason": "0 access keys: nobody can redeploy, drain or delete the contract"
+        },
+        {
+          "id": "factory.hash",
+          "group": "Factory",
+          "label": "Factory points at the same global hash",
+          "status": "pass",
+          "reason": "lastsave-factory.testnet code_hash() = 4Awoknek…6rt1 = the published global hash"
+        },
+        {
+          "id": "factory.listed",
+          "group": "Factory",
+          "label": "Instance listed by the factory",
+          "status": "pass",
+          "reason": "listed in lastsave-factory.testnet.instances(): created by lastsave-studio.testnet, status Ready"
+        },
+        {
+          "id": "escrow.verified",
+          "group": "Escrow",
+          "label": "Escrow attested by the enclave",
+          "status": "pass",
+          "reason": "escrowed; attest() verified key commitment, artifact hash and build hash in the enclave (2026-11-14 08:43 UTC)"
+        },
+        {
+          "id": "escrow.rule",
+          "group": "Escrow",
+          "label": "Keystore access rule is exactly release.wasm + this contract",
+          "status": "pass",
+          "reason": "keystore rule in tx F6Jcw556…VAgD: key opens only for caller = v2dev.lastsave-factory.testnet AND code = release.wasm 9fafaf8e…2b7a"
+        },
+        {
+          "id": "totals.sane",
+          "group": "Money",
+          "label": "Buckets non-negative and covered by the balance",
+          "status": "pass",
+          "reason": "no negative bucket; spendable 1.7405 N covers tracked 1.2797 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.9025 N)"
+        },
+        {
+          "id": "config.programs",
+          "group": "Pins",
+          "label": "release/probe wasm hashes = committed artifacts/ files",
+          "status": "pass",
+          "reason": "release.wasm 9fafaf8e…2b7a and probe.wasm b0cb38e1…b0b4 on chain = sha256 of artifacts/ files"
+        },
+        {
+          "id": "config.commitment",
+          "group": "Pins",
+          "label": "Key commitment, artifact hash and build hash are set",
+          "status": "pass",
+          "reason": "key commitment f2772b9f…f033, artifact 8aed87d3…8622 (584,610 B), build hash d3116805…50c8 are set on chain"
+        },
+        {
+          "id": "config.artifact_file",
+          "group": "Pins",
+          "label": "Encrypted artifact = committed file",
+          "status": "pass",
+          "reason": "encrypted artifact 8aed87d3…8622 = artifacts/ember-rift-8aed87d3d43cecff.bin"
+        },
+        {
+          "id": "programs.mirrors",
+          "group": "Artifacts",
+          "label": "Enclave programs download from every mirror",
+          "status": "pass",
+          "reason": "release.wasm: 2/2 mirrors serve sha256 9fafaf8e…2b7a; probe.wasm: 2/2 mirrors serve sha256 b0cb38e1…b0b4"
+        },
+        {
+          "id": "artifact.mirrors",
+          "group": "Artifacts",
+          "label": "Encrypted artifact: every mirror's sha256 = on-chain",
+          "status": "warn",
+          "reason": "encrypted artifact: 1/2 mirrors serve sha256 8aed87d3…8622 (github raw ✓ · platform mirror ✗ serves the site HTML, not the file); the pinned hash makes a missing mirror harmless, but the list on chain has a dead entry"
+        },
+        {
+          "id": "artifact.walrus",
+          "group": "Artifacts",
+          "label": "Walrus mirror serves it",
+          "status": "na",
+          "reason": "no Walrus mirror in artifact.urls (this instance predates it)"
+        },
+        {
+          "id": "release.key",
+          "group": "Release",
+          "label": "Released key hashes to the commitment",
+          "status": "pass",
+          "reason": "sha256(released key dff0a6d0…9d51) = on-chain key_commitment"
+        },
+        {
+          "id": "release.artifact",
+          "group": "Release",
+          "label": "Released key decrypts the artifact to build_hash",
+          "status": "pass",
+          "reason": "released key decrypts the artifact (AES-256-GCM) to 584,578 B whose sha256 d3116805…50c8 = on-chain build_hash"
+        },
+        {
+          "id": "chainsig.address",
+          "group": "Chain Signatures",
+          "label": "Payer address re-derived from public inputs",
+          "status": "pass",
+          "reason": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA = derive(v1.signer-prod.testnet root key, v2dev.lastsave-factory.testnet, \"lastsave/host-payouts\"); the signer contract's own view agrees"
+        },
+        {
+          "id": "chainsig.payouts",
+          "group": "Chain Signatures",
+          "label": "Signed payouts mined on Base Sepolia",
+          "status": "warn",
+          "reason": "0/1 signed payouts mined on Base Sepolia; #0 signed on NEAR, not broadcast yet (anyone can: node scripts/chainsig/relay.mjs v2dev.lastsave-factory.testnet)",
+          "links": []
+        },
+        {
+          "id": "provenance",
+          "group": "Provenance",
+          "label": "Build attested by GitHub Actions (Sigstore) for the on-chain build hash",
+          "status": "na",
+          "reason": "no build attestation for d3116805…50c8 (built before the CI pipeline or not published yet)"
+        },
+        {
+          "id": "manifest.txs",
+          "group": "Proof",
+          "label": "Every tx in the proof manifests resolves on RPC",
+          "status": "pass",
+          "reason": "30/30 listed txs are on chain, final, executed as listed [launch-v2dev.json, run-v2dev-20261114T0857Z.json]"
+        },
+        {
+          "id": "rebuild.release",
+          "group": "Rebuild",
+          "label": "release.wasm rebuilds to the on-chain hash",
+          "status": "na",
+          "reason": "not run by default (--rebuild); must print 9fafaf8e…2b7a; command listed below"
+        },
+        {
+          "id": "rebuild.probe",
+          "group": "Rebuild",
+          "label": "probe.wasm rebuilds to the on-chain hash",
+          "status": "na",
+          "reason": "not run by default (--rebuild); must print b0cb38e1…b0b4; command listed below"
+        },
+        {
+          "id": "rebuild.licence",
+          "group": "Rebuild",
+          "label": "Licence wasm rebuild",
+          "status": "na",
+          "reason": "not bit-reproducible: the published licence wasm is cargo (rust 1.86) + wasm-opt output from a local toolchain. Its identity is the hash 4Awoknek…6rt1 and its public on-chain bytes (rows above); the source is contracts/licence"
+        }
+      ]
+    },
+    {
+      "id": "lastsave-licence.testnet",
+      "kind": "v1",
+      "label": "v1 judge instance (own deployed code, locked, Dead, released)",
+      "exists": true,
+      "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3841 N · 1 host(s), 2 claim(s)",
+      "checked_at": "2026-11-14T09:34:02.289Z",
+      "counts": {
+        "pass": 13,
+        "fail": 0,
+        "na": 10,
+        "warn": 0
+      },
+      "pins": {
+        "codeHash": "c884be5a4e263cdd1d85ae63722d457961e751d6cbbe8ae190953d7c254b16d2",
+        "release": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "probe": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "keyCommitment": "5bb6b0cf211414cdcf27e6f836a03b242cf13f1e8b372845ed2e3d8230c6678f",
+        "artifactSha256": "ad3eb4f5560a8ae0bffd402587ef9d7d33bf9fa6485e0a9f079d68136fee21d2",
+        "buildHash": "b723c6d4854b1b8688a0a4a1191dda26d0492d6cf28a26cd1c88e7ac222bc967"
+      },
+      "checks": [
+        {
+          "id": "code.hash",
+          "group": "Code",
+          "label": "Contract code is the published code",
+          "status": "pass",
+          "reason": "code sha256 c884be5a…16d2 = pinned (proof/launch manifest) = deploy tx 33hTa6kh…LxUr"
+        },
+        {
+          "id": "code.global_bytes",
+          "group": "Code",
+          "label": "Published global code is readable and hashes to its id",
+          "status": "na",
+          "reason": "v1 deploys its own code; there is no global contract"
+        },
+        {
+          "id": "keys.none",
+          "group": "Code",
+          "label": "0 access keys on the instance (locked)",
+          "status": "pass",
+          "reason": "0 access keys: nobody can redeploy, drain or delete the contract"
+        },
+        {
+          "id": "factory.hash",
+          "group": "Factory",
+          "label": "Factory points at the same global hash",
+          "status": "na",
+          "reason": "v1 was deployed directly, not by the factory"
+        },
+        {
+          "id": "factory.listed",
+          "group": "Factory",
+          "label": "Instance listed by the factory",
+          "status": "na",
+          "reason": "not a factory instance"
+        },
+        {
+          "id": "escrow.verified",
+          "group": "Escrow",
+          "label": "Escrow attested by the enclave",
+          "status": "pass",
+          "reason": "escrowed; attest() verified key commitment, artifact hash and build hash in the enclave (2026-11-13 20:58 UTC)"
+        },
+        {
+          "id": "escrow.rule",
+          "group": "Escrow",
+          "label": "Keystore access rule is exactly release.wasm + this contract",
+          "status": "pass",
+          "reason": "keystore rule in tx 4Ztpt7PF…YvMH: key opens only for caller = lastsave-licence.testnet AND code = release.wasm 9fafaf8e…2b7a"
+        },
+        {
+          "id": "totals.sane",
+          "group": "Money",
+          "label": "Buckets non-negative and covered by the balance",
+          "status": "pass",
+          "reason": "no negative bucket; spendable 1.7491 N covers tracked 0.3841 N (pot locked 0.0000 N, pool 0.3841 N)"
+        },
+        {
+          "id": "config.programs",
+          "group": "Pins",
+          "label": "release/probe wasm hashes = committed artifacts/ files",
+          "status": "pass",
+          "reason": "release.wasm 9fafaf8e…2b7a and probe.wasm b0cb38e1…b0b4 on chain = sha256 of artifacts/ files"
+        },
+        {
+          "id": "config.commitment",
+          "group": "Pins",
+          "label": "Key commitment, artifact hash and build hash are set",
+          "status": "pass",
+          "reason": "key commitment 5bb6b0cf…678f, artifact ad3eb4f5…21d2 (581,053 B), build hash b723c6d4…c967 are set on chain"
+        },
+        {
+          "id": "config.artifact_file",
+          "group": "Pins",
+          "label": "Encrypted artifact = committed file",
+          "status": "pass",
+          "reason": "encrypted artifact ad3eb4f5…21d2 = artifacts/ember-rift-ad3eb4f5560a8ae0.bin"
+        },
+        {
+          "id": "programs.mirrors",
+          "group": "Artifacts",
+          "label": "Enclave programs download from every mirror",
+          "status": "pass",
+          "reason": "release.wasm: 2/2 mirrors serve sha256 9fafaf8e…2b7a; probe.wasm: 2/2 mirrors serve sha256 b0cb38e1…b0b4"
+        },
+        {
+          "id": "artifact.mirrors",
+          "group": "Artifacts",
+          "label": "Encrypted artifact: every mirror's sha256 = on-chain",
+          "status": "pass",
+          "reason": "encrypted artifact: 2/2 mirrors serve sha256 ad3eb4f5…21d2 (github raw ✓ · platform mirror ✓)"
+        },
+        {
+          "id": "artifact.walrus",
+          "group": "Artifacts",
+          "label": "Walrus mirror serves it",
+          "status": "na",
+          "reason": "no Walrus mirror in artifact.urls (this instance predates it)"
+        },
+        {
+          "id": "release.key",
+          "group": "Release",
+          "label": "Released key hashes to the commitment",
+          "status": "pass",
+          "reason": "sha256(released key fb0ac47f…e490) = on-chain key_commitment"
+        },
+        {
+          "id": "release.artifact",
+          "group": "Release",
+          "label": "Released key decrypts the artifact to build_hash",
+          "status": "pass",
+          "reason": "released key decrypts the artifact (AES-256-GCM) to 581,021 B whose sha256 b723c6d4…c967 = on-chain build_hash"
+        },
+        {
+          "id": "chainsig.address",
+          "group": "Chain Signatures",
+          "label": "Payer address re-derived from public inputs",
+          "status": "na",
+          "reason": "v1 pays hosts in NEAR only; Chain Signatures arrived in v2"
+        },
+        {
+          "id": "chainsig.payouts",
+          "group": "Chain Signatures",
+          "label": "Signed payouts mined on Base Sepolia",
+          "status": "na",
+          "reason": "no Chain Signatures payouts on a v1 instance"
+        },
+        {
+          "id": "provenance",
+          "group": "Provenance",
+          "label": "Build attested by GitHub Actions (Sigstore) for the on-chain build hash",
+          "status": "na",
+          "reason": "v1 predates the CI build pipeline; its build hash is checked by decrypting the released artifact"
+        },
+        {
+          "id": "manifest.txs",
+          "group": "Proof",
+          "label": "Every tx in the proof manifests resolves on RPC",
+          "status": "pass",
+          "reason": "24/24 listed txs are on chain, final, executed as listed [judge-run.md, launch-lastsave-licence.json]"
+        },
+        {
+          "id": "rebuild.release",
+          "group": "Rebuild",
+          "label": "release.wasm rebuilds to the on-chain hash",
+          "status": "na",
+          "reason": "not run by default (--rebuild); must print 9fafaf8e…2b7a; command listed below"
+        },
+        {
+          "id": "rebuild.probe",
+          "group": "Rebuild",
+          "label": "probe.wasm rebuilds to the on-chain hash",
+          "status": "na",
+          "reason": "not run by default (--rebuild); must print b0cb38e1…b0b4; command listed below"
+        },
+        {
+          "id": "rebuild.licence",
+          "group": "Rebuild",
+          "label": "Licence wasm rebuild",
+          "status": "na",
+          "reason": "not bit-reproducible: the published licence wasm is cargo (rust 1.86) + wasm-opt output from a local toolchain. Its identity is the hash c884be5a…16d2 and its public on-chain bytes (rows above); the source is contracts/licence"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "escrow",
+      "version": "v1",
+      "claim": "The server key is sealed in OutLayer's keystore. It opens only for this contract running exactly release.wasm; no code path deletes or replaces it.",
+      "checks": {
+        "escrow.rule": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "escrow.verified": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+            "label": "02:27 escrow_key",
+            "url": "https://testnet.nearblocks.io/txns/4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+            "label": "escrow",
+            "url": "https://testnet.nearblocks.io/txns/F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/outlayer.rs:112",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/outlayer.rs#L112",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/outlayer.rs:127",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/outlayer.rs#L127",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "escrow_stores_secret_with_access_rule_and_sets_flag",
+          "at": "t_sale.rs:10",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L10",
+          "commit": "11706bc"
+        },
+        {
+          "name": "escrow_twice_refused_even_while_in_flight",
+          "at": "t_sale.rs:30",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L30",
+          "commit": "11706bc"
+        },
+        {
+          "name": "escrow_by_non_studio_refused",
+          "at": "t_sale.rs:44",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L44",
+          "commit": "11706bc"
+        }
+      ]
+    },
+    {
+      "id": "attest",
+      "version": "v1",
+      "claim": "Before any sale an enclave decrypts the artifact with the escrowed key and confirms its build hash; only sha256(key) leaves it.",
+      "checks": {
+        "escrow.verified": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "artifact.mirrors": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "warn",
+          "lastsave-licence.testnet": "pass"
+        },
+        "config.commitment": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu",
+            "label": "02:27 attest",
+            "url": "https://testnet.nearblocks.io/txns/B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+            "label": "attest",
+            "url": "https://testnet.nearblocks.io/txns/FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+            "label": "attest",
+            "url": "https://testnet.nearblocks.io/txns/GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC",
+            "label": "attest",
+            "url": "https://testnet.nearblocks.io/txns/GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/outlayer.rs:178",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/outlayer.rs#L178",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/outlayer.rs:187",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/outlayer.rs#L187",
+          "commit": "d22da79"
+        },
+        {
+          "at": "outlayer/release/src/chain.rs:92",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/353974bd8b27c2485628c40873b7432c8d4a3562/outlayer/release/src/chain.rs#L92",
+          "commit": "353974b"
+        }
+      ],
+      "tests": [
+        {
+          "name": "attest_sets_verified_only_when_key_artifact_and_build_all_match",
+          "at": "t_sale.rs:67",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L67",
+          "commit": "11706bc"
+        },
+        {
+          "name": "attest_null_changes_nothing_and_can_retry",
+          "at": "t_sale.rs:90",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L90",
+          "commit": "11706bc"
+        }
+      ]
+    },
+    {
+      "id": "locked",
+      "version": "v1",
+      "claim": "The licence contract has no access keys: nobody can redeploy it, drain it or delete it. v2 instances are born that way.",
+      "checks": {
+        "keys.none": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "code.hash": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om",
+            "label": "02:29 lock",
+            "url": "https://testnet.nearblocks.io/txns/EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/factory/src/lib.rs:92",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/factory/src/lib.rs#L92",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "an_instance_is_created_in_one_batch_by_hash_and_born_with_no_keys",
+          "at": "tests.rs:93",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/factory/src/tests.rs#L93",
+          "commit": "d22da79"
+        },
+        {
+          "name": "global_publish_and_born_locked_instances",
+          "at": "factory.rs:85",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/277c534912525870dcd2dda5249b874dc045db5e/contracts/sandbox-tests/tests/factory.rs#L85",
+          "commit": "277c534"
+        }
+      ]
+    },
+    {
+      "id": "sale",
+      "version": "v1",
+      "claim": "buy_licence takes the exact price and mints a NEP-171 token: 60% goes to the studio, 40% stays locked as that token's pot share.",
+      "checks": {
+        "totals.sane": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "GPhminv2idpSWgbVx3udNbQchgoGENb1QjVgwhsz53Kz",
+            "label": "02:34 buy (yuna, filmed)",
+            "url": "https://testnet.nearblocks.io/txns/GPhminv2idpSWgbVx3udNbQchgoGENb1QjVgwhsz53Kz",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "331bcFHBwQRoZZgcaNLQJ4Q2qB6fu5RyBwyAxkJBBnGd",
+            "label": "02:35 buys (mira, kofi, dario)",
+            "url": "https://testnet.nearblocks.io/txns/331bcFHBwQRoZZgcaNLQJ4Q2qB6fu5RyBwyAxkJBBnGd",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "HiMGKqLAqcCdUK34Cp7tja6QZgAq7gNHQhPn89HN4QiW",
+            "label": "02:35 buys (mira, kofi, dario)",
+            "url": "https://testnet.nearblocks.io/txns/HiMGKqLAqcCdUK34Cp7tja6QZgAq7gNHQhPn89HN4QiW",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7",
+            "label": "buy_licence lastsave-mira.testnet",
+            "url": "https://testnet.nearblocks.io/txns/DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ",
+            "label": "buy_licence lastsave-kofi.testnet",
+            "url": "https://testnet.nearblocks.io/txns/Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+            "label": "buy_licence lastsave-yuna.testnet",
+            "url": "https://testnet.nearblocks.io/txns/5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/sale.rs:18",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/sale.rs#L18",
+          "commit": "11706bc"
+        }
+      ],
+      "tests": [
+        {
+          "name": "buy_alive_splits_pot_and_studio_share",
+          "at": "t_sale.rs:103",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L103",
+          "commit": "11706bc"
+        },
+        {
+          "name": "buy_with_wrong_deposit_refused",
+          "at": "t_sale.rs:123",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L123",
+          "commit": "11706bc"
+        },
+        {
+          "name": "buy_before_escrow_refused",
+          "at": "t_sale.rs:133",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L133",
+          "commit": "11706bc"
+        }
+      ]
+    },
+    {
+      "id": "liveness",
+      "version": "v1",
+      "claim": "Death by probes needs holder-signed sessions on the official server (a signed 200 is not enough) and K failures spaced in time. An OutLayer timeout is inconclusive, never a failure.",
+      "checks": {
+        "programs.mirrors": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "config.programs": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "FDhVT1jgmL79ZS2e3HNiAMHeAQqW2aADn37yRJ9hkuyZ",
+            "label": "02:36 probe (alive)",
+            "url": "https://testnet.nearblocks.io/txns/FDhVT1jgmL79ZS2e3HNiAMHeAQqW2aADn37yRJ9hkuyZ",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "7WJDcTBpB3msb67ZTekEqQYez3faC1XDkLw9EmigeS81",
+            "label": "02:48 probe → failure 1",
+            "url": "https://testnet.nearblocks.io/txns/7WJDcTBpB3msb67ZTekEqQYez3faC1XDkLw9EmigeS81",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "5Ckj335e76ZfrUU3WLZEFqLNtq9TaLEU73GynmP34qWu",
+            "label": "02:49 probe → failure 2",
+            "url": "https://testnet.nearblocks.io/txns/5Ckj335e76ZfrUU3WLZEFqLNtq9TaLEU73GynmP34qWu",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "label": "probe_official #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+            "label": "probe_official r1 #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+            "label": "probe_official r2 #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/liveness.rs:26",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/liveness.rs#L26",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/liveness.rs:66",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/liveness.rs#L66",
+          "commit": "d22da79"
+        },
+        {
+          "at": "outlayer/probe/src/probe.rs:12",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/51482ebefb33b74bfe98c59765c30b273e9b3eaa/outlayer/probe/src/probe.rs#L12",
+          "commit": "51482eb"
+        }
+      ],
+      "tests": [
+        {
+          "name": "threshold_failures_spaced_by_interval_kill_the_game",
+          "at": "t_liveness.rs:76",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_liveness.rs#L76",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "null_probe_output_is_inconclusive_and_not_counted",
+          "at": "t_liveness.rs:121",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_liveness.rs#L121",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "non_holder_is_rejected",
+          "at": "probe.rs:194",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/51482ebefb33b74bfe98c59765c30b273e9b3eaa/outlayer/probe/tests/probe.rs#L194",
+          "commit": "51482eb"
+        },
+        {
+          "name": "forged_receipt_signature_is_rejected",
+          "at": "probe.rs:52",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/51482ebefb33b74bfe98c59765c30b273e9b3eaa/outlayer/probe/tests/probe.rs#L52",
+          "commit": "51482eb"
+        }
+      ]
+    },
+    {
+      "id": "players",
+      "version": "v1",
+      "claim": "Holders can also kill it: a quorum of report_down calls inside the window, one per token. The studio can end service itself; nobody can keep it alive by saying so.",
+      "checks": {},
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc",
+            "label": "report_down lastsave-mira.testnet",
+            "url": "https://testnet.nearblocks.io/txns/EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj",
+            "label": "report_down again lastsave-mira.testnet",
+            "url": "https://testnet.nearblocks.io/txns/6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/liveness.rs:115",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/liveness.rs#L115",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/lib.rs:100",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/lib.rs#L100",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "quorum_of_holders_kills_the_game",
+          "at": "t_reports.rs:17",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_reports.rs#L17",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "a_token_reports_once_per_window",
+          "at": "t_reports.rs:53",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_reports.rs#L53",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "end_of_service_is_studio_only_and_final",
+          "at": "t_reports.rs:79",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_reports.rs#L79",
+          "commit": "c1d10cd"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "version": "v1",
+      "claim": "After death anyone can release: the enclave re-reads the contract, requires Dead, and outputs the key; the contract stores it publicly only if sha256(key) = the commitment. Released early is impossible.",
+      "checks": {
+        "release.key": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "release.artifact": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "AxEXFj6GxprNfPohgXoFMKMQnLVf439faQijq1kbMcfn",
+            "label": "03:00 release",
+            "url": "https://testnet.nearblocks.io/txns/AxEXFj6GxprNfPohgXoFMKMQnLVf439faQijq1kbMcfn",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+            "label": "release #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/release.rs:21",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/release.rs#L21",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/release.rs:44",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/release.rs#L44",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "release_while_alive_refused",
+          "at": "t_release.rs:17",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L17",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "release_success_stores_key_after_commitment_check",
+          "at": "t_release.rs:50",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L50",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "release_refused_or_failed_outputs_do_not_release",
+          "at": "t_release.rs:81",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L81",
+          "commit": "c1d10cd"
+        }
+      ]
+    },
+    {
+      "id": "afterlife",
+      "version": "v1",
+      "claim": "Each holder takes a refund of their pot share or pledges it to the keep-alive pool, once. Sales after death put 100% into the pool.",
+      "checks": {
+        "totals.sane": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "oRtXVocHDa1H8bhERcueex1L6gSwGfeeYGSs4PtEun9",
+            "label": "03:01 refund (yuna, filmed)",
+            "url": "https://testnet.nearblocks.io/txns/oRtXVocHDa1H8bhERcueex1L6gSwGfeeYGSs4PtEun9",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "2yxCg4QAuoAE7tB1gAubovuGujNdzTZSEqgBp1HzkdK6",
+            "label": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi)",
+            "url": "https://testnet.nearblocks.io/txns/2yxCg4QAuoAE7tB1gAubovuGujNdzTZSEqgBp1HzkdK6",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "9wSxYP5rP46RxDgUzwn6LEwxi8s6bz4rGJEqRbm5WGGK",
+            "label": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi)",
+            "url": "https://testnet.nearblocks.io/txns/9wSxYP5rP46RxDgUzwn6LEwxi8s6bz4rGJEqRbm5WGGK",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG",
+            "label": "choose Refund lastsave-yuna.testnet",
+            "url": "https://testnet.nearblocks.io/txns/14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x",
+            "label": "choose Refund lastsave-dario.testnet",
+            "url": "https://testnet.nearblocks.io/txns/4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC",
+            "label": "choose Pledge lastsave-mira.testnet",
+            "url": "https://testnet.nearblocks.io/txns/6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/afterlife.rs:14",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/afterlife.rs#L14",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "refund_pays_the_holder_and_updates_totals",
+          "at": "t_release.rs:141",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L141",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "pledge_moves_the_share_to_the_pool_and_is_final",
+          "at": "t_release.rs:166",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L166",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "refund_twice_and_pledge_after_refund_refused",
+          "at": "t_release.rs:156",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_release.rs#L156",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "buy_after_death_goes_to_pool_with_no_pot_share",
+          "at": "t_sale.rs:140",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L140",
+          "commit": "11706bc"
+        }
+      ]
+    },
+    {
+      "id": "hosts",
+      "version": "v1",
+      "claim": "A fan runs the released build and gets paid from the pool for unique holders served: pay = verified sessions x rate, capped, once per host and epoch, never below zero.",
+      "checks": {},
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "label": "03:06 register_host (local, tunnel)",
+            "url": "https://testnet.nearblocks.io/txns/EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "tpW2JXZUsddE346UuhrtYV9PB9HDLS1HRfaDVL7XrP1",
+            "label": "03:19 claim_epoch(8)",
+            "url": "https://testnet.nearblocks.io/txns/tpW2JXZUsddE346UuhrtYV9PB9HDLS1HRfaDVL7XrP1",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "Fo3oehCCG8GxrwLy696sp8GjKbrSfaxE6K3uf7AKHFF1",
+            "label": "03:22 claim_epoch",
+            "url": "https://testnet.nearblocks.io/txns/Fo3oehCCG8GxrwLy696sp8GjKbrSfaxE6K3uf7AKHFF1",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+            "label": "register_host",
+            "url": "https://testnet.nearblocks.io/txns/GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "label": "claim_epoch 10 #1",
+            "url": "https://testnet.nearblocks.io/txns/cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "label": "claim_epoch 10 again",
+            "url": "https://testnet.nearblocks.io/txns/8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/hosts.rs:139",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/hosts.rs#L139",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/hosts.rs:96",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/hosts.rs#L96",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "claim_pays_verified_times_rate_and_records_it",
+          "at": "t_hosts.rs:99",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_hosts.rs#L99",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "a_paid_epoch_cannot_be_claimed_again_but_the_next_can",
+          "at": "t_hosts.rs:141",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_hosts.rs#L141",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "pool_exhaustion_pays_what_is_left_and_never_goes_negative",
+          "at": "t_hosts.rs:220",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_hosts.rs#L220",
+          "commit": "c1d10cd"
+        }
+      ]
+    },
+    {
+      "id": "hostverify",
+      "version": "v1",
+      "claim": "The fan-host CLI downloads the artifact from any mirror, refuses wrong bytes, and decrypts only with the key whose hash is on chain.",
+      "checks": {
+        "artifact.mirrors": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "warn",
+          "lastsave-licence.testnet": "pass"
+        },
+        "release.artifact": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "label": "03:06 register_host (local, tunnel)",
+            "url": "https://testnet.nearblocks.io/txns/EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a",
+            "label": "03:24 register_host (persistent)",
+            "url": "https://testnet.nearblocks.io/txns/8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+            "label": "register_host",
+            "url": "https://testnet.nearblocks.io/txns/GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "host/lib/mirrors.mjs:30",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/mirrors.mjs#L30",
+          "commit": "0706e09"
+        },
+        {
+          "at": "host/lib/prepare.mjs:52",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/prepare.mjs#L52",
+          "commit": "0706e09"
+        }
+      ],
+      "tests": [
+        {
+          "name": "refuses a tampered artifact and writes nothing",
+          "at": "prepare.test.ts:53",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/681ca5ba33ee2d1bf5d8cfc9848888637805baec/host/test/prepare.test.ts#L53",
+          "commit": "681ca5b"
+        },
+        {
+          "name": "falls back to a second mirror when the first is tampered",
+          "at": "prepare.test.ts:62",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/681ca5ba33ee2d1bf5d8cfc9848888637805baec/host/test/prepare.test.ts#L62",
+          "commit": "681ca5b"
+        },
+        {
+          "name": "refuses a released key that does not match the commitment",
+          "at": "prepare.test.ts:78",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/681ca5ba33ee2d1bf5d8cfc9848888637805baec/host/test/prepare.test.ts#L78",
+          "commit": "681ca5b"
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "version": "v1",
+      "claim": "Progress lives on chain: the official server posts a hashed snapshot after every match; hosts restore the latest one only if it hashes right.",
+      "checks": {},
+      "tx": {
+        "v1 (lastsave-licence)": [
+          {
+            "hash": "EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "label": "03:06 register_host (local, tunnel)",
+            "url": "https://testnet.nearblocks.io/txns/EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "instance": "lastsave-licence.testnet"
+          },
+          {
+            "hash": "8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a",
+            "label": "03:24 register_host (persistent)",
+            "url": "https://testnet.nearblocks.io/txns/8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a",
+            "instance": "lastsave-licence.testnet"
+          }
+        ],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N",
+            "label": "snapkey",
+            "url": "https://testnet.nearblocks.io/txns/EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/sale.rs:67",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/sale.rs#L67",
+          "commit": "11706bc"
+        }
+      ],
+      "tests": [
+        {
+          "name": "snapshot_ok_keeps_latest_and_last_32_hashes",
+          "at": "t_sale.rs:160",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L160",
+          "commit": "11706bc"
+        },
+        {
+          "name": "snapshot_rejections",
+          "at": "t_sale.rs:176",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/11706bc69a663f003306f5f0668625a7c859568e/contracts/licence/src/tests/t_sale.rs#L176",
+          "commit": "11706bc"
+        },
+        {
+          "name": "refuses a snapshot whose blob does not hash to the recorded hash",
+          "at": "prepare.test.ts:99",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/681ca5ba33ee2d1bf5d8cfc9848888637805baec/host/test/prepare.test.ts#L99",
+          "commit": "681ca5b"
+        }
+      ]
+    },
+    {
+      "id": "royalty",
+      "version": "v1",
+      "claim": "NEP-199 royalties: 10% of every resale goes to the studio; transfers carry the pot share and the unused choice.",
+      "checks": {},
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": []
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/nft.rs:251",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/nft.rs#L251",
+          "commit": "c1d10cd"
+        }
+      ],
+      "tests": [
+        {
+          "name": "nft_payout_pays_royalty_to_studio_and_rest_to_owner",
+          "at": "t_nft.rs:11",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_nft.rs#L11",
+          "commit": "c1d10cd"
+        },
+        {
+          "name": "transfers_carry_pot_share_and_the_unused_choice",
+          "at": "t_nft.rs:55",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/c1d10cd418c3fc18678aa5e507f42144c7eccb78/contracts/licence/src/tests/t_nft.rs#L55",
+          "commit": "c1d10cd"
+        }
+      ]
+    },
+    {
+      "id": "login",
+      "version": "v1",
+      "claim": "Players sign in with one wallet signature (NEP-413); the server accepts only holders of this licence and rejects replays, expired or foreign logins.",
+      "checks": {},
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": []
+      },
+      "code": [
+        {
+          "at": "game/server/src/login.ts:12",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/41039996c1c251fa8275a503ec5211b16cb62ac6/game/server/src/login.ts#L12",
+          "commit": "4103999"
+        }
+      ],
+      "tests": [
+        {
+          "name": "rejects an account without a licence",
+          "at": "login.test.ts:58",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/41039996c1c251fa8275a503ec5211b16cb62ac6/game/server/test/unit/login.test.ts#L58",
+          "commit": "4103999"
+        },
+        {
+          "name": "denies a stale proof as replay",
+          "at": "login.test.ts:72",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/41039996c1c251fa8275a503ec5211b16cb62ac6/game/server/test/unit/login.test.ts#L72",
+          "commit": "4103999"
+        },
+        {
+          "name": "rejects a login signed for another licence contract",
+          "at": "login.test.ts:66",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/41039996c1c251fa8275a503ec5211b16cb62ac6/game/server/test/unit/login.test.ts#L66",
+          "commit": "4103999"
+        }
+      ]
+    },
+    {
+      "id": "gasless",
+      "version": "v2",
+      "claim": "Holders and hosts act without holding NEAR: zero-deposit probe, release and claim are paid from the contract's ops budget (funded by 10% of post-death sales and anyone); a relayer pays gas only.",
+      "checks": {
+        "totals.sane": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "label": "probe_official #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+            "label": "probe_official r1 #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+            "label": "probe_official r2 #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/ops.rs:46",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/ops.rs#L46",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/ops.rs:60",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/ops.rs#L60",
+          "commit": "d22da79"
+        },
+        {
+          "at": "relayer/src/policy.ts:27",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/3ba25e3752c0f2e9deaf3a3cf04b4ace7d089848/relayer/src/policy.ts#L27",
+          "commit": "3ba25e3"
+        }
+      ],
+      "tests": [
+        {
+          "name": "zero_deposit_probe_is_paid_from_the_budget_and_the_contract_is_the_payer",
+          "at": "t_ops.rs:67",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_ops.rs#L67",
+          "commit": "d22da79"
+        },
+        {
+          "name": "every_gasless_method_fits_inside_250_tgas",
+          "at": "t_ops.rs:158",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_ops.rs#L158",
+          "commit": "d22da79"
+        },
+        {
+          "name": "sync_ops_only_adds_the_strict_surplus_and_never_touches_other_buckets",
+          "at": "t_guards.rs:111",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_guards.rs#L111",
+          "commit": "d22da79"
+        },
+        {
+          "name": "deposit above zero",
+          "at": "relay.test.ts:37",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/3ba25e3752c0f2e9deaf3a3cf04b4ace7d089848/relayer/test/relay.test.ts#L37",
+          "commit": "3ba25e3"
+        },
+        {
+          "name": "bad signature, before any RPC is spent",
+          "at": "relay.test.ts:49",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/3ba25e3752c0f2e9deaf3a3cf04b4ace7d089848/relayer/test/relay.test.ts#L49",
+          "commit": "3ba25e3"
+        }
+      ]
+    },
+    {
+      "id": "chainsig-address",
+      "version": "v2",
+      "claim": "The contract pays hosts on Base Sepolia from an address nobody holds a key for: derived from the NEAR MPC signer's root key, this contract's id and a path. Anyone can re-derive it.",
+      "checks": {
+        "chainsig.address": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "na"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "scripts/chainsig/derive.mjs:43",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/ff465b36c70f8a0d9674fb9014fc525ca0614cc4/scripts/chainsig/derive.mjs#L43",
+          "commit": "ff465b3"
+        },
+        {
+          "at": "contracts/licence/src/evm.rs:202",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/evm.rs#L202",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "payer address re-derivation matches the live v2dev instance (known answer)",
+          "at": "pure.test.mjs:23",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/60f41a588950eb9616e091b31728c01c5d9eab49/scripts/verify/pure.test.mjs#L23",
+          "commit": "60f41a5"
+        },
+        {
+          "name": "a_signature_that_does_not_recover_to_the_payer_is_never_stored",
+          "at": "t_evm.rs:236",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_evm.rs#L236",
+          "commit": "d22da79"
+        }
+      ]
+    },
+    {
+      "id": "chainsig-payout",
+      "version": "v2",
+      "claim": "A verified host claim moves NEAR from the pool into evm_settled (no method can withdraw it) and books an ETH payout; anyone can have it signed, broadcast and bumped; each epoch pays once on either rail.",
+      "checks": {
+        "chainsig.payouts": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "warn",
+          "lastsave-licence.testnet": "na"
+        },
+        "totals.sane": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "label": "claim_epoch 10 #1",
+            "url": "https://testnet.nearblocks.io/txns/cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "label": "claim_epoch 10 again",
+            "url": "https://testnet.nearblocks.io/txns/8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/licence/src/evm.rs:209",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/evm.rs#L209",
+          "commit": "d22da79"
+        },
+        {
+          "at": "contracts/licence/src/hosts.rs:71",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/hosts.rs#L71",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "an_epoch_pays_exactly_once_on_either_rail",
+          "at": "t_evm.rs:156",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_evm.rs#L156",
+          "commit": "d22da79"
+        },
+        {
+          "name": "source_has_no_way_to_move_evm_settled_out",
+          "at": "t_ops.rs:234",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_ops.rs#L234",
+          "commit": "d22da79"
+        },
+        {
+          "name": "bump_resigns_at_the_same_nonce_to_and_value_with_a_higher_fee_and_keeps_history",
+          "at": "t_evm_bump.rs:8",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/licence/src/tests/t_evm_bump.rs#L8",
+          "commit": "d22da79"
+        },
+        {
+          "name": "evm_payouts_and_gasless_calls",
+          "at": "evm_lifecycle.rs:56",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/sandbox-tests/tests/evm_lifecycle.rs#L56",
+          "commit": "d22da79"
+        }
+      ]
+    },
+    {
+      "id": "global",
+      "version": "v2",
+      "claim": "The licence code is published once as an immutable NEAR global contract (by hash); a factory creates every instance pointing at that exact hash, with no access key ever added.",
+      "checks": {
+        "code.hash": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        },
+        "code.global_bytes": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "na"
+        },
+        "factory.hash": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "na"
+        },
+        "factory.listed": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "na"
+        },
+        "keys.none": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "contracts/factory/src/lib.rs:92",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/factory/src/lib.rs#L92",
+          "commit": "d22da79"
+        },
+        {
+          "at": "scripts/launch/publish-global.mjs:14",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/scripts/launch/publish-global.mjs#L14",
+          "commit": "d22da79"
+        }
+      ],
+      "tests": [
+        {
+          "name": "global_publish_and_born_locked_instances",
+          "at": "factory.rs:85",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/277c534912525870dcd2dda5249b874dc045db5e/contracts/sandbox-tests/tests/factory.rs#L85",
+          "commit": "277c534"
+        },
+        {
+          "name": "views_report_the_code_hash_and_start_empty",
+          "at": "tests.rs:85",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/d22da79a4b4a909ee791d41b7ce93ba6f83722ae/contracts/factory/src/tests.rs#L85",
+          "commit": "d22da79"
+        }
+      ]
+    },
+    {
+      "id": "walrus",
+      "version": "v2",
+      "claim": "The encrypted server artifact is mirrored on Walrus (content-addressed) next to the studio's copy and GitHub; the fan host tries them in order and accepts only the on-chain hash.",
+      "checks": {
+        "artifact.walrus": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "na",
+          "lastsave-licence.testnet": "na"
+        },
+        "artifact.mirrors": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "warn",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "host/lib/walrus.mjs:18",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/walrus.mjs#L18",
+          "commit": "0706e09"
+        },
+        {
+          "at": "host/lib/mirrors.mjs:30",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/mirrors.mjs#L30",
+          "commit": "0706e09"
+        }
+      ],
+      "tests": [
+        {
+          "name": "studio 404 -> walrus verified, stops there and prints one line each",
+          "at": "artifact.test.ts:45",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L45",
+          "commit": "e2a676b"
+        },
+        {
+          "name": "skips a mirror that serves the wrong bytes and reports tampering when none matches",
+          "at": "artifact.test.ts:55",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L55",
+          "commit": "e2a676b"
+        },
+        {
+          "name": "PUTs the exact JSON bytes with epochs=53&permanent=true and returns the blob id",
+          "at": "walrus.test.ts:7",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/game/server/test/unit/walrus.test.ts#L7",
+          "commit": "e2a676b"
+        }
+      ]
+    },
+    {
+      "id": "provenance",
+      "version": "v2",
+      "claim": "The server bundle is built by a public GitHub Actions workflow and attested with Sigstore; the on-chain build_hash is that attested digest, so the code the escrow protects is the code the workflow built.",
+      "checks": {
+        "provenance": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "na",
+          "lastsave-licence.testnet": "na"
+        },
+        "release.artifact": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+            "label": "attest",
+            "url": "https://testnet.nearblocks.io/txns/FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+            "label": "attest",
+            "url": "https://testnet.nearblocks.io/txns/GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+            "instance": "v2dev.lastsave-factory.testnet"
+          }
+        ]
+      },
+      "code": [
+        {
+          "at": "host/lib/provenance.mjs:82",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/2b6f48b2ec3c4b7f41037249447a85aa28577814/host/lib/provenance.mjs#L82",
+          "commit": "2b6f48b"
+        },
+        {
+          "at": ".github/workflows/release-build.yml:77",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/eefba0050a9776e02c6ac7268ff8a4dadaf27832/.github/workflows/release-build.yml#L77",
+          "commit": "eefba00"
+        }
+      ],
+      "tests": [
+        {
+          "name": "refuses an attestation whose subject digest is not the on-chain build_hash",
+          "at": "artifact.test.ts:76",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L76",
+          "commit": "e2a676b"
+        },
+        {
+          "name": "refuses a different workflow, a foreign signer identity",
+          "at": "artifact.test.ts:84",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L84",
+          "commit": "e2a676b"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "version": "v2",
+      "claim": "Everything above that can be read from chain is re-checked by one read-only command that needs no keys and no funds.",
+      "checks": {
+        "manifest.txs": {
+          "ember-rift.lastsave-factory.testnet": "pending",
+          "v2dev.lastsave-factory.testnet": "pass",
+          "lastsave-licence.testnet": "pass"
+        }
+      },
+      "tx": {
+        "v1 (lastsave-licence)": [],
+        "v2 (ember-rift)": "pending judge v2 launch",
+        "v2 dev run (v2dev, same code)": []
+      },
+      "code": [
+        {
+          "at": "scripts/verify/run.mjs:33",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/60f41a588950eb9616e091b31728c01c5d9eab49/scripts/verify/run.mjs#L33",
+          "commit": "60f41a5"
+        }
+      ],
+      "tests": [
+        {
+          "name": "released v1 key decrypts the committed artifact to the on-chain build hash",
+          "at": "pure.test.mjs:30",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/60f41a588950eb9616e091b31728c01c5d9eab49/scripts/verify/pure.test.mjs#L30",
+          "commit": "60f41a5"
+        },
+        {
+          "name": "totals sanity: negative buckets and an uncovered balance are caught",
+          "at": "pure.test.mjs:55",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/60f41a588950eb9616e091b31728c01c5d9eab49/scripts/verify/pure.test.mjs#L55",
+          "commit": "60f41a5"
+        },
+        {
+          "name": "not-applicable paths say why instead of passing",
+          "at": "checks.test.mjs:35",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/60f41a588950eb9616e091b31728c01c5d9eab49/scripts/verify/checks.test.mjs#L35",
+          "commit": "60f41a5"
+        }
+      ]
+    }
+  ],
+  "rehearsed_vs_real": [
+    {
+      "thing": "Demo-speed timers",
+      "status": "Rehearsed setting",
+      "detail": "The judge instances run probe interval 20 s, 3 failures, windows 2 to 3 min, epoch 2 min so a lifecycle fits a video. The contract code is identical; production defaults (6 h, 4 failures, 72 h windows, 7-day epochs) are init config, listed in the README. No production-length run was done."
+    },
+    {
+      "thing": "Death of the official server",
+      "status": "Real, staged by us",
+      "detail": "We deleted our own Cloudflare Worker (`scripts/ops/kill-official.sh`). What followed is real contract state: failed probes spaced in time, then Dead, then release. We chose the moment; the contract decided the rest."
+    },
+    {
+      "thing": "Studio, players, fan host",
+      "status": "Role-played",
+      "detail": "Ember Rift is a fictional studio title. The studio account, the four player accounts and the fan host are all ours, on testnet. The community server is the released build running for real, hosted by us in the fan role."
+    },
+    {
+      "thing": "Films and UI flows",
+      "status": "Rehearsed tooling",
+      "detail": "UI flows in the film were driven from a local build with a localhost-only test-account signer (no wallet keys imported anywhere). Every transaction they sent is on testnet and listed above. Wallet sign-in through Meteor or MyNearWallet was not exercised end to end."
+    },
+    {
+      "thing": "Money",
+      "status": "Testnet only",
+      "detail": "NEAR testnet and Base Sepolia. Nothing has real value. Base Sepolia payouts are demo-sized (10^13 wei per verified session, 0.00001 ETH)."
+    },
+    {
+      "thing": "Chain Signatures",
+      "status": "Real",
+      "detail": "The NEAR MPC signer `v1.signer-prod.testnet` signs the payout transactions; the contract verifies the signature recovers to its derived address before storing it. The Base Sepolia receipts are public."
+    },
+    {
+      "thing": "Gas-free actions",
+      "status": "Real, with a convenience",
+      "detail": "Zero-deposit calls are paid from the contract's ops budget (seeded by us, topped up by 10% of post-death sales). The relayer (Cloudflare Pages) pays gas only and is ours: a holder who distrusts it can send the same call and pay gas themselves."
+    },
+    {
+      "thing": "Walrus mirror",
+      "status": "Real, not permanent",
+      "detail": "Walrus testnet is not permanent storage and is wiped periodically. It is one mirror of three; the studio's copy and GitHub raw serve the same hash-pinned bytes, and any single honest mirror is enough."
+    },
+    {
+      "thing": "Reproducible builds",
+      "status": "Partly",
+      "detail": "release.wasm and probe.wasm (the code the escrow trusts) rebuild bit-for-bit in OutLayer's pinned compiler image. The licence wasm is cargo plus wasm-opt from a local toolchain and is not claimed to be bit-reproducible; its identity is its hash and its public on-chain bytes."
+    },
+    {
+      "thing": "Build provenance",
+      "status": "Real from v2",
+      "detail": "The v2 judge instance's bundle is attested by a public GitHub Actions workflow (Sigstore, Rekor). v1 and the dev instance predate that pipeline: their build hash is checked by decrypting the released artifact instead."
+    },
+    {
+      "thing": "The escrow's trust root",
+      "status": "Trusted, not proven here",
+      "detail": "The key opens only in OutLayer's TEE workers (Intel TDX) under a keystore whose master key comes from NEAR MPC. We prove the rule we asked the keystore to enforce (the store_secrets call on chain), not the enclave's honesty."
+    }
+  ]
+}
