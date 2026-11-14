@@ -21,6 +21,7 @@ export const PAYOUT = {
 export const VERIFY_INSTANCE = "ember-rift.lastsave-factory.testnet";
 
 /** Seam with S14's last frame, measured on its render at f251: the lifted "Host paid 0.04 Ⓝ" amount's centre and
- * on-screen font size (EpochChip Mono 96 px at its 1.16 lift scale), and the box hidden in the frozen S14 layer while
- * the amount flies to the Base row. Re-measure if S14's chip moves. */
-export const S14_SEAM = { frame: 251, amount: { x: 1006, y: 592, px: 111 }, hole: { x: 770, y: 528, w: 475, h: 130 } } as const;
+ * on-screen font size (EpochChip Mono 96 px at its 1.16 lift scale), the box hidden in the frozen S14 layer while the
+ * amount flies to the Base row, and the chip's box (with its glow) that collapses away. Re-measure if S14's chip moves. */
+export const S14_SEAM = { frame: 251, amount: { x: 1006, y: 592, px: 111 }, hole: { x: 770, y: 528, w: 475, h: 130 },
+  chip: { x: 505, y: 365, w: 910, h: 335 } } as const;
