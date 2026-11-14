@@ -1254,7 +1254,7 @@
       "token_id": "1",
       "note": "refund is on chain; its recording is unusable (choice card below the fold)"
     },
-    "store_real": {
+    "postbuy_wallet": {
       "instance": "v2dev.lastsave-factory.testnet",
       "buyer": "jenifajoanna.testnet",
       "token_id": "6",

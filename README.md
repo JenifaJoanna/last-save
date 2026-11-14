@@ -204,8 +204,10 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
 - A host account needs ~0.05 testnet NEAR per paid claim; gas-free claims come out of the instance's ops budget.
 - Gas-free holder actions need the wallet to add the app's function-call key at sign-in (NEAR Connect's
   `addFunctionCallKey`); a wallet that declines, and every Ethereum wallet, pays normal gas instead. Tested with a real
-  Meteor Web wallet on testnet: Meteor adds the key for the licence contract with an empty method list (any zero-deposit
-  method on that one contract, 0.25 NEAR allowance) rather than the app's eight-method list.
+  Meteor Web wallet on testnet: Meteor adds the key for the licence contract with an empty method list
+  (`method_names: []`), which allows any zero-deposit method on that one contract, rather than the app's requested list
+  of eight methods. A function-call key can never attach a deposit, so it still cannot move the holder's NEAR; its gas
+  allowance is capped at 0.25 NEAR.
 - No email or Google login yet: the shared NEAR Auth testnet login only accepts a `http://localhost:3000` callback, so it
   needs its own client id for our domains. No passkey sign-in: that NEAR Connect executor is mainnet-only.
 - The game server's single-use NEP-413 login nonce (replay refusal) landed after the ember-rift build was cut, so the
