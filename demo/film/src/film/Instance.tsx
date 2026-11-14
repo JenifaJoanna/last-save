@@ -1,7 +1,7 @@
 // Which instance a scene shows. The judge instance ember-rift is launched, played, killed and declared dead on camera
 // (S01–S09, S11). Its key release could not complete tonight (its release program reads the chain through public RPCs
 // that were rate-limiting), so S10 and S13–S16 show the dev instance v2dev's REAL afterlife on the same global code:
-// its OutLayer release, Walrus/Archive copy, fan host, epoch claim and Base payout on 14 Nov. Every frame of those
+// its OutLayer release, fan host, epoch claim and Base payout on 14 Nov (v2dev has no Walrus/Archive copy). Every frame of those
 // scenes says so: S10 opens with a banner, and a corner chip stays on S10 and S13–S16 in every cut (S12, ember-rift's stored build, carries its own) (the vertical shows
 // it in its own header instead, since its band crops the frame's edges).
 import { createContext, useContext, type FC, type ReactNode } from "react";
