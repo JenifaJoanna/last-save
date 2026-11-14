@@ -9,7 +9,7 @@ import { GASLESS_METHODS, KEY_ALLOWANCE_YOCTO } from "./gasless";
 
 export type SignInKind = "near" | "evm";
 export const EVM_WALLET_ID = "ethereum-wallets";
-const RPCS = ["https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"];
+const RPCS = ["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"]; // dRPC first: FastNEAR rate-limits heavy users
 
 let shared: Promise<NearConnector> | null = null;
 

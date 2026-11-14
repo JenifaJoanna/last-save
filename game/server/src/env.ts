@@ -47,7 +47,7 @@ export function loadConfig(env: Env): Config {
     hostId: env.HOST_ID || "official",
     buildHash: env.BUILD_HASH || "dev",
     licenceContract: env.LICENCE_CONTRACT || "lastsave-licence.testnet",
-    rpcUrls: (env.RPC_URLS || "https://test.rpc.fastnear.com,https://near-testnet.drpc.org")
+    rpcUrls: (env.RPC_URLS || "https://near-testnet.drpc.org,https://test.rpc.fastnear.com")
       .split(",").map((s) => s.trim()).filter(Boolean),
     snapshotSigner: env.SNAPSHOT_SIGNER || null,
     studioAccount: env.STUDIO_ACCOUNT || "lastsave-studio.testnet",

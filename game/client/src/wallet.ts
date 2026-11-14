@@ -11,7 +11,7 @@ interface Pending { message: string; nonce: string; recipient: string; secret: s
 let shared: Promise<NearConnector> | null = null;
 function connector(): Promise<NearConnector> {
   shared ??= import("@hot-labs/near-connect").then(({ NearConnector: C }) =>
-    new C({ network: "testnet", providers: { testnet: ["https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"] }, features: { testnet: true, signMessage: true }, footerBranding: null }));
+    new C({ network: "testnet", providers: { testnet: ["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"] }, features: { testnet: true, signMessage: true }, footerBranding: null }));
   return shared;
 }
 

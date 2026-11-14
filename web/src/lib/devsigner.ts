@@ -26,7 +26,7 @@ export async function devCall(s: DevSession, method: string, args: Record<string
   const { Account, Connection, InMemorySigner, KeyPair, keyStores, providers } = nearApi;
   const store = new keyStores.InMemoryKeyStore();
   await store.setKey("testnet", s.accountId, KeyPair.fromString(s.privateKey as `ed25519:${string}`));
-  const provider = new providers.FailoverRpcProvider(["https://test.rpc.fastnear.com", "https://near-testnet.drpc.org"].map((url) => new providers.JsonRpcProvider({ url }, { retries: 4, backoff: 1.8, wait: 500 })));
+  const provider = new providers.FailoverRpcProvider(["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com"].map((url) => new providers.JsonRpcProvider({ url }, { retries: 4, backoff: 1.8, wait: 500 })));
   const account = new Account(new Connection("testnet", provider, new InMemorySigner(store), ""), s.accountId);
   const outcome = await account.functionCall({ contractId: CONTRACT, methodName: method, args, gas: BigInt(gasTgas) * 10n ** 12n, attachedDeposit: BigInt(depositYocto) });
   const failure = [outcome.status, ...outcome.receipts_outcome.map((r) => r.outcome.status)].find((st) => typeof st === "object" && st && "Failure" in st);

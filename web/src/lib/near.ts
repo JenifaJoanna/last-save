@@ -4,7 +4,7 @@ export const NETWORK = "testnet";
 export const CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
 export const STUDIO: string = (import.meta.env.VITE_STUDIO as string | undefined) ?? "lastsave-studio.testnet";
 export const OFFICIAL_URL: string = ((import.meta.env.VITE_OFFICIAL_URL as string | undefined) ?? "").replace(/\/$/, "");
-const RPCS = ["https://test.rpc.fastnear.com", "https://near-testnet.drpc.org"];
+const RPCS = ["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com"];
 
 export const txUrl = (hash: string) => `https://testnet.nearblocks.io/txns/${hash}`;
 export const accountUrl = (id: string) => `https://testnet.nearblocks.io/address/${id}`;
