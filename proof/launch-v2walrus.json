@@ -1,0 +1,67 @@
+{
+  "contract": "v2walrus.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "cibuild",
+      "at": "2026-11-14T09:31:21.634Z",
+      "error": "api.github.com attestations: invalid certificate extension - missing OID 1.3.6.1.4.1.57264.1.12"
+    },
+    {
+      "step": "cibuild",
+      "at": "2026-11-14T09:32:24.334Z",
+      "build_hash": "4389b8d2dcbe7e52b3b144f14426ce23a129ec7f74b91694e2e9e9e957c5e949",
+      "attested_digest": "4389b8d2dcbe7e52b3b144f14426ce23a129ec7f74b91694e2e9e9e957c5e949",
+      "artifact_sha256": "0b5bb75c051d7651770584dd24599c50831fe6aa4afb3451f6610bb638ea3792",
+      "size": 586405,
+      "key_commitment": "bf497b876472f986d322bcdd934398133067a8df220a3a7ccc923ac4738d75a5",
+      "workflow": ".github/workflows/release-build.yml",
+      "commit": "c47563ba4d7c12cd2222a5e026e2ac03ad79b030",
+      "run_id": "43580818448",
+      "rekor_log_index": 3874867299,
+      "rekor_integrated_time": "2026-11-14T09:30:20.000Z"
+    },
+    {
+      "step": "walrus",
+      "at": "2026-11-14T09:32:39.938Z",
+      "blob_id": "AaiTfFH8cOJQ51cx1cqvPRYQrC59_WDOTeS0fZ4KHLw",
+      "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/AaiTfFH8cOJQ51cx1cqvPRYQrC59_WDOTeS0fZ4KHLw",
+      "end_epoch": 634,
+      "newly_created": true,
+      "readback_sha256": "0b5bb75c051d7651770584dd24599c50831fe6aa4afb3451f6610bb638ea3792",
+      "readback_ok": true,
+      "bytes": 586405
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-14T09:32:52.723Z",
+      "project": "kiln-cdn-v2walrus",
+      "url": "https://kiln-cdn-v2walrus.pages.dev/ember-rift-0b5bb75c051d7651.bin",
+      "status": 200,
+      "sha256_ok": true
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-14T09:32:52.728Z",
+      "release": {
+        "sha256": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-0a02917bec7e50c1.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://kiln-cdn-v2walrus.pages.dev/ember-rift-0b5bb75c051d7651.bin",
+        "https://aggregator.walrus-testnet.walrus.space/v1/blobs/AaiTfFH8cOJQ51cx1cqvPRYQrC59_WDOTeS0fZ4KHLw",
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-0b5bb75c051d7651.bin"
+      ],
+      "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    }
+  ]
+}

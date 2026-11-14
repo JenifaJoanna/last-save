@@ -2,13 +2,12 @@
 //   1. GitHub's attestations REST API for a public repo (unauthenticated), falling back to the sigstore bundle
 //      attached to the release (plain HTTPS download, not subject to the API's 60/h unauthenticated rate limit).
 //   2. The bundle is verified with `sigstore` against the public-good trust root (Fulcio chain, Rekor inclusion / signed entry
-//      timestamp, SCT): certificate issuer and source repository are pinned, the DSSE signature is checked.
+//      timestamp, SCT): certificate issuer is pinned and the signer identity (SAN) must be our repo's release workflow, the DSSE signature is checked.
 //   3. The signed in-toto statement must name sha256(bundle tarball) as a subject, be SLSA provenance, and come from our workflow.
 // Used by the launch step `cibuild` and by the fan host before it decrypts anything.
 export const DEFAULT_REPO = "JenifaJoanna/last-save";
 export const WORKFLOW_PATH = ".github/workflows/release-build.yml";
 export const OIDC_ISSUER = "https://token.actions.githubusercontent.com";
-const OID_SOURCE_REPO_URI = "1.3.6.1.4.1.57264.1.12";
 const SLSA_TYPES = new Set(["https://slsa.dev/provenance/v1", "https://slsa.dev/provenance/v0.2"]);
 export const RELEASE_ASSET = "server-bundle.tar.gz";
 
@@ -91,7 +90,7 @@ export async function verifyProvenance({ digest, repo = DEFAULT_REPO, tag = null
   for (const { bundle, source } of bundles) {
     try {
       const facts = readStatement(bundle, { repo, digest });
-      const signer = await verifyBundle(bundle, { certificateIssuer: OIDC_ISSUER, certificateOIDs: { [OID_SOURCE_REPO_URI]: `https://github.com/${repo}` } });
+      const signer = await verifyBundle(bundle, { certificateIssuer: OIDC_ISSUER });
       const san = signer?.identity?.subjectAlternativeName ?? "";
       if (!san.startsWith(`https://github.com/${repo}/${workflow}@refs/tags/build-`)) throw new ProvenanceError("invalid", `signer identity ${san || "(none)"} is not the ${workflow} release workflow`);
       if (facts.workflow !== workflow) throw new ProvenanceError("invalid", `attested workflow ${facts.workflow} is not ${workflow}`);
