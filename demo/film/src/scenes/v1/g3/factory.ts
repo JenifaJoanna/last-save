@@ -14,6 +14,7 @@ export const S07_BEATS = {
   account: beat("S07", 6.84) - 2, // f212: the result block prints and the account line lifts on "single transaction"
   flash: beat("S07", 6.84) + 14,
   keys: beat("S07", 8.18) - 2, // f252: "access keys: 0 · born locked" lifts on "born"
+  global: beat("S07", 6.84) + 30, // f244: "global code …" lifts off the x-factory result as the flash shows it
 };
 
 const RESULT_AT = 6.467; // take s: the result block prints
@@ -38,8 +39,23 @@ export const FACTORY = {
   account: { text: rs("studio2Account"), status: "Alive" },
 } as const;
 
+/** x-factory (raw/x-factory.mp4 + .cast, 14 Nov 22:05): view_account on tidebreak via the public RPC; the jq result
+ * prints at 4.25 s (cast) and holds to 8.1 s. The flash shows the result block (take px x 220-1380, y 298-538; rows
+ * every 33 px: account 347, global_contract_hash 381, code_hash 414, block_height 446) at 1.33x, ≈32 px type. */
+export const XFACTORY = {
+  slot: "x-factory",
+  from: 4.5, // take s at the flash's open frame: the result is already printed when the dial-up hands over (+13 f)
+  rect: { x: 190, y: 250, w: 1540, h: 319 },
+  crop: { x: 220 / 1920, y: 298 / 1080, w: 1160 / 1920, h: 240 / 1080 },
+  cropY: 298,
+  hashAt: { x: 636, y: 381 - 16 }, // the hash value's row top-left in take px
+  /** The take's own "global_contract_hash" value (= launch-factory.json code_hash). */
+  globalHash: "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+} as const;
+
 /** "access keys: 0 · born locked", as the take prints it (cream, then green). */
 export const KEYS_LINE = { head: "access keys: 0", tail: " · born locked" } as const;
 
 /** Key-line slots in frame px (lower third; they hold over the pull-out into S08). */
-export const S07_SLOTS = { account: { x: 112, y: 812 }, keys: { x: 112, y: 916 }, size: 56 } as const;
+/** Stacked bottom-up in landing order (account f212, global f244, keys f252), so no lift crosses a landed line. */
+export const S07_SLOTS = { account: { x: 112, y: 916 }, global: { x: 112, y: 812 }, keys: { x: 112, y: 708 }, size: 56 } as const;

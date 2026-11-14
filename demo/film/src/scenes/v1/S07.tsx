@@ -9,7 +9,8 @@ import { stepped, T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
 import { TEXTURE } from "./g3/attack";
 import { DeviceShot } from "./g3/Device";
-import { FACTORY, KEYS_LINE, S07_BEATS, S07_SLOTS } from "./g3/factory";
+import { FACTORY, KEYS_LINE, S07_BEATS, S07_SLOTS, XFACTORY } from "./g3/factory";
+import { shortHash } from "../../film/run";
 import { Flash } from "./g3/Flash";
 import { KeyLine } from "./g3/KeyLine";
 import { easeInOut, lerp, prog } from "./g3/motion";
@@ -35,6 +36,10 @@ export function S07Lines({ f, out, push = 1 }: { f: number; out?: number; push?:
     <>
       <KeyLine f={f} at={S07_BEATS.account} from={at(FACTORY.rows.account)} fromScale={k0} to={S07_SLOTS.account} size={S07_SLOTS.size} accent={T.gold} out={out}>
         <span style={{ color: T.gold }}>{FACTORY.account.text}</span>  <span style={{ color: T.alive }}>{FACTORY.account.status}</span>
+      </KeyLine>
+      <KeyLine f={f} at={S07_BEATS.global} from={{ x: XFACTORY.rect.x + (XFACTORY.hashAt.x - 220) * (XFACTORY.rect.w / 1160), y: XFACTORY.rect.y + (XFACTORY.hashAt.y - XFACTORY.cropY) * (XFACTORY.rect.w / 1160) }}
+        fromScale={(24.5 * XFACTORY.rect.w) / 1160 / S07_SLOTS.size} to={S07_SLOTS.global} size={S07_SLOTS.size} accent={T.alive} out={out}>
+        global code <span style={{ color: T.alive }}>{shortHash(XFACTORY.globalHash)}</span>
       </KeyLine>
       <KeyLine f={f} at={S07_BEATS.keys} from={at(FACTORY.rows.keys)} fromScale={k0} to={S07_SLOTS.keys} size={S07_SLOTS.size} accent={T.alive} out={out}>
         {KEYS_LINE.head}<span style={{ color: T.alive }}>{KEYS_LINE.tail}</span>
@@ -74,7 +79,7 @@ export function S07() {
       <Camera scale={push} fx={960} fy={CONTENT.y + CONTENT.h / 2}>
         <ScreenFrame title="Terminal" mode="online">{terminal}</ScreenFrame>
       </Camera>
-      <Flash f={f} at={S07_BEATS.flash} dur={FLASH_DUR} slot="x-factory" path="testnet.nearblocks.io/address/…" dim={stepped(prog(f, S07_BEATS.keys - 2, S07_BEATS.keys + 4), 3)} />
+      <Flash f={f} at={S07_BEATS.flash} dur={FLASH_DUR} slot={XFACTORY.slot} path="rpc.testnet.near.org view_account" from={XFACTORY.from} rect={XFACTORY.rect} crop={XFACTORY.crop} dim={stepped(prog(f, S07_BEATS.keys - 2, S07_BEATS.keys + 4), 3)} />
       <S07Lines f={f} push={push} />
     </AbsoluteFill>
   );

@@ -1,7 +1,7 @@
 // Copied from g2 for S06/S07 (scene-owner rule).
 // Explorer flash (PLAN §5): a ~1-s window opens with the dial-up box (no URL bar), tilted slightly forward on z, shows
 // the explorer take, then closes with a CRT collapse (scaleY → 0.006, ease-in cubic, then the line pinches out).
-import { Easing, interpolate } from "remotion";
+import { Easing, interpolate, Sequence } from "remotion";
 import { Slot } from "../../../film/Slot";
 import { T } from "../../../ds/tokens";
 import { DialupBox } from "./Dialup";
@@ -10,7 +10,7 @@ import { CL, easeOut } from "./motion";
 export interface Rect { x: number; y: number; w: number; h: number }
 type Crop = { x: number; y: number; w: number; h: number };
 
-/** `at`: scene frame the flash opens; `dur` frames (default 30). `rect` window in frame px. `crop` frames the take's key region. */
+/** `from` = take second at the flash's open frame `at` (the take is sequenced from `at`). `at`: scene frame the flash opens; `dur` frames (default 30). `rect` window in frame px. `crop` frames the take's key region. */
 export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 260, y: 130, w: 1400, h: 788 }, tilt = 1, from = 0, dim = 0 }: {
   f: number; at: number; dur?: number; slot: string; plate?: string; path: string; crop?: Crop; rect?: Rect; tilt?: number; from?: number; dim?: number;
 }) {
@@ -28,7 +28,7 @@ export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 26
         transform: `translateZ(${40 * lift}px) rotateX(${4 * tilt}deg) rotateY(${-5 * tilt}deg) scale(${sx}, ${sy})` }}>
         <div style={{ position: "absolute", inset: -24, background: "rgba(0,0,0,0.55)", filter: "blur(30px)", transform: "translate(18px, 30px)", opacity: sy }} />
         <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: T.ink, border: `1px solid ${T.line2}`, borderRadius: 6 }}>
-          {!dial && <div style={{ position: "absolute", inset: 0, opacity: 1 - 0.6 * dim, filter: dim > 0 ? `blur(${3 * dim}px)` : undefined }}><Slot slot={slot} plate={plate} crop={crop} from={from} /></div>}
+          {!dial && <div style={{ position: "absolute", inset: 0, opacity: 1 - 0.6 * dim, filter: dim > 0 ? `blur(${3 * dim}px)` : undefined }}><Sequence from={at} layout="none"><Slot slot={slot} plate={plate} crop={crop} from={from} /></Sequence></div>}
           {dial && (
             <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: T.ink }}>
               <DialupBox path={path} t={Math.max(0, t - 1)} k={1.9} speed={1.8} />
