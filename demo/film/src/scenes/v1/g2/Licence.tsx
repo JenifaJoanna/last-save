@@ -7,7 +7,7 @@ import { FONT, T } from "../../../ds/tokens";
 import { CONFIG } from "./facts";
 
 export const CARD_W = 620;
-export const CARD_H = 384;
+export const CARD_H = 432;
 export const ART_H = 178;
 
 function Bracket({ corner }: { corner: "tl" | "br" }) {
@@ -50,10 +50,11 @@ export function LicenceCard({ number, fill = 0, royalty = 0, gloss = 0.5, glow =
           <Label size={13} color={T.text} style={{ position: "absolute", right: 16, top: 14, padding: "6px 10px", border: `1px solid ${T.line2}`, background: "rgba(18,14,34,0.72)", opacity: art }}>NEAR testnet</Label>
           {art < 1 && <div style={{ position: "absolute", left: 18, right: 18, top: 14, bottom: 14, border: `1px dashed rgba(255,201,74,${0.5 * (1 - art)})`, borderRadius: 4 }} />}
         </div>
-        <div style={{ padding: "18px 26px 0" }}>
-          <Label size={24} color={T.text} track={0.14}>Licence #{number} · Ember Rift</Label>
-          <Mono size={15} color={T.faint} style={{ marginTop: 4 }}>NFT licence · Kiln Interactive</Mono>
-          <div style={{ display: "flex", gap: 5, marginTop: 16 }}>
+        {/* Key lines (licence number, the locked share) are 40 px on the card: ≥ 56 px at the held scale (≥ 1.42). */}
+        <div style={{ padding: "14px 26px 0" }}>
+          <Label size={40} color={T.text} track={0.1}>Licence #{number}</Label>
+          <Mono size={15} color={T.faint} style={{ marginTop: 2 }}>NFT licence · Ember Rift · Kiln Interactive</Mono>
+          <div style={{ display: "flex", gap: 5, marginTop: 12 }}>
             {Array.from({ length: 10 }, (_, i) => {
               const gold = i >= 10 - CONFIG.fundPct / 10;
               const on = gold && i - (10 - CONFIG.fundPct / 10) < lit;
@@ -61,11 +62,11 @@ export function LicenceCard({ number, fill = 0, royalty = 0, gloss = 0.5, glow =
                 boxShadow: on ? "0 0 12px rgba(255,201,74,0.55)" : undefined }} />;
             })}
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
-            <Mono size={15} color={T.muted}>{CONFIG.studioPct}% to the studio</Mono>
-            <Mono size={15} color={lit > 0 ? T.gold : T.faint} weight={500}>{CONFIG.fundPct}% locked for you</Mono>
-          </div>
-          <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${T.line}`, opacity: r > 0 ? Math.max(0.2, Math.floor(r * 5) / 5) : 0,
+          <Mono size={15} color={T.muted} style={{ marginTop: 6 }}>{CONFIG.studioPct}% to the studio</Mono>
+          <Mono size={40} color={lit > 0 ? T.text : T.faint} weight={600} style={{ lineHeight: 1.2, marginTop: 2 }}>
+            <span style={{ color: lit > 0 ? T.gold : T.faint }}>{CONFIG.fundPct} %</span> locked for you
+          </Mono>
+          <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${T.line}`, opacity: r > 0 ? Math.max(0.2, Math.floor(r * 5) / 5) : 0,
             transform: `translateX(${(1 - Math.floor(r * 5) / 5) * -14}px)` }}>
             <Mono size={16} color={T.text}><span style={{ color: T.gold }}>{CONFIG.royaltyPct} %</span> resale royalty to the studio <span style={{ color: T.faint }}>(NEP-199)</span></Mono>
           </div>

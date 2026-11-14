@@ -117,7 +117,7 @@ export function ContractBlock({ f, beamAt, keysAt, glow, account, keys }: { f: n
           borderRadius: 4, padding: "12px 18px", whiteSpace: "nowrap", boxShadow: "0 10px 30px rgba(0,0,0,0.45)" }}>
           <div style={{ fontFamily: FONT.label, fontWeight: 700, fontSize: 22, letterSpacing: "0.16em", textTransform: "uppercase", color: T.gold }}>Licence contract</div>
           <div style={{ fontFamily: FONT.mono, fontSize: 18, color: T.muted, marginTop: 4 }}>{account}</div>
-          {k > 0 && <div style={{ ...slide(k), marginTop: 10, fontFamily: FONT.mono, fontSize: 34, fontWeight: 600, color: T.text }}>
+          {k > 0 && <div style={{ ...slide(k), marginTop: 10, fontFamily: FONT.mono, fontSize: 50, fontWeight: 600, color: T.text }}>
             <span style={{ color: T.gold }}>{keys}</span> access keys
           </div>}
         </div>

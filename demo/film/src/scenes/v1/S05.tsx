@@ -16,7 +16,7 @@ import { FACTS, short } from "./g2/facts";
 import { Flash } from "./g2/Flash";
 import { CardInSpace, HELD, heldPose } from "./g2/heldCard";
 import { Billboard, type Cam, Floor, project } from "./g2/iso";
-import { KeyArt } from "./g2/Licence";
+import { CARD_H, KeyArt } from "./g2/Licence";
 import { CONTRACT, ContractBlock, EnclaveTag, LockTags, LogStrip, PlinthTag, StatusTag } from "./g2/MachineTags";
 import { abs, beat, CL, easeInOut, keys, lerp, prog } from "./g2/motion";
 import { DevicePull, Embers, Nebula, Page } from "./g2/World";
@@ -30,7 +30,7 @@ const W = {
   only: beat("S05", 7.52), running: beat("S05", 8.88), take: beat("S05", 12.8), notStudio: beat("S05", 13.8), notUs: beat("S05", 15.04),
 };
 const GLIDE = W.two - 3;  // copies glide 36 f
-const XKEYS = W.notUs + 4; // flash 30 f
+const XKEYS = W.notUs + 4; // flash 30 f; x-keys.mp4 result ("keys": []) lands at 4.30 s (x-keys.cast) → from 4.4 s
 // Proof flashes on "two places" (t-cdn, x-walrus) and "logged publicly" (x-rekor): 6-f dial, then the take; each key line
 // lifts out as a ≥ 56 px chip held KEY_HOLD f, rides to its anchor, then hands over to the machine's tag.
 const DIAL = 6;
@@ -84,7 +84,7 @@ export function S05() {
   const slotC = project(ORIGIN.x, ORIGIN.y - 20, PAD_H + CART.h, base);
   const tgt = { x: 960 + (slotC.x - 960) * ws, y: 540 + (slotC.y - 540) * ws, w: 208 * slotC.k * ws * 0.92 };
   const held = heldPose(g, HELD.s1);
-  const art0 = { x: held.x, y: held.y + (-192 + 89) * held.s, w: 620 * held.s };
+  const art0 = { x: held.x, y: held.y + (-CARD_H / 2 + 89) * held.s, w: 620 * held.s };
   const fly = prog(f, 2, 22, easeInOut);
   const thumb = { x: lerp(art0.x, tgt.x, fly), y: lerp(art0.y, tgt.y, fly) - Math.sin(Math.PI * fly) * 60, w: lerp(art0.w, tgt.w, fly) };
   const landed = prog(f, 19, 24);
@@ -121,7 +121,7 @@ export function S05() {
               </Billboard>
             )}
             <EnclaveTag f={f} at={W.enclave - 3} />
-            {f >= W.only - 4 && <ContractBlock f={f} beamAt={W.only - 4} keysAt={W.notUs - 4} glow={glow} account={FACTS.instance.v} keys={FACTS.accessKeys.v} />}
+            {f >= W.only - 4 && <ContractBlock f={f} beamAt={W.only - 4} keysAt={W.notUs - 8} glow={glow} account={FACTS.instance.v} keys={FACTS.accessKeys.v} />}
             <LockTags f={f} a={W.only - 4} b={W.running - 3} account={FACTS.instance.v} wasm={short(FACTS.releaseWasm)} />
           </Floor>
         </AbsoluteFill>
@@ -143,8 +143,8 @@ export function S05() {
         </div>
       )}
       <Flash f={f} at={PF.cdn.at} dur={PF.cdn.dur} dial={DIAL} slot="t-cdn" path="studio-cdn" from={1.1} rect={PF.cdn.rect} crop={{ x: 0.1, y: 0.06, w: 0.64, h: 0.64 }} />
-      <Flash f={f} at={PF.wal.at} dur={PF.wal.dur} dial={DIAL} slot="x-walrus" path={`walruscan.com/testnet/blob/${BLOB}`} from={0.5} rect={PF.wal.rect} tilt={-1} />
-      <Flash f={f} at={PF.rek.at} dur={PF.rek.dur} dial={DIAL} slot="x-rekor" path={`search.sigstore.dev/?logIndex=${REKOR}`} from={0.5} rect={PF.rek.rect} />
+      <Flash f={f} at={PF.wal.at} dur={PF.wal.dur} dial={DIAL} slot="x-walrus" path={`walruscan.com/testnet/blob/${BLOB}`} from={1.0} rect={PF.wal.rect} tilt={-1} crop={{ x: 0.04, y: 0.13, w: 0.56, h: 0.56 }} />
+      <Flash f={f} at={PF.rek.at} dur={PF.rek.dur} dial={DIAL} slot="x-rekor" path={`search.sigstore.dev/?logIndex=${REKOR}`} from={1.0} rect={PF.rek.rect} crop={{ x: 0.02, y: 0.07, w: 0.5, h: 0.5 }} />
       <KeyChip f={f} on={onAt("cdn")} fly={flyAt("cdn")} from={{ x: PF.cdn.rect.x + 28, y: PF.cdn.rect.y + PF.cdn.rect.h - 28 }} to={tagAt(CDN.x, CDN.y)} label={`Studio CDN · ${CDN_HOST}`} accent={T.alive}>
         <span style={{ color: T.alive }}>HTTP/2 200</span>
       </KeyChip>
@@ -154,7 +154,8 @@ export function S05() {
       <KeyChip f={f} on={onAt("rek")} fly={flyAt("rek")} from={{ x: PF.rek.rect.x + 28, y: PF.rek.rect.y + PF.rek.rect.h - 28 }} to={ribbonAt} label="Sigstore · build record" accent={T.alive}>
         Rekor <span style={{ color: T.gold }}>#{REKOR}</span>
       </KeyChip>
-      <Flash f={f} at={XKEYS} dur={30} slot="x-keys" path={`near.rocks/account/${FACTS.instance.v}`} crop={{ x: 0.12, y: 0.06, w: 0.7, h: 0.7 }} rect={{ x: 140, y: 150, w: 1240, h: 698 }} />
+      <Flash f={f} at={XKEYS} dur={30} slot="x-keys" path="rpc.testnet.near.org/keys" from={4.4} dial={8}
+        crop={{ x: 0.11, y: 0.235, w: 0.42, h: 0.42 }} rect={{ x: 1236, y: 110, w: 640, h: 360 }} tilt={-1} />
     </AbsoluteFill>
   );
 }
