@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Film helper for the explorer beats: reads the chain straight from PUBLIC RPCs (no explorer site, no app), printing the
 # exact command as a gold "$ " prompt line first. Each recipe is one read; nothing is signed or sent.
-#   bash scripts/ops/chain-view.sh <keys|account|tx|tx-refusal|release-state|evm-tx> <arg> [sender]
+#   bash scripts/ops/chain-view.sh <keys|account|tx|tx-refusal|release-state|walrus-check|evm-tx> <arg> [sender]
 set -euo pipefail
 NEAR_RPC="${NEAR_RPC:-https://near-testnet.drpc.org}"
 BASE_RPC="https://sepolia.base.org"
@@ -17,7 +17,10 @@ case "${1:-}" in
     show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"EXPERIMENTAL_tx_status\",\"params\":{\"tx_hash\":\"$2\",\"sender_account_id\":\"$3\",\"wait_until\":\"FINAL\"}}' | jq '{tx: .result.transaction.hash, relayer: .result.transaction.signer_id, sender: .result.transaction.receiver_id, call: (.result.transaction.actions[0].Delegate.delegate_action | {receiver: .receiver_id, method: .actions[0].FunctionCall.method_name}), refused: ([.result.receipts_outcome[].outcome.status | select(.Failure) | .Failure.ActionError.kind.FunctionCallError.ExecutionError] | first)}'" ;;
   release-state)  # the licence's lifecycle state and the released server key, read from the contract itself
     show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"call_function\",\"finality\":\"final\",\"account_id\":\"$2\",\"method_name\":\"get_info\",\"args_base64\":\"e30=\"}}' | jq '.result.result | implode | fromjson | {contract: .contract_id, status, cause, released_key, released_at_ms}'" ;;
+  walrus-check)  # read the encrypted build back from Walrus, hash it, and print the hash the contract committed to
+    show "curl -s https://aggregator.walrus-testnet.walrus.space/v1/blobs/$2 | shasum -a 256 | cut -c1-64"
+    show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"call_function\",\"finality\":\"final\",\"account_id\":\"$3\",\"method_name\":\"release_info\",\"args_base64\":\"e30=\"}}' | jq -r '.result.result | implode | fromjson | .artifact_sha256'" ;;
   evm-tx)   # a Base Sepolia transaction receipt (status 0x1 = success)
     show "curl -s $BASE_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"$2\"]}' | jq '{tx: .result.transactionHash, from: .result.from, to: .result.to, block: .result.blockNumber, status: .result.status}'" ;;
-  *) echo "usage: chain-view.sh <keys|account|tx|tx-refusal|release-state|evm-tx> <arg> [sender]" >&2; exit 2 ;;
+  *) echo "usage: chain-view.sh <keys|account|tx|tx-refusal|release-state|walrus-check|evm-tx> <arg> [sender]" >&2; exit 2 ;;
 esac
