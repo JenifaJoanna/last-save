@@ -36,6 +36,18 @@ pub fn validate(c: &mut InitConfig) {
     require!(c.liveness.receipt_window_ms > 0 && c.liveness.report_window_ms > 0, "Windows must be above zero");
     require!(c.liveness.quorum_bps > 0 && c.liveness.quorum_bps <= 10_000, "quorum_bps is 1 to 10000");
     require!(c.pool.epoch_ms > 0, "epoch_ms must be above zero");
+    if let Some(e) = c.evm_payout.as_mut() {
+        require!(crate::evm_sig::parse_address(&e.address).is_some(), "EVM address must be 0x plus 40 hex characters");
+        e.address = e.address.to_ascii_lowercase();
+        require!(!e.path.is_empty() && e.path.len() <= 64, "EVM path must be 1 to 64 characters");
+        require!(e.gas_limit >= 21_000, "gas_limit is at least 21000");
+        require!(e.demo_wei_per_session.0 > 0, "demo_wei_per_session must be above zero");
+        require!(e.max_priority_fee_per_gas.0 > 0, "Priority fee must be above zero");
+        require!(
+            e.max_priority_fee_per_gas.0 <= e.max_fee_per_gas.0 && e.max_fee_per_gas.0 <= e.max_fee_cap.0,
+            "Fees must satisfy priority <= max fee <= cap"
+        );
+    }
     require!(c.title.len() <= 80 && c.game_id.len() <= 40 && c.media.len() <= 300, "Title, game id or media too long");
 }
 

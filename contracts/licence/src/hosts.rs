@@ -20,6 +20,9 @@ impl Licence {
 
     /// Records the claim and pays min(verified * pay_per_session, epoch_cap, pool).
     /// The record's storage is taken from the pool so the contract never goes short.
+    /// A host with an EVM payout address is not paid in NEAR: the same NEAR amount moves from
+    /// the pool into `evm_settled` and an `EvmPayout` is booked for it (see evm.rs). One
+    /// `epoch_paid` flag guards both rails, so an epoch can only ever pay once.
     fn pay_claim(&mut self, host_id: &AccountId, epoch: u64, verified: u64) {
         let mut host = match store::host(host_id) {
             Some(h) => h,
@@ -31,33 +34,57 @@ impl Licence {
         let idx = self.claim_count;
         let before = env::storage_usage();
         let now = Self::now();
-        store::set_claim(idx, &Claim { host_id: host_id.clone(), epoch, verified, paid: 0, at_ms: now });
+        let byte = env::storage_byte_cost().as_yoctonear();
+        store::set_claim(idx, &Claim { host_id: host_id.clone(), epoch, verified, paid: 0, at_ms: now, evm_payout: None });
         store::set_epoch_paid(host_id, epoch);
-        let cost = env::storage_usage().saturating_sub(before) as u128 * env::storage_byte_cost().as_yoctonear();
-        let avail = self.totals.pool.saturating_sub(cost);
+        let cost = env::storage_usage().saturating_sub(before) as u128 * byte;
+        let evm = match (&self.cfg.evm_payout, &host.evm_address) {
+            (Some(c), Some(a)) => crate::evm_sig::parse_address(a).map(|to| (to, c.demo_wei_per_session.0)),
+            _ => None,
+        };
+        let reserve = if evm.is_some() { crate::evm::EVM_RECORD_RESERVE_BYTES as u128 * byte } else { 0 };
+        let avail = self.totals.pool.saturating_sub(cost + reserve);
         if avail == 0 {
             store::remove_claim(idx);
             store::unset_epoch_paid(host_id, epoch);
             return Self::claim_skipped(host_id, epoch, "pool is empty");
         }
-        let owed = (verified as u128).saturating_mul(self.cfg.pool.pay_per_session.0);
+        let per = self.cfg.pool.pay_per_session.0;
+        let owed = (verified as u128).saturating_mul(per);
         let pay = owed.min(self.cfg.pool.epoch_cap.0).min(avail);
-        self.totals.pool -= cost + pay;
-        self.totals.paid_out += pay;
+        let mut evm_id = None;
+        let mut record_cost = 0;
+        if let Some((to, rate)) = evm {
+            let sessions = if per == 0 { verified as u128 } else { (pay / per).min(verified as u128) };
+            if sessions == 0 {
+                store::remove_claim(idx);
+                store::unset_epoch_paid(host_id, epoch);
+                return Self::claim_skipped(host_id, epoch, "pool is empty");
+            }
+            let b2 = env::storage_usage();
+            evm_id = Some(self.book_evm(host_id, epoch, to, verified, sessions * rate, pay));
+            record_cost = env::storage_usage().saturating_sub(b2) as u128 * byte;
+        }
+        self.totals.pool = self.totals.pool.saturating_sub(cost + record_cost + pay);
+        if evm_id.is_some() {
+            self.totals.evm_settled += pay;
+        } else {
+            self.totals.paid_out += pay;
+        }
         self.claim_count += 1;
         host.epochs_paid += 1;
         host.sessions_paid += verified;
         host.earned += pay;
         store::set_host(host_id, &host);
-        store::set_claim(idx, &Claim { host_id: host_id.clone(), epoch, verified, paid: pay, at_ms: now });
-        if pay > 0 {
+        store::set_claim(idx, &Claim { host_id: host_id.clone(), epoch, verified, paid: pay, at_ms: now, evm_payout: evm_id });
+        if pay > 0 && evm_id.is_none() {
             Promise::new(host_id.clone()).transfer(NearToken::from_yoctonear(pay)).detach();
         }
         emit(
             "epoch_claimed",
-            &format!("\"host_id\":\"{host_id}\",\"epoch\":{epoch},\"verified\":{verified},\"paid\":\"{pay}\""),
+            &format!("\"host_id\":\"{host_id}\",\"epoch\":{epoch},\"verified\":{verified},\"paid\":\"{pay}\",\"rail\":\"{}\"", if evm_id.is_some() { "evm" } else { "near" }),
         );
-        log_activity("claim", "paid", &format!("{host_id} epoch {epoch}: {verified} verified, paid {pay}"));
+        log_activity("claim", "paid", &format!("{host_id} epoch {epoch}: {verified} verified, paid {pay}{}", if evm_id.is_some() { " (ETH payout booked)" } else { "" }));
     }
 }
 
@@ -91,6 +118,7 @@ impl Licence {
                     sessions_paid: 0,
                     earned: 0,
                     flight: None,
+                    evm_address: None,
                 };
                 store::set_host(&id, &host);
                 let mut ids = store::host_ids();
@@ -116,6 +144,7 @@ impl Licence {
         let end = released as u128 + (epoch as u128 + 1) * epoch_ms;
         require!(Self::now() as u128 >= end, "This epoch is not complete yet");
         require!(self.totals.pool > 0, "The hosting pool is empty");
+        let ops = self.take_attach();
         let flight = Self::begin_flight(&mut host.flight, &mut self.next_flight, "A claim");
         store::set_host(&id, &host);
         let from = (released as u128 + epoch as u128 * epoch_ms) as u64;
@@ -127,7 +156,7 @@ impl Licence {
             nonce_hex(),
             from + self.cfg.pool.epoch_ms,
         );
-        let cb = Cb { host: Some(id), epoch, ..Cb::new(flight) };
+        let cb = Cb { host: Some(id), epoch, ..Cb::new(flight).funded(ops) };
         self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_claim", &cb)
     }
 
@@ -141,7 +170,7 @@ impl Licence {
         }
         match read_out() {
             Out::Failed => {
-                Self::refund_failed(&cb.payer, cb.deposit);
+                self.refund_cb(&cb);
                 Self::claim_skipped(&host_id, epoch, "claim call failed, retry");
             }
             Out::Null => Self::claim_skipped(&host_id, epoch, "probe run failed or timed out, retry"),

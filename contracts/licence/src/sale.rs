@@ -41,7 +41,10 @@ impl Licence {
         let cost = env::storage_usage().saturating_sub(before) as u128 * env::storage_byte_cost().as_yoctonear();
         self.supply = number;
         if dead {
-            self.totals.pool += price.saturating_sub(cost);
+            let net = price.saturating_sub(cost);
+            let ops = net * crate::ops::OPS_SALE_BPS / 10_000;
+            self.totals.ops_budget += ops;
+            self.totals.pool += net - ops;
         } else {
             self.live_supply += 1;
             self.totals.pot_locked += pot;

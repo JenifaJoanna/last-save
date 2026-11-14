@@ -1,0 +1,24 @@
+[package]
+name = "mock-signer"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.86"
+resolver = "3"
+license = "MIT"
+description = "Test double for the NEAR Chain Signatures MPC contract: signs EVM payloads with a fixed test key, same request and reply JSON as v1.signer-prod.testnet."
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "5"
+k256 = { version = "0.13", default-features = false, features = ["ecdsa", "arithmetic"] }
+hex = "0.4"
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true

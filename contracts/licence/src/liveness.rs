@@ -65,6 +65,7 @@ impl Licence {
     #[payable]
     pub fn probe_official(&mut self, mirror_index: Option<u32>) -> Promise {
         self.require_alive();
+        let ops = self.take_attach();
         let id = Self::begin_flight(&mut self.probe.flight, &mut self.next_flight, "A probe");
         let now = Self::now();
         let input = format!(
@@ -75,7 +76,7 @@ impl Licence {
             nonce_hex(),
             now.saturating_sub(self.cfg.liveness.receipt_window_ms),
         );
-        self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_probe", &Cb::new(id))
+        self.outlayer_call(&self.cfg.probe, mirror_index, &input, false, "on_probe", &Cb::new(id).funded(ops))
     }
 
     #[private]
@@ -83,7 +84,7 @@ impl Licence {
         Self::end_flight(&mut self.probe.flight, cb.flight);
         let out = read_out();
         if let Out::Failed = out {
-            Self::refund_failed(&cb.payer, cb.deposit);
+            self.refund_cb(&cb);
         }
         if self.dead {
             return;

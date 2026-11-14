@@ -4,7 +4,7 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, AccountId};
 
-use crate::types::{Activity, Claim, Host, SnapBlob, TokenData};
+use crate::types::{Activity, Claim, EvmPayout, Host, SnapBlob, TokenData};
 
 pub fn load<T: BorshDeserialize>(key: &[u8]) -> Option<T> {
     env::storage_read(key).and_then(|b| borsh::from_slice(&b).ok())
@@ -99,4 +99,11 @@ pub fn set_owner_tokens(a: &AccountId, v: &Vec<u64>) {
     } else {
         save(&keyed(b'O', a.as_bytes()), v)
     }
+}
+
+pub fn evm(id: u64) -> Option<EvmPayout> {
+    load(&keyed(b'e', &id.to_be_bytes()))
+}
+pub fn set_evm(p: &EvmPayout) {
+    save(&keyed(b'e', &p.id.to_be_bytes()), p)
 }

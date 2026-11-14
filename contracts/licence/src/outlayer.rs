@@ -1,7 +1,7 @@
 //! OutLayer plumbing: request_execution calls, result reading, escrow and attest.
 
 use near_sdk::serde_json;
-use near_sdk::{env, near, require, AccountId, Gas, GasWeight, NearToken, Promise, PromiseError};
+use near_sdk::{env, near, require, Gas, GasWeight, NearToken, Promise, PromiseError};
 
 use crate::events::{emit, log_activity};
 use crate::util::{jstr, Cb};
@@ -57,10 +57,13 @@ pub fn nonce_hex() -> String {
 }
 
 impl Licence {
-    /// Hands back an attached deposit when the OutLayer promise itself failed.
-    pub(crate) fn refund_failed(payer: &AccountId, deposit: u128) {
-        if deposit > 0 {
-            Promise::new(payer.clone()).transfer(NearToken::from_yoctonear(deposit)).detach();
+    /// Hands back the deposit when the OutLayer promise itself failed: to the caller, or
+    /// into the ops budget when the contract paid it.
+    pub(crate) fn refund_cb(&mut self, cb: &Cb) {
+        if cb.ops {
+            self.totals.ops_budget += cb.deposit;
+        } else if cb.deposit > 0 {
+            Promise::new(cb.payer.clone()).transfer(NearToken::from_yoctonear(cb.deposit)).detach();
         }
     }
 
@@ -75,7 +78,7 @@ impl Licence {
         callback: &str,
         cb: &Cb,
     ) -> Promise {
-        let deposit = env::attached_deposit();
+        let deposit = NearToken::from_yoctonear(cb.deposit);
         require!(deposit >= MIN_ATTACH, "Attach at least 0.01 NEAR for OutLayer");
         let secrets_ref = if secrets {
             format!(",\"secrets_ref\":{{\"profile\":\"{PROFILE}\",\"account_id\":\"{}\"}}", env::current_account_id())
@@ -89,7 +92,7 @@ impl Licence {
             jstr(pick_url(program, mirror)),
             program.sha256,
             jstr(input),
-            env::predecessor_account_id(),
+            cb.payer,
         );
         let gas = env::prepaid_gas()
             .saturating_sub(env::used_gas())
@@ -155,7 +158,7 @@ impl Licence {
         match env::promise_result_checked(0, MAX_OUT) {
             Err(PromiseError::Failed) => {
                 self.escrow.last_error = Some("OutLayer refused the secret".into());
-                Self::refund_failed(&cb.payer, cb.deposit);
+                self.refund_cb(&cb);
                 false
             }
             _ => {
@@ -181,7 +184,7 @@ impl Licence {
         Self::end_flight(&mut self.escrow.attest_flight, cb.flight);
         let r = match crate::outlayer::read_out() {
             Out::Failed => {
-                Self::refund_failed(&cb.payer, cb.deposit);
+                self.refund_cb(&cb);
                 self.escrow.last_error = Some("Attestation call failed".into());
                 return false;
             }

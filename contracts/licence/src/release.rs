@@ -22,9 +22,10 @@ impl Licence {
         require!(self.dead, "The game is still alive");
         require!(self.escrow.escrowed, "Nothing is escrowed");
         require!(self.release.released_key.is_none(), "Key is already released");
+        let ops = self.take_attach();
         let id = Self::begin_flight(&mut self.release.flight, &mut self.next_flight, "Release");
         emit("release_requested", "");
-        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"release\"}", true, "on_release", &Cb::new(id))
+        self.outlayer_call(&self.cfg.release, mirror_index, "{\"mode\":\"release\"}", true, "on_release", &Cb::new(id).funded(ops))
     }
 
     /// A key is stored only if sha256(K) equals the commitment made at init.
@@ -36,7 +37,7 @@ impl Licence {
         }
         match read_out() {
             Out::Failed => {
-                Self::refund_failed(&cb.payer, cb.deposit);
+                self.refund_cb(&cb);
                 self.release_failed("Release call failed, retry");
                 false
             }

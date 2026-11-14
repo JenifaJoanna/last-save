@@ -12,11 +12,15 @@ mod afterlife;
 mod approvals;
 mod config;
 mod events;
+mod evm;
+mod evm_sig;
 mod hosts;
 mod liveness;
 mod nft;
+mod ops;
 mod outlayer;
 mod release;
+mod rlp;
 mod sale;
 mod store;
 mod types;
@@ -51,6 +55,9 @@ pub struct Licence {
     pub(crate) snap_hashes: Vec<[u8; 32]>,
     pub(crate) claim_count: u64,
     pub(crate) next_flight: u64,
+    pub(crate) next_evm_nonce: u64,
+    pub(crate) evm_count: u64,
+    pub(crate) evm_lock: Option<EvmLock>,
 }
 
 #[near]
@@ -59,6 +66,7 @@ impl Licence {
     pub fn new(config: InitConfig) -> Self {
         let mut cfg = config;
         config::validate(&mut cfg);
+        let start_nonce = cfg.evm_payout.as_ref().map_or(0, |e| e.start_nonce);
         Self {
             cfg,
             supply: 0,
@@ -74,6 +82,9 @@ impl Licence {
             snap_hashes: vec![],
             claim_count: 0,
             next_flight: 0,
+            next_evm_nonce: start_nonce,
+            evm_count: 0,
+            evm_lock: None,
         }
     }
 

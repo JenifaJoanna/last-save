@@ -42,11 +42,22 @@ pub struct Cb {
     pub host: Option<AccountId>,
     pub epoch: u64,
     pub token: u64,
+    /// The deposit came out of ops_budget (and goes back there on failure).
+    pub ops: bool,
 }
 
 impl Cb {
     pub fn new(flight: u64) -> Self {
-        Cb { flight, payer: env::predecessor_account_id(), deposit: env::attached_deposit().as_yoctonear(), host: None, epoch: 0, token: 0 }
+        Cb { flight, payer: env::predecessor_account_id(), deposit: env::attached_deposit().as_yoctonear(), host: None, epoch: 0, token: 0, ops: false }
+    }
+    /// Zero-deposit calls: the contract pays from its ops budget and is its own refund target.
+    pub fn funded(mut self, ops: bool) -> Self {
+        if ops {
+            self.payer = env::current_account_id();
+            self.deposit = crate::ops::OPS_ATTACH;
+            self.ops = true;
+        }
+        self
     }
     pub fn bytes(&self) -> Vec<u8> {
         borsh::to_vec(self).unwrap_or_default()

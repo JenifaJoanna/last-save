@@ -144,7 +144,10 @@ fn buy_after_death_goes_to_pool_with_no_pot_share() {
     let pot_before = c.totals.pot_locked;
     buy(&mut c, "lastsave-late.testnet", T0 + 20);
     assert!(transfers().is_empty(), "no studio payout after death");
-    assert!(c.totals.pool > PRICE - 10 * MILLI && c.totals.pool <= PRICE, "pool {}", c.totals.pool);
+    // net of mint storage: 90% feeds the pool, 10% the ops budget (OPS_SALE_BPS)
+    let net = c.totals.pool + c.totals.ops_budget;
+    assert!(net > PRICE - 10 * MILLI && net <= PRICE, "net {net}");
+    assert_eq!(c.totals.ops_budget, net / 10, "10% of a post-death sale funds ops");
     assert_eq!(c.totals.pot_locked, pot_before);
     assert_eq!((c.supply, c.live_supply), (5, 4));
     assert!(logs_have("licence_sold"));

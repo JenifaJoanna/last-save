@@ -31,7 +31,7 @@ impl Licence {
             }
             Choice::Refund => {
                 self.totals.refunded += amount;
-                let cb = Cb { flight: 0, payer: owner.clone(), deposit: amount, host: None, epoch: 0, token: n };
+                let cb = Cb { flight: 0, payer: owner.clone(), deposit: amount, host: None, epoch: 0, token: n, ops: false };
                 Some(
                     Promise::new(owner)
                         .transfer(NearToken::from_yoctonear(amount))

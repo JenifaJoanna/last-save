@@ -1,0 +1,2 @@
+{ "name": "lastsave-evm-fixtures", "private": true, "type": "module", "version": "0.0.0",
+  "dependencies": { "ethers": "6.13.4", "@noble/curves": "1.6.0", "@noble/hashes": "1.5.0" } }

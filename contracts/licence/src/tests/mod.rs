@@ -1,10 +1,14 @@
 //! Unit tests. Callbacks are driven directly with mocked promise results.
 
+mod t_evm;
+mod t_evm_bump;
 mod t_hosts;
 mod t_liveness;
 mod t_nft;
+mod t_ops;
 mod t_reports;
 mod t_release;
+mod t_rlp;
 mod t_sale;
 
 use std::panic::{catch_unwind, AssertUnwindSafe};
@@ -80,7 +84,7 @@ pub fn env_cb(t_ms: u64, r: R) {
 }
 
 pub fn cb(flight: u64, payer: &str) -> Cb {
-    Cb { flight, payer: acct(payer), deposit: 10 * MILLI, host: None, epoch: 0, token: 0 }
+    Cb { flight, payer: acct(payer), deposit: 10 * MILLI, host: None, epoch: 0, token: 0, ops: false }
 }
 
 pub fn cfg() -> InitConfig {
@@ -100,6 +104,7 @@ pub fn cfg() -> InitConfig {
         artifact: Artifact { urls: vec!["https://example.test/server.bin".into()], sha256: h('c'), build_hash: h('d'), size: 1234 },
         official_endpoint: "https://ember-rift-official.pages.dev".into(),
         liveness: Liveness { probe_interval_ms: 20_000, fail_threshold: 3, receipt_window_ms: 180_000, report_window_ms: 120_000, quorum_bps: 5000 },
+        evm_payout: None,
         pool: PoolCfg { epoch_ms: 120_000, pay_per_session: near_sdk::json_types::U128(10 * MILLI), epoch_cap: near_sdk::json_types::U128(50 * MILLI) },
     }
 }
@@ -109,6 +114,8 @@ pub fn fresh() -> Licence {
 }
 
 pub fn fresh_with(c: InitConfig) -> Licence {
+    // testing_env! keeps storage between calls; a new contract starts from empty storage
+    let _ = near_sdk::mock::with_mocked_blockchain(|b| b.take_storage());
     env_at(STUDIO, 0, T0);
     Licence::new(c)
 }

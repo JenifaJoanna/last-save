@@ -162,7 +162,9 @@ async fn full_lifecycle() -> anyhow::Result<()> {
     // buy after death: whole price into the pool, no pot share, cannot choose
     call(&late, &lic, "buy_licence", json!({}), NearToken::from_yoctonear(PRICE)).await?;
     let t = info(&lic).await["totals"].clone();
-    assert!(u(&t["pool"]) > 2 * POT + PRICE - 10 * MILLI && u(&t["pool"]) <= 2 * POT + PRICE);
+    // 90% of the net price feeds the pool, 10% the ops budget
+    let (pool, ops) = (u(&t["pool"]), u(&t["ops_budget"]));
+    assert!(pool + ops > 2 * POT + PRICE - 10 * MILLI && pool + ops <= 2 * POT + PRICE && ops > 20 * MILLI, "pool {pool} ops {ops}");
     let late_tok: Value = lic.view("get_token").args_json(json!({ "token_id": "5" })).await?.json()?;
     assert_eq!((late_tok["post_death"].clone(), u(&late_tok["pot_share"])), (json!(true), 0));
     assert!(call(&late, &lic, "choose", json!({ "token_id": "5", "choice": "Refund" }), NearToken::from_yoctonear(0)).await.is_err());

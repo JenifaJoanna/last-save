@@ -42,6 +42,7 @@ pub struct HostView {
     pub epochs_paid: u64,
     pub sessions_paid: u64,
     pub earned: U128,
+    pub evm_address: Option<String>,
 }
 
 #[near(serializers=[json])]
@@ -52,6 +53,7 @@ pub struct ClaimView {
     pub verified: u64,
     pub paid: U128,
     pub at_ms: u64,
+    pub evm_payout: Option<u64>,
 }
 
 #[near(serializers=[json])]
@@ -80,6 +82,8 @@ pub struct TotalsView {
     pub refunded: U128,
     pub pledged: U128,
     pub paid_out: U128,
+    pub ops_budget: U128,
+    pub evm_settled: U128,
 }
 
 #[near(serializers=[json])]
@@ -127,4 +131,45 @@ pub struct Info {
     pub claims: u64,
     pub snapshot: Option<SnapMeta>,
     pub snapshot_hashes: Vec<String>,
+}
+
+#[near(serializers=[json])]
+pub struct EvmPayoutView {
+    pub id: u64,
+    pub host_id: AccountId,
+    pub epoch: u64,
+    pub to: String,
+    pub verified: u64,
+    pub value_wei: U128,
+    pub near_debited: U128,
+    pub nonce: Option<u64>,
+    /// "Booked" | "Signing" | "Signed"
+    pub status: String,
+    /// Newest signed raw transaction (0x hex), ready to broadcast.
+    pub signed_tx: Option<String>,
+    /// Every signed version, oldest first (bumps append).
+    pub signed_txs: Vec<String>,
+    pub tx_hash: Option<String>,
+    pub tx_hashes: Vec<String>,
+    pub max_fee_per_gas: U128,
+    pub max_priority_fee_per_gas: U128,
+    pub booked_at_ms: u64,
+    pub last_error: Option<String>,
+}
+
+#[near(serializers=[json])]
+pub struct EvmInfoView {
+    pub address: String,
+    pub next_nonce: u64,
+    pub mpc: AccountId,
+    pub path: String,
+    pub chain_id: u64,
+    /// The account the MPC derives the key for: this contract.
+    pub derivation_account: AccountId,
+    pub domain_id: u32,
+    pub demo_wei_per_session: U128,
+    pub max_fee_cap: U128,
+    pub evm_settled: U128,
+    pub signing_payout: Option<u64>,
+    pub payouts: u64,
 }

@@ -37,6 +37,28 @@ pub struct PoolCfg {
     pub epoch_cap: U128,
 }
 
+/// Chain Signatures payouts on Base Sepolia (chain id is a constant, see `evm::EVM_CHAIN_ID`).
+#[near(serializers=[borsh, json])]
+#[derive(Clone)]
+pub struct EvmCfg {
+    /// The MPC signer contract (v1.signer-prod.testnet).
+    pub mpc: AccountId,
+    /// Derivation path ("lastsave/host-payouts"); the derivation account is this contract.
+    pub path: String,
+    /// 0x address derived off-chain from (mpc root key, this contract, path); the payer on Base Sepolia.
+    pub address: String,
+    /// Demo rate: wei paid per verified session. Not a market price.
+    pub demo_wei_per_session: U128,
+    pub max_fee_per_gas: U128,
+    pub max_priority_fee_per_gas: U128,
+    /// Hard ceiling for max_fee_per_gas, including every fee bump.
+    pub max_fee_cap: U128,
+    pub gas_limit: u64,
+    /// The payer address's next transaction nonce at launch (0 for a fresh address).
+    #[serde(default)]
+    pub start_nonce: u64,
+}
+
 #[near(serializers=[borsh, json])]
 #[derive(Clone)]
 pub struct InitConfig {
@@ -55,6 +77,8 @@ pub struct InitConfig {
     pub official_endpoint: String,
     pub liveness: Liveness,
     pub pool: PoolCfg,
+    /// None disables EVM payouts.
+    pub evm_payout: Option<EvmCfg>,
 }
 
 #[near(serializers=[borsh, json])]
@@ -133,6 +157,10 @@ pub struct Totals {
     pub refunded: u128,
     pub pledged: u128,
     pub paid_out: u128,
+    /// Gas money for zero-deposit enclave calls and MPC signing (yocto).
+    pub ops_budget: u128,
+    /// NEAR debited from the pool for epochs paid in ETH. Nothing can move it out again.
+    pub evm_settled: u128,
 }
 
 #[near(serializers=[borsh, json])]
@@ -160,6 +188,7 @@ pub struct Host {
     pub sessions_paid: u64,
     pub earned: u128,
     pub flight: Option<Flight>,
+    pub evm_address: Option<String>,
 }
 
 #[near(serializers=[borsh])]
@@ -170,6 +199,7 @@ pub struct Claim {
     pub verified: u64,
     pub paid: u128,
     pub at_ms: u64,
+    pub evm_payout: Option<u64>,
 }
 
 #[near(serializers=[borsh, json])]
@@ -179,6 +209,53 @@ pub struct Activity {
     pub kind: String,
     pub outcome: String,
     pub detail: String,
+}
+
+#[near(serializers=[borsh])]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum EvmStatus {
+    Booked,
+    Signing,
+    Signed,
+}
+
+impl EvmStatus {
+    pub fn name(&self) -> &'static str {
+        match self {
+            EvmStatus::Booked => "Booked",
+            EvmStatus::Signing => "Signing",
+            EvmStatus::Signed => "Signed",
+        }
+    }
+}
+
+/// One host payout in ETH. `signed`/`hashes` keep every signed version (oldest first).
+#[near(serializers=[borsh])]
+#[derive(Clone)]
+pub struct EvmPayout {
+    pub id: u64,
+    pub host_id: AccountId,
+    pub epoch: u64,
+    pub to: [u8; 20],
+    pub verified: u64,
+    pub value_wei: u128,
+    pub near_debited: u128,
+    pub nonce: Option<u64>,
+    pub status: EvmStatus,
+    pub max_fee: u128,
+    pub max_prio: u128,
+    pub signed: Vec<Vec<u8>>,
+    pub hashes: Vec<[u8; 32]>,
+    pub booked_ms: u64,
+    pub last_error: Option<String>,
+}
+
+/// At most one payout is being signed at a time (nonce safety).
+#[near(serializers=[borsh])]
+#[derive(Clone)]
+pub struct EvmLock {
+    pub flight: Flight,
+    pub payout: u64,
 }
 
 pub use crate::view_types::*;

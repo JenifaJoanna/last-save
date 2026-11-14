@@ -11,12 +11,12 @@ description = "Last Save licence: a NEP-171 game licence whose escrowed server k
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-near-sdk = "5"
+near-sdk = { version = "5", features = ["unstable"] }
 hex = "0.4"
 near-sys = "0.2"
 
 [dev-dependencies]
-near-sdk = { version = "5", features = ["unit-testing"] }
+near-sdk = { version = "5", features = ["unit-testing", "unstable"] }
 
 [profile.release]
 codegen-units = 1

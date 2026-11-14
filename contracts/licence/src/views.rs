@@ -94,6 +94,8 @@ impl Licence {
                 refunded: U128(t.refunded),
                 pledged: U128(t.pledged),
                 paid_out: U128(t.paid_out),
+                ops_budget: U128(t.ops_budget),
+                evm_settled: U128(t.evm_settled),
             },
             probe: ProbeView {
                 consecutive_failures: self.probe.consecutive_failures,
@@ -127,6 +129,7 @@ impl Licence {
                     epochs_paid: h.epochs_paid,
                     sessions_paid: h.sessions_paid,
                     earned: U128(h.earned),
+                    evm_address: h.evm_address,
                 })
             })
             .collect()
@@ -144,6 +147,7 @@ impl Licence {
                     verified: c.verified,
                     paid: U128(c.paid),
                     at_ms: c.at_ms,
+                    evm_payout: c.evm_payout,
                 })
             })
             .collect()
