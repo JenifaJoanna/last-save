@@ -7,7 +7,7 @@ import { Vertical, VERTICAL_FRAMES } from "./film/Vertical";
 import { X_TOTAL } from "./film/xcut";
 import { XOPEN, XOpen } from "./film/XOpen";
 import { ThumbArt } from "./film/Thumb";
-import { f, PLACED, TOTAL_FRAMES } from "./film/timeline";
+import { f, SCENES, TOTAL_FRAMES } from "./film/timeline";
 import { FrameA } from "./frames/FrameA";
 import { FrameB } from "./frames/FrameB";
 import { FrameC } from "./frames/FrameC";
@@ -23,8 +23,8 @@ export function Root() {
       <Composition id="LastSaveVertical" component={Vertical} durationInFrames={VERTICAL_FRAMES} fps={30} width={1080} height={1920} />
       <Folder name="Scenes">
         <Composition id="XO" component={XOpen} durationInFrames={f(XOPEN.dur)} fps={30} width={1920} height={1080} />
-        {PLACED.map((s) => (
-          <Composition key={s.id} id={s.id} component={SCENE_COMPONENTS[s.id]} durationInFrames={s.frames} fps={30} width={1920} height={1080} />
+        {SCENES.map((s) => ( // every scene, including any cut from the full film, stays reviewable on its own
+          <Composition key={s.id} id={s.id} component={SCENE_COMPONENTS[s.id]} durationInFrames={f(s.dur)} fps={30} width={1920} height={1080} />
         ))}
       </Folder>
       <Folder name="Thumbnails">

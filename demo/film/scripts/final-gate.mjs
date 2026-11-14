@@ -21,7 +21,14 @@ const sources = walk(join(root, "src", "scenes")).filter((p) => /\.(tsx?|json)$/
 const fails = [];
 
 const slots = new Set();
-for (const p of sources) for (const m of readFileSync(p, "utf8").matchAll(/slot(?:=|: )"([a-z0-9-]+)"/g)) slots.add(m[1]);
+// a scene cut from the full film (timeline FULL_DROP) and from the X cut (xcut DROP), and not in the vertical, needs no takes
+const tl = readFileSync(join(root, "src", "film", "timeline.ts"), "utf8");
+const xc = readFileSync(join(root, "src", "film", "xcut.ts"), "utf8");
+const setOf = (src, name) => new Set([...(src.match(new RegExp(`${name} = new Set(?:<[^>]+>)?\\(\\[([^\\]]*)\\]`))?.[1] ?? "").matchAll(/"(S\d\d|XO)"/g)].map((m) => m[1]));
+const fullDrop = setOf(tl, "FULL_DROP"); const xDrop = setOf(xc, "DROP");
+const vertical = new Set([...readFileSync(join(root, "src", "film", "Vertical.tsx"), "utf8").matchAll(/id: "(S\d\d)"/g)].map((m) => m[1]));
+const unused = (p) => { const m = p.match(/\/(S\d\d)\.tsx$/); return !!m && fullDrop.has(m[1]) && xDrop.has(m[1]) && !vertical.has(m[1]); };
+for (const p of sources) if (!unused(p)) for (const m of readFileSync(p, "utf8").matchAll(/slot(?:=|: )"([a-z0-9-]+)"/g)) slots.add(m[1]);
 for (const s of [...slots].sort()) if (!existsSync(join(root, "public", "footage", "raw", `${s}.mp4`))) fails.push(`take missing: public/footage/raw/${s}.mp4`);
 
 for (const p of sources) {

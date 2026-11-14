@@ -3,7 +3,7 @@
 // Score: Eleven Music music_v2_5, candidate 3 (dark synthwave, 80 BPM, E minor to E major), picked 14 Nov from the score
 // pick page; runners-up c1/c2 kept in public/music/v1/. Gain and ducking unchanged (the pick was heard at this mix).
 import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
-import { scene, type SceneId } from "./timeline";
+import { FULL_DROP, scene, TOTAL_FRAMES, type SceneId } from "./timeline";
 import V08 from "../../vo/timings/V08.json";
 import { S9_SFX } from "../scenes/v1/g4/t09";
 
@@ -68,6 +68,7 @@ export const SFX: Cue[] = [
 export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number; offset?: number }
 export const SCORE: ScoreAct[] = [
   { file: "music/v1/c3-act1.mp3", from: 0, to: scene("S09").from / 30 + S09_DEAD + 0.16, fadeIn: 1.2, fadeOut: 0.1 },
-  { file: "music/v1/c3-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },
+  // act 2 enters 0.37 s into S10; without S12 the full film's S10→S17 run is the X cut's, so it takes the X-length act 2
+  { file: FULL_DROP.has("S12") ? "music/v1/c3-act2x.mp3" : "music/v1/c3-act2.mp3", from: scene("S10").from / 30 + 0.37, to: TOTAL_FRAMES / 30, fadeIn: 0.6, fadeOut: 2.0 },
 ];
 export const MUSIC = { gain: 0.24, duckUnderVo: 0.42, closeBoost: 2.4 }; // closeBoost: the resolve under the end card, after the last line

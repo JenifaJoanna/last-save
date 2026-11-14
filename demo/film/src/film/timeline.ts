@@ -31,11 +31,22 @@ export const SCENES: SceneSpec[] = [
 
 export const f = (sec: number) => Math.round(sec * FPS);
 export interface Placed extends SceneSpec { from: number; frames: number; fadeIn?: number }
+/** Scenes cut from the full film. S12 ("on Walrus and on the Internet Archive") goes when approved: v2dev, whose
+ * afterlife S10–S16 show, has no Walrus or Archive copy (the X cut already drops it). The next scene then crossfades in. */
+export const FULL_DROP = new Set<SceneId>([]);
+const AFTER_DROP_XFADE = 10;
 export const PLACED: Placed[] = (() => {
-  let at = 0;
-  return SCENES.map((s) => { const p = { ...s, from: at, frames: f(s.dur) }; at += p.frames; return p; });
+  let at = 0; let dropped = false;
+  const out: Placed[] = [];
+  for (const s of SCENES) {
+    if (FULL_DROP.has(s.id)) { dropped = true; continue; }
+    const fade = dropped && out.length ? AFTER_DROP_XFADE : 0;
+    const p: Placed = { ...s, from: at - fade, frames: f(s.dur), ...(fade ? { fadeIn: fade } : {}) };
+    at = p.from + p.frames; dropped = false; out.push(p);
+  }
+  return out;
 })();
-export const TOTAL_FRAMES = PLACED.reduce((n, s) => n + s.frames, 0);
+export const TOTAL_FRAMES = PLACED[PLACED.length - 1].from + PLACED[PLACED.length - 1].frames;
 export const scene = (id: SceneId) => PLACED.find((s) => s.id === id)!;
 /** Frame, relative to a scene's start, where its VO line starts. */
 export const voFrame = (id: SceneId) => f(scene(id).voAt ?? 0);
