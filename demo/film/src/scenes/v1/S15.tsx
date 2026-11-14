@@ -1,22 +1,26 @@
 // S15 Paid on Base (7.6 s, V14 at 0.3 s). Opens on S14's last frame (frozen: the epoch chip "Host paid 0.04 Ⓝ" over the
 // blurred Hosts page); the page scrolls on to the Base card, the chip folds away and its amount flies (ease-out 18 f)
-// onto the Base payout row of /app/hosts; Sign → "MPC signing…" → "Signed by MPC" (lifts on "signs") with the signed transmission printing in →
-// Relay; on "no one holds that key" a 1-s Basescan flash; end pose: the readout's tx line, highlighted, camera on it.
+// onto the Base payout row of /app/hosts; Sign → "MPC signing…" → "Signed by MPC", which lifts off the glass as 72 px
+// film type on "signs" (held 1.5 s; the card behind turns to texture) while the signed transmission prints → Relay; on
+// "no one holds that key" the Basescan window lifts "Status: Success" (held 1.5 s); end pose: the readout's tx line.
 // The `base` take replaces the drawn card (g6/BaseCard) when public/footage has it; camera keys then need a retune.
 import { AbsoluteFill, Freeze, interpolate, useCurrentFrame } from "remotion";
 import { Camera, ScreenFrame } from "../../ds/screen";
+import { Label } from "../../ds/type";
 import { FONT, stepped, T } from "../../ds/tokens";
 import { Slot, slotSource } from "../../film/Slot";
 import { AMOUNT, B15, BaseCard, READOUT, ROW_Y } from "./g6/BaseCard";
-import { PAYOUT, S14_SEAM } from "./g6/facts";
-import { BaseFlash } from "./g6/Flash";
+import { LIFT, PAYOUT, S14_SEAM, TEXTURE } from "./g6/facts";
+import { BaseFlash, flashTexture } from "./g6/Flash";
+import { LiftCard, liftShow, texture } from "./g6/Lift";
 import { PendingTag } from "./g6/PendingTag";
 import { C, inOut, out, word } from "./g6/kit";
 import { S14 } from "./S14";
 
 const OX = 22; // content origin in the frame (ScreenFrame CONTENT)
 const OY = 102;
-const FLASH_AT = word("S15", 5.5) - 6; // opens just before "no one"
+const FLASH_AT = word("S15", 5.5) - 6; // opens f168, just before "no one"; "Status: Success" lifts at f170
+const SIGNED = { at: word("S15", 3.88) - 9, out: word("S15", 3.88) + 42 }; // settles f122 ("signs" f125), held to f167
 
 type Cam = { s: number; fx: number; fy: number };
 const ROW: Cam = { s: 1.55, fx: 940, fy: OY + ROW_Y + 60 };
@@ -65,7 +69,7 @@ function AmountFlight({ f, cam, dy }: { f: number; cam: Cam; dy: number }) {
 export function S15() {
   const f = useCurrentFrame();
   const cam = s15Cam(f);
-  // S14 ends with its page racked out (blur 1.68 px, brightness 0.685); the Base row racks back in as the amount lands
+  // S14 ends with its page racked out (facts S14_SEAM.rack); the Base row racks back in as the amount lands
   const rack = 1 - interpolate(f, [0, B15.land], [0, 1], { ...C, easing: out });
   // S14's page scrolls up and away as the Base card scrolls in (same page, ease-out 16 f); its chip collapses
   // (stepped, 6 f) leaving only the amount, which flies on to the row
@@ -75,10 +79,12 @@ export function S15() {
   const ch = S14_SEAM.chip;
   const pageClip = `polygon(evenodd, 0 0, 1920px 0, 1920px 1080px, 0 1080px, 0 0, ${box(ch)})`;
   const h = S14_SEAM.hole;
-  const flashDim = interpolate(f, [FLASH_AT, FLASH_AT + 4, FLASH_AT + 40, FLASH_AT + 48], [0, 0.55, 0.55, 0], C);
+  const signed = liftShow(f, SIGNED.at, SIGNED.out);
+  const tex = Math.max(signed, flashTexture(f, FLASH_AT));
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
-      <AbsoluteFill style={{ transform: `translateY(${(1 - scroll) * 1080}px)`, filter: rack > 0.01 ? `blur(${(1.68 * rack).toFixed(2)}px) brightness(${1 - 0.315 * rack})` : undefined }}>
+      <AbsoluteFill style={{ transform: `translateY(${(1 - scroll) * 1080}px)`, ...texture(tex, TEXTURE.opacity, TEXTURE.blur),
+        ...(rack > 0.01 ? { filter: `blur(${(S14_SEAM.rack.blur * rack).toFixed(2)}px) brightness(${1 - (1 - S14_SEAM.rack.brightness) * rack})` } : {}) }}>
         <Camera scale={cam.s} fx={cam.fx} fy={cam.fy} x={960 - cam.fx} y={540 - cam.fy}>
           <ScreenFrame title="Community hosts" mode="released" keys={{ primary: "Claim" }}>
             <S15Content f={f} />
@@ -91,14 +97,16 @@ export function S15() {
         </AbsoluteFill>
       )}
       {fold > 0 && (
-        <AbsoluteFill style={{ clipPath: `polygon(${box(ch)})`, transform: `scaleY(${fold})`, transformOrigin: `960px ${ch.y + ch.h / 2}px` }}>
+        <AbsoluteFill style={{ clipPath: `polygon(${box(ch)})`, transform: `scale(${S14_SEAM.fix.scale}) scaleY(${fold})`, transformOrigin: `${S14_SEAM.fix.ox}px ${S14_SEAM.fix.oy}px` }}>
           <Freeze frame={S14_SEAM.frame}><S14 /></Freeze>
           {/* the amount leaves its slot in the chip (the chip's own ink fills it); AmountFlight carries it on */}
           <div style={{ position: "absolute", left: h.x, top: h.y, width: h.w, height: h.h, background: T.ink }} />
         </AbsoluteFill>
       )}
       <AmountFlight f={f} cam={cam} dy={(1 - scroll) * 1080} />
-      {flashDim > 0 && <AbsoluteFill style={{ background: `rgba(10,8,20,${flashDim})` }} />}
+      <LiftCard x={LIFT.signed.x} y={LIFT.signed.y} show={signed} edge={T.cyan} glow="rgba(79,216,208,0.25)">
+        <Label size={LIFT.signed.size} color={T.cyan} track={0.14} style={{ lineHeight: 1.1 }}>Signed by MPC</Label>
+      </LiftCard>
       <BaseFlash f={f} at={FLASH_AT} />
     </AbsoluteFill>
   );

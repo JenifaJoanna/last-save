@@ -2,7 +2,8 @@
 // Rendered-file checks (headless, file-based; nothing is played or shown). Exit 1 on any failure.
 //  1. dead air: no run of near-black frames (mean luma YAVG < 28 on the limited 16–235 scale, where the void is ~24)
 //     longer than 10 frames — an empty or black hold, not a transition;
-//  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "placeholder" or "Take pending" anywhere on screen.
+//  2. --ocr: OCR (tesseract) of a frame every 0.5 s finds no "TBD", "placeholder", "Take pending", the dev instance
+//     ("v2dev") or any identity term (the same base64 list as scripts/check-identity.mjs) anywhere on screen.
 // Usage: node scripts/check-render.mjs <video.mp4> [--ocr] [--max-dark 10]
 import { execFileSync, spawn } from "node:child_process";
 import { mkdtempSync, readdirSync, rmSync } from "node:fs";
@@ -39,14 +40,16 @@ if (ocr) {
   try {
     execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-i", file, "-vf", "fps=2", "-q:v", "2", join(dir, "f%05d.jpg")]);
     const frames = readdirSync(dir).filter((n) => n.endsWith(".jpg")).sort();
-    const bad = /\bTBD\b|placeholder|take pending/i;
+    const dec = (s) => Buffer.from(s, "base64").toString("utf8");
+    const ids = ["Z2FicmllbGF4eQ==", "Z2FicmllbA==", "YW50b255", "eGF2aW91cg==", "Y29zbWljbGFu"].map(dec);
+    const bad = new RegExp(`\\bTBD\\b|placeholder|take pending|v2dev|${ids.join("|")}`, "i");
     const queue = [...frames]; const hits = [];
     const worker = () => new Promise((done) => {
       const next = () => {
         const n = queue.shift(); if (!n) return done();
         let out = ""; const p = spawn("tesseract", [join(dir, n), "-", "--psm", "11"], { stdio: ["ignore", "pipe", "ignore"] });
         p.stdout.on("data", (b) => { out += b; });
-        p.on("close", () => { const m = out.match(bad); if (m) hits.push([n, m[0]]); next(); });
+        p.on("close", () => { const m = out.match(bad); if (m) hits.push([n, ids.includes(m[0].toLowerCase()) ? "identity term" : m[0]]); next(); });
       };
       next();
     });

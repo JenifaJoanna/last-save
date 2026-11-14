@@ -3,7 +3,8 @@
 //  1. every footage slot used by a scene has a real take at public/footage/raw/<slot>.mp4 (a missing one would render
 //     a preview capture or a drawn stand-in with a "placeholder" tag);
 //  2. no scene source or facts file still holds the string TBD (it would render on screen);
-//  2b. facts files carry no dev-run marker at all (TBD, v2dev, dev-run, placeholder), even in comments;
+//  2b. facts files carry no dev-run marker at all (TBD, v2dev, dev-run, placeholder), even in comments, and no other
+//      scene source names the dev instance (v2dev) outside a comment;
 //  3. no "100%" claim about the post-shutdown sale (the contract sends 90 % to the pool, 10 % to the ops budget);
 //  4. the narration files exist for every line the timeline places.
 // Usage: node scripts/final-gate.mjs   (run before rendering a deliverable; prints every failure, not just the first)
@@ -23,6 +24,7 @@ for (const s of [...slots].sort()) if (!existsSync(join(root, "public", "footage
 for (const p of sources) {
   readFileSync(p, "utf8").split("\n").forEach((line, i) => {
     if (/\bTBD\b/.test(line) && !/^\s*(\/\/|\*|\/\*)/.test(line)) fails.push(`TBD on screen: ${relative(root, p)}:${i + 1}`);
+    else if (/v2dev/.test(line) && !/facts\.ts$/.test(p) && !/^\s*(\/\/|\*|\/\*)/.test(line)) fails.push(`dev instance on screen: ${relative(root, p)}:${i + 1}`);
     // facts files hold every judge-run number: any dev-run marker, even in a comment, means a value not yet re-sourced
     else if (/facts\.ts$/.test(p) && /\bTBD\b|v2dev|dev[- ]run|placeholder/i.test(line)) fails.push(`unverified fact: ${relative(root, p)}:${i + 1}`);
     if (/100\s?%[^)]*(pool|keep-alive)/i.test(line)) fails.push(`100% pool claim: ${relative(root, p)}:${i + 1}`);

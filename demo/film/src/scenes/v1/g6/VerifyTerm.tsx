@@ -1,11 +1,11 @@
 // Motion-graphics stand-in for the `t-verify` take: `pnpm verify` in the terminal palette (IBM Plex Mono 26 px, gold
 // prompt, green ✓), drawn in ScreenFrame content coords. Row labels and group names are the real ones from
 // scripts/verify (checks-chain/artifact/evm/proof.mjs) in their real order; the two reason lines are instance-independent
-// (global code hash from scripts/verify/instances.json). Per-instance reasons and the summary counts come with the take.
+// (global code hash from scripts/verify/instances.json). Marks and the summary are the v2 dev run's real output (facts.ts, TBD).
 // The real command prints the whole table at once after ~2 s; the stand-in prints rows in so they read on camera.
 import { interpolate } from "remotion";
 import { FONT, T } from "../../../ds/tokens";
-import { VERIFY_INSTANCE } from "./facts";
+import { VERIFY_INSTANCE, VERIFY_SUMMARY } from "./facts";
 import { C, printP, stepIn } from "./kit";
 
 export const LH = 35; // row height at 26 px (term.html: 26 rows in ~924 px)
@@ -14,10 +14,10 @@ export const CMD = "pnpm verify";
 export const TYPE_AT = 16; // first command char
 export const ENTER_AT = 30;
 export const ROWS_AT = 38; // first output row
-export const LAST_AT = 192; // last ✓ row lands just before "chain." (V15 f197)
+export const LAST_AT = 188; // the summary row prints at f188; it lifts at f190, before "chain." (V15 f197)
 const VISIBLE = 22; // rows that fit before the terminal scrolls
 
-type Row = { kind: "title" | "group" | "ok" | "why" | "blank"; text: string };
+type Row = { kind: "title" | "group" | "ok" | "na" | "warn" | "why" | "blank" | "sum"; text: string };
 const R = (kind: Row["kind"], text = ""): Row => ({ kind, text });
 export const ROWS: Row[] = [
   R("title", `LAST SAVE verify · ${VERIFY_INSTANCE}`),
@@ -26,16 +26,22 @@ export const ROWS: Row[] = [
   R("why", "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code"),
   R("ok", "Published global code is readable and hashes to its id"),
   R("ok", "0 access keys on the instance (locked)"),
-  R("why", "0 access keys: nobody can redeploy, drain or delete the contract"),
   R("blank"), R("group", "Factory"),
   R("ok", "Factory points at the same global hash"),
   R("ok", "Instance listed by the factory"),
   R("blank"), R("group", "Escrow"),
   R("ok", "Escrow attested by the enclave"),
   R("ok", "Keystore access rule is exactly release.wasm + this contract"),
+  R("blank"), R("group", "Money"),
+  R("ok", "Buckets non-negative and covered by the balance"),
+  R("blank"), R("group", "Pins"),
+  R("ok", "release/probe wasm hashes = committed artifacts/ files"),
+  R("ok", "Key commitment, artifact hash and build hash are set"),
+  R("ok", "Encrypted artifact = committed file"),
   R("blank"), R("group", "Artifacts"),
+  R("ok", "Enclave programs download from every mirror"),
   R("ok", "Encrypted artifact: every mirror's sha256 = on-chain"),
-  R("ok", "Walrus mirror serves it"),
+  R("na", "Walrus mirror serves it"),
   R("blank"), R("group", "Release"),
   R("ok", "Released key hashes to the commitment"),
   R("ok", "Released key decrypts the artifact to build_hash"),
@@ -43,9 +49,11 @@ export const ROWS: Row[] = [
   R("ok", "Payer address re-derived from public inputs"),
   R("ok", "Signed payouts mined on Base Sepolia"),
   R("blank"), R("group", "Provenance"),
-  R("ok", "Build attested by GitHub Actions (Sigstore) for the on-chain build hash"),
+  R("warn", "Build attested by GitHub Actions (Sigstore) for the on-chain build hash"),
   R("blank"), R("group", "Proof"),
   R("ok", "Every tx in the proof manifests resolves on RPC"),
+  R("blank"),
+  R("sum", `${VERIFY_SUMMARY.head}  ·  ${VERIFY_SUMMARY.counts}`),
 ];
 
 // Blank rows take 1 unit of time, others 2: spread the rows from ROWS_AT to LAST_AT.
@@ -91,6 +99,9 @@ export function VerifyTerm({ f, cmdDim = 0 }: { f: number; cmdDim?: number }) {
               {hi > 0 && <span style={{ position: "absolute", left: -10, right: 0, top: 0, bottom: 0, background: `rgba(69,227,148,${0.08 * hi})`, borderLeft: `3px solid rgba(69,227,148,${hi})` }} />}
               {r.kind === "title" && <span style={{ fontWeight: 600, color: T.text }}>{r.text}</span>}
               {r.kind === "group" && <span style={{ fontWeight: 600, color: T.text, textDecoration: "underline", textUnderlineOffset: 5 }}>{r.text}</span>}
+              {r.kind === "na" && <span><span style={{ color: T.faint }}>{"n/a "}</span><span style={{ color: T.text }}>{r.text}</span></span>}
+              {r.kind === "warn" && <span><span style={{ color: T.amber, fontWeight: 600 }}>{"!   "}</span><span style={{ color: T.text }}>{r.text}</span></span>}
+              {r.kind === "sum" && <span style={{ color: T.alive, fontWeight: 600 }}>{r.text}</span>}
               {r.kind === "ok" && <span style={{ position: "relative" }}><span style={{ color: T.alive, fontWeight: 600 }}>{"✓   "}</span><span style={{ color: T.text }}>{r.text}</span></span>}
               {r.kind === "why" && <span style={{ color: T.faint }}>{"     "}{r.text}</span>}
             </div>

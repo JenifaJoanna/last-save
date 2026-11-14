@@ -11,8 +11,8 @@ import { Icon } from "./icons";
 import { PAYOUT } from "./facts";
 import { C, out, printP, stepIn } from "./kit";
 
-/** Beats (S15 frames). V14 at f9: "base" f59, "signs" f125, "no one" f174. */
-export const B15 = { land: 18, signPress: 56, signed: 121, liftEnd: 150, relayPress: 152, relayed: 160, txHi: 212 } as const;
+/** Beats (S15 frames). V14 at f9: "base" f59, "signs" f125, "no one" f174. The lifted lines are S15's overlays. */
+export const B15 = { land: 18, signPress: 56, signed: 121, relayPress: 150, relayed: 156, txHi: 214 } as const;
 
 /** Layout (content coords, px at 1x). The card sits in the app's max-w-6xl column. */
 export const CARD = { x: 363, y: 36, w: 1152 } as const;
@@ -39,10 +39,6 @@ export function BaseCard({ f }: { f: number }) {
   const kind = signed ? "Signed" : signing ? "Signing" : "Booked";
   const chipText = relayed ? "On Base Sepolia" : signed ? "Signed by MPC" : signing ? "MPC signing…" : "Booked";
 
-  // "Signed by MPC" lifts toward the camera on "signs", then settles back into its row.
-  const up = interpolate(f, [B15.signed, B15.signed + 14], [0, 1], { ...C, easing: out });
-  const down = interpolate(f, [B15.liftEnd - 12, B15.liftEnd], [0, 1], { ...C, easing: out });
-  const lift = up * (1 - down);
 
   const amtGlow = interpolate(f, [0, B15.land, B15.land + 24], [1, 1, 0], C);
 
@@ -83,13 +79,7 @@ export function BaseCard({ f }: { f: number }) {
           <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15 }}>
             <Label size={13} weight={700}>Epoch {PAYOUT.epoch}</Label>
             <span style={{ color: T.muted }}>{PAYOUT.sessions} verified sessions</span>
-            <span style={{ position: "relative", display: "inline-block" }}>
-              {lift > 0 && <span style={{ position: "absolute", inset: 0, border: `1px dashed rgba(79,216,208,${0.35 * lift})` }} />}
-              <Chip kind={relayed ? "Signed" : kind} text={chipText} style={{
-                position: "relative", transformOrigin: "0% 50%", background: lift > 0 ? `rgba(18,14,34,${0.92 * lift})` : CHIP[kind][1],
-                transform: `translate(${lift * 40}px, ${lift * -3}px) scale(${1 + lift * 1.0})`,
-                boxShadow: lift > 0 ? `0 ${6 * lift}px ${14 * lift}px rgba(0,0,0,${0.6 * lift}), 0 0 ${14 * lift}px rgba(79,216,208,${0.4 * lift})` : undefined }} />
-            </span>
+            <Chip kind={relayed ? "Signed" : kind} text={chipText} />
           </div>
           <div style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 8, fontSize: 14, color: T.muted }}>
             <span style={{ color: T.text, fontWeight: 600 }}>{decode(PAYOUT.value, valueDecode, f)}</span>

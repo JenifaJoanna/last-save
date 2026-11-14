@@ -44,7 +44,7 @@ export function Lockup({ f }: { f: number }) {
         <div style={stepIn(l1)}><Display size={SIZE} tone="cream" glow={false}>{"We killed\nour server."}</Display></div>
         <div style={{ marginTop: 26, ...stepIn(l2) }}><Display size={SIZE}>{"You still have\nthe game."}</Display></div>
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 878, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 858, display: "flex", justifyContent: "center", alignItems: "center", gap: 22 }}>
         {ITEMS.map((it, i) => {
           const p = printP(f, AT.labels + i * 2);
           return (
@@ -55,10 +55,10 @@ export function Lockup({ f }: { f: number }) {
           );
         })}
       </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: 950, display: "flex", justifyContent: "center", gap: 28, ...stepIn(printP(f, AT.urls)) }}>
-        <Mono size={24} color={T.text}>github.com/JenifaJoanna/last-save</Mono>
-        <Mono size={24} color={T.gold}>·</Mono>
-        <Mono size={24} color={T.text}>last-save.pages.dev</Mono>
+      <div style={{ position: "absolute", left: 0, right: 0, top: 926, display: "flex", justifyContent: "center", gap: 32, ...stepIn(printP(f, AT.urls)) }}>
+        <Mono size={40} color={T.text}>github.com/JenifaJoanna/last-save</Mono>
+        <Mono size={40} color={T.gold}>·</Mono>
+        <Mono size={40} color={T.text}>last-save.pages.dev</Mono>
       </div>
     </>
   );

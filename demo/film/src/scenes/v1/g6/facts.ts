@@ -17,11 +17,31 @@ export const PAYOUT = {
   block: "58635246",
 } as const;
 
-/** TBD. The instance `pnpm verify` names in the S16 stand-in (the judge instance the t-verify take will run against). */
-export const VERIFY_INSTANCE = "ember-rift.lastsave-factory.testnet";
+/** TBD (dev run). The instance the S16 stand-in shows: the v2 dev run whose real output it replays (rows and summary). */
+export const VERIFY_INSTANCE = "v2dev.lastsave-factory.testnet";
 
 /** Seam with S14's last frame, measured on its render at f251: the lifted "Host paid 0.04 Ⓝ" amount's centre and
  * on-screen font size (EpochChip Mono 96 px at its 1.16 lift scale), the box hidden in the frozen S14 layer while the
  * amount flies to the Base row, and the chip's box (with its glow) that collapses away. Re-measure if S14's chip moves. */
-export const S14_SEAM = { frame: 251, amount: { x: 1006, y: 592, px: 111 }, hole: { x: 770, y: 528, w: 475, h: 130 },
-  chip: { x: 505, y: 365, w: 910, h: 335 } } as const;
+export const S14_SEAM = { frame: 251, amount: { x: 940, y: 613, px: 111 }, hole: { x: 700, y: 545, w: 480, h: 135 },
+  chip: { x: 205, y: 335, w: 1510, h: 390 }, rack: { blur: 3, brightness: 0.45 },
+  fix: { scale: 1.005, ox: 956, oy: 527 } } as const; // measured: the frozen chip renders 0.5 % small; scaled back
+
+/** TBD (dev run). The Basescan result line for the payout tx (x-base): Basescan prints "Status:" then "Success"; the
+ * receipt's status is 1 (proof/v2-e2e.md: block 58635246, success). */
+export const BASESCAN_STATUS = { label: "Status:", value: "Success" } as const;
+
+/** TBD (dev run). The summary line that ends `pnpm verify` on the v2 dev instance (run 14 Nov, scripts/verify/render.mjs
+ * format): "ALL CHECKS THAT RAN HELD  ·  18 ✓   0 ✗   1 !   4 n/a   ·  2.6 s". The judge run's line replaces it. */
+export const VERIFY_SUMMARY = { head: "ALL CHECKS THAT RAN HELD", counts: "18 ✓   0 ✗   1 !   4 n/a   ·  2.6 s" } as const;
+
+/** Lifted film type (legibility pass): centre (frame px, 1920×1080) and font size of each key line, ≥ 56 px. Retune
+ * these numbers only when the takes land. */
+export const LIFT = {
+  signed: { x: 960, y: 250, size: 72 }, // S15 "Signed by MPC"
+  status: { x: 960, y: 455, size: 68 }, // S15 Basescan "Status: Success" (inside the flash window)
+  cmd: { x: 1330, y: 190, size: 64 }, // S16 "$ pnpm verify"
+  summary: { x: 960, y: 540, size: 64 }, // S16 → S17 summary line (head 64 px, counts 56 px)
+} as const;
+/** Texture for everything behind a lifted line: opacity and blur (px) at full strength. */
+export const TEXTURE = { opacity: 0.4, blur: 3 } as const;

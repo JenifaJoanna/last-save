@@ -8,7 +8,11 @@ import { T } from "../../ds/tokens";
 import { DeviceFrame } from "./g6/Device";
 import { C, inOut } from "./g6/kit";
 import { Lockup } from "./g6/Lockup";
-import { s16Cam, VerifyContent } from "./S16";
+import { TEXTURE } from "./g6/facts";
+import { liftShow, texture } from "./g6/Lift";
+import { s16Cam, SUM_AT, SummaryLift, VerifyContent } from "./S16";
+
+const SUM_OUT = 30; // the lifted verify summary (from S16) holds through the first second of the pull-back
 
 const PULL = 60;
 const SETTLE = 180;
@@ -30,6 +34,7 @@ export function S17() {
   const backdrop = interpolate(f, [6, 34], [1, 0], C);
   const drift = interpolate(f, [SETTLE - 40, 263], [1, 1.025], C);
   const space = 1 - backdrop;
+  const sum = liftShow(227 + f, SUM_AT, 227 + SUM_OUT);
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
@@ -41,14 +46,17 @@ export function S17() {
         <AbsoluteFill style={{ perspective: 2400 }}>
           <AbsoluteFill style={{ transformStyle: "preserve-3d", transformOrigin: "960px 540px",
             transform: `translate(${tx}px, ${ty + float}px) rotateY(${ry}deg) rotateX(${rx}deg) scale(${s})` }}>
-            <DeviceFrame title="Terminal" mode="released" primary="Run" backdrop={backdrop}>
-              <VerifyContent f={227 + f} />
-            </DeviceFrame>
+            <AbsoluteFill style={texture(sum, TEXTURE.opacity, TEXTURE.blur, s)}>
+              <DeviceFrame title="Terminal" mode="released" primary="Run" backdrop={backdrop}>
+                <VerifyContent f={227 + f} />
+              </DeviceFrame>
+            </AbsoluteFill>
           </AbsoluteFill>
         </AbsoluteFill>
         <Lockup f={f} />
       </AbsoluteFill>
       <AbsoluteFill style={{ pointerEvents: "none", opacity: space, background: "radial-gradient(120% 100% at 50% 50%, transparent 62%, rgba(5,4,10,0.55) 100%)" }} />
+      <SummaryLift show={sum} />
     </AbsoluteFill>
   );
 }
