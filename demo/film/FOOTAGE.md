@@ -41,7 +41,7 @@ build** (no PREVIEW pill, no preview strip). Until a take arrives, the film show
 | refund | Choose 1:50 | `/app/afterlife` as **yuna** | choose 1 REFUND, confirm | toast "Gas paid by the relayer: you paid 0 Ⓝ", refunded amount | 8 s |
 | refund2 | Choose | same as **dario** | choose 1 REFUND | same toast | 6 s |
 | pledge | Choose 1:53 | `/app/afterlife` as **mira**, then **kofi** (two takes: pledge, pledge2) | choose 2 PLEDGE | pool total rising | 6 s each |
-| postbuy | Choose 1:55 | `/app/store` as the non-holder after death | buy | "100% to the keep-alive pool", runway in epochs | 8 s |
+| postbuy | Choose 1:55 | `/app/store` as the non-holder after death | buy | the 90/10 split bar (90 % to the keep-alive pool, 10 % gas-free budget), pool rises about 0.223 Ⓝ, runway in epochs | 8 s |
 | x-archive | Preserved 1:58 | the Internet Archive item page of the released build | scroll to the file list or sha256 | item title + sha256 matching the chain | 4 s |
 | x-walrus2 | Preserved 2:00 | the Walrus blob page of the released build | — | blob id; sha256 = on-chain value | 3 s |
 | hostbtn | Fan hosts 2:04 | the "Host this game" page as **fanhost** | click it; follow the one-click deploy to its end | the deployed host URL | long, ≤ 40 s |
