@@ -5,11 +5,17 @@
 import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
 import { FULL_DROP, scene, TOTAL_FRAMES, type SceneId } from "./timeline";
 import V08 from "../../vo/timings/V08.json";
+import V11 from "../../vo/timings/V11.json";
+import V12 from "../../vo/timings/V12.json";
 import { S9_SFX } from "../scenes/v1/g4/t09";
 
 /** Seconds into S09 where a V08 word starts (V08 plays from 0.6 s); the kill's sounds and act 1's cut follow the words. */
 const V08_AT = 0.6;
 const w08 = (word: string) => V08_AT + (V08.words.find((x) => x.w.toLowerCase().replace(/[^a-z]/g, "") === word)?.s ?? NaN);
+/** Seconds into S12 where a V11 word starts (V11 plays from 0.2 s). */
+const w11 = (word: string) => 0.2 + (V11.words.find((x) => x.w.toLowerCase().replace(/[^a-z]/g, "") === word)?.s ?? NaN);
+/** Seconds into S13 where a V12 word starts (V12 plays from 0.3 s). */
+const w12 = (word: string) => 0.3 + (V12.words.find((x) => x.w.toLowerCase().replace(/[^a-z]/g, "") === word)?.s ?? NaN);
 /** "dead" in S09 (act 1 cuts 0.16 s after it, in every cut). */
 export const S09_DEAD = w08("dead");
 
@@ -47,12 +53,12 @@ export const SFX: Cue[] = [
   { scene: "S11", file: "refund.mp3", at: 4.1, volume: 0.5 },              // "share back"
   { scene: "S11", file: "pledge.mp3", at: 5.72, volume: 0.5 },             // "alive"
   { scene: "S11", file: "cash.mp3", at: 7.62, volume: 0.35 },              // "too": post-shutdown buy
-  { scene: "S12", file: "stamp.wav", at: 2.46, volume: 0.45 },             // "Walrus"
-  { scene: "S12", file: "tick.wav", at: 4.08, volume: 0.5 },               // "Internet Archive"
-  { scene: "S13", file: "key.mp3", at: 1.5, volume: 0.45 },                // "button"
-  { scene: "S13", file: "tick.wav", at: 6.26, volume: 0.5 },               // "hash"
-  { scene: "S13", file: "tick.wav", at: 7.16, volume: 0.5, rate: 1.15 },   // "build record"
-  { scene: "S13", file: "win.mp3", at: 9.66, volume: 0.4 },                // "progress"
+  { scene: "S12", file: "stamp.wav", at: w11("walrus"), volume: 0.45 },    // "Walrus"
+  { scene: "S12", file: "tick.wav", at: w11("internet"), volume: 0.5 },    // "Internet Archive"
+  { scene: "S13", file: "key.mp3", at: w12("command"), volume: 0.45 },     // "runs one command"
+  { scene: "S13", file: "tick.wav", at: w12("hash"), volume: 0.5 },        // "hash"
+  { scene: "S13", file: "tick.wav", at: w12("day"), volume: 0.5, rate: 1.15 }, // "from day one"
+  { scene: "S13", file: "win.mp3", at: w12("progress"), volume: 0.4 },     // "progress"
   { scene: "S14", file: "dialup.mp3", at: 0.0, volume: 0.35, rate: 1.1 },
   { scene: "S14", file: "lobby.mp3", at: 1.0, volume: 0.45 },              // "Same players"
   { scene: "S14", file: "coins.mp3", at: 6.96, volume: 0.45 },             // "themselves": host paid

@@ -1,0 +1,141 @@
+{
+ "id": "V12",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "A fan clicks one button or runs one command. It fetches a public copy, checks it against the hash from day one, and restores everyone's progress.",
+ "heard": "A fan clicks one button or runs one command. It fetches a public copy, checks it against the hash from day one, and restores everyone's progress.",
+ "match": true,
+ "lastWordEnd": 8.72,
+ "words": [
+  {
+   "w": "A",
+   "s": 0.14,
+   "e": 0.22
+  },
+  {
+   "w": "fan",
+   "s": 0.28,
+   "e": 0.46
+  },
+  {
+   "w": "clicks",
+   "s": 0.54,
+   "e": 0.78
+  },
+  {
+   "w": "one",
+   "s": 0.96,
+   "e": 1.12
+  },
+  {
+   "w": "button",
+   "s": 1.22,
+   "e": 1.64
+  },
+  {
+   "w": "or",
+   "s": 1.68,
+   "e": 1.82
+  },
+  {
+   "w": "runs",
+   "s": 1.86,
+   "e": 2.08
+  },
+  {
+   "w": "one",
+   "s": 2.22,
+   "e": 2.36
+  },
+  {
+   "w": "command.",
+   "s": 2.44,
+   "e": 2.88
+  },
+  {
+   "w": "It",
+   "s": 3.36,
+   "e": 3.46
+  },
+  {
+   "w": "fetches",
+   "s": 3.52,
+   "e": 3.78
+  },
+  {
+   "w": "a",
+   "s": 3.84,
+   "e": 3.9
+  },
+  {
+   "w": "public",
+   "s": 3.94,
+   "e": 4.14
+  },
+  {
+   "w": "copy,",
+   "s": 4.24,
+   "e": 4.56
+  },
+  {
+   "w": "checks",
+   "s": 4.96,
+   "e": 5.18
+  },
+  {
+   "w": "it",
+   "s": 5.2,
+   "e": 5.26
+  },
+  {
+   "w": "against",
+   "s": 5.3,
+   "e": 5.54
+  },
+  {
+   "w": "the",
+   "s": 5.58,
+   "e": 5.66
+  },
+  {
+   "w": "hash",
+   "s": 5.7,
+   "e": 5.96
+  },
+  {
+   "w": "from",
+   "s": 6,
+   "e": 6.18
+  },
+  {
+   "w": "day",
+   "s": 6.22,
+   "e": 6.36
+  },
+  {
+   "w": "one,",
+   "s": 6.54,
+   "e": 6.68
+  },
+  {
+   "w": "and",
+   "s": 7.06,
+   "e": 7.14
+  },
+  {
+   "w": "restores",
+   "s": 7.18,
+   "e": 7.58
+  },
+  {
+   "w": "everyone's",
+   "s": 7.8,
+   "e": 8.2
+  },
+  {
+   "w": "progress.",
+   "s": 8.24,
+   "e": 8.72
+  }
+ ]
+}

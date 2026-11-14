@@ -14,7 +14,7 @@ const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 /** Measured VO lengths in seconds (scribe_v3 last word end + tail), from vo/timings. */
 export const VO_LEN: Record<string, number> = {
   V01: 4.8, V02: 3.68, V03: 11.68, V04: 10.88, V05: 15.76, V06: 8.88, V07: 9.52, V08: 14.4,
-  V09: 4.08, V10: 7.76, V11: 4.56, V12: 10.0, V13: 7.12, V14: 6.8, V15: 6.58, V16: 2.88,
+  V09: 4.08, V10: 7.76, V11: 6.32, V12: 7.72, V13: 7.12, V14: 6.8, V15: 6.58, V16: 2.88,
 };
 
 function FadeIn({ frames, children }: { frames: number; children: ReactNode }) {

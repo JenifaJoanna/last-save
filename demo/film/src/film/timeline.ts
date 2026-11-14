@@ -7,7 +7,7 @@ export type SceneId = "XO" | "S01" | "S02" | "S03" | "S04" | "S05" | "S06" | "S0
 export interface SceneSpec { id: SceneId; name: string; dur: number; vo?: string; voAt?: number }
 
 /** dur and voAt in seconds; voAt is relative to the scene start. VO lengths (s): V01 4.80, V02 3.68, V03 11.68,
- * V04 10.88, V05 15.76, V06 8.88, V07 9.52, V08 14.40, V09 4.08, V10 7.76, V11 4.56, V12 10.0, V13 7.12, V14 6.80,
+ * V04 10.88, V05 15.76, V06 8.88, V07 9.52, V08 14.40, V09 4.08, V10 7.76, V11 6.32, V12 7.72, V13 7.12, V14 6.80,
  * V15 6.58, V16 2.88. */
 export const SCENES: SceneSpec[] = [
   { id: "S01", name: "Open", dur: 9.0, vo: "V01", voAt: 3.6 },
@@ -21,8 +21,8 @@ export const SCENES: SceneSpec[] = [
   { id: "S09", name: "The kill", dur: 17.2, vo: "V08", voAt: 0.6 },
   { id: "S10", name: "Release", dur: 5.4, vo: "V09", voAt: 0.4 },
   { id: "S11", name: "Choose", dur: 8.7, vo: "V10", voAt: 0.3 },
-  { id: "S12", name: "Preserved", dur: 5.2, vo: "V11", voAt: 0.2 },
-  { id: "S13", name: "A fan hosts", dur: 11.1, vo: "V12", voAt: 0.3 },
+  { id: "S12", name: "Preserved", dur: 6.9, vo: "V11", voAt: 0.2 },
+  { id: "S13", name: "A fan hosts", dur: 9.6, vo: "V12", voAt: 0.3 },
   { id: "S14", name: "Back in", dur: 8.4, vo: "V13", voAt: 0.6 },
   { id: "S15", name: "Paid on Base", dur: 7.6, vo: "V14", voAt: 0.3 },
   { id: "S16", name: "Verify", dur: 7.6, vo: "V15", voAt: 0.3 },

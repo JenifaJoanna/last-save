@@ -60,12 +60,12 @@
     {
       "id": "V11",
       "tag": "[calm]",
-      "text": "Now the build is public for good, on Walrus and on the Internet Archive."
+      "text": "The build is already stored for good, on Walrus and on the Internet Archive, waiting for its key."
     },
     {
       "id": "V12",
       "tag": "[calm]",
-      "text": "A fan clicks one button or runs one command. It fetches the archived copy, checks it against the hash and the build record from day one, and restores everyone's progress."
+      "text": "A fan runs one command. It fetches a public copy, checks it against the hash from day one, and restores everyone's progress."
     },
     {
       "id": "V13",
