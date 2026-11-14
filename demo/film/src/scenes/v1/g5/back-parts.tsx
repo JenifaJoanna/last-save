@@ -22,8 +22,8 @@ export function HudLift({ crop, seqFrom, takeFrom, lift, to, scale, tag }: {
   const s = interpolate(lift, [0, 1], [1, scale]);
   return (
     <div style={{ position: "absolute", left: x, top: y }}>
-      <div style={{ position: "absolute", left: 0, top: -56, clipPath: `inset(0 0 ${(1 - stepped(Math.max(0, (lift - 0.4) / 0.6), 5)) * 100}% 0)` }}>
-        <Tag color={T.gold} size={22}>{tag}</Tag>
+      <div style={{ position: "absolute", left: 0, top: -84, clipPath: `inset(0 0 ${(1 - stepped(Math.max(0, (lift - 0.4) / 0.6), 5)) * 100}% 0)` }}>
+        <Tag color={T.gold} size={44}>{tag}</Tag>
       </div>
       <div style={{ transformOrigin: "0 0", transform: `scale(${s})` }}>
         <LiftPlate lift={lift} edge={T.gold} style={{ width: w, height: h, overflow: "hidden", padding: 0 }}>
@@ -48,14 +48,14 @@ function Check({ size }: { size: number }) {
 export function EpochChip({ f, lift, paidAt }: { f: number; lift: number; paidAt: number }) {
   const row2 = printIn(f, paidAt);
   return (
-    <LiftPlate lift={lift} edge={T.alive} style={{ padding: "26px 36px 28px", width: 760 }}>
-      <Label size={20} color={T.cyan} track={0.18}>{"// Epoch claimed · community host"}</Label>
+    <LiftPlate lift={lift} edge={T.alive} style={{ padding: "26px 44px 30px" }}>
+      <Label size={24} color={T.cyan} track={0.18} style={{ opacity: 0.45 }}>{"// Epoch claimed · community host"}</Label>
       <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 14 }}>
-        <Check size={34} />
-        <Mono size={30} color={T.text}>{CLAIM.sessions} player-signed sessions verified</Mono>
+        <Check size={60} />
+        <Mono size={56} color={T.text}>{CLAIM.sessions} player-signed sessions verified</Mono>
       </div>
       <div style={{ display: "flex", alignItems: "baseline", gap: 22, marginTop: 18, clipPath: `inset(0 0 ${(1 - row2) * 100}% 0)` }}>
-        <Label size={26} color={T.muted}>Host paid</Label>
+        <Label size={56} color={T.text}>Host paid</Label>
         <Mono size={96} weight={600} color={T.alive} style={{ lineHeight: 1.05, textShadow: "0 0 34px rgba(69,227,148,0.35)" }}>{CLAIM.paid} Ⓝ</Mono>
       </div>
     </LiftPlate>

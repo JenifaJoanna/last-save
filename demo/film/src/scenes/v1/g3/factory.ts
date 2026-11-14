@@ -1,19 +1,24 @@
-// S07 cut sheet for the `t-factory` terminal take (the real `create_instance` on lastsave-factory.testnet for studio
-// #2 "Tidebreak"). TUNE WHEN THE TAKE LANDS: `from` = take second shown at S07 f0; `tx` = take second when the tx line
-// has printed and that line's top in take px (26 px rows ≈ 35 px). The line text itself always comes from the take.
+// S07 cut sheet and key lines for the `t-factory` terminal take (the real `create_instance` on lastsave-factory.testnet
+// for studio #2 "Tidebreak") and the `x-factory` explorer flash. TUNE WHEN THE TAKES LAND: `from` = take second shown
+// at S07 f0; `account.y` = top of the new-account line in take px (26 px rows ≈ 35 px); `account.text` must be the
+// exact account the take prints (create_instance makes `<name>.lastsave-factory.testnet`; name assumed "tidebreak").
 import { beat } from "./motion";
 
 export const FACTORY = {
   slot: "t-factory",
   from: 0.8,
-  tx: { takeAt: 7.9, y: 285 },
-  /** Lifted tx row parks here (take px): below the command's output, in the terminal's empty lower rows. */
-  parkY: 760,
+  account: { text: "tidebreak.lastsave-factory.testnet", y: 250 },
 } as const;
 
-/** V07 word starts (vo/timings/V07.json): single 6.84, born 8.18, no 8.72. */
+/** "0 access keys": the x-factory explorer's access-key count for the new instance (FOOTAGE x-factory row). */
+export const KEYS_LINE = { zero: "0", rest: " access keys" } as const;
+
+/** V07 word starts (vo/timings/V07.json): single 6.84, born 8.18, no 8.72. Lines land 2 f early. */
 export const S07_BEATS = {
-  tx: beat("S07", 6.84) - 2,
-  flash: beat("S07", 8.18) - 6,
-  keys: beat("S07", 8.72),
+  account: beat("S07", 6.84) - 2,
+  flash: beat("S07", 6.84) + 14,
+  keys: beat("S07", 8.18) - 2,
 };
+
+/** Key-line slots in frame px (lower third, clear of the explorer's centre; they hold over the pull-out into S08). */
+export const S07_SLOTS = { account: { x: 112, y: 812 }, keys: { x: 112, y: 916 }, size: 56 } as const;

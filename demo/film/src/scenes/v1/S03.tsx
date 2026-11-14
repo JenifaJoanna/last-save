@@ -3,7 +3,7 @@
 // Commission cards from IP/26/1369 follow, one on screen at a time, each scrolling the last one up and out:
 //   card 1 head f22, lead types f26–83, key words print f90 ("law" f94), ember underline f104
 //   card 2 scrolls in f148–164, prints f160–164 ("code" f169), underline f176, C(2026)4110 note types f206 ("Last Save" f209)
-//   card 3 scrolls in f260–276, line 1 f274, "proportionate refund" prints f308, gold block grows f315–329 ("refund" f315)
+//   card 3 scrolls in f260–276, head f262, line 1 f266, "proportionate refund" prints f308, gold block grows f315–329 ("refund" f315)
 // Camera (all ease-out): push into the glass f20–58, drift +4 % inside, pull back to the bezel f336–374.
 // End pose: settled ScreenFrame (scale 1, WHY STUDIOS OPT IN, online, HOME hints/keys) with card 3, "refund" in gold.
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";

@@ -6,6 +6,10 @@ import type { SceneId } from "./timeline";
 export interface Cue { file: string; at: number; scene: SceneId; volume?: number; dur?: number; rate?: number; fadeOut?: number }
 
 export const SFX: Cue[] = [
+  { scene: "XO", file: "flatline.mp3", at: 0.0, volume: 0.025, dur: 2.8, fadeOut: 1.2 }, // X cold open: the dead line under the hook
+  { scene: "XO", file: "impact.mp3", at: 0.14, volume: 0.42 },             // "WE KILLED OUR SERVER." prints
+  { scene: "XO", file: "glitch.mp3", at: 2.8, volume: 0.35 },              // the line kicks once, the roll
+  { scene: "XO", file: "unlock.mp3", at: 3.0, volume: 0.4 },               // "the game": the match, alive
   { scene: "S01", file: "typing.mp3", at: 0.2, volume: 0.3, dur: 3.2 },
   { scene: "S02", file: "crt-on.mp3", at: 0.1, volume: 0.6 },
   { scene: "S04", file: "dialup.mp3", at: 0.0, volume: 0.45 },
@@ -51,7 +55,8 @@ export const SFX: Cue[] = [
 
 /** Score in two acts. Act 1 is cut hard on the word "dead" (S09); act 2 enters under "The enclave confirms" and its
  * last chunk resolves on the final frame. Times are absolute film seconds. */
-export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number }
+/** `offset`: seconds into the music file where playback starts (default 0). */
+export interface ScoreAct { file: string; from: number; to: number; fadeIn: number; fadeOut: number; offset?: number }
 export const SCORE: ScoreAct[] = [
   { file: "music/v1/c1-act1.mp3", from: 0, to: 101.2, fadeIn: 1.2, fadeOut: 0.1 },
   { file: "music/v1/c1-act2.mp3", from: 103.57, to: 166.0, fadeIn: 0.6, fadeOut: 2.0 },

@@ -9,7 +9,7 @@ import { Camera, ScreenFrame } from "../../../ds/screen";
 import { Mono } from "../../../ds/type";
 import { T } from "../../../ds/tokens";
 import { Slot, slotSource } from "../../../film/Slot";
-import { HOST_CMD, HOST_ROWS, TAKE_FROM, TERM_CROP, TERM_ROW } from "./facts";
+import { HOST_CMD, HOST_ROWS, KEY_PROVENANCE, KEY_WALRUS, LAYOUT, TAKE_FROM, TERM_CROP, TERM_ROW } from "./facts";
 import { c, LiftPlate, out, printIn, ramp, word } from "./kit";
 
 const W = (s: number) => word("S13", s);
@@ -19,7 +19,7 @@ const SIZE = 25;
 const LH = 44;
 const TOP = 40;
 const LEFT = 120;
-const LIFT_Y = 640; // content-space centre of the lift band
+const LIFT_Y = LAYOUT.s13LiftY; // content-space centre of the lift band
 
 type Kind = "walrus" | "hash" | "provenance" | "snapshot" | "register";
 interface Line { at: number; body: ReactNode; text: string; lift?: Kind; liftAt?: number }
@@ -35,7 +35,33 @@ const LINES: Line[] = [
   { at: W(8.28) + 8, text: "Serving at https://…", body: "Serving at https://…" },
   { at: W(9.36) + 14, text: "register_host: tx …  ✓", body: <>{"register_host: tx …  "}{ok("✓")}</>, lift: "register", liftAt: W(9.36) + 20 },
 ];
-const LIFTS = LINES.map((l, i) => ({ ...l, row: i + 1 })).filter((l) => l.lift).sort((a, b) => a.liftAt! - b.liftAt!);
+// Only the register line still lifts as a pixel/mono chip (S14's seam); the key beats lift as film type (KEYS).
+const LIFTS = LINES.map((l, i) => ({ ...l, row: i + 1 })).filter((l) => l.lift === "register");
+interface Key { row: number; take: number; at: number; until: number; lines: string[] }
+const KEYS: Key[] = [
+  { row: 4, take: HOST_ROWS.walrus, at: W(4.06) - 4, until: W(6.62) - 6, lines: KEY_WALRUS }, // "archived copy" → "hash"
+  { row: 5, take: HOST_ROWS.provenance, at: W(6.62) - 2, until: W(9.36) - 6, lines: KEY_PROVENANCE }, // "build record"
+];
+const keyOn = (f: number) => KEYS.some((k) => f >= k.at && f < k.until + 8);
+const ticked = (t: string) => t.split("✓").flatMap((part, i) => (i ? [<span key={i} style={{ color: T.alive }}>✓</span>, part] : [part]));
+
+/** A key line lifted off the glass as 56 px film type (frame px, outside the CRT layers). Rises from its row in 10 f,
+ * holds still, sinks in 8 f. */
+function KeyLift({ k, f, take }: { k: Key; f: number; take: boolean }) {
+  const up = ramp(f, k.at, k.at + 10);
+  const down = ramp(f, k.until, k.until + 8);
+  if (up <= 0 || down >= 1) return null;
+  const fromY = take ? (TERM_ROW.top + (k.take + 0.5) * TERM_ROW.h) * BOX_H : TOP + k.row * LH + LH / 2;
+  const y = 102 + interpolate(up, [0, 1], [fromY, LIFT_Y]) + down * 24;
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, top: y, display: "flex", justifyContent: "center", opacity: 1 - down,
+      transform: `translateY(-50%) scale(${interpolate(up, [0, 1], [SIZE / 56, 1])})` }}>
+      <LiftPlate lift={up} style={{ padding: "18px 40px 20px" }}>
+        {k.lines.map((t, i) => <Mono key={i} size={56} color={T.text} style={{ lineHeight: 1.3, color: i > 0 && k.row === 4 ? T.alive : T.text }}>{ticked(t)}</Mono>)}
+      </LiftPlate>
+    </div>
+  );
+}
 
 /** Take geometry: the term.html screen below its bar, fitted to the content height (868) and centred. */
 const BOX_H = 868;
@@ -71,16 +97,17 @@ function LiftedRow({ l, f, take }: { l: (typeof LIFTS)[number]; f: number; take:
 /** The terminal content (inside ScreenFrame). `f` = scene frame of S13. */
 function Log({ f, take }: { f: number; take: boolean }) {
   const typed = Math.floor(interpolate(f, [TERM_AT + 2, TYPE_END], [0, HOST_CMD.length], c));
-  const anyLift = LIFTS.some((l) => f >= l.liftAt!);
+  const anyLift = LINES.some((l) => l.lift && f >= l.liftAt!);
+  const tex = keyOn(f);
   if (take) {
     return (
-      <div style={{ position: "absolute", left: BOX_X, top: 0, width: BOX_W, height: BOX_H, opacity: anyLift ? 0.5 : 1 }}>
+      <div style={{ position: "absolute", left: BOX_X, top: 0, width: BOX_W, height: BOX_H, opacity: tex ? 0.4 : anyLift ? 0.5 : 1, filter: tex ? "blur(2px)" : undefined }}>
         <Sequence from={TERM_AT} layout="none"><Slot slot="t-host" from={TAKE_FROM["t-host"]} crop={TERM_CROP} /></Sequence>
       </div>
     );
   }
   return (
-    <div style={{ position: "absolute", left: LEFT, top: TOP }}>
+    <div style={{ position: "absolute", left: LEFT, top: TOP, opacity: tex ? 0.4 : 1, filter: tex ? "blur(2px)" : undefined }}>
       <Mono size={SIZE} style={{ lineHeight: `${LH}px` }}><span style={{ color: T.gold }}>$ </span>{HOST_CMD.slice(0, typed)}{f < TYPE_END + 4 && <span style={{ color: T.gold }}>█</span>}</Mono>
       {LINES.map((l, i) => {
         const p = printIn(f, l.at);
@@ -110,6 +137,7 @@ export function HostTerminal({ at }: { at?: number }) {
         <Log f={f} take={take} />
         {LIFTS.map((l) => <LiftedRow key={l.lift} l={l} f={f} take={take} />)}
       </ScreenFrame>
+      {KEYS.map((k) => <KeyLift key={k.row} k={k} f={f} take={take} />)}
     </Camera>
   );
 }

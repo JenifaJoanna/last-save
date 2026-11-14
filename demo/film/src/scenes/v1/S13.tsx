@@ -9,7 +9,7 @@ import { Label, Mono } from "../../ds/type";
 import { T } from "../../ds/tokens";
 import { Slot } from "../../film/Slot";
 import { Embers, Nebula } from "../../frames/b/Space";
-import { CONTENT_CROP, TAKE_FROM } from "./g5/facts";
+import { CONTENT_CROP, HOSTBTN_PLATE, TAKE_FROM } from "./g5/facts";
 import { HostTerminal, TERM_AT } from "./g5/host-term";
 import { c, DialUp, inOut, out, ramp, roll, RollBand } from "./g5/kit";
 
@@ -62,7 +62,7 @@ export function S13() {
       {open > 0 && f < ROLL_AT + 10 && (
         <AbsoluteFill style={{ transform: `translateY(${r.outY}px) scale(${(0.55 + 0.45 * out(open)) * drift})`, opacity: Math.min(1, open * 1.6) }}>
           <ScreenFrame title="Community hosts" mode="released" titleAt={OPEN_AT}>
-            <Sequence from={OPEN_AT} layout="none"><Slot slot="hostbtn" from={TAKE_FROM.hostbtn} crop={CONTENT_CROP} /></Sequence>
+            <Sequence from={OPEN_AT} layout="none"><Slot slot="hostbtn" plate={HOSTBTN_PLATE} from={TAKE_FROM.hostbtn} crop={CONTENT_CROP} /></Sequence>
           </ScreenFrame>
         </AbsoluteFill>
       )}

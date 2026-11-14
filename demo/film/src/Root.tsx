@@ -5,7 +5,8 @@ import { loadFilmFonts } from "./ds/tokens";
 import { Film, XCut } from "./film/Film";
 import { Vertical, VERTICAL_FRAMES } from "./film/Vertical";
 import { X_TOTAL } from "./film/xcut";
-import { PLACED, TOTAL_FRAMES } from "./film/timeline";
+import { XOPEN, XOpen } from "./film/XOpen";
+import { f, PLACED, TOTAL_FRAMES } from "./film/timeline";
 import { FrameA } from "./frames/FrameA";
 import { FrameB } from "./frames/FrameB";
 import { FrameC } from "./frames/FrameC";
@@ -20,6 +21,7 @@ export function Root() {
       <Composition id="LastSaveX" component={XCut} durationInFrames={X_TOTAL} fps={30} width={1920} height={1080} />
       <Composition id="LastSaveVertical" component={Vertical} durationInFrames={VERTICAL_FRAMES} fps={30} width={1080} height={1920} />
       <Folder name="Scenes">
+        <Composition id="XO" component={XOpen} durationInFrames={f(XOPEN.dur)} fps={30} width={1920} height={1080} />
         {PLACED.map((s) => (
           <Composition key={s.id} id={s.id} component={SCENE_COMPONENTS[s.id]} durationInFrames={s.frames} fps={30} width={1920} height={1080} />
         ))}

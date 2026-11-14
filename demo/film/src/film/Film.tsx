@@ -63,7 +63,7 @@ export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[
         const a = f(m.from); const len = f(m.to) - a;
         return (
           <Sequence key={m.file} from={a} durationInFrames={len} name={`score ${m.file.split("/").pop()}`}>
-            <Audio src={staticFile(m.file)} volume={(fr) => {
+            <Audio src={staticFile(m.file)} startFrom={f(m.offset ?? 0)} volume={(fr) => {
               const abs = a + fr;
               const speaking = Math.max(0, ...voWindows.map(([s0, s1]) => interpolate(abs, [s0 - 9, s0, s1, s1 + 12], [0, 1, 1, 0], clamp)));
               const env = interpolate(fr, [0, Math.max(1, f(m.fadeIn)), len - Math.max(1, f(m.fadeOut)), len], [0, 1, 1, 0], clamp);

@@ -10,7 +10,7 @@ import { T } from "../../ds/tokens";
 import { Slot } from "../../film/Slot";
 import { Embers, Nebula } from "../../frames/b/Space";
 import { HOLDERS, MiniDevice, PoolPanel, RelayerToast } from "./g5/choose-parts";
-import { POSTBUY_CROP, RELEASED_KEY, TAKE_FROM } from "./g5/facts";
+import { LAYOUT, POSTBUY_CROP, RELEASED_KEY, TAKE_FROM } from "./g5/facts";
 import { c, inOut, out, ramp, word } from "./g5/kit";
 
 const W = (s: number) => word("S11", s);
@@ -19,7 +19,9 @@ const SHARE = W(3.18); // "take their share back"
 const ALIVE = W(4.92); // "keep the game alive"
 const NEW = W(6.42); // "New players fund it too"
 const TOO = W(7.32);
-const POOL_AT = TOO - 3;
+const POOL_AT = TOO - 3; // the store take gives way to the empty status screen under the panel
+const TOAST_AT = W(1.62) - 14; // toast lifts before "without paying gas", holds to "take their share back"
+const PANEL_AT = NEW + 4; // pool panel prints (film type, screen space)
 const FLY = 24; // key rows fly 24 f, 3 f stagger
 const KEY_SIZE = 36;
 const CH = KEY_SIZE * 0.6; // Plex Mono advance
@@ -45,18 +47,20 @@ export function S11() {
   const lands = HOLDERS.map((_, i) => 3 + FLY + 3 * i);
   const refundFocus = ramp(f, SHARE - 4, SHARE + 14) - ramp(f, ALIVE - 4, ALIVE + 14);
   const pledgeFocus = ramp(f, ALIVE - 4, ALIVE + 14);
-  const toastUp = ramp(f, GAS - 22, GAS - 3);
-  const toastDown = ramp(f, SHARE - 8, SHARE + 6, inOut);
+  const toastUp = ramp(f, TOAST_AT, TOAST_AT + 16);
+  const toastDown = ramp(f, SHARE + 2, SHARE + 14, inOut);
   const toast = toastUp * (1 - toastDown);
   const giveWay = ramp(f, NEW - 8, NEW + 12, inOut);
   const shop = ramp(f, NEW - 6, NEW + 16);
   const push = interpolate(f, [POOL_AT, 261], [1, 1.07], { ...c, easing: out });
 
   // the toast lifts from the lower right of yuna's glass to the frame centre, turning to face the camera
-  const from = screenPos(0, GAS - 22);
-  const tx = interpolate(toast, [0, 1], [from.x + 150 * from.k, 960]);
-  const ty = interpolate(toast, [0, 1], [from.y + 120 * from.k, 560]);
-  const ts = interpolate(toast, [0, 1], [0.42, 1.0]);
+  const from = screenPos(0, TOAST_AT);
+  const tx = interpolate(toast, [0, 1], [from.x + 150 * from.k, LAYOUT.toast.x]);
+  const ty = interpolate(toast, [0, 1], [from.y + 120 * from.k, LAYOUT.toast.y]);
+  const ts = interpolate(toast, [0, 1], [0.28, 1.0]);
+  const panelUp = ramp(f, PANEL_AT - 4, PANEL_AT + 6);
+  const rise = ramp(f, W(6.98) - 2, TOO + 6, inOut);
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
@@ -66,11 +70,11 @@ export function S11() {
         <AbsoluteFill style={{ transformStyle: "preserve-3d", transform: `translateX(${camX}px) scale(${camS})`, transformOrigin: "960px 540px", opacity: 1 - giveWay }}>
           {HOLDERS.map((h, i) => {
             const appear = ramp(f, 4 + 3 * i, 22 + 3 * i);
-            const dim = Math.max(h.kind === "refund" ? pledgeFocus : refundFocus, toast * 0.8);
+            const dim = Math.max(h.kind === "refund" ? pledgeFocus : refundFocus, toast);
             const spread = giveWay * (h.x < 960 ? -420 : 420);
             return (
               <div key={h.slot} style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: `translate3d(${spread}px, ${giveWay * (h.y < 540 ? -160 : 160)}px, ${-giveWay * 300}px)` }}>
-                <MiniDevice h={h} f={f} land={lands[i]} appear={appear} dim={dim} float={Math.sin((f + i * 23) / 33) * 4} />
+                <MiniDevice h={h} f={f} land={lands[i]} appear={appear} dim={dim} float={Math.sin((f + i * 23) / 33) * 4} focus={h.kind === "refund" ? refundFocus : pledgeFocus} />
               </div>
             );
           })}
@@ -114,12 +118,16 @@ export function S11() {
         <AbsoluteFill style={{ transform: `scale(${0.5 + 0.5 * shop})`, opacity: Math.min(1, shop * 2.2) }}>
           <Camera scale={push}>
             <ScreenFrame title={f >= POOL_AT ? "Licence status" : "Store"} mode="released" titleAt={f >= POOL_AT ? POOL_AT : NEW - 6}>
-              {f < POOL_AT && <Sequence from={NEW - 6} layout="none"><Slot slot="postbuy" from={TAKE_FROM.postbuy} crop={POSTBUY_CROP} /></Sequence>}
-              {f >= POOL_AT && <PoolPanel f={f} at={POOL_AT} />}
+              {f < POOL_AT && (
+                <AbsoluteFill style={{ opacity: 1 - 0.6 * panelUp, filter: panelUp > 0.01 ? `blur(${(3 * panelUp).toFixed(2)}px)` : undefined }}>
+                  <Sequence from={NEW - 6} layout="none"><Slot slot="postbuy" from={TAKE_FROM.postbuy} crop={POSTBUY_CROP} /></Sequence>
+                </AbsoluteFill>
+              )}
             </ScreenFrame>
           </Camera>
         </AbsoluteFill>
       )}
+      {f >= PANEL_AT && <AbsoluteFill style={{ transform: `scale(${push})` }}><PoolPanel f={f} at={PANEL_AT} rise={rise} /></AbsoluteFill>}
       <Embers count={8} seed={31} />
       <AbsoluteFill style={{ pointerEvents: "none", background: "radial-gradient(120% 100% at 50% 50%, transparent 62%, rgba(5,4,10,0.5) 100%)", opacity: 1 - shop }} />
     </AbsoluteFill>

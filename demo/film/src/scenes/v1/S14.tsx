@@ -10,7 +10,7 @@ import { T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
 import { Slot } from "../../film/Slot";
 import { EpochChip, HudLift } from "./g5/back-parts";
-import { CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, TAKE_FROM } from "./g5/facts";
+import { BACK_PLATE, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, TAKE_FROM } from "./g5/facts";
 import { HostTerminal } from "./g5/host-term";
 import { c, DialUp, inOut, out, ramp, roll, RollBand, word } from "./g5/kit";
 
@@ -23,8 +23,9 @@ const PROGRESS = W(1.82) - 6; // "Same progress" lift
 const DROP = W(2.88) - 4; // lifts sink back on "The host"
 const BOUNCE = W(3.74) - 12; // roll to the refusal ("per real player session")
 const EPOCH = BOUNCE + 38; // roll to the Hosts page
-const CHIP = W(6.36) - 12; // epoch result lifts; lands on "themselves"
-const PAID = W(6.36) - 2;
+const CHIP = W(5.5) - 8; // epoch result lifts on "signed", the 56 px line holds ≥ 45 f
+const PAID = W(5.5) + 8; // "Host paid" prints
+const RISE = W(6.36) - 2; // on "themselves" the amount keeps rising toward the camera
 const END = scene("S14").frames;
 
 export function S14() {
@@ -39,14 +40,14 @@ export function S14() {
   const bouncePush = interpolate(f, [BOUNCE, EPOCH], [1, 1.12], { ...c, easing: out });
   const epochPush = interpolate(f, [EPOCH + 8, CHIP], [1, EPOCH_FOCUS.scale], { ...c, easing: inOut });
   const chipUp = ramp(f, CHIP, CHIP + 12);
-  const rise = ramp(f, PAID + 6, END, out);
-  const rack = Math.max(chipUp * 0.7, 0);
+  const rise = ramp(f, RISE, END, out);
+  const rack = chipUp;
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
       {/* S13's last pose, frozen, falling back as the dial-up box opens over it */}
       {crt < 1 && (
-        <AbsoluteFill style={{ opacity: interpolate(f, [0, 14], [1, 0.28], c), filter: `blur(${interpolate(f, [0, 14], [0, 3], c)}px)` }}>
+        <AbsoluteFill style={{ opacity: interpolate(f, [0, 14], [1, 0.55], c), filter: `blur(${interpolate(f, [0, 14], [0, 3], c)}px)` }}>
           <Freeze frame={S13_LAST}><HostTerminal at={S13_LAST} /></Freeze>
         </AbsoluteFill>
       )}
@@ -56,9 +57,9 @@ export function S14() {
         <AbsoluteFill style={{ clipPath: `inset(${(1 - crt) * 49.8}% 0 ${(1 - crt) * 49.8}% 0)`, transform: `translateY(${r1.outY}px)` }}>
           <AbsoluteFill style={{ filter: dimGame > 0.01 ? `brightness(${1 - dimGame})` : undefined, transform: `scale(${interpolate(f, [OPEN, BOUNCE], [1, 1.03], c)})` }}>
             {f < MATCH ? (
-              <Sequence from={OPEN} layout="none"><Slot slot="back" from={TAKE_FROM.backSignin} /></Sequence>
+              <Sequence from={OPEN} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backSignin} /></Sequence>
             ) : (
-              <Sequence from={MATCH} layout="none"><Slot slot="back" from={TAKE_FROM.backMatch} /></Sequence>
+              <Sequence from={MATCH} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backMatch} /></Sequence>
             )}
           </AbsoluteFill>
           <HudLift crop={HUD_BOARD} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={players} to={{ x: 150, y: 190 }} scale={1.9} tag="Same players" />
@@ -76,7 +77,7 @@ export function S14() {
       {f >= BOUNCE && f < EPOCH + 10 && (
         <AbsoluteFill style={{ transform: `translateY(${f < EPOCH ? r1.inY : r2.outY}px)` }}>
           <Camera scale={bouncePush}>
-            <Sequence from={BOUNCE} layout="none"><Slot slot="bounce" from={TAKE_FROM.bounce} /></Sequence>
+            <Sequence from={BOUNCE} layout="none"><Slot slot="bounce" plate={BOUNCE_PLATE} from={TAKE_FROM.bounce} /></Sequence>
           </Camera>
         </AbsoluteFill>
       )}
@@ -84,7 +85,7 @@ export function S14() {
 
       {/* the Hosts page: the epoch claim, then the result lifts off the glass */}
       {f >= EPOCH && (
-        <AbsoluteFill style={{ transform: `translateY(${r2.inY}px)`, filter: rack > 0.01 ? `blur(${(2.4 * rack).toFixed(2)}px) brightness(${1 - 0.45 * rack})` : undefined }}>
+        <AbsoluteFill style={{ transform: `translateY(${r2.inY}px)`, filter: rack > 0.01 ? `blur(${(3 * rack).toFixed(2)}px) brightness(${1 - 0.55 * rack})` : undefined }}>
           <Camera scale={epochPush} fx={EPOCH_FOCUS.fx} fy={EPOCH_FOCUS.fy}>
             <ScreenFrame title="Community hosts" mode="released" titleAt={EPOCH}>
               <Sequence from={EPOCH} layout="none"><Slot slot="epoch" from={TAKE_FROM.epoch} crop={CONTENT_CROP} /></Sequence>

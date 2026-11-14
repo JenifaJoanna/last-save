@@ -53,9 +53,9 @@ export const EC_CARDS: CardSpec[] = [
     mark: { line: 0, a: 14, b: 29, at: 176, kind: "under" },
   },
   {
-    eyebrow: "03 · The refund", at: 268,
+    eyebrow: "03 · The refund", at: 262, // prints while the card is still scrolling in: never an empty box on screen
     lines: [
-      { text: "“Consumers may be entitled to", big: true, at: 274 },
+      { text: "“Consumers may be entitled to", big: true, at: 266 },
       { text: "proportionate refund", big: true, at: 308 },
       { text: "of their purchases.”", big: true, at: 310 },
     ],

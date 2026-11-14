@@ -56,3 +56,21 @@ export const TERM_CROP = { x: 68 / 1920, y: 98 / 1080, w: 1784 / 1920, h: 924 / 
 /** Row of each lifted t-host line in the take (0 = the `$ pnpm host` line). Guesses from host/lib order. TUNE. */
 export const HOST_ROWS = { walrus: 3, hash: 6, provenance: 4, snapshot: 8, register: 11 };
 export const TERM_ROW = { top: 18 / 924, h: 34.4 / 924 }; // first row offset and row height, as fractions of TERM_CROP.h
+
+// ---- v2 legibility pass: key lines lifted as film type (≥ 56 px after camera, ≥ 45 f, ≤ 4 px/f). Positions are TUNE. ----
+/** S11 toast body, verbatim from web/src/lib/wallet.tsx (gasless toast). Title is texture. */
+export const KEY_TOAST = { title: "Refund sent", body: "Gas paid by the relayer: you paid 0 Ⓝ." };
+/** S11 end: the pool after the pledges (0.2, proof readback phase 10), then the post-shutdown sale split from
+ * contracts/licence/src/ops.rs (10 % ops budget, the rest to the pool). TBD (dev run config) until the judge proof. */
+export const KEY_SPLIT = { before: "0.200", after: "0.425", line: "+0.225 Ⓝ: 90% of the 0.25 Ⓝ sale · 10% to ops" };
+/** S13 key lines in the host CLI's own formats (host/lib/mirrors.mjs, provenance.mjs). TBD (dev run): values from
+ * proof/launch-v2walrus.json (walrus aggregator mirror; commit c47563b, Rekor 3874867299, logged 09:30 UTC). */
+export const KEY_WALRUS = ["walrus aggregator.walrus-testnet.walrus.space …", "200, sha256 matches on-chain ✓"];
+export const KEY_PROVENANCE = ["provenance ✓ built by workflow", ".github/workflows/release-build.yml", "at commit c47563b, logged 2026-11-14 09:30 UTC", "(Rekor #3874867299)"];
+/** Layout (TUNE): S11 toast centre, S13 lift band centre (content px), S12 key line top (frame px). */
+export const LAYOUT = { toast: { x: 960, y: 540 }, s13LiftY: 640, s12LineY: 880 };
+/** S14 stand-ins while `back` / `bounce` are pending, so the open never sits on a near-black "Take pending" card
+ * (scripts/check-dead-air). Game-client plates from public/plates; tagged as placeholders by Slot. */
+export const BACK_PLATE = "match.png";
+export const BOUNCE_PLATE = "kill-lost.png";
+export const HOSTBTN_PLATE = "status-released.png"; // S13 stand-in while `hostbtn` is pending (no dead air)

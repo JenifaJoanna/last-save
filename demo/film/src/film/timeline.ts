@@ -2,7 +2,8 @@
 // with scribe_v3) plus the beats without VO. Change a length here and every later scene moves with it.
 import { FPS } from "../ds/tokens";
 
-export type SceneId = "S01" | "S02" | "S03" | "S04" | "S05" | "S06" | "S07" | "S08" | "S09" | "S10" | "S11" | "S12" | "S13" | "S14" | "S15" | "S16" | "S17";
+/** XO is the X cut's cold open (src/film/XOpen.tsx); it is placed only by src/film/xcut.ts, never in SCENES. */
+export type SceneId = "XO" | "S01" | "S02" | "S03" | "S04" | "S05" | "S06" | "S07" | "S08" | "S09" | "S10" | "S11" | "S12" | "S13" | "S14" | "S15" | "S16" | "S17";
 export interface SceneSpec { id: SceneId; name: string; dur: number; vo?: string; voAt?: number }
 
 /** dur and voAt in seconds; voAt is relative to the scene start. VO lengths (s): V01 4.80, V02 3.68, V03 11.68,

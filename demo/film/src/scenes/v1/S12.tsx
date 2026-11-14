@@ -17,6 +17,9 @@ import { PlinthTag, Tick } from "./g2/MachineTags";
 import { beat, CL, easeInOut, keys, lerp, prog } from "./g2/motion";
 import { S11 } from "./S11";
 import { S13 } from "./S13";
+import { ShaKeyLine } from "./g5/s12-key";
+
+const TEX = 0.45; // v2 legibility: plinth tags and flashes are texture; the sha256 line is the beat
 
 const WAL = { x: -260, y: -260 }, IA = { x: 260, y: 260 };
 const W = { publicW: beat("S12", 0.86), walrus: beat("S12", 2.26), internet: beat("S12", 3.54) };
@@ -62,8 +65,8 @@ export function S12() {
               <div style={{ position: "absolute", inset: 0, borderRadius: 30, background: `rgba(0,0,0,${0.5 * (1 - rise * 0.7)})`, filter: `blur(${16 + 30 * rise}px)` }} />
             </OnFloor>
             <Cartridge x={WAL.x} y={WAL.y} z={PAD_H + lift} gold={1} frame={f} hash={hash} />
-            <PlinthTag f={f} x={WAL.x} y={WAL.y} z={PAD_H + CART.h} at={W.publicW - 4} label="Walrus" sub={sub} gold fade={tagFade} />
-            <PlinthTag f={f} x={IA.x} y={IA.y} z={PAD_H + CART.h} at={W.publicW + 4} label="Internet Archive" sub={sub} gold fade={tagFade} />
+            <PlinthTag f={f} x={WAL.x} y={WAL.y} z={PAD_H + CART.h} at={W.publicW - 4} label="Walrus" sub={sub} gold fade={tagFade * TEX} />
+            <PlinthTag f={f} x={IA.x} y={IA.y} z={PAD_H + CART.h} at={W.publicW + 4} label="Internet Archive" sub={sub} gold fade={tagFade * TEX} />
           </Floor>
         </AbsoluteFill>
       </AbsoluteFill>
@@ -73,8 +76,11 @@ export function S12() {
           <Sequence from={-(scene("S11").frames - 1)} layout="none"><Freeze frame={scene("S11").frames - 1}><S11 /></Freeze></Sequence>
         </AbsoluteFill>
       )}
+      <AbsoluteFill style={{ filter: "blur(2px)" }}>
       <Flash f={f} at={W.walrus - 4} dur={26} slot="x-walrus2" path={`walruscan.com/testnet/blob/${short(FACTS.walrusBlob)}`} rect={{ x: 70, y: 120, w: 1040, h: 585 }} tilt={1} />
       <Flash f={f} at={W.internet - 4} dur={26} slot="x-archive" path={`archive.org/details/${short(FACTS.archiveItem)}`} rect={{ x: 810, y: 120, w: 1040, h: 585 }} tilt={-1} />
+      </AbsoluteFill>
+      <ShaKeyLine f={f} at={W.publicW - 2} out={RISE} />
       {hand > 0 && (
         <AbsoluteFill style={{ opacity: interpolate(hand, [0, 1], [0, 1], CL) }}>
           <Freeze frame={0}><S13 /></Freeze>

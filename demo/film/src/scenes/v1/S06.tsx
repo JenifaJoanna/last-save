@@ -1,39 +1,38 @@
 // S06 Try to kill it (9.8 s, V06 at 0.3 s). Opens in S05's machine on the glowing licence contract block ("0 access
-// keys"); the camera rises and pulls back until the floor is the CRT and the bezel frames it: ScreenFrame "Try to kill it".
-// The camera pushes onto the attack menu and the attacker log, and the `attack` take is cut so each refusal prints on
-// its word ("release", "fake", "drain"; 4 and 5 together on "refuses"); red lines lift 1.3x under the menu.
-// A 1-s `x-attack` explorer flash, then the camera eases back to the full screen with the last red line held, and the
-// screen content rolls up one screen height (10 f, stepped) onto the `t-factory` terminal take that opens S07.
+// keys"); the camera rises and pulls back until the floor is the CRT and the bezel frames it: ScreenFrame "Try to kill
+// it", whose page title is the first readable line. A 1-s `x-attack` explorer flash, then the `attack` take is cut so
+// each refusal prints on its word ("release", "fake", "drain"; 4 and 5 together on "refuses"). As each prints, the take
+// drops to texture and the refusal lifts off the log as 56 px film type into a stacked list under "Refused n/5". All
+// five hold together, then the screen content (take and list) rolls up one screen height (10 f, stepped) onto the
+// `t-factory` terminal take that opens S07.
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
 import { Camera, CONTENT, ScreenFrame } from "../../ds/screen";
 import { stepped, T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
-import { HITS, LEAD, PUSH } from "./g3/attack";
-import { AttackTake } from "./g3/AttackTake";
+import { FLASH_AT, HITS, LEAD, TEXTURE } from "./g3/attack";
+import { AttackTake, RefusalList } from "./g3/AttackTake";
 import { FACTORY } from "./g3/factory";
 import { Flash } from "./g3/Flash";
-import { easeInOut, easeOut, lerp, prog } from "./g3/motion";
 import { Machine } from "./g3/Machine";
+import { easeInOut, lerp, prog } from "./g3/motion";
 import { TermTake } from "./g3/TermTake";
 
 const ATTACK_HINTS = ["1-5 attack", "↑↓ choose", "Enter run", "S summary"];
 const Z0 = 1.32; // at f0 the content rect fills the frame: the machine is all we see
+const FY = CONTENT.y + CONTENT.h / 2;
 
 export function S06() {
   const f = useCurrentFrame();
   const total = scene("S06").frames;
   const ROLL = total - 10;
-  const FLASH = HITS[HITS.length - 1].cue + 12;
 
-  // Camera: pull back out of the machine (f0-22), hold on the titled screen, push onto menu + log (40-70), drift,
-  // then ease back to the full screen after the flash so S07 starts on the settled ScreenFrame.
+  // Camera: pull back out of the machine (f0-22), a slow +3 % push on the page, eased back to 1.0 before the roll.
   const pull = prog(f, 0, 22, easeInOut);
-  const push = prog(f, 40, 70, easeOut) * (1 - prog(f, FLASH + 30, ROLL - 2, easeInOut));
-  const drift = 1 + 0.025 * prog(f, 70, FLASH + 30);
-  const scale = lerp(lerp(Z0, 1, pull), PUSH.scale * drift, push);
-  const fy = lerp(536, PUSH.fy, push);
+  const scale = lerp(Z0, 1, pull) * (1 + 0.03 * prog(f, 22, 200) - 0.03 * prog(f, 236, ROLL - 2, easeInOut));
+  const toScreen = (x: number, y: number) => ({ x: 960 + (x - 960) * scale, y: FY + (y - FY) * scale });
 
   const machine = f < 24 ? 1 - stepped(prog(f, 12, 22), 5) : 0;
+  const texture = stepped(prog(f, HITS[0].cue - 4, HITS[0].cue + 2), 3);
   const roll = stepped(prog(f, ROLL - 1, total - 1), 5) * CONTENT.h;
   const rolling = f >= ROLL;
   const live = HITS.filter((h) => f >= h.cue - LEAD).length;
@@ -43,11 +42,13 @@ export function S06() {
 
   return (
     <AbsoluteFill style={{ background: T.void }}>
-      <Camera scale={scale} fx={PUSH.fx} fy={fy}>
+      <Camera scale={scale} fx={960} fy={FY}>
         <ScreenFrame title={rolling ? "Terminal" : "Try to kill it"} titleAt={rolling ? ROLL : 8} mode="online"
           hints={rolling ? undefined : ATTACK_HINTS} keys={rolling ? undefined : { primary: `Attack ${n}`, pressed }}>
           <AbsoluteFill style={{ transform: `translateY(${-roll}px)` }}>
-            <AttackTake f={f} total={total} />
+            <AbsoluteFill style={{ opacity: lerp(1, TEXTURE.opacity, texture), filter: texture > 0 ? `blur(${TEXTURE.blur * texture}px)` : undefined }}>
+              <AttackTake total={total} />
+            </AbsoluteFill>
             {machine > 0 && <AbsoluteFill style={{ opacity: machine }}><Machine f={f} /></AbsoluteFill>}
           </AbsoluteFill>
           {f >= ROLL - 1 && (
@@ -60,7 +61,11 @@ export function S06() {
           )}
         </ScreenFrame>
       </Camera>
-      <Flash f={f} at={FLASH} dur={30} slot="x-attack" path="testnet.nearblocks.io/txns/…" />
+      {/* the list rides the roll with the screen content and is clipped to the CRT content rect */}
+      <AbsoluteFill style={{ clipPath: `inset(${CONTENT.y}px ${1920 - CONTENT.x - CONTENT.w}px ${1080 - CONTENT.y - CONTENT.h}px ${CONTENT.x}px)` }}>
+        <AbsoluteFill style={{ transform: `translateY(${-roll}px)` }}><RefusalList f={f} toScreen={toScreen} camScale={scale} /></AbsoluteFill>
+      </AbsoluteFill>
+      <Flash f={f} at={FLASH_AT} dur={30} slot="x-attack" path="testnet.nearblocks.io/txns/…" />
     </AbsoluteFill>
   );
 }
