@@ -25,7 +25,7 @@ export const CONFIG = {
 /** Two sets: "judge" (ember-rift; S01-S09, S11) -> run-facts.json, "after" (v2dev's real afterlife; S10, S12-S16) ->
  * run-facts-after.json. A key outside a set's list is still written when readable, and is never reported missing. */
 export const SET_KEYS = {
-  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolBefore", "postBuyDelta", "poolTotal", "runwayEpochs", "epochCap", "epochLen"],
+  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolTotal"], // exactly what S01-S11 print; poolBefore, postBuyDelta, runwayEpochs, epochCap and epochLen are read when present, never required
   after: ["releasedSha", "releasedKey", "archiveItem", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce", "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
 };
 const BOTH = ["instance", "walrusBlob", "walrusHost", "workflow", "commit7", "rekorIndex", "rekorLogged"];
@@ -75,7 +75,7 @@ export const MAP = [
   { key: "studio2Account", src: "studio2", at: "steps[instance].instance | contract", get: (S) => S.studio2.steps.find((s) => s.step === "instance" && s.instance)?.instance ?? S.studio2.contract },
   { key: "price", src: "run", at: "preflight.config.price", get: (S) => yN(cfg(S).price) },
   { key: "fundPct", src: "run", at: "preflight.config.fund_bps / 100", get: (S) => cfg(S).fund_bps / 100 },
-  { key: "lockedShare", src: "run", at: "buy.readback[licence <buyer>].pot_share", get: (S) => yN(phase(S.run, "buy").readback[`licence ${S.buyer}`]?.pot_share) },
+  { key: "lockedShare", src: "run", at: "buy.readback[licence <buyer>].pot_share", get: (S) => yN(phase(S.run, "buy").readback[`licence ${S.run.takes?.store?.buyer ?? S.buyer}`]?.pot_share) },
   // the store take's own buy: run.takes.store when the run records it (the judge run's on-camera buy), else the buy phase
   { key: "licenceNo", src: "run", at: "takes.store.token_id | buy.readback[licence <buyer>].token_id",
     get: (S) => String(S.run.takes?.store?.token_id ?? need(phase(S.run, "buy").readback[`licence ${S.buyer}`]?.token_id, "buyer licence token_id")) },
@@ -99,10 +99,10 @@ export const MAP = [
     get: (S) => phase(S.run, "release").readback.released_key ?? S.extra.releasedKey },
   { key: "poolBefore", src: "run", at: "choose.readback.totals.pool", get: (S) => yN(phase(S.run, "choose").readback.totals.pool, 3) },
   { key: "postBuyDelta", src: "run", at: "post-death-buy assertion 'pool rose by 90%...'", get: (S) => fix(/^([\d.]+) N of/.exec(assertion(S.run, "post-death-buy", /^pool rose by 90%/).detail)?.[1] ?? bad("no 'x N of' in detail"), 3) },
-  { key: "poolTotal", src: "run", at: "claim assertion 'pool decreased' (before value)", get: (S) => fix(poolAfter(S), 3) },
-  { key: "runwayEpochs", src: "run", at: "floor(pool after buy / preflight.config.pool.epoch_cap)", get: (S) => Math.floor(Number(poolAfter(S)) / Number(yN(cfg(S).pool.epoch_cap))) },
-  { key: "epochCap", src: "run", at: "preflight.config.pool.epoch_cap", get: (S) => yN(cfg(S).pool.epoch_cap) },
-  { key: "epochLen", src: "run", at: "preflight.config.pool.epoch_ms", get: (S) => `${cfg(S).pool.epoch_ms / 60000} min` },
+  { key: "poolTotal", src: "run", at: "afterlife.pool_near | claim assertion 'pool decreased' (before value)", get: (S) => fix(S.run.afterlife?.pool_near ?? poolAfter(S), 3) },
+  { key: "runwayEpochs", src: "run", at: "afterlife.runway_epochs | floor(pool after buy / preflight.config.pool.epoch_cap)", get: (S) => S.run.afterlife?.runway_epochs ?? Math.floor(Number(poolAfter(S)) / Number(yN(cfg(S).pool.epoch_cap))) },
+  { key: "epochCap", src: "run", at: "afterlife.epoch_cap_near | preflight.config.pool.epoch_cap", get: (S) => (S.run.afterlife?.epoch_cap_near !== undefined ? String(Number(S.run.afterlife.epoch_cap_near)) : yN(cfg(S).pool.epoch_cap)) },
+  { key: "epochLen", src: "run", at: "afterlife.epoch_ms | preflight.config.pool.epoch_ms", get: (S) => `${(S.run.afterlife?.epoch_ms ?? cfg(S).pool.epoch_ms) / 60000} min` },
   { key: "hostPaid", src: "run", at: "claim.readback.claim.paid", get: (S) => yN(phase(S.run, "claim").readback.claim.paid) },
   { key: "sessionsVerified", src: "run", at: "claim.readback.claim.verified", get: (S) => need(phase(S.run, "claim").readback.claim.verified, "claim.verified") },
   { key: "payoutEpoch", src: "run", at: "evm-payout.readback.final_payout.epoch", get: (S) => need(payout(S).epoch, "final_payout.epoch") },
@@ -126,5 +126,5 @@ export const MAP = [
 /** Cross-checks between values (the film shows some numbers twice and they must agree). */
 export const CHECKS = [
   (V, set) => set !== "after" ? null : (V.payoutNear === V.hostPaid ? null : `payoutNear ${V.payoutNear} != hostPaid ${V.hostPaid} (S14 lifts the amount S15 flies to the Base row)`),
-  (V, set) => set !== "judge" ? null : (Math.abs(Number(V.poolBefore) + Number(V.postBuyDelta) - Number(V.poolTotal)) < 0.0015 ? null : `poolBefore + postBuyDelta (${V.poolBefore} + ${V.postBuyDelta}) != poolTotal ${V.poolTotal}`),
+  (V, set) => set !== "judge" || V.poolBefore == null || V.postBuyDelta == null ? null : (Math.abs(Number(V.poolBefore) + Number(V.postBuyDelta) - Number(V.poolTotal)) < 0.0015 ? null : `poolBefore + postBuyDelta (${V.poolBefore} + ${V.postBuyDelta}) != poolTotal ${V.poolTotal}`),
 ];
