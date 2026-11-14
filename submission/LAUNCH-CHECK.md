@@ -3,11 +3,13 @@
 - Run: Sun 15 Nov 2026, 00:55 to 01:47 IST. Browser and build work paused from 00:59 to 01:03 IST while another
   project recorded. The run used one headless session at a time and two production builds in all: one of the deployed
   code (00:55) and one with the fixes (01:45).
+- Follow-up on production, 15 Nov 02:01 to 02:06 IST, after redeploying `1e8edfa` (this run's fixes), `ed1ed8a` (phone
+  keycap) and `48314dc` (host URLs): the clipped-text and modal-close rows below were re-run on the deployed URL.
 - URL: https://last-save.pages.dev, wired to `ember-rift.lastsave-factory.testnet` (the judge instance).
 - Commit deployed to production: `051cdce` (Cloudflare Pages production deployment `16205746`, listed at 00:55 IST).
   Repo HEAD was `1ed68aa` at the start and `4148f80` (another session's film commits) during the checks. The web,
-  game and scripts code of both is identical to `051cdce`. The fixes from this run are in `44cc7ee` (pushed) and
-  are **not deployed**. This file is in the commit after it.
+  game and scripts code of both is identical to `051cdce`. The fixes from this run are in `44cc7ee`, deployed
+  to production with `1e8edfa` after the run. This file is in the commit after it.
 - Chain state, read directly over RPC (drpc):
   - 00:58 IST: Dead, cause `players` (holders reported it down, 14 Nov 22:44 IST). The release was **pending**: not
     released, last error "Release timed out, retry". The on-chain log showed a release retry about every 10 min.
@@ -80,7 +82,7 @@
 | Data as designed views | yes | PASS | bracketed fact box, stat rows, probe lines, escrow steps, money rows, log timeline, decoded key | none |
 | Numbers real and sourced | yes | PASS | prod `/`: 0 access keys, 0 Ⓝ locked, 0.423 Ⓝ pool, 0 hosts and Store 0.25 Ⓝ all match RPC (pool 0.4233 Ⓝ, shown rounded down to 3 decimals) | none |
 | No horizontal overflow at 1440 / 1000 / 390 | yes | PASS | 0 px page overflow and nothing past the right edge on 57 prod and 59 local loads. Only the `/how` diagram scrolls sideways inside its own card at 390 (466 px), with no cue | none (cue: proposed) |
-| No clipped text | yes | FAIL (partly fixed) | 1. Escrow step "2h ago · licence holders reported the server down" cut on `/status` and `/app/afterlife` at 1440 (330 px) and 390 (250 px). 2. Store check "0 access keys on ember-rift.lastsave-factory.testn…" cut at 1440 (419 px) and 390 (254 px). 3. Library "Emberwing" cut at 390 (127 px). 4. Phone primary keycap "Buy · fund hosts" and "Go to store" cut at 99 px. Deliberate truncation stays: hashes on `/judges` and the Base address (each has a copy button), the official URL on Play, and the account chip at 390 (full id in its title and explorer link) | 1–3: `44cc7ee`. On the fixed local production build, the audit found 0 clipped text on mira's Library, Store and Afterlife and on fanhost's Store and Library at 390, except the deliberate truncation, and Emberwing shows in full. 4: a wrapping keycap was tried and reverted, because "Buy · fund hosts" then overflowed its 40 px keycap (scroll height 67 px): proposed |
+| No clipped text | yes | PASS (15 Nov 02:05 IST, prod `48314dc`) | Prod, leaf-text audit: `/status` (which renders the Afterlife view, incl. the escrow step) at 390 / 768 / 1440 and the landing page at 390 / 1440 show no clipped text. The phone primary keycap is 122 px at 390 and wraps "Buy · fund hosts" and "Waiting for wallet…" to two lines inside the key; every other label fits on one line; 768 and 1440 are unchanged. Signed-in elements (Store check, Library Emberwing, Afterlife escrow step): fixed in `44cc7ee`, checked on the local production build and deployed at `1e8edfa`; the deployed URL cannot reach them without a wallet. Deliberate truncation stays: the hashes on `/judges` (title + copy button), the Base address, the official URL on Play and the account chip at 390 | 1–3: `44cc7ee`. 4 (keycap): `ed1ed8a`, the one-glyph ◂ ▸ keys give their share to the primary key, which wraps at 13 px (set in CSS, since `button { font: inherit }` beats size utilities). New: the persistent community host URL was cut at 390 on `/status`; host endpoints now wrap with the full URL in a title (`48314dc`) |
 | Sticky elements | yes, judged under §12 | PASS | §12: no sticky elements; the chrome is a fixed full-height layout and only the screen scrolls | none |
 
 ## 5. Sign-in page
@@ -95,7 +97,7 @@
 | Phone width | yes | PASS | prod 390: no clipped text; the primary keycap reads "Connect" in full; the rows wrap | none |
 | Wallet groups: NEAR Connect first, judge demo secondary and labelled | yes (rebuilt sign-in) | PASS | prod: group 1 "Your wallet · NEAR Connect" has 1 NEAR wallet (gas-free tag) and 2 Ethereum wallet. Group 2 is "Judge demo · no wallet · nothing is saved, nothing is signed", with 3 Practice offline and 4 Tap-through preview | none |
 | NEAR Connect modal renders themed | yes (rebuilt sign-in) | PASS | prod, key 1 opens "Select wallet" with Meteor, Intear, Ledger, Nightly, Ethereum Wallets and NEAR CLI. 1440: a centred 420×522 panel. 390: a full-width bottom sheet with 356 px rows. Both use IBM Plex Mono and the ink panel, with 0 overflow (screenshots taken) | none |
-| NEAR Connect modal closes cleanly | yes (rebuilt sign-in) | FAIL | prod: a backdrop click closes the modal and stays on `/signin`. Esc also closes it and the toast says "Sign-in cancelled · Nothing was signed and no key was added", but the terminal's own Esc = Back fired too and left `/signin` for `/`. The arrow keys, S and Enter would also act behind the modal | `44cc7ee`: terminal keys ignore keystrokes while the wallet modal is open (`nav.ts` `typing`). On the fixed local build, with the modal open, → stayed on `/signin`; Esc closed the modal and stayed on `/signin`; a second Esc, with no modal, went Back to `/` as before |
+| NEAR Connect modal closes cleanly | yes (rebuilt sign-in) | PASS (15 Nov 02:06 IST, prod `48314dc`) | Prod: key 1 opens the wallet modal; Esc closes it and stays on `/signin`. Before the fix, Esc also fired the terminal's Back and left for `/` | `44cc7ee` (terminal keys ignore keystrokes while the wallet modal is open), deployed at `1e8edfa` |
 
 ## 6. Data and copy correctness
 
@@ -145,12 +147,12 @@
    `brightness-0 invert`. It needs an inline or mask-image rendering to take NEAR's brand colour on hover.
 3. The `/how` diagram at 390 scrolls 466 px sideways inside its card with no cue. Add a stacked phone variant or a
    "scroll ▸" hint.
-4. The phone primary keycap truncates at 99 px: "Buy · fund hosts" on Store and "Go to store" on an empty Library,
+4. Done in `ed1ed8a` (was: the phone primary keycap truncates at 99 px: "Buy · fund hosts" on Store and "Go to store" on an empty Library,
    in the `KeycapBar` in `web/src/components/terminal/chrome.tsx`.
    - Tried and reverted: wrapping the label. Even with narrower ◂ ▸ keys, live styles at 131 px still overflowed the
      40 px keycap.
    - Options: short phone labels ("Buy", "Store"), a smaller phone font for the primary keycap, or the primary keycap
-     on its own full-width row above the four keys.
+     on its own full-width row above the four keys.)
 
 ## Not covered, and why
 
@@ -171,13 +173,13 @@
     `35d1943`, deployed);
   - identity block with sign out, and the sign-in page at phone width (both resolved by the rebuilt sign-in).
 - Clipped text is FAIL again, on four different elements, three of them shown only signed in. The earlier clipped
-  titles and rows now wrap. Three of the four are fixed in `44cc7ee` (not deployed); the phone primary keycap is proposed.
+  titles and rows now wrap. Three of the four are fixed in `44cc7ee`, the phone primary keycap in `ed1ed8a`; all deployed, and the row is PASS on prod.
 - Still FAIL: the logo row (per-logo role labels added in `44cc7ee`; the brand-colour hover is proposed) and the
   sign-in visual below 1024 px (proposed).
 - New rows for the rebuilt sign-in (5):
   - wallet groups: PASS;
   - modal themed: PASS;
-  - modal closes cleanly: FAIL, fixed in `44cc7ee`;
+  - modal closes cleanly: FAIL, fixed in `44cc7ee`; PASS on prod after the redeploy;
   - toasts with transaction hashes: NOT COVERED;
   - payout binder: NOT COVERED.
 - Accounts: fanhost replaces bank1 as the no-licence account, and yuna replaces dario as the refunded one.
@@ -192,6 +194,5 @@
 
 ## Summary
 
-57 items: PASS 38 · FAIL 4 (1 fixed in `44cc7ee`, 2 partly fixed, 1 proposed) · NOT COVERED 5 · not
-applicable 10. Until the parent redeploys `44cc7ee`, production still shows all 4 FAILs. A redeploy clears the modal
-Esc FAIL and three of the four clipped-text elements, and adds the logo role labels.
+57 items, as of 15 Nov 02:06 IST on prod `48314dc`: PASS 40 · FAIL 2 (the logo row, partly fixed: role labels deployed, brand-colour hover proposed; the sign-in visual below 1024 px, proposed) · NOT COVERED 5 · not applicable 10.
+At 01:47 IST, before the redeploys, it was PASS 38 · FAIL 4; the clipped-text and modal-close rows passed on prod after them.

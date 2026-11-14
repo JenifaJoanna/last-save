@@ -75,8 +75,9 @@ deployed page; deleted pages listed as expected gone).
 ## Submission drafts
 - `submission/FORM.md`: idea text 1,885 chars. Declaration fields left EMPTY for the submitter: lead name, email, team
   size, mainnet payout address, consent. `demoUrl` = the submitter's X post (draft `submission/X-POST.md`, not posted).
-- `submission/LAUNCH-CHECK.md`: re-run end to end on production on 15 Nov after the wallet-first rebuild: 57 items,
-  38 pass, 4 fail (1 fixed, 2 partly fixed, 1 proposed; fixes deployed at 1e8edfa), 5 not covered, 10 n/a.
+- `submission/LAUNCH-CHECK.md`: re-run end to end on production on 15 Nov after the wallet-first rebuild, fixes
+  deployed and re-checked on prod at 02:06 IST: 57 items, 40 pass, 2 fail (logo hover colour and the sign-in visual below
+  1024 px, both proposed), 5 not covered, 10 n/a.
 
 ## Known limits (details in README)
 - ember-rift's release took 14 inconclusive runs: the pinned enclave programs read the chain through public RPCs (FastNEAR,
