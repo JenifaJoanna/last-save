@@ -15,13 +15,14 @@
     {
       "id": "03-why",
       "beat": "0:22 why a studio opts in",
-      "text": "Players took this fight to the European Commission. Last Save lets a studio make the promise in code, and earn a royalty on every resale.",
-      "rev": 2
+      "text": "In June, Europe chose not to make it law, and asked the industry for an end-of-life code instead. Last Save is that promise, enforced by code, with a refund already locked in.",
+      "rev": 4
     },
     {
       "id": "04-buy",
       "beat": "0:30 buy",
-      "text": "Each licence is an NFT on NEAR. Forty percent of every sale is locked, by contract, for the day the studio leaves."
+      "text": "Each licence is an NFT on NEAR. The studio earns a royalty on every resale, and forty percent of every sale is locked, by contract, for the day the studio leaves.",
+      "rev": 4
     },
     {
       "id": "05-promise",
@@ -77,5 +78,5 @@
     }
   ],
   "rules": "DEMO_MAGIC_ROOM_SPEC script voice: mechanisms not claims, no UI mechanics, no punchline cadence, plain close; numbers from the live contract config (40% = fund_bps 4000, three probes = fail_threshold 3).",
-  "approved": "v3 lines (05b, 08, 10b) approved by the owner via the coordinator, 14 Nov 12:10 IST"
+  "approved": "v4 lines 03-why and 04-buy approved by the owner via the coordinator, 14 Nov; v3 lines 05b, 08, 10b approved earlier"
 }
