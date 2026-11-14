@@ -212,6 +212,12 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
   needs its own client id for our domains. No passkey sign-in: that NEAR Connect executor is mainnet-only.
 - The game server's single-use NEP-413 login nonce (replay refusal) landed after the ember-rift build was cut, so the
   judge instance's server checks recipient, host and expiry but not nonce reuse.
+- Not done yet: Ethereum-wallet (0x) accounts can sign NEAR transactions but cannot log into the game (that executor
+  cannot sign NEP-413 messages; an EIP-191 login branch is planned). The MetaMask paths (sign-in and the payout address
+  by signature) are built but not yet run by a person with a real wallet; the Meteor Web paths were (sign-in, buy, game
+  login). The second studio's game (Tidebreak) is launched but not on sale: its key escrow needs an OutLayer run.
+  HOT Kit needs `VITE_HOT_API_KEY` and WalletConnect needs `VITE_WALLETCONNECT_PROJECT_ID`; neither is set, so
+  WalletConnect wallets stay hidden.
 - The deploy-to-Cloudflare template deploys into the clicker's own account; we prove it by local build and dry run.
 - Testnet only. Demo timers are seconds-scale; production defaults are days.
 
