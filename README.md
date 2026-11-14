@@ -195,6 +195,12 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
   Cloudflare evicted the Durable Object. Liveness is judged by probes, so this only affects how quickly players notice.
 - OutLayer runs occasionally time out (we saw ~10 minutes of timeouts once). Those runs are inconclusive by design and
   can be retried by anyone; each failed attempt costs its caller 0.001 testnet NEAR.
+- The pinned release and probe programs read chain state inside the enclave through public RPCs (FastNEAR, then
+  dRPC). On the deadline night both rate-limited (HTTP 429), so those reads failed, OutLayer returned a failure and the
+  contract counted each run inconclusive, as designed. The judge instance `ember-rift` therefore died by holder reports
+  (2 of 4, after one counted probe failure), and its release waits for the RPCs to answer again; anyone can retry it.
+  `v1` and `v2dev` show completed, real OutLayer releases with the same code. Fix for v3: more RPC fallbacks, including
+  an archival endpoint, inside the wasm.
 - A host account needs ~0.05 testnet NEAR per paid claim; gas-free claims come out of the instance's ops budget.
 - Gas-free holder actions need the wallet to add the app's function-call key at sign-in (NEAR Connect's
   `addFunctionCallKey`); a wallet that declines, and every Ethereum wallet, pays normal gas instead.
