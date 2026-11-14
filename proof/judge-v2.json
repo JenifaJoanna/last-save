@@ -780,6 +780,143 @@
     {
       "name": "release",
       "title": "key released and verified",
+      "started_at": "2026-11-14T19:45:31.730Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "released_key": "d5080ebc3504c369f810a8a5075195171c84964e165327acad6d2e1bc59d8fe7",
+        "released_at_ms": 1794684901833
+      },
+      "assertions": [
+        {
+          "name": "released_key is public on chain",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sha256(K) equals key_commitment",
+          "pass": true,
+          "detail": "commitment 6144be6dd602..."
+        },
+        {
+          "name": "released_at_ms is set",
+          "pass": true,
+          "detail": "1794684901833"
+        }
+      ],
+      "notes": [
+        "key already released, verifying only"
+      ],
+      "ended_at": "2026-11-14T19:45:32.200Z"
+    }
+  ],
+  "unenforced": [
+    "spend cap (3 N) is only reported above, not blocked by code"
+  ],
+  "v2": true,
+  "balances_start": {
+    "lastsave-mira.testnet": "0.7831 N",
+    "lastsave-kofi.testnet": "0.6367 N",
+    "lastsave-yuna.testnet": "0.5844 N",
+    "lastsave-dario.testnet": "0.5981 N",
+    "lastsave-fanhost.testnet": "1.1037 N"
+  },
+  "resumed_at": [
+    "2026-11-14T16:10:18.896Z",
+    "2026-11-14T16:25:24.644Z",
+    "2026-11-14T16:32:27.335Z",
+    "2026-11-14T17:23:43.353Z",
+    "2026-11-14T17:51:38.732Z",
+    "2026-11-14T19:45:30.115Z"
+  ],
+  "superseded": [
+    {
+      "name": "factory",
+      "title": "factory lists the instance, global code, 0 keys",
+      "started_at": "2026-11-14T16:07:34.600Z",
+      "status": "passed",
+      "txs": [],
+      "readback": {
+        "factory_instances": [
+          "v2dev.lastsave-factory.testnet Ready",
+          "v2walrus.lastsave-factory.testnet Ready",
+          "ember-rift.lastsave-factory.testnet Ready",
+          "tidebreak.lastsave-factory.testnet Ready"
+        ],
+        "instance_account": {
+          "code_hash": "11111111111111111111111111111111",
+          "global_contract_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+          "global_contract_account_id": null
+        }
+      },
+      "assertions": [
+        {
+          "name": "factory instances() lists the instance, status Ready",
+          "pass": true,
+          "detail": "ember-rift.lastsave-factory.testnet by lastsave-studio.testnet"
+        },
+        {
+          "name": "the instance was created through the factory (creator is the studio)",
+          "pass": true,
+          "detail": "lastsave-studio.testnet"
+        },
+        {
+          "name": "the instance runs the factory's global contract (code_hash() matches)",
+          "pass": true,
+          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 vs 4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
+        },
+        {
+          "name": "the instance has no local contract code (code_hash is all ones)",
+          "pass": true,
+          "detail": "11111111111111111111111111111111"
+        },
+        {
+          "name": "the instance has 0 access keys (born locked)",
+          "pass": true,
+          "detail": "0 keys"
+        },
+        {
+          "name": "factory code_hash() is the published licence v2 hash",
+          "pass": true,
+          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T16:07:56.699Z"
+    },
+    {
+      "name": "release",
+      "title": "key released and verified",
+      "started_at": "2026-11-14T17:24:41.396Z",
+      "status": "error",
+      "txs": [
+        {
+          "label": "release #1 (gas-free)",
+          "hash": "3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ",
+          "url": "https://testnet.nearblocks.io/txns/3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ",
+          "failure": null
+        },
+        {
+          "label": "release #2 (gas-free)",
+          "hash": "2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A",
+          "url": "https://testnet.nearblocks.io/txns/2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A",
+          "failure": null
+        }
+      ],
+      "readback": {},
+      "assertions": [
+        {
+          "name": "phase completed without an unexpected error",
+          "pass": false,
+          "detail": "fetch failed"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T17:31:30.287Z"
+    },
+    {
+      "name": "release",
+      "title": "key released and verified",
       "started_at": "2026-11-14T17:51:40.138Z",
       "status": "failed",
       "txs": [
@@ -1034,110 +1171,6 @@
       "ended_at": "2026-11-14T18:23:55.369Z"
     }
   ],
-  "unenforced": [
-    "spend cap (3 N) is only reported above, not blocked by code"
-  ],
-  "v2": true,
-  "balances_start": {
-    "lastsave-mira.testnet": "0.7831 N",
-    "lastsave-kofi.testnet": "0.6367 N",
-    "lastsave-yuna.testnet": "0.5844 N",
-    "lastsave-dario.testnet": "0.5981 N",
-    "lastsave-fanhost.testnet": "1.1037 N"
-  },
-  "resumed_at": [
-    "2026-11-14T16:10:18.896Z",
-    "2026-11-14T16:25:24.644Z",
-    "2026-11-14T16:32:27.335Z",
-    "2026-11-14T17:23:43.353Z",
-    "2026-11-14T17:51:38.732Z"
-  ],
-  "superseded": [
-    {
-      "name": "factory",
-      "title": "factory lists the instance, global code, 0 keys",
-      "started_at": "2026-11-14T16:07:34.600Z",
-      "status": "passed",
-      "txs": [],
-      "readback": {
-        "factory_instances": [
-          "v2dev.lastsave-factory.testnet Ready",
-          "v2walrus.lastsave-factory.testnet Ready",
-          "ember-rift.lastsave-factory.testnet Ready",
-          "tidebreak.lastsave-factory.testnet Ready"
-        ],
-        "instance_account": {
-          "code_hash": "11111111111111111111111111111111",
-          "global_contract_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
-          "global_contract_account_id": null
-        }
-      },
-      "assertions": [
-        {
-          "name": "factory instances() lists the instance, status Ready",
-          "pass": true,
-          "detail": "ember-rift.lastsave-factory.testnet by lastsave-studio.testnet"
-        },
-        {
-          "name": "the instance was created through the factory (creator is the studio)",
-          "pass": true,
-          "detail": "lastsave-studio.testnet"
-        },
-        {
-          "name": "the instance runs the factory's global contract (code_hash() matches)",
-          "pass": true,
-          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 vs 4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
-        },
-        {
-          "name": "the instance has no local contract code (code_hash is all ones)",
-          "pass": true,
-          "detail": "11111111111111111111111111111111"
-        },
-        {
-          "name": "the instance has 0 access keys (born locked)",
-          "pass": true,
-          "detail": "0 keys"
-        },
-        {
-          "name": "factory code_hash() is the published licence v2 hash",
-          "pass": true,
-          "detail": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1"
-        }
-      ],
-      "notes": [],
-      "ended_at": "2026-11-14T16:07:56.699Z"
-    },
-    {
-      "name": "release",
-      "title": "key released and verified",
-      "started_at": "2026-11-14T17:24:41.396Z",
-      "status": "error",
-      "txs": [
-        {
-          "label": "release #1 (gas-free)",
-          "hash": "3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ",
-          "url": "https://testnet.nearblocks.io/txns/3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ",
-          "failure": null
-        },
-        {
-          "label": "release #2 (gas-free)",
-          "hash": "2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A",
-          "url": "https://testnet.nearblocks.io/txns/2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A",
-          "failure": null
-        }
-      ],
-      "readback": {},
-      "assertions": [
-        {
-          "name": "phase completed without an unexpected error",
-          "pass": false,
-          "detail": "fetch failed"
-        }
-      ],
-      "notes": [],
-      "ended_at": "2026-11-14T17:31:30.287Z"
-    }
-  ],
   "balances_end": {
     "lastsave-mira.testnet": "0.5328 N",
     "lastsave-kofi.testnet": "0.3864 N",
@@ -1145,23 +1178,16 @@
     "lastsave-dario.testnet": "0.4478 N",
     "lastsave-fanhost.testnet": "1.1006 N"
   },
-  "net_cost_players_and_fanhost": "-0.0968 N",
-  "finished_at": "2026-11-14T18:23:56.556Z",
-  "totals": {
-    "assertions": 75,
-    "passed": 70,
-    "failed": 5,
-    "phases_passed": 8,
-    "phases_failed": 2
-  },
+  "net_cost_players_and_fanhost": "0.0000 N",
+  "finished_at": "2026-11-14T19:45:33.336Z",
   "afterlife": {
-    "read_at": "2026-11-14T18:51:16.865Z",
-    "block_height": 277696328,
+    "read_at": "2026-11-14T20:17:21.550Z",
+    "block_height": 277705134,
     "status": "Dead",
     "pool_yocto": "423299000000000000000000",
     "pool_near": "0.423",
-    "ops_budget_yocto": "1044811000000000000000000",
-    "ops_budget_near": "1.044",
+    "ops_budget_yocto": "944811000000000000000000",
+    "ops_budget_near": "0.944",
     "epoch_cap_yocto": "50000000000000000000000",
     "epoch_cap_near": "0.05",
     "epoch_ms": 120000,
@@ -1174,7 +1200,7 @@
     "supply": 5,
     "live_supply": 4,
     "cause": "players",
-    "released": false,
+    "released": true,
     "holders": {
       "lastsave-mira.testnet": {
         "token_id": "3",
@@ -1266,6 +1292,14 @@
   },
   "files": {
     "launch": "proof/launch-ember-rift.json",
-    "verify": "proof/verify-ember-rift.json"
+    "verify": "proof/verify-ember-rift.json",
+    "release": "proof/judge-v2-release.json"
+  },
+  "totals": {
+    "assertions": 72,
+    "passed": 70,
+    "failed": 2,
+    "phases_passed": 9,
+    "phases_failed": 1
   }
 }
