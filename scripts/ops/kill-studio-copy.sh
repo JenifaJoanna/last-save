@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Studio takes its own copy of the encrypted build offline: deletes the Cloudflare Pages project kiln-cdn-<name>
-# (the studio-hosted artifact mirror) so that URL really answers 404. The Walrus and GitHub copies are not the studio's to delete.
+# (the studio-hosted artifact mirror) so that URL stops serving: Cloudflare answers 522/530 at once and the name later stops
+# resolving. The Walrus and GitHub copies are not the studio's to delete.
 #   scripts/ops/kill-studio-copy.sh <name> [artifact-file]
 # Prints only its own lines (wrangler output can name the hosting account and is suppressed).
 set -euo pipefail

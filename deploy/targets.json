@@ -11,9 +11,7 @@
     "https://lastsave-relay.pages.dev/health",
     "https://emberrift-v2dev.pages.dev/",
     "https://emberrift-v2dev.pages.dev/health",
-    "https://emberrift-ember-rift.pages.dev/",
-    "https://emberrift-ember-rift.pages.dev/health",
-    "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin"
+    "https://emberrift-ember-rift.pages.dev/"
   ],
   "workers": [
     "emberrift-arena",
@@ -23,6 +21,9 @@
     "emberrift-ember-rift-arena"
   ],
   "expected_gone": [
-    "https://kiln-cdn-v2walrus.pages.dev/"
+    "https://kiln-cdn-v2walrus.pages.dev/",
+    "https://kiln-cdn-ember-rift.pages.dev/",
+    "https://emberrift-ember-rift.pages.dev/health",
+    "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin"
   ]
 }
