@@ -15,17 +15,30 @@ REMOTE_DIR="${M2_DIR:-lastsave}"
 LOCAL_OUT="$REPO/demo/film/out"
 mkdir -p "$LOCAL_OUT"
 
+SSH=(ssh -o BatchMode=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=15 "$SSH_HOST")
 echo "[m2-render] refusing to start if another remotion job is running on the box"
-if ssh "$SSH_HOST" "pgrep -f 'remotion render' >/dev/null"; then
+if "${SSH[@]}" "pgrep -f 'remotion(-cli[.]js)? render' >/dev/null"; then
   echo "[m2-render] a render is already running there; aborting"; exit 1
 fi
 
-echo "[m2-render] rendering $COMP -> out/$OUT (concurrency 1) $EXTRA"
+echo "[m2-render] rendering $COMP -> out/$OUT (concurrency 1, detached on the box) $EXTRA"
 # Render with the box's full Google Chrome: the bundled headless shell drops some CSS-3D billboards (S12's plinth
 # tags rendered blank on 14 Nov), and every scene was reviewed on full Chrome. Override with M2_BROWSER.
+# The job runs detached (scripts/remote/m2-job.sh) so an ssh drop can't kill it (a 14 Nov render died that way);
+# this side polls its log and exit file, retrying through connection blips.
 BROWSER="${M2_BROWSER:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
-ssh "$SSH_HOST" "zsh -lc 'cd ~/$REMOTE_DIR/demo/film && mkdir -p out && \
-  npx remotion render src/index.ts $COMP out/$OUT --codec h264 --pixel-format yuv420p --concurrency=1 \"--browser-executable=$BROWSER\" $EXTRA'"
+"${SSH[@]}" "cd ~/$REMOTE_DIR && nohup zsh scripts/remote/m2-job.sh '$COMP' '$OUT' '$BROWSER' $EXTRA >/dev/null 2>&1 &"
+J="~/$REMOTE_DIR/demo/film/out/$OUT"
+code=""; last=""
+while [ -z "$code" ]; do
+  sleep 20
+  st=$("${SSH[@]}" "cat $J.exit 2>/dev/null; echo '|'; tail -c 400 $J.log 2>/dev/null | tr '\r' '\n' | grep -E 'Rendered|Encoded|Error' | tail -1" 2>/dev/null) || { echo "[m2-render] (box unreachable, retrying)"; continue; }
+  code="${st%%|*}"; code="$(echo "$code" | tr -d '[:space:]')"; prog="${st#*|}"
+  [ "$prog" != "$last" ] && [ -n "$prog" ] && echo "[m2-render]$prog" && last="$prog"
+done
+if [ "$code" != "0" ]; then
+  echo "[m2-render] render failed (exit $code); last log lines:"; "${SSH[@]}" "tail -n 25 $J.log"; exit 1
+fi
 
 echo "[m2-render] pulling out/$OUT to $LOCAL_OUT"
 rsync -a --progress "$LAN_HOST:$REMOTE_DIR/demo/film/out/$OUT" "$LOCAL_OUT/"
