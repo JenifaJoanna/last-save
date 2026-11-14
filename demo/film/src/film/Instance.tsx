@@ -13,8 +13,13 @@ export const INSTANCE_BANNER = "Real OutLayer release · dev instance v2dev · s
 export const INSTANCE_CHIP = "v2dev · same code · real release 14 Nov";
 /** S11 returns to the judge instance (its holders choose after the kill), so it says so too. */
 export const JUDGE_CHIP = "ember-rift · judge instance · holders choose";
+/** Which instance the story's second half shows. "split" (shipped 15 Nov 01:41): v2dev's 14 Nov afterlife in S10 and
+ * S13–S16. "ember-rift": the judge instance end to end, after its key was released at 01:05 IST (release, host, back),
+ * with only S15's payout still v2dev's real 14 Nov record, so only S15 carries a v2dev chip. */
+export const STORY: "split" | "ember-rift" = "split";
 /** Scenes whose run values and takes come from v2dev (src/film/run-facts-after.json). */
-export const AFTER_SCENES = new Set(["S10", "S13", "S14", "S15", "S16"]);
+export const AFTER_SCENES = new Set(STORY === "split" ? ["S10", "S13", "S14", "S15", "S16"] : ["S15"]);
+export const PAYOUT_CHIP = "v2dev · same code · real Base payout 14 Nov";
 /** S12 shows ember-rift's encrypted build, stored for good and waiting for its key. */
 export const JUDGE_STORED_CHIP = "ember-rift · judge instance · build stored, key not yet released";
 

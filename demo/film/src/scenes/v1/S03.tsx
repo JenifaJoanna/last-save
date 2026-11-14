@@ -6,7 +6,7 @@
 //   card 3 scrolls in f260–276, head f262, line 1 f266, "proportionate refund" prints f308, gold block grows f315–329 ("refund" f315)
 // Camera (all ease-out): push into the glass f20–58, drift +4 % inside, pull back to the bezel f336–374.
 // End pose: settled ScreenFrame (scale 1, WHY STUDIOS OPT IN, online, HOME hints/keys) with card 3, "refund" in gold.
-import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Easing, getStaticFiles, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { T } from "../../ds/tokens";
 import { CardPage } from "./g1/Card";
 import { EC_CARDS } from "./g1/copy";
@@ -15,6 +15,23 @@ import { TitlePage } from "./g1/TitlePage";
 import { S02_END_VEIL } from "./S02";
 
 const S02_LEN = 204;
+/** Each EC card's backdrop (AI-generated line-art textures, see SOURCES.md): fixed behind the scrolling cards, tinted,
+ * at low opacity, crossfading as each card arrives. Drawn only once the files exist. */
+const BACKDROPS = ["plates/eu/law", "plates/eu/ask", "plates/eu/refund"].map((b) =>
+  getStaticFiles().find((x) => x.name === `${b}.png` || x.name === `${b}.jpg`)?.name ?? null);
+function Backdrops({ page }: { page: number }) {
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      {BACKDROPS.map((file, i) => {
+        const o = file ? Math.max(0, 1 - Math.abs(page - (i + 1))) : 0;
+        return o > 0.001 && file ? (
+          <Img key={file} src={staticFile(file)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+            opacity: 0.2 * o, filter: "saturate(0.8) sepia(0.15) hue-rotate(-12deg)", mixBlendMode: "screen" }} />
+        ) : null;
+      })}
+    </AbsoluteFill>
+  );
+}
 const SCROLLS: [number, number][] = [[0, 22], [148, 164], [260, 276]];
 const TITLE = "WHY STUDIOS OPT IN";
 
@@ -31,6 +48,7 @@ export function S03() {
   return (
     <AbsoluteFill style={{ background: T.void }}>
       <Glass scale={scale} title={f < 2 ? "HOME" : TITLE} titleAt={2}>
+        <Backdrops page={page} />
         <div style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", transform: `translateY(${-H * page}px)` }}>
           {page < 1 && <TitlePage t={S02_LEN + f} veil={S02_END_VEIL} title={settled} bands={1} eyebrow={settled} />}
           {EC_CARDS.map((c, i) => Math.abs(page - (i + 1)) < 1 && <CardPage key={c.eyebrow} f={f} spec={c} top={H * (i + 1)} />)}
