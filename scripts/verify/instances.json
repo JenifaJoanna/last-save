@@ -1,0 +1,39 @@
+{
+  "network": "testnet",
+  "repo": "JenifaJoanna/last-save",
+  "factory": "lastsave-factory.testnet",
+  "globalCodeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+  "globalPublishTx": "3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF",
+  "studio": "lastsave-studio.testnet",
+  "defaultOrder": [
+    "ember-rift.lastsave-factory.testnet",
+    "lastsave-licence.testnet"
+  ],
+  "instances": {
+    "ember-rift.lastsave-factory.testnet": {
+      "label": "v2 judge instance (factory, global contract, Chain Signatures, Walrus, provenance)",
+      "kind": "factory",
+      "manifests": [
+        "proof/launch-ember-rift.json",
+        "proof/judge-v2.json"
+      ]
+    },
+    "v2dev.lastsave-factory.testnet": {
+      "label": "v2 dev instance (same code as the judge instance; built before the CI pipeline)",
+      "kind": "factory",
+      "manifests": [
+        "proof/launch-v2dev.json",
+        "proof/run-v2dev-*.json"
+      ]
+    },
+    "lastsave-licence.testnet": {
+      "label": "v1 judge instance (own deployed code, locked, Dead, released)",
+      "kind": "v1",
+      "codeSha256": "c884be5a4e263cdd1d85ae63722d457961e751d6cbbe8ae190953d7c254b16d2",
+      "manifests": [
+        "proof/judge-run.md",
+        "proof/launch-lastsave-licence.json"
+      ]
+    }
+  }
+}
