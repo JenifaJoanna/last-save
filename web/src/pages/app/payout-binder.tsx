@@ -17,8 +17,8 @@ const slot = (host: string) => `lastsave:payoutproof:${CONTRACT}:${host}`;
 const loadProof = (host: string): Proof | null => { try { return JSON.parse(localStorage.getItem(slot(host)) ?? "null"); } catch { return null; } };
 const saveProof = (host: string, p: Proof) => { try { localStorage.setItem(slot(host), JSON.stringify(p)); } catch { /* storage blocked: proof shows this session only */ } };
 
-type Step = "idle" | "pick" | "connect" | "sign" | "record";
-const STEP_TEXT: Record<Step, string> = { idle: "", pick: "", connect: "Approve the connection in your wallet…", sign: "Sign the message in your wallet…", record: "Recording the address on NEAR…" };
+type Step = "idle" | "pick" | "connect" | "sign" | "confirm" | "record";
+const STEP_TEXT: Record<Step, string> = { idle: "", pick: "", connect: "Approve the connection in your wallet…", sign: "Sign the message in your wallet…", confirm: "", record: "Recording the address on NEAR…" };
 
 export function PayoutBinder({ hostId, current, onDone }: { hostId: string; current: string | null; onDone: () => void }) {
   const wallets = useEvmWallets();
@@ -27,6 +27,19 @@ export function PayoutBinder({ hostId, current, onDone }: { hostId: string; curr
   const [step, setStep] = useState<Step>("idle");
   const [proof, setProof] = useState<Proof | null>(() => loadProof(hostId));
   const shownProof = proof && current && proof.address.toLowerCase() === current.toLowerCase() ? proof : null;
+
+  const [pending, setPending] = useState<{ address: string; signature: string; issuedAt: string } | null>(null);
+  /** set_payout_evm for a verified signature; called straight from a click when the NEAR wallet has to open. */
+  const record = async (signed: { address: string; signature: string; issuedAt: string }) => {
+    setStep("record");
+    const tx = await call("set_payout_evm", { address: signed.address }, { gasTgas: 30, label: "Base payout address set" });
+    if (!tx) { setStep("idle"); return; }
+    const p = { ...signed, tx: /^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(tx) ? tx : null };
+    saveProof(hostId, p); setProof(p); setPending(null);
+    toast.push({ kind: "ok", title: "Signed by your Ethereum wallet", body: `Payouts for ${hostId} now go to ${shortHash(p.address, 6)} on Base Sepolia.`, href: `${SCAN}/address/${p.address}`, linkText: "Open the address on Basescan" });
+    setStep("idle");
+    onDone();
+  };
 
   const bind = async (w: EvmWallet) => {
     try {
@@ -37,13 +50,12 @@ export function PayoutBinder({ hostId, current, onDone }: { hostId: string; curr
       const message = payoutMessage(hostId, CONTRACT, address, issuedAt);
       const signature = await personalSign(w, address, message);
       if (recoverSigner(message, signature) !== address.toLowerCase()) throw new Error("The signature does not match that address.");
-      setStep("record");
-      const tx = await call("set_payout_evm", { address: address.toLowerCase() }, { gasTgas: 30, label: "Base payout address set" });
-      if (!tx) { setStep("idle"); return; }
-      const p = { address: address.toLowerCase(), signature, issuedAt, tx: /^[1-9A-HJ-NP-Za-km-z]{43,44}$/.test(tx) ? tx : null };
-      saveProof(hostId, p); setProof(p);
-      toast.push({ kind: "ok", title: "Signed by your Ethereum wallet", body: `Payouts for ${hostId} now go to ${shortHash(p.address, 6)} on Base Sepolia.`, href: `${SCAN}/address/${p.address}`, linkText: "Open the address on Basescan" });
-      onDone();
+      const signed = { address: address.toLowerCase(), signature, issuedAt };
+      // Gas-free sessions record it now (no wallet window). Otherwise the NEAR wallet must open on a FRESH tap: browsers
+      // block a wallet tab opened long after the click that started this (the Ethereum signature took that time).
+      if (!gasless) { setPending(signed); setStep("confirm"); return; }
+      await record(signed);
+      return;
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (!/reject|denied|cancel/i.test(msg)) toast.push({ kind: "error", title: "Payout address not set", body: msg.slice(0, 160) });
@@ -51,7 +63,7 @@ export function PayoutBinder({ hostId, current, onDone }: { hostId: string; curr
     setStep("idle");
   };
 
-  const busy = step !== "idle" && step !== "pick";
+  const busy = step !== "idle" && step !== "pick" && step !== "confirm";
   return (
     <div className="grid min-w-0 content-start gap-2">
       <p className="break-words text-[13px] text-muted">{current
@@ -62,6 +74,13 @@ export function PayoutBinder({ hostId, current, onDone }: { hostId: string; curr
           <BadgeCheck className="size-3.5 text-alive" />signed by {shortHash(shownProof.address, 4)} · sig {shortHash(shownProof.signature, 5)} · verified here
           {shownProof.tx && <a href={txUrl(shownProof.tx)} target="_blank" rel="noopener" className="text-gold">NEAR tx {shortHash(shownProof.tx, 4)}</a>}
         </p>
+      )}
+      {step === "confirm" && pending && (
+        <div className="grid gap-2 border border-line-2 bg-void/60 p-3">
+          <p className="text-[13px] text-muted">Signed by {shortHash(pending.address, 6)} · verified here. Now record it on NEAR: your NEAR wallet asks you to approve <span className="mono">set_payout_evm</span>.</p>
+          <Button onClick={() => void record(pending)}><Wallet className="size-4" />Record on NEAR</Button>
+          <button className="text-left text-[12px] text-faint hover:text-text" onClick={() => { setPending(null); setStep("idle"); }}>Cancel</button>
+        </div>
       )}
       {step === "idle" && (
         <Button variant={current ? "quiet" : "ghost"} onClick={() => setStep("pick")}><Wallet className="size-4" />{current ? "Change payout wallet" : "Connect Ethereum wallet"}</Button>

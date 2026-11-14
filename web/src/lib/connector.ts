@@ -12,6 +12,10 @@ export const EVM_WALLET_ID = "ethereum-wallets";
 const RPCS = ["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"]; // dRPC first: FastNEAR rate-limits heavy users
 
 let shared: Promise<NearConnector> | null = null;
+/** The connected wallet, kept so a signature request runs with NO await after the user's tap (web wallets open a tab,
+ *  and browsers block window.open once the tap's activation has expired). */
+let current: NearWalletBase | null = null;
+export const forgetWallet = () => { current = null; };
 
 export function connector(): Promise<NearConnector> {
   shared ??= import("@hot-labs/near-connect").then(({ NearConnector: C }) =>
@@ -38,6 +42,7 @@ export async function connectWallet(kind: SignInKind, publicKey: string | null):
       gasAllowance: { kind: "limited", amount: KEY_ALLOWANCE_YOCTO },
     },
   } : { walletId });
+  current = wallet;
   return { wallet, walletId, walletName: w.manifest.name, keyRequested };
 }
 
@@ -47,6 +52,7 @@ export async function restoredAccount(): Promise<{ wallet: NearWalletBase; accou
     const c = await connector();
     const { wallet, accounts } = await c.getConnectedWallet();
     const accountId = accounts[0]?.accountId;
+    if (accountId) current = wallet;
     return accountId ? { wallet, accountId } : null;
   } catch { return null; }
 }
@@ -62,8 +68,7 @@ export function hashOf(outcome: unknown): string | null {
 
 /** Sends one function call through the connected wallet. Returns the tx hash and whether any receipt failed. */
 export async function walletCall(method: string, args: Record<string, unknown>, gasTgas: number, depositYocto: string): Promise<{ hash: string | null; failed: boolean }> {
-  const c = await connector();
-  const wallet = await c.wallet();
+  const wallet = current ?? await (await connector()).wallet(); // cached: sign straight away, inside the tap's activation
   const outcome = await wallet.signAndSendTransaction({
     receiverId: CONTRACT,
     actions: [{ type: "FunctionCall", params: { methodName: method, args, gas: (BigInt(gasTgas) * 10n ** 12n).toString(), deposit: depositYocto } }],

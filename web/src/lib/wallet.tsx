@@ -4,7 +4,7 @@
 // their wallet. Holder actions then go out as NEP-366 delegates and the relayer pays gas. The capture-only test signer
 // (devsigner.ts) has no UI and never runs outside a localhost capture build.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { connectWallet, connector, EVM_WALLET_ID, restoredAccount, walletCall, type SignInKind } from "./connector";
+import { connectWallet, connector, EVM_WALLET_ID, forgetWallet, restoredAccount, walletCall, type SignInKind } from "./connector";
 import { DEV_ALLOWED, devCall, loadDev, saveDev, type DevSession } from "./devsigner";
 import { gaslessCall, GASLESS_METHODS, keyUsable, loadKey, newSecret, publicKeyFromSecret, RELAYER_URL, relayerCovers, saveKey, waitForKey } from "./gasless";
 import { accountUrl, txUrl } from "./near";
@@ -55,7 +55,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     let live = true;
     void relayerCovers(); // warm it, so a sign-in click opens the wallet without waiting on the network
     const onIn = (p: { accounts: { accountId: string }[] }) => { if (live) setWalletAccount(p.accounts[0]?.accountId ?? null); };
-    const onOut = () => { if (live) { setWalletAccount(null); setKey(null); } };
+    const onOut = () => { forgetWallet(); if (live) { setWalletAccount(null); setKey(null); } };
     restoredAccount().then((r) => { if (live && r) { setWalletAccount(r.accountId); const v = { id: r.wallet.manifest.id, name: r.wallet.manifest.name }; saveLast(v); setLast(v); } })
       .finally(() => live && setReady(true));
     connector().then((c) => { c.on("wallet:signIn", onIn); c.on("wallet:signOut", onOut); }).catch(() => setReady(true));
@@ -116,6 +116,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (dev) { saveDev(null); setDev(null); return; }
     if (walletAccount) saveKey(walletAccount, null);
     setKey(null);
+    forgetWallet();
     try { const c = await connector(); await c.disconnect(); } catch { /* already signed out */ }
     setWalletAccount(null);
     toast.push({ kind: "info", title: "Disconnected", body: "This browser forgot its gas-free key. Your licence stays on chain." });
