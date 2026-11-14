@@ -157,6 +157,18 @@ async fn global_publish_and_born_locked_instances() -> anyhow::Result<()> {
     // 6. duplicate name refused
     let dup = studio.call(fac.id(), "create_instance").args_json(json!({ "name": "ember", "config": cfg })).deposit(NearToken::from_near(2)).gas(Gas::from_tgas(300)).transact().await?;
     assert!(dup.is_failure());
+    // 7. the exact config scripts/launch/launch.mjs sends (v1 config + evm_payout), with min deposit + 1.5 N ops
+    let fixture: Value = serde_json::from_str(&std::fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../scripts/launch/fixtures/instance-config.json"))?)?;
+    let min2: u128 = fac.view("min_deposit").args_json(json!({ "config": fixture })).await?.json::<String>()?.parse()?;
+    studio.call(fac.id(), "create_instance").args_json(json!({ "name": "fromlaunch", "config": fixture })).deposit(NearToken::from_yoctonear(min2 + 3 * NEAR / 2)).gas(Gas::from_tgas(300)).transact().await?.into_result()?;
+    let launched: AccountId = format!("fromlaunch.{}", fac.id()).parse()?;
+    let list: Vec<Value> = fac.view("instances").args_json(json!({})).await?.json()?;
+    assert_eq!(list.last().unwrap()["status"].as_str(), Some("Ready"), "the launch config is accepted by the licence");
+    assert!(worker.view_access_keys(&launched).await?.is_empty());
+    let ops: String = worker.view(&launched, "ops_budget").await?.json()?;
+    assert_eq!(ops.parse::<u128>()?, 3 * NEAR / 2, "ops funded in the same transaction");
+    let evm: Value = worker.view(&launched, "evm_payout_info").await?.json()?;
+    assert_eq!((evm["address"].as_str(), evm["chain_id"].as_u64(), evm["derivation_account"].as_str()), (fixture["evm_payout"]["address"].as_str(), Some(84532), Some(launched.as_str())));
     println!("factory ok");
     Ok(())
 }

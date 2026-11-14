@@ -1,0 +1,56 @@
+{
+ "studio": "lastsave-studio.testnet",
+ "outlayer": "outlayer.testnet",
+ "title": "Ember Rift",
+ "game_id": "ember-rift",
+ "media": "https://last-save.pages.dev/art/ember-rift-key-960.jpg",
+ "price": "250000000000000000000000",
+ "fund_bps": 4000,
+ "royalty_bps": 1000,
+ "release": {
+  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "urls": [
+   "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-aaaa.wasm",
+   "https://last-save.pages.dev/mirror/lastsave-release-aaaa.wasm"
+  ]
+ },
+ "probe": {
+  "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "urls": [
+   "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-bbbb.wasm"
+  ]
+ },
+ "key_commitment": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+ "artifact": {
+  "urls": [
+   "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-cccc.bin"
+  ],
+  "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "build_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "size": 123456
+ },
+ "official_endpoint": "https://emberrift.pages.dev",
+ "liveness": {
+  "probe_interval_ms": 20000,
+  "fail_threshold": 3,
+  "receipt_window_ms": 180000,
+  "report_window_ms": 120000,
+  "quorum_bps": 5000
+ },
+ "pool": {
+  "epoch_ms": 120000,
+  "pay_per_session": "10000000000000000000000",
+  "epoch_cap": "50000000000000000000000"
+ },
+ "evm_payout": {
+  "mpc": "v1.signer-prod.testnet",
+  "path": "lastsave/host-payouts",
+  "address": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea",
+  "demo_wei_per_session": "10000000000000",
+  "max_fee_per_gas": "1000000000",
+  "max_priority_fee_per_gas": "1000000",
+  "max_fee_cap": "5000000000",
+  "gas_limit": 21000,
+  "start_nonce": 0
+ }
+}
