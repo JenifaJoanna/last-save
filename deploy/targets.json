@@ -7,10 +7,12 @@
     "https://emberrift-community.pages.dev/",
     "https://emberrift-community.pages.dev/health",
     "https://last-save-preview.pages.dev/",
-    "https://last-save-preview.pages.dev/play/"
+    "https://last-save-preview.pages.dev/play/",
+    "https://lastsave-relay.pages.dev/health"
   ],
   "workers": [
     "emberrift-arena",
-    "emberrift-community-arena"
+    "emberrift-community-arena",
+    "lastsave-relay-relayer"
   ]
 }
