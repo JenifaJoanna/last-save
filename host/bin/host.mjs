@@ -3,7 +3,9 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { claimableEpochs } from "../lib/claims.mjs";
-import { prepare } from "../lib/prepare.mjs";
+import { fetchVerifiedArtifact, prepare } from "../lib/prepare.mjs";
+import { DEFAULT_REPO, tagForName, verifyProvenance } from "../lib/provenance.mjs";
+import { walrusFindSnapshot } from "../lib/snapshots.mjs";
 import { Refusal } from "../lib/refusal.mjs";
 
 const hostRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -19,9 +21,11 @@ if (flag("help") || flag("h")) {
   pnpm host --local                  verify, unpack, run locally behind a cloudflared tunnel, register on chain
   pnpm host --deploy <name>          same, but deploy to Cloudflare (needs CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID)
   pnpm host --prepare-only           verify and unpack only (no server, no transactions)
+  pnpm host --verify-only            download from the mirrors (first verified copy) and check build provenance; needs no key, runs nothing
   --claim                            keep claiming completed epochs while serving
   --account <id>   host account (default lastsave-fanhost.testnet, env LASTSAVE_HOST_ACCOUNT)
   --contract <id>  licence contract (default lastsave-licence.testnet, env LICENCE_CONTRACT)
+  --repo <owner/name>  repository whose release workflow built the bundle (default ${DEFAULT_REPO}); --no-provenance skips that check
   --mirror <url>   extra artifact mirror (repeatable)   --port <n>  local port   --no-register  skip register_host`);
   process.exit(0);
 }
@@ -29,7 +33,7 @@ if (flag("help") || flag("h")) {
 const account = opt("account", process.env.LASTSAVE_HOST_ACCOUNT ?? "lastsave-fanhost.testnet");
 const contract = opt("contract", process.env.LICENCE_CONTRACT ?? "lastsave-licence.testnet");
 const deployName = opt("deploy");
-const mode = flag("prepare-only") ? "prepare" : deployName ? "deploy" : "local";
+const mode = flag("verify-only") ? "verify" : flag("prepare-only") ? "prepare" : deployName ? "deploy" : "local";
 if (flag("deploy") && !deployName) { err("--deploy needs a project name"); process.exit(2); }
 const log = (s) => out(`  ${s}`);
 
@@ -37,8 +41,21 @@ try {
   const { chainFor, registerHost, claimEpoch } = await import("../lib/chain.mjs");
   const chain = chainFor(contract);
   out(`Last Save host for ${account} on ${contract}`);
-  const prep = await prepare({ chain, workDir: opt("work-dir", join(hostRoot, ".host")), extraMirrors: multi("mirror"), log });
+  // factory instances are <name>.<factory>; their release is tagged build-<name> (used only as a rate-limit-free fallback source)
+  const tag = /^[a-z0-9][a-z0-9_-]*\.lastsave-factory\./.test(contract) ? tagForName(contract.split(".")[0]) : null;
+  const provenance = flag("no-provenance") ? null : ({ digest }) => verifyProvenance({ digest, repo: opt("repo", DEFAULT_REPO), tag });
+  if (mode === "verify") {
+    const rel = await chain.releaseInfo();
+    const got = await fetchVerifiedArtifact({ rel, extraMirrors: multi("mirror"), provenance, log });
+    out(`Verified artifact ${String(rel.artifact_sha256).slice(0, 16)}... from ${got.label}${got.provenance ? ", provenance checked" : ""}. Nothing was decrypted or run.`);
+    process.exit(0);
+  }
+  const prep = await prepare({ chain, workDir: opt("work-dir", join(hostRoot, ".host")), extraMirrors: multi("mirror"), provenance, log });
   out(`Verified build ${prep.buildHash}${prep.restore ? `, restoring progress snapshot #${prep.restore.seq}` : ", no snapshot on chain (fresh start)"}`);
+  if (prep.restore) {
+    const w = await walrusFindSnapshot({ endpoint: (await chain.info())?.config?.official_endpoint, restore: prep.restore }).catch(() => null);
+    if (w) out(`  snapshot #${prep.restore.seq} is also on Walrus: blob ${w.blob_id} (${w.url}), sha256 matches the on-chain hash ✓`);
+  }
   if (mode === "prepare") { out(`Unpacked to ${prep.dir}`); process.exit(0); }
 
   const { hostVars, serveLocal, serveDeploy } = await import("../lib/serve.mjs");

@@ -4,6 +4,8 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { decryptBundle } from "server-bundle/crypto";
 import { unpackTarGz } from "server-bundle/tar";
+import { fetchFromMirrors, defaultFetchBytes } from "./mirrors.mjs";
+import { describeProvenance, ProvenanceError } from "./provenance.mjs";
 import { Refusal } from "./refusal.mjs";
 
 const hex = (b) => Buffer.from(sha256(b)).toString("hex");
@@ -14,19 +16,40 @@ export function readReleasedKey(info) {
   return typeof k === "string" && HEX64.test(k) ? k.toLowerCase() : null;
 }
 
-export async function defaultFetchBytes(url) {
-  const res = await fetch(url, { signal: AbortSignal.timeout(90_000) });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const len = Number(res.headers.get("content-length") ?? 0);
-  if (len > 64 * 1024 * 1024) throw new Error("artifact is larger than 64 MiB");
-  return Buffer.from(await res.arrayBuffer());
-}
+export { defaultFetchBytes } from "./mirrors.mjs";
 
 /**
- * chain: { info(), releaseInfo(), snapshot() } over the licence contract views (get_info, release_info, get_snapshot).
- * Returns { buildHash, dir, restore } or throws Refusal.
+ * Step 1 of a host start: get a copy of the encrypted artifact whose sha256 matches the chain (mirrors in order, one log line each),
+ * then check build provenance when a `provenance({ digest })` verifier is supplied. Needs no key, so it also backs `--verify-only`.
+ * Provenance that cannot be fetched warns (the on-chain hash still gates); a bundle that is invalid or names another digest refuses.
  */
-export async function prepare({ chain, fetchBytes = defaultFetchBytes, workDir, extraMirrors = [], log = () => {} }) {
+export async function fetchVerifiedArtifact({ rel, fetchBytes = defaultFetchBytes, extraMirrors = [], provenance = null, log = () => {} }) {
+  const urls = [...(rel.artifact_urls ?? []), ...extraMirrors];
+  if (!urls.length) throw new Refusal("no_mirrors", "The contract lists no artifact mirrors. Add one with --mirror <url>.");
+  const got = await fetchFromMirrors({ urls, sha256: rel.artifact_sha256, fetchBytes, log });
+  if (!got.bytes) {
+    const detail = got.tried.map((t) => `${t.url}: ${t.outcome}${t.error ? ` (${t.error})` : ""}`).join("\n  ");
+    throw new Refusal(got.tampered ? "artifact_tampered" : "artifact_unavailable",
+      got.tampered ? `Every reachable mirror served bytes that do not match the on-chain artifact sha256 (tampered or corrupted). Refusing.\n  ${detail}`
+        : `No mirror could be downloaded.\n  ${detail}`);
+  }
+  let proof = null;
+  if (provenance) {
+    try {
+      proof = await provenance({ digest: String(rel.build_hash).toLowerCase() });
+      log(`provenance ✓ ${describeProvenance(proof)}`);
+    } catch (e) {
+      if (!(e instanceof ProvenanceError)) throw e;
+      if (e.code === "unreachable" || e.code === "not_found") log(`WARNING: provenance not checked (${e.code}): ${e.message}. The on-chain hash still gates this build.`);
+      else throw new Refusal(`provenance_${e.code}`, `Build provenance check failed: ${e.message}. Refusing.`);
+    }
+  }
+  return { encrypted: got.bytes, mirror: got.url, label: got.label, tried: got.tried, provenance: proof };
+}
+
+/** chain: { info(), releaseInfo(), snapshot() } over the licence contract views (get_info, release_info, get_snapshot).
+ * Returns { buildHash, dir, restore, provenance } or throws Refusal. */
+export async function prepare({ chain, fetchBytes = defaultFetchBytes, workDir, extraMirrors = [], provenance = null, log = () => {} }) {
   const info = await chain.info();
   const key = readReleasedKey(info);
   if (!key) throw new Refusal("not_released", `The licence has not released the server key yet (status: ${info?.status ?? "unknown"}). Nothing to host.`);
@@ -35,22 +58,7 @@ export async function prepare({ chain, fetchBytes = defaultFetchBytes, workDir, 
   if (hex(Buffer.from(key, "hex")) !== commitment) throw new Refusal("key_mismatch", "The released key does not match the on-chain key commitment. Refusing.");
   log(`released key matches the on-chain commitment (${commitment.slice(0, 12)}...)`);
 
-  const urls = [...(rel.artifact_urls ?? []), ...extraMirrors];
-  if (!urls.length) throw new Refusal("no_mirrors", "The contract lists no artifact mirrors. Add one with --mirror <url>.");
-  let encrypted = null, tampered = 0;
-  const errors = [];
-  for (const url of urls) {
-    try {
-      const bytes = await fetchBytes(url);
-      if (hex(bytes) === String(rel.artifact_sha256).toLowerCase()) { encrypted = bytes; log(`artifact verified from ${new URL(url).host} (${bytes.length} bytes)`); break; }
-      tampered++; errors.push(`${url}: sha256 mismatch`);
-    } catch (e) { errors.push(`${url}: ${e.message}`); }
-  }
-  if (!encrypted) {
-    throw new Refusal(tampered ? "artifact_tampered" : "artifact_unavailable",
-      tampered ? `Every reachable mirror served bytes that do not match the on-chain artifact sha256 (tampered or corrupted). Refusing.\n  ${errors.join("\n  ")}`
-        : `No mirror could be downloaded.\n  ${errors.join("\n  ")}`);
-  }
+  const { encrypted, provenance: proof } = await fetchVerifiedArtifact({ rel, fetchBytes, extraMirrors, provenance, log });
 
   let plain;
   try { plain = decryptBundle(encrypted, Buffer.from(key, "hex")); } catch (e) { throw new Refusal("decrypt_failed", `${e.message}. Refusing.`); }
@@ -72,7 +80,7 @@ export async function prepare({ chain, fetchBytes = defaultFetchBytes, workDir, 
     writeFileSync(target, f.data);
   }
   log(`unpacked ${files.length} files to ${relative(process.cwd(), dir) || "."}`);
-  return { buildHash, dir, restore };
+  return { buildHash, dir, restore, provenance: proof };
 }
 
 async function readSnapshot(chain, info) {

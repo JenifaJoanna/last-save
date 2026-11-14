@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "bin": { "last-save-host": "./bin/host.mjs" },
+  "bin": {
+    "last-save-host": "./bin/host.mjs"
+  },
   "scripts": {
     "host": "node bin/host.mjs",
     "test": "vitest run"
@@ -11,6 +13,7 @@
   "dependencies": {
     "@noble/hashes": "1.8.0",
     "server-bundle": "workspace:*",
+    "sigstore": "5.0.1",
     "wrangler": "4.88.0"
   },
   "devDependencies": {
