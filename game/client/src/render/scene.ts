@@ -3,6 +3,7 @@ import { Application, Container, Sprite, Text, Texture } from "pixi.js";
 import type { GameEvent, ShardState, ShipState } from "../../../shared/protocol";
 import { ARENA_R } from "../../../shared/sim";
 import { Arena, Backdrop } from "./arena";
+import { captureEvents } from "./capture-log";
 import { Fx } from "./fx";
 import { displayName, Ships } from "./ships";
 import { EMBER, makeTextures, SHARD_CYAN, type Textures } from "./textures";
@@ -143,6 +144,7 @@ export class Scene {
   }
 
   onEvents(events: GameEvent[], ownId: string | null): void {
+    captureEvents(events, ownId);
     for (const e of events) {
       switch (e.k) {
         case "collect": {
