@@ -23,7 +23,8 @@ attack the live contract and watch it refuse.
 | Licence contract v1 (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
 | Licence v2, published once as a global contract | code hash `4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1` ([publish tx](https://testnet.near.rocks/tx/3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF)) |
 | Studio factory (one tx per studio, instances born with 0 keys) | [`lastsave-factory.testnet`](https://testnet.near.rocks/account/lastsave-factory.testnet) |
-| v2 judge instance | `ember-rift.lastsave-factory.testnet` (launched for the v2 film; its run is recorded in `proof/judge-v2.json`) |
+| v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key release pending (see Known limits). Run: `proof/judge-v2.json` |
+| Encrypted judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave) (sha256 = the on-chain artifact hash) |
 | v2 dev instance (full lifecycle incl. a Base Sepolia payout) | [`v2dev.lastsave-factory.testnet`](https://testnet.near.rocks/account/v2dev.lastsave-factory.testnet) |
 | Gas-free relayer | https://lastsave-relay.pages.dev (`/health`) |
 | Try to kill it (real attacks, real refusals) | https://last-save.pages.dev/attack |
@@ -76,9 +77,12 @@ On testnet that offers Meteor, Intear, Ledger, Nightly and NEAR CLI, plus Ethere
 evm-on-near executor. At sign-in a NEAR wallet is asked to add one function-call key that this app generated and that can
 only call this licence's zero-deposit methods; holder actions are then signed as NEP-366 delegates and the relayer pays.
 Verified on chain: a key with the app's exact parameters signed a delegate that the protocol accepted and the relayer
-paid for ([tx BM781HeC…](https://testnet.nearblocks.io/txns/BM781HeCWRQr4RYd882WgWCr81Z5ivBqmyhbYSruRiuh)). Not yet
-verified with a person at a real wallet: that Meteor or Intear adds the key during their own sign-in. Ethereum wallets
-cannot add that key, so their users pay normal gas. You can also play without any wallet (practice offline).
+paid for ([tx BM781HeC…](https://testnet.nearblocks.io/txns/BM781HeCWRQr4RYd882WgWCr81Z5ivBqmyhbYSruRiuh)). Then with
+a real Meteor Web wallet on the dev instance: sign-in added the app's key (Meteor scopes it to the contract, any
+zero-deposit method), a licence buy ([Hw6jqPnR…](https://testnet.nearblocks.io/txns/Hw6jqPnRWmp8x7RwdwGRyhGtCytEpB1gBSpNfGgDdsfE)),
+a host registration ([DvaU8XF9…](https://testnet.nearblocks.io/txns/DvaU8XF9dw9kaUENjJaFk6iRB7xdh27EvuqMw2E8SkBw)) and the
+game's NEP-413 login on the community host, each opening Meteor in a tab of the same window. Ethereum wallets cannot add
+that key, so their users pay normal gas. You can also play without any wallet (practice offline).
 
 **2. Host payouts on Base Sepolia, signed by NEAR's MPC network (Chain Signatures).** The licence contract controls one
 Base Sepolia address derived from `v1.signer-prod.testnet` with path `lastsave/host-payouts`; no person or server holds
@@ -167,11 +171,14 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 | `pnpm verify` checks (`scripts/verify`) | 12 / 12 |
 | probe.wasm unit tests incl. the canonical NEP-413 vector (`outlayer/probe`) | 33 / 33 |
 | probe.wasm under wasmtime against fixture servers (valid, stub, forged, non-holder, replay, wrong build, flaky RPC, stall…) | 13 / 13 |
-| Game server unit / integration (real `wrangler dev`, 4–9 clients, reconnect, persistence, `/attest`, snapshots) | 40 / 40 · 15 / 15 |
+| Game server unit / integration (real `wrangler dev`, 4–9 clients, reconnect, persistence, `/attest`, snapshots, NEP-413 replay refusal) | 55 / 55 · 15 / 15 |
+| Web wallet library (`web/src/lib`: EIP-191 signature recovery, NEAR Connect opens wallets in a tab) | 5 / 5 |
 | Server bundle crypto + tar; host CLI incl. mirror fallback and provenance | 6 / 6 · 30 / 30 |
 | End-to-end on NEAR testnet (`pnpm e2e`, dev instance: buy → play → probes → kill → death → release → refund/pledge → post-shutdown buy → fan host → claim) | 98 / 98 assertions |
 | End-to-end on the v2 dev instance (`proof/v2-e2e.md`): v1 lifecycle + gas-free relayer + relayer refusals + factory + an MPC-signed, fee-bumped Base Sepolia payout mined on-chain | 173 / 174 (the one miss is a test assertion that ignored Base's L1 data fee; re-verified to the wei) |
-| The locked judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
+| The locked v1 judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
+| The v2 judge instance `ember-rift` (`proof/judge-v2.json`): preflight, relayer guards, factory, buy, play, alive probe, report, kill, death, release | 70 / 75: the 5 misses are the release (pending, see Known limits) and the probe-path death checks (it died by holder reports instead) |
+| Real wallet (Meteor Web, testnet) on the dev instance: sign-in with the limited key, licence buy, host registration, NEP-413 game login | done by hand, each tx read back on chain |
 
 ## What is real and what is rehearsed
 
@@ -179,7 +186,8 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 |---|---|
 | Every contract call, enclave run, MPC signature and Base Sepolia transfer shown | Liveness timers are seconds (production defaults are days) |
 | The locked judge instances (0 access keys) and their transactions | Ember Rift and its studio are fictional |
-| The escrow rule, refusals and attacks on `/attack` | UI flows in the film use a localhost-only test-account signer (no keys in third-party wallets) |
+| The escrow rule, refusals and attacks on `/attack` | Most UI actions in the film were driven by a localhost-only capture signer; the wallet sign-in, a post-death buy, a host registration and the game login used a real Meteor Web wallet |
+| The dev instance's real OutLayer release, fan host and Base payout | The film shows those afterlife beats on the dev instance `v2dev` (labelled), because the judge instance's release is pending |
 | Walrus storage and the Sigstore attestation | NEAR testnet and Base Sepolia only; Walrus testnet retention is limited |
 
 The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE.md`](JUDGE.md).
