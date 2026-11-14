@@ -106,7 +106,7 @@ export function AfterlifeView() {
             <ul className="grid grid-cols-1 gap-2">
               {(hosts.data ?? []).slice(0, 4).map((h) => (
                 <li key={h.hostId} className="flex items-center justify-between gap-3 text-[13px]">
-                  <span className="min-w-0"><span className="label block text-[12px]">{shortAcct(h.hostId)}</span><span className="mono block truncate text-faint">{h.endpoint}</span></span>
+                  <span className="min-w-0"><span className="label block text-[12px]">{shortAcct(h.hostId)}</span><span className="mono block break-all text-faint" title={h.endpoint}>{h.endpoint}</span></span>
                   <span className="num shrink-0 text-alive">{near(h.earned)} Ⓝ</span>
                 </li>
               ))}

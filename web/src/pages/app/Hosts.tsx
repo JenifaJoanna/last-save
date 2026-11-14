@@ -77,7 +77,7 @@ export default function Hosts() {
           <Card eyebrow={mineHost ? "Your host" : "Register by hand"} title={mineHost ? shortAcct(mineHost.hostId) : "Already running a server?"}>
             {mineHost ? (
               <div className="grid gap-3">
-                <p className="mono truncate text-sm text-muted">{mineHost.endpoint}</p>
+                <p className="mono break-all text-sm text-muted" title={mineHost.endpoint}>{mineHost.endpoint}</p>
                 <p className="text-sm text-muted">{mineHost.sessionsPaid} sessions paid · <b className="text-alive">{near(mineHost.earned)} Ⓝ</b> earned</p>
                 <label className="grid gap-1.5 text-sm text-muted">Epoch to claim
                   <input value={epoch} onChange={(e) => setEpoch(e.target.value.replace(/\D/g, ""))} inputMode="numeric" placeholder={lastDone !== null ? `${lastDone} (last completed)` : "—"}
@@ -107,7 +107,7 @@ export default function Hosts() {
           <ul className="divide-y divide-line">
             {(hosts.data ?? []).map((h) => (
               <li key={h.hostId} className="grid grid-cols-1 gap-2 px-6 py-4 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center sm:gap-6">
-                <span className="min-w-0"><a href={accountUrl(h.hostId)} target="_blank" rel="noopener" className="font-medium no-underline hover:underline">{h.hostId}</a><span className="mono block truncate text-faint">{h.endpoint}</span></span>
+                <span className="min-w-0"><a href={accountUrl(h.hostId)} target="_blank" rel="noopener" className="font-medium no-underline hover:underline">{h.hostId}</a><span className="mono block break-all text-faint" title={h.endpoint}>{h.endpoint}</span></span>
                 <span className="text-[12.5px] text-muted">{h.epochsPaid} {h.epochsPaid === 1 ? "epoch" : "epochs"} · {h.sessionsPaid} sessions · since {ago(h.registeredAt)}{h.payoutEvm && <span className="ml-2 label border border-cyan/50 px-1.5 py-0.5 text-[10px] text-cyan">pays out on Base · <span className="mono">{shortHash(h.payoutEvm, 4)}</span></span>}</span>
                 <span className="num text-lg text-alive">{near(h.earned)} Ⓝ</span>
               </li>
