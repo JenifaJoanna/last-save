@@ -8,7 +8,7 @@ set -a; . ./.env.local; set +a
 PROJECT="${PREVIEW_PROJECT:-last-save-preview}"
 (cd game/client && npx vite build --logLevel warn)
 rm -rf web/dist-preview
-(cd web && VITE_PREVIEW=1 npx vite build --mode preview --outDir dist-preview --logLevel warn)
+(cd web && VITE_PREVIEW=1 VITE_RELAYER_URL=https://lastsave-relay.pages.dev VITE_RELAYER_ACCOUNT=relay.lastsave-studio.testnet VITE_ATTACK_TARGET=${ATTACK_TARGET:-v2dev.lastsave-factory.testnet} npx vite build --mode preview --outDir dist-preview --logLevel warn)
 cp -R game/client/dist web/dist-preview/play
 printf '/play/* /play/index.html 200\n/* /index.html 200\n' > web/dist-preview/_redirects
 printf '/*\n  X-Robots-Tag: noindex\n' > web/dist-preview/_headers

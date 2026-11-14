@@ -41,6 +41,7 @@ const SECTIONS: { name: string; icon: typeof Store; tiles: Tile[] }[] = [
     { title: "How it works", sub: "The lifecycle explained", step: "sold", path: "/how" },
     { title: "Public status page", sub: "Shareable licence status", step: "paid", path: "/status" },
     { title: "Judge guide", sub: "Live facts, studio factory: studio #2 in one tx", step: "studio2", path: "/judges" },
+    { title: "Try to kill it", sub: "REAL attacks on the live v2 dev contract, real refusals", step: "sold", path: "/attack" },
   ] },
 ];
 const ICON: Record<string, ReactNode> = { "/host-run": <Terminal className="size-4" />, "/play/?practice=1": <Gamepad2 className="size-4" />, "/judges": <Landmark className="size-4" /> };

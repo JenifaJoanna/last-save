@@ -71,6 +71,9 @@ export default function Home() {
           <nav className="grid" aria-label="Summary">
             {MENU.map((m, i) => <MenuRow key={m.path} n={m.n!} title={m.title} sub={m.sub} selected={sel === i} onSelect={() => setSel(i)} onOpen={() => open(i)} />)}
           </nav>
+          <a data-print href="/attack" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/attack"); }} className="label mt-3 flex items-center justify-between border border-dead/50 px-3 py-2.5 text-[12px] text-dead no-underline hover:bg-dead hover:text-[#1a0306]">
+            <span>Try to kill it · real attacks, real refusals</span><span aria-hidden>▸</span>
+          </a>
         </div>
       </div>
       <div data-print className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-4">
