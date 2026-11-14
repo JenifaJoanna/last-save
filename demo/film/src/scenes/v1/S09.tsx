@@ -1,8 +1,9 @@
 // S09 The kill (17.2 s, V08 from 0.6 s). The live match → the studio's terminal deletes the official server and its
-// download answers HTTP/2 530 ("gone") → CONNECTION LOST → the client powers off like a CRT, its line turns into the
-// red flatline in the dead ScreenFrame → the /status take opens out of it, probes 1/3 2/3 3/3 FAILED lift over it →
-// it folds back into the flatline → GONE DARK + dead sun + three hard flicker dips + the alert card → 1.7 s of stillness.
-// Schedule: g4/t09.ts; beats and take cuts: g4/facts.ts.
+// download answers HTTP/2 530 ("gone"), lifted to 64 px → a new sign-in after the shutdown gets CONNECTION LOST → that
+// client powers off like a CRT into the red flatline → the reports take opens out of it: the counted probe failure and
+// the not-counted runs, holder report 1/2 on "report", 2/2 (quorum, GONE DARK) on "down" → it folds into the flatline →
+// GONE DARK + dead sun + three hard flicker dips + the alert card on "dead" → stillness to the end.
+// Schedule and sound frames: g4/t09.ts; beats and take cuts: g4/facts.ts.
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { ScreenFrame } from "../../ds/screen";
 import { T } from "../../ds/tokens";
@@ -33,7 +34,7 @@ export function S09() {
   return (
     <AbsoluteFill style={{ background: T.void }}>
       {screen && (
-        <ScreenFrame title="Licence status" mode={CHROME_FOLLOWS_CONTRACT && f < S9.fold ? "probing" : "dead"} titleAt={S9.collapse + 4}>
+        <ScreenFrame title="Licence status" mode={CHROME_FOLLOWS_CONTRACT && f < S9.deadFlip ? "probing" : "dead"} titleAt={S9.collapse + 4}>
           <Dead />
         </ScreenFrame>
       )}

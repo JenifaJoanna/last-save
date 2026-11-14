@@ -5,6 +5,7 @@
 import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
 import { scene, type SceneId } from "./timeline";
 import V08 from "../../vo/timings/V08.json";
+import { S9_SFX } from "../scenes/v1/g4/t09";
 
 /** Seconds into S09 where a V08 word starts (V08 plays from 0.6 s); the kill's sounds and act 1's cut follow the words. */
 const V08_AT = 0.6;
@@ -35,8 +36,8 @@ export const SFX: Cue[] = [
   // one hit per real hit in the take (g3/match.ts, from the builder's hit log), on the same frame as the punch-in
   ...MATCH_HITS.map((h): Cue => ({ scene: "S08", file: "hit.mp3", at: MATCH_CUT / 30 + h - MATCH_FROM, volume: 0.5 })),
   { scene: "S09", file: "key.mp3", at: 1.9, volume: 0.55 },                // "goes dark": the delete command
-  { scene: "S09", file: "glitch.mp3", at: 5.04, volume: 0.45 },            // "disappears": studio copy gone
-  { scene: "S09", file: "crt-off.mp3", at: 7.1, volume: 0.6 },             // CONNECTION LOST collapse
+  { scene: "S09", file: "glitch.mp3", at: S9_SFX.status530 / 30, volume: 0.45 },  // "disappears": the studio copy answers 530
+  { scene: "S09", file: "crt-off.mp3", at: S9_SFX.crtOff / 30, volume: 0.6 },     // the rejoined client powers off
   { scene: "S09", file: "stamp.wav", at: w08("report"), volume: 0.5 },                  // holder report 1/2 ("report")
   { scene: "S09", file: "stamp.wav", at: w08("down"), volume: 0.5, rate: 0.92 },       // report 2/2, quorum ("down")
   { scene: "S09", file: "flatline.mp3", at: S09_DEAD, volume: 0.035, dur: 2.2, fadeOut: 1.9 }, // "dead"; the tone fades to silence (source is -4.8 LUFS)

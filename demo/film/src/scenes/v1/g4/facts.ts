@@ -13,7 +13,7 @@ const r = (w: string, n = 0) => voFrame("S10") + Math.round(wordAt(V09.words, w,
 /** S09 beats (f18 is the VO start). */
 export const K = {
   goes: k("goes"), dark: k("dark"), stop: k("stop"), disappears: k("disappears"), word: k("word"), alive: k("alive"),
-  only: k("only"), served: k("served"), checks: k("checks"), fail: k("fail"), three: k("three"), times: k("times"),
+  only: k("only"), served: k("served"), they: k("they"), report: k("report"), down: k("down"),
   contract: k("contract"), marks: k("marks"), dead: k("dead"), voEnd: voFrame("S09") + Math.round(V08.lastWordEnd * 30),
 } as const;
 
@@ -41,17 +41,23 @@ export const LIFT = { deleted: "✕ official server deleted", status: "HTTP/2 53
 /** lost (raw/lost.mp4, 4.1 s): after the kill, a new sign-in to the official server; the client's own overlay. */
 export const LOST = { from: 0, overlay: "Connection lost — reconnecting", sub: "the server is not responding", lead: "Rejoin after the shutdown" };
 
-/** The probes take: segments cut in at `at` (scene frame; clamped to the power-on), playing from `from` s. A label marks
- * every real time jump. `from` values fit the preview capture (17.5 s: alive probe 0–2 s, enclave checking 2–5 s,
- * 1/3 at 5.5 s, 2/3 at 8.5 s, 3/3 + DEAD at 12.5 s). TUNE for the v2 take (1–2 min, probes ≥ 20 s apart): reset `from`
- * and the jump labels to the take's real gaps. */
-export const PROBE_CUTS: { at: number; from: number; label?: string }[] = [
-  { at: 0, from: 0.6 },
-  { at: K.served + 2, from: 2.3, label: "+20 s" },
-  { at: K.fail - 3, from: 5.6, label: "+20 s" },
-  { at: K.three - 2, from: 8.6, label: "+20 s" },
-  { at: K.times - 2, from: 12.4, label: "+20 s" },
+/** The death path is holder reports (raw/reports.mp4, 1920×1080, 23.5 s, /status as a holder). Measured off the take:
+ * 1/2 holder report at 10.43 s (then the "Report recorded" relayer toast), 2/2 and GONE DARK in the same frame at
+ * 19.07 s (the page's own flicker runs to 19.63 s). Cuts fall only in the idle time between those events, each labelled;
+ * nothing is sped up. `at` is the scene frame (clamped to the power-on), `from` the take second. */
+export const REPORT_CUTS: { at: number; from: number; label?: string }[] = [
+  { at: 0, from: 0.5 }, //                                           ALIVE, proof-of-life rows (1/3 failed, not counted)
+  { at: K.report - 28, from: 9.5, label: "+7.7 s" }, //               1/2 lands at 10.43 s → on "report"
+  { at: K.down - 7, from: 18.84, label: "+8.2 s" }, //                2/2 + GONE DARK at 19.07 s → on "down"
 ];
+/** The lifted log: the take's own rows (proof-of-life card) and its report counter, in order. */
+export const LOG_LINES = [
+  { text: "> PROBE 1/3 ....... ", res: "FAILED", tail: "  unreachable", c: "dead" },
+  { text: "> PROBE ......... ", res: "NOT COUNTED", tail: "  enclave timeout ×2", c: "amber" },
+  { text: "> HOLDER REPORT 1/2 ...... ", res: "RECORDED", tail: "", c: "gold" },
+  { text: "> HOLDER REPORT 2/2 ...... ", res: "QUORUM", tail: "", c: "gold" },
+  { text: "> STUDIO DECLARED GONE  ", res: "DEAD", tail: "", c: "dead" },
+] as const;
 
 /** Discord alert: scripts/alerts/discord-feed.mjs embed for the death event; its dry run prints the fallback line. */
 export const ALERT = {

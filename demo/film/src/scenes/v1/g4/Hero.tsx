@@ -39,7 +39,7 @@ export function Hero() {
   return (
     <>
       <div style={{ position: "absolute", left: 186, top: 58, opacity: printIn(f, S9.eyebrow) }}>
-        <Eyebrow size={24} color={T.dead}>Proof of life · Ember Rift official server</Eyebrow>
+        <Eyebrow size={24} color={T.dead}>Players decide · Ember Rift official server</Eyebrow>
       </div>
       {f >= S9.title && (
         <div style={{ position: "absolute", left: 180, top: 110, opacity: tp, transform: `translateX(${(1 - tp) * -14}px)` }}>
