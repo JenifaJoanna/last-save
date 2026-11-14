@@ -21,7 +21,8 @@ const CONTRACT = process.env.CONTRACT ?? (NAME ? v2.instanceAccount(NAME, FACTOR
 const BORN_LOCKED = CONTRACT.endsWith(`.${FACTORY}`);
 const DRY = process.argv.includes("--dry-run") || process.env.DRY === "1";
 const STUDIO = process.env.STUDIO ?? "lastsave-studio.testnet";
-const OFFICIAL_BASE = process.env.OFFICIAL_BASE ?? "emberrift";
+// Factory instances get their own official server name, so v2 never revives v1's deliberately dead emberrift.pages.dev.
+const OFFICIAL_BASE = process.env.OFFICIAL_BASE ?? (NAME ? `emberrift-${NAME}` : "emberrift");
 const OFFICIAL_URL = process.env.OFFICIAL_URL ?? `https://${OFFICIAL_BASE}.pages.dev`;
 const PLATFORM_URL = process.env.PLATFORM_URL ?? "https://last-save.pages.dev";
 const RAW = "https://raw.githubusercontent.com/JenifaJoanna/last-save/main";
