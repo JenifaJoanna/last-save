@@ -1,39 +1,46 @@
 // S11 parts: a mini LS-0001 device playing one holder's real take (FrameB device look at small scale), the key lines
 // that lift off the glass as film type (the relayer toast, the Refunded row, the pledged card), and the pool panel.
 import type { ReactNode } from "react";
-import { Sequence } from "remotion";
+import { Freeze, Sequence } from "remotion";
 import { Terminal } from "../../../ds/crt";
 import { Label, Mono } from "../../../ds/type";
 import { stepped, T } from "../../../ds/tokens";
 import { Slot } from "../../../film/Slot";
-import { CHOOSE_CROP, KEY_PLEDGED, KEY_REFUNDED, KEY_SPLIT, KEY_TOAST, TAKE_FROM } from "./facts";
+import { CHOOSE_CROP, KEY_PLEDGED, KEY_REFUNDED, KEY_SPLIT, KEY_TOAST, TAKE_END, TAKE_FROM } from "./facts";
 import { LiftPlate, printIn, Tag } from "./kit";
 
-export const DW = 880;
-export const DH = 520;
-const K = 1;
-/** Glass (content) size inside the bezel: padding 8, status bar 32, borders. */
-export const GLASS = { x: 9, y: 41, w: DW - 18, h: DH - 50 };
+export const DW = 780;
+export const DH = 440;
+const K = 0.9;
+/** Glass (content) size inside the bezel: padding 8k, status bar 32k, borders. */
+export const GLASS = { x: 8, y: 37, w: DW - 16, h: DH - 46 };
 
-export interface Holder { slot: string; who: string; x: number; y: number; z: number; ry: number }
+export interface Holder { slot: string; who: string; kind: "refund" | "pledge"; x: number; y: number; z: number; ry: number }
+/** dario's real refund (refund2) top left, mira's pledge bottom left, kofi's pledge right. yuna's refund was not recorded. */
 export const HOLDERS: Holder[] = [
-  { slot: "pledge", who: "mira", x: 500, y: 520, z: -110, ry: 8 },
-  { slot: "pledge2", who: "kofi", x: 1420, y: 560, z: -170, ry: -8 },
+  { slot: "refund2", who: "dario", kind: "refund", x: 480, y: 300, z: -120, ry: 9 },
+  { slot: "pledge", who: "mira", kind: "pledge", x: 540, y: 800, z: -230, ry: 7 },
+  { slot: "pledge2", who: "kofi", kind: "pledge", x: 1420, y: 540, z: -150, ry: -9 },
 ];
+const tint = (h: Holder) => (h.kind === "refund" ? T.cyan : T.gold);
 
 /** One device. `f` is the scene frame, `land` the frame its key row arrives (the take prints in from there). */
 export function MiniDevice({ h, f, land, appear, dim, float, focus = 0 }: { h: Holder; f: number; land: number; appear: number; dim: number; float: number; focus?: number }) {
   const reveal = printIn(f, land);
+  const end = TAKE_END[h.slot];
+  const hold = end === undefined ? 1e6 : Math.floor((end - TAKE_FROM[h.slot]) * 30) - 3; // last frame holds
   return (
     <div style={{ position: "absolute", left: h.x - DW / 2, top: h.y - DH / 2 + float, width: DW, height: DH, transformStyle: "preserve-3d",
       transform: `translateZ(${h.z - (1 - appear) * 700}px) rotateY(${h.ry}deg) rotateX(3deg)`, opacity: appear * (1 - 0.6 * dim),
       filter: dim > 0.01 ? `blur(${(3 * dim).toFixed(2)}px)` : undefined }}>
-      <Tag color={T.gold} size={22 + 16 * focus} style={{ position: "absolute", left: 6, top: -58 - 22 * focus }}>Pledge · {h.who}</Tag>
+      <Tag color={tint(h)} size={22 + 16 * focus} style={{ position: "absolute", left: 6, top: -58 - 22 * focus }}>{h.kind === "refund" ? "Refund" : "Pledge"} · {h.who}</Tag>
       <Terminal width={DW} height={DH} k={K} title="Licence status" mode="dead" hints={false}
-        style={{ boxShadow: `inset -3px -3px 0 ${T.gold}66, inset 0 1px 0 rgba(255,255,255,0.07), 0 0 90px ${T.gold}24, 0 60px 120px -40px rgba(0,0,0,0.95)` }}>
+        style={{ boxShadow: `inset -3px -3px 0 ${tint(h)}66, inset 0 1px 0 rgba(255,255,255,0.07), 0 0 90px ${tint(h)}24, 0 60px 120px -40px rgba(0,0,0,0.95)` }}>
         <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${(1 - reveal) * 100}% 0)` }}>
           <Sequence from={land} layout="none">
-            <Slot slot={h.slot} from={TAKE_FROM[h.slot]} crop={CHOOSE_CROP[h.slot]} />
+            <Freeze frame={hold} active={(fr) => fr >= hold}>
+              <Slot slot={h.slot} from={TAKE_FROM[h.slot]} crop={CHOOSE_CROP[h.slot]} />
+            </Freeze>
           </Sequence>
         </div>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(118deg, rgba(255,255,255,0.05) 0%, transparent 32%, transparent 70%, rgba(255,138,76,0.04) 100%)" }} />
@@ -70,10 +77,11 @@ function Plate({ lift, edge, children }: { lift: number; edge: string; children:
 /** The money card's Refunded row (its muted swatch, label and figure) at film size. */
 export function RefundedLine({ lift }: { lift: number }) {
   return (
-    <Plate lift={lift} edge={T.muted}>
+    <Plate lift={lift} edge={T.cyan}>
       <span style={{ width: 30, height: 30, background: T.muted }} />
       <Mono size={64} color={T.text}>{KEY_REFUNDED.label}</Mono>
       <Mono size={64} weight={600} color={T.text} style={{ marginLeft: 40 }}>{KEY_REFUNDED.value} Ⓝ</Mono>
+      {KEY_REFUNDED.count && <Mono size={56} color={T.muted}>· {KEY_REFUNDED.count} holders</Mono>}
     </Plate>
   );
 }

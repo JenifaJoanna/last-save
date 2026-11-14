@@ -25,8 +25,8 @@ export const CONFIG = {
 /** Two sets: "judge" (ember-rift; S01-S09, S11) -> run-facts.json, "after" (v2dev's real afterlife; S10, S12-S16) ->
  * run-facts-after.json. A key outside a set's list is still written when readable, and is never reported missing. */
 export const SET_KEYS = {
-  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolTotal"], // exactly what S01-S11 print; poolBefore, postBuyDelta, runwayEpochs, epochCap and epochLen are read when present, never required
-  after: ["releasedSha", "releasedKey", "archiveItem", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce", "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
+  judge: ["studio2Account", "price", "fundPct", "lockedShare", "licenceNo", "buyTx", "accessKeys", "buildSha", "releaseWasm", "officialWorker", "cdnUrl", "poolBefore", "postBuyDelta", "poolTotal", "refundedNear", "refundedCount", "pledgedNear", "pledgedCount"], // exactly what S01-S11 print; runwayEpochs, epochCap and epochLen are read when present, never required
+  after: ["releasedSha", "releasedKey", "archiveItem", "hostPaid", "sessionsVerified", "payoutEpoch", "payoutSessions", "payoutNear", "payoutNonce", "payoutValue", "payoutTo", "payoutToShort", "payoutPayer", "basePayoutTx", "basePayoutBlock", "baseStatus", "verifyInstance", "verifyInstances", "verifyHead", "verifySummary", "verifyCodeWhy", "verifyMarks"],
 };
 const BOTH = ["instance", "walrusBlob", "walrusHost", "workflow", "commit7", "rekorIndex", "rekorLogged"];
 /** Is this key required in that set? */
@@ -63,6 +63,8 @@ export const step = (S, name) => {
   return bad(`no clean "${name}" step in the launch files`);
 };
 const ver = (S, id) => need(S.verify.results.find((r) => r.id === id), `verify result "${id}"`);
+/** The `pnpm verify` count line (scripts/verify/render.mjs format). */
+const summaryLine = (n, ms) => `${n.pass} ✓   ${n.fail} ✗   ${n.warn} !   ${n.na} n/a   ·  ${(ms / 1000).toFixed(1)} s`;
 const shortAddr = (a) => `${a.slice(0, 6)}…${a.slice(-6)}`;
 const utcMinute = (iso) => `${iso.slice(0, 10)} ${iso.slice(11, 16)} UTC`;
 const poolAfter = (S) => /^([\d.]+) N ->/.exec(assertion(S.run, "claim", /^pool decreased/).detail)?.[1] ?? bad("pool decreased detail has no 'x N ->'");
@@ -97,9 +99,13 @@ export const MAP = [
   { key: "rekorLogged", src: "launch", at: "steps[cibuild].rekor_integrated_time", get: (S) => utcMinute(step(S, "cibuild").rekor_integrated_time) },
   { key: "releasedKey", src: "run|extra", at: "release.readback.released_key | extra.releasedKey",
     get: (S) => phase(S.run, "release").readback.released_key ?? S.extra.releasedKey },
-  { key: "poolBefore", src: "run", at: "choose.readback.totals.pool", get: (S) => yN(phase(S.run, "choose").readback.totals.pool, 3) },
-  { key: "postBuyDelta", src: "run", at: "post-death-buy assertion 'pool rose by 90%...'", get: (S) => fix(/^([\d.]+) N of/.exec(assertion(S.run, "post-death-buy", /^pool rose by 90%/).detail)?.[1] ?? bad("no 'x N of' in detail"), 3) },
-  { key: "poolTotal", src: "run", at: "afterlife.pool_near | claim assertion 'pool decreased' (before value)", get: (S) => fix(S.run.afterlife?.pool_near ?? poolAfter(S), 3) },
+  { key: "poolBefore", src: "run", at: "afterlife.post_death_buy.pool_before_near | choose.readback.totals.pool", get: (S) => (S.run.afterlife?.post_death_buy?.pool_before_near !== undefined ? fix(S.run.afterlife.post_death_buy.pool_before_near, 3) : yN(phase(S.run, "choose").readback.totals.pool, 3)) },
+  { key: "postBuyDelta", src: "run", at: "afterlife.post_death_buy.pool_rise_near | post-death-buy assertion 'pool rose by 90%...'", get: (S) => S.run.afterlife?.post_death_buy?.pool_rise_near !== undefined ? fix(S.run.afterlife.post_death_buy.pool_rise_near, 3) : fix(/^([\d.]+) N of/.exec(assertion(S.run, "post-death-buy", /^pool rose by 90%/).detail)?.[1] ?? bad("no 'x N of' in detail"), 3) },
+  { key: "poolTotal", src: "run", at: "afterlife.post_death_buy.pool_after_near | afterlife.pool_near | claim assertion 'pool decreased'", get: (S) => fix(S.run.afterlife?.post_death_buy?.pool_after_near ?? S.run.afterlife?.pool_near ?? poolAfter(S), 3) },
+  { key: "refundedNear", src: "run", at: "afterlife.refunded_near", get: (S) => String(need(S.run.afterlife?.refunded_near, "afterlife.refunded_near")) },
+  { key: "refundedCount", src: "run", at: "afterlife.refunded_count", get: (S) => need(S.run.afterlife?.refunded_count, "afterlife.refunded_count") },
+  { key: "pledgedNear", src: "run", at: "afterlife.pledged_near", get: (S) => String(need(S.run.afterlife?.pledged_near, "afterlife.pledged_near")) },
+  { key: "pledgedCount", src: "run", at: "afterlife.pledged_count", get: (S) => need(S.run.afterlife?.pledged_count, "afterlife.pledged_count") },
   { key: "runwayEpochs", src: "run", at: "afterlife.runway_epochs | floor(pool after buy / preflight.config.pool.epoch_cap)", get: (S) => S.run.afterlife?.runway_epochs ?? Math.floor(Number(poolAfter(S)) / Number(yN(cfg(S).pool.epoch_cap))) },
   { key: "epochCap", src: "run", at: "afterlife.epoch_cap_near | preflight.config.pool.epoch_cap", get: (S) => (S.run.afterlife?.epoch_cap_near !== undefined ? String(Number(S.run.afterlife.epoch_cap_near)) : yN(cfg(S).pool.epoch_cap)) },
   { key: "epochLen", src: "run", at: "afterlife.epoch_ms | preflight.config.pool.epoch_ms", get: (S) => `${(S.run.afterlife?.epoch_ms ?? cfg(S).pool.epoch_ms) / 60000} min` },
@@ -117,8 +123,9 @@ export const MAP = [
   { key: "basePayoutBlock", src: "run", at: "evm-payout assertion 'Base Sepolia receipt is a success'", get: (S) => /block (\d+)/.exec(assertion(S.run, "evm-payout", /^the Base Sepolia receipt is a success/).detail)?.[1] ?? bad("no block number in detail") },
   { key: "baseStatus", src: "run", at: "evm-payout assertion 'Base Sepolia receipt is a success' (pass)", get: (S) => (assertion(S.run, "evm-payout", /^the Base Sepolia receipt is a success/), "Success") },
   { key: "verifyInstance", src: "verify", at: "instance.id", get: (S) => S.verify.instance.id },
+  { key: "verifyInstances", src: "verify|verify_all", at: "per instance: id + summary line", get: (S) => (S.verifyAll ?? [S.verify]).map((r) => ({ instance: r.instance.id, summary: summaryLine(r.counts, r.elapsed_ms) })) },
   { key: "verifyHead", src: "verify", at: "counts.fail == 0", get: (S) => (S.verify.counts.fail === 0 ? "ALL CHECKS THAT RAN HELD" : bad(`verify has ${S.verify.counts.fail} failing check(s)`)) },
-  { key: "verifySummary", src: "verify", at: "counts + elapsed_ms", get: (S) => { const n = S.verify.counts; return `${n.pass} ✓   ${n.fail} ✗   ${n.warn} !   ${n.na} n/a   ·  ${(S.verify.elapsed_ms / 1000).toFixed(1)} s`; } },
+  { key: "verifySummary", src: "verify", at: "counts + elapsed_ms", get: (S) => { const n = S.verify.counts; return summaryLine(n, S.verify.elapsed_ms); } },
   { key: "verifyCodeWhy", src: "verify", at: "results[code.hash].reason", get: (S) => ver(S, "code.hash").reason },
   { key: "verifyMarks", src: "verify", at: "results[].label -> status", get: (S) => Object.fromEntries(S.verify.results.map((r) => [r.label, r.status])) },
 ];

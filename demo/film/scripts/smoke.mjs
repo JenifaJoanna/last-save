@@ -21,8 +21,9 @@ const browserExecutable = args.includes("--browser") ? args[args.indexOf("--brow
 const out = mkdtempSync(join(tmpdir(), "film-smoke-"));
 const fails = [];
 let n = 0;
+let serveUrl = null;
 try {
-  const serveUrl = await bundle({ entryPoint: join(root, "src", "index.ts"), publicDir: join(root, "public") });
+  serveUrl = await bundle({ entryPoint: join(root, "src", "index.ts"), publicDir: join(root, "public") });
   const comps = await getCompositions(serveUrl, { browserExecutable });
   const scenes = comps.filter((c) => /^(S\d\d|XO)$/.test(c.id));
   const cuts = comps.filter((c) => ["LastSave", "LastSaveX", "LastSaveVertical"].includes(c.id));
@@ -43,6 +44,7 @@ try {
   fails.push(`bundle or composition load failed: ${String(e?.message ?? e).split("\n").slice(0, 3).join(" | ").slice(0, 400)}`);
 } finally {
   rmSync(out, { recursive: true, force: true });
+  if (serveUrl) rmSync(serveUrl, { recursive: true, force: true }); // each bundle is a full copy of public/
 }
 process.stdout.write(`smoke: ${n} stills rendered\n`);
 if (fails.length) { process.stdout.write(`smoke: FAIL (${fails.length})\n${fails.map((f) => `  - ${f}`).join("\n")}\n`); process.exit(1); }

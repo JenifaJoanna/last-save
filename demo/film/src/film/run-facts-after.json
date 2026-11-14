@@ -16,8 +16,8 @@
       }
     ],
     "verify": {
-      "path": "external/verify-v2dev.json",
-      "sha256": "3ae78ca1780e8510c8d48cd9a71132378d1dfd9a15a9d7304f3f703b45d87fe4"
+      "path": "proof/verify-v2dev.json",
+      "sha256": "05f7e20d1f090267e955d40eef634852012a4139057911c7fce89086b031addc"
     },
     "studio2": {
       "path": "proof/launch-tidebreak.json",
@@ -26,14 +26,23 @@
     "extra": {
       "path": "proof/v2dev-extra.json",
       "sha256": "3f4905e6dc784eb1cfef2743d303d0b17871a8ec5e22a0ed91e57bc7554fa818"
+    },
+    "verify_all": {
+      "path": "proof/verify-all.json",
+      "sha256": "e7144e9f1e359e4c2771ae177afc4a45bd8d307f6d304472908a93d11236e973"
     }
   },
   "set": "after",
-  "generated_at": "2026-11-14T18:01:53.075Z",
+  "generated_at": "2026-11-14T18:08:50.138Z",
   "missing": [
     "archiveItem (launch|extra: archive step .item (ia-upload.mjs) | extra.archiveItem): no clean \"archive\" step in the launch files"
   ],
-  "unused": [],
+  "unused": [
+    "refundedNear",
+    "refundedCount",
+    "pledgedNear",
+    "pledgedCount"
+  ],
   "values": {
     "instance": "v2dev.lastsave-factory.testnet",
     "studio2Account": "tidebreak.lastsave-factory.testnet",
@@ -59,6 +68,10 @@
     "poolBefore": "0.200",
     "postBuyDelta": "0.223",
     "poolTotal": "0.423",
+    "refundedNear": null,
+    "refundedCount": null,
+    "pledgedNear": null,
+    "pledgedCount": null,
     "runwayEpochs": 8,
     "epochCap": "0.05",
     "epochLen": "2 min",
@@ -75,16 +88,30 @@
     "basePayoutTx": "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
     "basePayoutBlock": "58635246",
     "baseStatus": "Success",
-    "verifyInstance": "v2dev.lastsave-factory.testnet",
+    "verifyInstance": "3 instances",
+    "verifyInstances": [
+      {
+        "instance": "ember-rift.lastsave-factory.testnet",
+        "summary": "16 ✓   0 ✗   1 !   6 n/a   ·  2.5 s"
+      },
+      {
+        "instance": "v2dev.lastsave-factory.testnet",
+        "summary": "18 ✓   0 ✗   0 !   5 n/a   ·  2.3 s"
+      },
+      {
+        "instance": "lastsave-licence.testnet",
+        "summary": "13 ✓   0 ✗   0 !   10 n/a   ·  1.6 s"
+      }
+    ],
     "verifyHead": "ALL CHECKS THAT RAN HELD",
-    "verifySummary": "18 ✓   0 ✗   0 !   5 n/a   ·  2.6 s",
+    "verifySummary": "47 ✓   0 ✗   1 !   21 n/a   ·  6.4 s",
     "verifyCodeWhy": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code",
     "verifyMarks": {
       "Contract code is the published code": "pass",
-      "Published global code is readable and hashes to its id": "pass",
+      "Published global code is readable and hashes to its id": "na",
       "0 access keys on the instance (locked)": "pass",
-      "Factory points at the same global hash": "pass",
-      "Instance listed by the factory": "pass",
+      "Factory points at the same global hash": "na",
+      "Instance listed by the factory": "na",
       "Escrow attested by the enclave": "pass",
       "Keystore access rule is exactly release.wasm + this contract": "pass",
       "Buckets non-negative and covered by the balance": "pass",
@@ -92,12 +119,12 @@
       "Key commitment, artifact hash and build hash are set": "pass",
       "Encrypted artifact = committed file": "pass",
       "Enclave programs download from every mirror": "pass",
-      "Encrypted artifact: every mirror's sha256 = on-chain": "pass",
+      "Encrypted artifact: every mirror's sha256 = on-chain": "warn",
       "Walrus mirror serves it": "na",
-      "Released key hashes to the commitment": "pass",
-      "Released key decrypts the artifact to build_hash": "pass",
-      "Payer address re-derived from public inputs": "pass",
-      "Signed payouts mined on Base Sepolia": "pass",
+      "Released key hashes to the commitment": "na",
+      "Released key decrypts the artifact to build_hash": "na",
+      "Payer address re-derived from public inputs": "na",
+      "Signed payouts mined on Base Sepolia": "na",
       "Build attested by GitHub Actions (Sigstore) for the on-chain build hash": "na",
       "Every tx in the proof manifests resolves on RPC": "pass",
       "release.wasm rebuilds to the on-chain hash": "na",

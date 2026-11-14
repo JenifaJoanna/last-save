@@ -53,11 +53,11 @@ function mergeAll(reports, base) {
   const counts = { pass: 0, fail: 0, na: 0, warn: 0 };
   for (const r of reports) for (const k of Object.keys(counts)) counts[k] += r.counts[k] ?? 0;
   const ids = reports.map((r) => r.instance.id);
-  return { ...base, instance: { ...base.instance, id: ids.join(" + ") }, results: [...byLabel.values()], counts, elapsed_ms: reports.reduce((n, r) => n + r.elapsed_ms, 0) };
+  return { ...base, instance: { ...base.instance, id: ids.length > 1 ? `${ids.length} instances` : ids[0] }, results: [...byLabel.values()], counts, elapsed_ms: reports.reduce((n, r) => n + r.elapsed_ms, 0) };
 }
 if (files.verifyAll) { const all = files.verifyAll.json; if (!Array.isArray(all) || !all.length) die("verify-all.json must be the array `pnpm verify --all --json` prints"); files.verifyMerged = mergeAll(all, files.verify.json); }
 
-const S = { run: files.run.json, launch: files.launch.map((l) => l.json), verify: files.verifyMerged ?? files.verify.json, studio2: files.studio2.json, extra: files.extra?.json ?? {}, buyer: cfg.buyer };
+const S = { run: files.run.json, launch: files.launch.map((l) => l.json), verify: files.verifyMerged ?? files.verify.json, verifyAll: files.verifyAll?.json, studio2: files.studio2.json, extra: files.extra?.json ?? {}, buyer: cfg.buyer };
 const values = {}, missing = [], unused = [], rows = [];
 for (const row of MAP) {
   try {

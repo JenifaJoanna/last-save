@@ -3,42 +3,39 @@
   "source": {
     "run": {
       "path": "proof/judge-v2.json",
-      "sha256": "4ac77d33c2db80fbfa4410213333959cc61187bb518650c4ed46fa670f258c15"
+      "sha256": "e1f67042f4ac45b6b84cc20546c36a15bb3a3c63d59637dad38e4d412611f868"
     },
     "launch": {
       "path": "proof/launch-ember-rift.json",
       "sha256": "a165f5b97646df5e63cf2529df73997b8661cbc642375b022c674f07dc78a32a"
     },
     "verify": {
-      "path": "external/verify-ember-now.json",
-      "sha256": "fb574f72c3c5d1cb3d57446e5201e5ab57f3f724a9d653c469d772a243591ab1"
+      "path": "proof/verify-ember-rift.json",
+      "sha256": "4f1b79039217368fd03a9cfc18cff67df6339c41ab8262efd32118e0f5fb5826"
     },
     "studio2": {
       "path": "proof/launch-tidebreak.json",
       "sha256": "daa4b58fa6a0042f4a6680ad3d022a093c97246519d0f4015e3ceee670b98a7d"
     }
   },
-  "generated_at": "2026-11-14T17:35:15.818Z",
-  "missing": [
-    "buyTx (run: takes.store.tx | buy.txs[buy_licence <buyer>].hash): not found: tx \"buy_licence lastsave-dario.testnet\" in phase \"buy\"",
-    "archiveItem (launch|extra: archive step .item (ia-upload.mjs) | extra.archiveItem): no clean \"archive\" step in the launch files",
-    "releasedKey (run|extra: release.readback.released_key | extra.releasedKey): empty",
-    "poolBefore (run: choose.readback.totals.pool): not found: phase \"choose\"",
-    "postBuyDelta (run: post-death-buy assertion 'pool rose by 90%...'): not found: phase \"post-death-buy\"",
-    "poolTotal (run: claim assertion 'pool decreased' (before value)): not found: phase \"claim\"",
-    "runwayEpochs (run: floor(pool after buy / preflight.config.pool.epoch_cap)): not found: phase \"claim\"",
-    "hostPaid (run: claim.readback.claim.paid): not found: phase \"claim\"",
-    "sessionsVerified (run: claim.readback.claim.verified): not found: phase \"claim\"",
-    "payoutEpoch (run: evm-payout.readback.final_payout.epoch): not found: phase \"evm-payout\"",
-    "payoutSessions (run: evm-payout.readback.final_payout.verified): not found: phase \"evm-payout\"",
-    "payoutNear (run: evm-payout.readback.final_payout.near_debited): not found: phase \"evm-payout\"",
-    "payoutNonce (run: evm-payout.readback.final_payout.nonce): not found: phase \"evm-payout\"",
-    "payoutValue (run: evm-payout.readback.final_payout.value_wei (ETH)): not found: phase \"evm-payout\"",
-    "payoutTo (run: evm-payout.readback.final_payout.to): not found: phase \"evm-payout\"",
-    "payoutToShort (run: final_payout.to (6…6)): not found: phase \"evm-payout\"",
-    "basePayoutTx (run: evm-payout.readback.tx_hash): not found: phase \"evm-payout\"",
-    "basePayoutBlock (run: evm-payout assertion 'Base Sepolia receipt is a success'): not found: phase \"evm-payout\"",
-    "baseStatus (run: evm-payout assertion 'Base Sepolia receipt is a success' (pass)): not found: phase \"evm-payout\""
+  "set": "judge",
+  "generated_at": "2026-11-14T18:08:50.103Z",
+  "missing": [],
+  "unused": [
+    "archiveItem",
+    "releasedKey",
+    "hostPaid",
+    "sessionsVerified",
+    "payoutEpoch",
+    "payoutSessions",
+    "payoutNear",
+    "payoutNonce",
+    "payoutValue",
+    "payoutTo",
+    "payoutToShort",
+    "basePayoutTx",
+    "basePayoutBlock",
+    "baseStatus"
   ],
   "values": {
     "instance": "ember-rift.lastsave-factory.testnet",
@@ -47,7 +44,7 @@
     "fundPct": 40,
     "lockedShare": "0.1",
     "licenceNo": "2",
-    "buyTx": null,
+    "buyTx": "JDspLTRgDqWWQ1UDERkF58H86tURGmvaY8Az5QJbFDAW",
     "buildSha": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
     "releasedSha": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
     "releaseWasm": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
@@ -62,10 +59,14 @@
     "rekorIndex": "3881246795",
     "rekorLogged": "2026-11-14 15:40 UTC",
     "releasedKey": null,
-    "poolBefore": null,
-    "postBuyDelta": null,
-    "poolTotal": null,
-    "runwayEpochs": null,
+    "poolBefore": "0.200",
+    "postBuyDelta": "0.223",
+    "poolTotal": "0.423",
+    "refundedNear": "0.2",
+    "refundedCount": 2,
+    "pledgedNear": "0.2",
+    "pledgedCount": 2,
+    "runwayEpochs": 8,
     "epochCap": "0.05",
     "epochLen": "2 min",
     "hostPaid": null,
@@ -82,8 +83,14 @@
     "basePayoutBlock": null,
     "baseStatus": null,
     "verifyInstance": "ember-rift.lastsave-factory.testnet",
+    "verifyInstances": [
+      {
+        "instance": "ember-rift.lastsave-factory.testnet",
+        "summary": "16 ✓   0 ✗   1 !   6 n/a   ·  1.6 s"
+      }
+    ],
     "verifyHead": "ALL CHECKS THAT RAN HELD",
-    "verifySummary": "16 ✓   0 ✗   1 !   6 n/a   ·  1.9 s",
+    "verifySummary": "16 ✓   0 ✗   1 !   6 n/a   ·  1.6 s",
     "verifyCodeWhy": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code",
     "verifyMarks": {
       "Contract code is the published code": "pass",

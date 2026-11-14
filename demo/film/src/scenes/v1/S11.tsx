@@ -1,10 +1,10 @@
 // S11 Choose (8.7 s, V10 at 0.3 s). Opens on S10's end pose (the decoded key centred on a gold ScreenFrame). The key
-// splits into two rows that fly into two LS-0001 devices floating in space, each playing a real pledge take (mira #3,
-// kofi #4). Three key lines lift off the glass as film type, one at a time, each held ≥ 45 f while the devices go to
-// texture: mira's relayer toast through "without paying gas", the money card's Refunded row on "take their share back"
-// (the refund takes were not recorded; the panel carries the refunds), kofi's "You pledged to the hosts" on "keep the
-// game alive". "New players fund it too" brings the post-shutdown store take forward (texture) under the pool panel and
-// the store's 90/10 legend; the camera pushes in (S12 enters the glass).
+// splits into three rows that fly into three LS-0001 devices floating in space, each playing a real take on ember-rift:
+// dario's refund (refund2, cyan), mira's and kofi's pledges (gold). Three key lines lift off the glass as film type, one
+// at a time, each held ≥ 45 f while the devices go to texture: mira's relayer toast through "without paying gas", the
+// Refunded total on "take their share back" as dario's card flips, kofi's "You pledged to the hosts" on "keep the game
+// alive". "New players fund it too" brings the post-shutdown store take forward (texture) under the pool panel and the
+// store's 90/10 legend; the camera pushes in (S12 enters the glass).
 import { AbsoluteFill, interpolate, Sequence, useCurrentFrame } from "remotion";
 import type { ReactNode } from "react";
 import { Camera, ScreenFrame } from "../../ds/screen";
@@ -71,7 +71,7 @@ export function S11() {
   const push = interpolate(f, [POOL_AT, 261], [1, 1.07], { ...c, easing: out });
   const panelUp = ramp(f, PANEL_AT - 4, PANEL_AT + 6);
   const rise = ramp(f, W(6.98) - 2, TOO + 6, inOut);
-  const half = Math.ceil(RELEASED_KEY.length / 2);
+  const part = Math.ceil(RELEASED_KEY.length / HOLDERS.length);
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
@@ -80,7 +80,7 @@ export function S11() {
       <AbsoluteFill style={{ perspective: 2400, perspectiveOrigin: "50% 50%" }}>
         <AbsoluteFill style={{ transformStyle: "preserve-3d", transform: `translateX(${camX}px) scale(${camS})`, transformOrigin: "960px 540px", opacity: 1 - giveWay }}>
           {HOLDERS.map((h, i) => (
-            <div key={h.slot} style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: `translate3d(${giveWay * (i ? 460 : -460)}px, 0, ${-giveWay * 300}px)` }}>
+            <div key={h.slot} style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: `translate3d(${giveWay * (h.x > 960 ? 460 : -460)}px, 0, ${-giveWay * 300}px)` }}>
               <MiniDevice h={h} f={f} land={lands[i]} appear={ramp(f, 4 + 3 * i, 22 + 3 * i)} dim={keyUp} float={Math.sin((f + i * 23) / 33) * 4} />
             </div>
           ))}
@@ -98,10 +98,10 @@ export function S11() {
         </AbsoluteFill>
       )}
       {HOLDERS.map((h, i) => {
-        const seg = RELEASED_KEY.slice(i * half, i * half + half);
+        const seg = RELEASED_KEY.slice(i * part, i * part + part);
         const p = ramp(f, 3 + 3 * i, 3 + FLY + 3 * i);
         if (f > lands[i] + 8 || !seg) return null;
-        const sx = 960 - (RELEASED_KEY.length * CH) / 2 + (i * half + seg.length / 2) * CH;
+        const sx = 960 - (RELEASED_KEY.length * CH) / 2 + (i * part + seg.length / 2) * CH;
         const end = glassPoint(i, lands[i], 0.5, 0.5);
         const fade = interpolate(f, [lands[i] - 2, lands[i] + 8], [1, 0], c);
         return (
@@ -112,9 +112,9 @@ export function S11() {
         );
       })}
 
-      <Lift f={f} win={LIFTS.toast} from={glassPoint(0, LIFTS.toast[0], CHOOSE_POINTS.toast.x, CHOOSE_POINTS.toast.y)} scale0={0.3}>{(l) => <RelayerToast lift={l} />}</Lift>
+      <Lift f={f} win={LIFTS.toast} from={glassPoint(1, LIFTS.toast[0], CHOOSE_POINTS.toast.x, CHOOSE_POINTS.toast.y)} scale0={0.3}>{(l) => <RelayerToast lift={l} />}</Lift>
       <Lift f={f} win={LIFTS.refunded} from={glassPoint(0, LIFTS.refunded[0], CHOOSE_POINTS.refunded.x, CHOOSE_POINTS.refunded.y)} scale0={0.25}>{(l) => <RefundedLine lift={l} />}</Lift>
-      <Lift f={f} win={LIFTS.pledged} from={glassPoint(1, LIFTS.pledged[0], CHOOSE_POINTS.title.x, CHOOSE_POINTS.title.y)} scale0={0.3}>{(l) => <PledgedLine lift={l} />}</Lift>
+      <Lift f={f} win={LIFTS.pledged} from={glassPoint(2, LIFTS.pledged[0], CHOOSE_POINTS.title.x, CHOOSE_POINTS.title.y)} scale0={0.3}>{(l) => <PledgedLine lift={l} />}</Lift>
 
       {/* "New players fund it too": the post-shutdown store take comes forward as texture under the pool panel */}
       {shop > 0.001 && (
