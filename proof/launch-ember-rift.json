@@ -1,0 +1,67 @@
+{
+  "contract": "ember-rift.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "cibuild",
+      "at": "2026-11-14T15:41:46.996Z",
+      "build_hash": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2",
+      "attested_digest": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2",
+      "artifact_sha256": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
+      "size": 271868,
+      "key_commitment": "6144be6dd6022300a40fd892949ae50b1c17aa42083abcef60651636e471ef7d",
+      "workflow": ".github/workflows/release-build.yml",
+      "commit": "f2a8851a95ada0a8bec46863957002143b860abe",
+      "run_id": "43611428713",
+      "rekor_log_index": 3881246795,
+      "rekor_integrated_time": "2026-11-14T15:40:58.000Z"
+    },
+    {
+      "step": "walrus",
+      "at": "2026-11-14T15:41:59.101Z",
+      "blob_id": "8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
+      "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
+      "end_epoch": 634,
+      "newly_created": true,
+      "readback_sha256": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
+      "readback_ok": true,
+      "bytes": 271868
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-14T15:41:59.140Z",
+      "error": "CLOUDFLARE_API_TOKEN is not set (set -a; . ./.env.local)"
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-14T15:42:53.061Z",
+      "project": "kiln-cdn-ember-rift",
+      "url": "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin",
+      "status": 200,
+      "sha256_ok": true
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-14T15:42:53.065Z",
+      "release": {
+        "sha256": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-0a02917bec7e50c1.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin",
+        "https://aggregator.walrus-testnet.walrus.space/v1/blobs/8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-49e114638d42bc0d.bin"
+      ],
+      "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    }
+  ]
+}
