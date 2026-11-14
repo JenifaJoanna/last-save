@@ -21,6 +21,8 @@ import { CONTRACT, ContractBlock, EnclaveTag, LockTags, LogStrip, PlinthTag, Sta
 import { abs, beat, CL, easeInOut, keys, lerp, prog } from "./g2/motion";
 import { DevicePull, Embers, Nebula, Page } from "./g2/World";
 import { S04_LIB_FRAMES } from "./S04";
+import { rs, shortHash } from "../../film/run";
+import { KEY_HOLD, KeyChip } from "./g2/KeyChip";
 
 const ORIGIN = { x: -560, y: -560 }, CDN = { x: 60, y: -560 }, WAL = { x: -560, y: 60 };
 const W = {
@@ -29,6 +31,19 @@ const W = {
 };
 const GLIDE = W.two - 3;  // copies glide 36 f
 const XKEYS = W.notUs + 4; // flash 30 f
+// Proof flashes on "two places" (t-cdn, x-walrus) and "logged publicly" (x-rekor): 6-f dial, then the take; each key line
+// lifts out as a ≥ 56 px chip held KEY_HOLD f, rides to its anchor, then hands over to the machine's tag.
+const DIAL = 6;
+const PF = {
+  cdn: { at: W.two - 6, dur: 28, rect: { x: 1100, y: 56, w: 760, h: 428 } },
+  wal: { at: W.two + 2, dur: 28, rect: { x: 60, y: 596, w: 760, h: 428 } },
+  rek: { at: W.logged - 4, dur: 30, rect: { x: 40, y: 50, w: 700, h: 394 } },
+};
+const onAt = (k: keyof typeof PF) => PF[k].at + DIAL;
+const flyAt = (k: keyof typeof PF) => PF[k].at + PF[k].dur - 2;
+const CDN_HOST = (rs("cdnUrl").match(/^https?:\/\/([^/]+)/) ?? [])[1] ?? rs("cdnUrl");
+const BLOB = shortHash(rs("walrusBlob"));
+const REKOR = rs("rekorIndex");
 const LIB_SEQ = S04_LIB_FRAMES.LIB - scene("S04").frames; // continues S04's library take
 const SCREEN_C = { x: 645, y: 495 }; // the pulled device's screen centre (S04 end pose)
 
@@ -46,6 +61,10 @@ export function S05() {
     s: keys(f, [[0, 1.42], [24, 1.32], [72, 1.36], [120, 1.0], [168, 1.03], [214, 1.12], [W.take, 1.18], [W.notStudio + 10, 1.16], [504, 1.2]]),
   };
   const riseP = prog(f, W.take - 4, W.notStudio + 10, easeInOut);
+  // Screen anchors for the lifted key lines: each plinth's tag stem, and the end of the sigstore ribbon.
+  const tagAt = (x: number, y: number) => { const p = project(x, y, PAD_H + CART.h, base); return { x: p.x, y: p.y - 58 * p.k }; };
+  // The Rekor line stays over the machine where its window was (the open top-left), drifting toward the ribbon below it.
+  const ribbonAt = { x: PF.rek.rect.x + 28 + 390, y: PF.rek.rect.y + PF.rek.rect.h + 40 };
   const top = project(CONTRACT.x, CONTRACT.y, CONTRACT.z + CONTRACT.h, base);
   const rise = riseP * (585 - top.y);
   // Through the glass: the old world scales into the device screen and fades; the machine settles from 1.12×.
@@ -77,7 +96,7 @@ export function S05() {
         <AbsoluteFill style={{ perspective: 7000, perspectiveOrigin: "50% 45%", transform: `translateY(${rise}px) scale(${ws})` }}>
           <Floor tx={base.tx} ty={base.ty} s={base.s}>
             <Grid tx={base.tx} ty={base.ty} />
-            <LogStrip f={f} at={W.logged - 4} x={-310} y={-300} />
+            <LogStrip f={f} at={W.logged - 4} x={-240} y={-360} />
             <Track x0={ORIGIN.x + 135} y0={ORIGIN.y} x1={CDN.x - 135} y1={CDN.y} p={split ? glide : 0} />
             <Track x0={WAL.x} y0={ORIGIN.y + 135} x1={WAL.x} y1={WAL.y - 135} p={split ? glide : 0} />
             <div style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", opacity: 1 - prog(f, GLIDE + 30, GLIDE + 50) }}><Plinth x={ORIGIN.x} y={ORIGIN.y} lit={0} /></div>
@@ -93,8 +112,8 @@ export function S05() {
               </>
             )}
             <StatusTag f={f} x={ORIGIN.x} y={ORIGIN.y} z={PAD_H + CART.h} encAt={W.encrypted - 4} doneAt={W.encrypted + 12} hideAt={GLIDE - 6} />
-            <PlinthTag f={f} x={CDN.x} y={CDN.y} z={PAD_H + CART.h} at={GLIDE + 30} label="Studio CDN" sub="encrypted copy 1" fade={1 - riseP} />
-            <PlinthTag f={f} x={WAL.x} y={WAL.y} z={PAD_H + CART.h} at={GLIDE + 34} label="Walrus" sub="encrypted copy 2" fade={1 - riseP} />
+            <PlinthTag f={f} x={CDN.x} y={CDN.y} z={PAD_H + CART.h} at={onAt("cdn") + KEY_HOLD} label="Studio CDN" sub={`HTTP/2 200 · ${CDN_HOST}`} fade={1 - riseP} />
+            <PlinthTag f={f} x={WAL.x} y={WAL.y} z={PAD_H + CART.h} at={onAt("wal") + KEY_HOLD} label="Walrus" sub={`blob ${BLOB}`} fade={1 - riseP} />
             <Enclave glow={encGlow} />
             {f >= W.key - 4 && (
               <Billboard x={ENC.x} y={ENC.y} z={keyZ}>
@@ -123,6 +142,18 @@ export function S05() {
           <div style={{ transform: `scale(${thumb.w / 620})`, transformOrigin: "0 0" }}><KeyArt title={fly < 0.4} /></div>
         </div>
       )}
+      <Flash f={f} at={PF.cdn.at} dur={PF.cdn.dur} dial={DIAL} slot="t-cdn" path="studio-cdn" from={1.1} rect={PF.cdn.rect} crop={{ x: 0.1, y: 0.06, w: 0.64, h: 0.64 }} />
+      <Flash f={f} at={PF.wal.at} dur={PF.wal.dur} dial={DIAL} slot="x-walrus" path={`walruscan.com/testnet/blob/${BLOB}`} from={0.5} rect={PF.wal.rect} tilt={-1} />
+      <Flash f={f} at={PF.rek.at} dur={PF.rek.dur} dial={DIAL} slot="x-rekor" path={`search.sigstore.dev/?logIndex=${REKOR}`} from={0.5} rect={PF.rek.rect} />
+      <KeyChip f={f} on={onAt("cdn")} fly={flyAt("cdn")} from={{ x: PF.cdn.rect.x + 28, y: PF.cdn.rect.y + PF.cdn.rect.h - 28 }} to={tagAt(CDN.x, CDN.y)} label={`Studio CDN · ${CDN_HOST}`} accent={T.alive}>
+        <span style={{ color: T.alive }}>HTTP/2 200</span>
+      </KeyChip>
+      <KeyChip f={f} on={onAt("wal")} fly={flyAt("wal")} from={{ x: PF.wal.rect.x + 28, y: PF.wal.rect.y + PF.wal.rect.h - 28 }} to={tagAt(WAL.x, WAL.y)} label="Walrus · blob id" accent={T.gold}>
+        <span style={{ color: T.gold }}>{BLOB}</span>
+      </KeyChip>
+      <KeyChip f={f} on={onAt("rek")} fly={flyAt("rek")} from={{ x: PF.rek.rect.x + 28, y: PF.rek.rect.y + PF.rek.rect.h - 28 }} to={ribbonAt} label="Sigstore · build record" accent={T.alive}>
+        Rekor <span style={{ color: T.gold }}>#{REKOR}</span>
+      </KeyChip>
       <Flash f={f} at={XKEYS} dur={30} slot="x-keys" path={`near.rocks/account/${FACTS.instance.v}`} crop={{ x: 0.12, y: 0.06, w: 0.7, h: 0.7 }} rect={{ x: 140, y: 150, w: 1240, h: 698 }} />
     </AbsoluteFill>
   );

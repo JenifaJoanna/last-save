@@ -10,8 +10,8 @@ export interface Rect { x: number; y: number; w: number; h: number }
 type Crop = { x: number; y: number; w: number; h: number };
 
 /** `at`: scene frame the flash opens; `dur` frames (default 30). `rect` window in frame px. `crop` frames the take's key region. */
-export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 260, y: 130, w: 1400, h: 788 }, tilt = 1, from = 0 }: {
-  f: number; at: number; dur?: number; slot: string; plate?: string; path: string; crop?: Crop; rect?: Rect; tilt?: number; from?: number;
+export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 260, y: 130, w: 1400, h: 788 }, tilt = 1, from = 0, dial = 13 }: {
+  f: number; at: number; dur?: number; slot: string; plate?: string; path: string; crop?: Crop; rect?: Rect; tilt?: number; from?: number; dial?: number;
 }) {
   const t = f - at;
   if (t < 0 || t >= dur) return null;
@@ -19,7 +19,7 @@ export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 26
   const sx = interpolate(t, [0, 2, close + 5, dur - 1], [0.35, 1, 1, 0.02], { ...CL, easing: easeOut });
   const sy = t < close ? interpolate(t, [1, 5], [0.008, 1], { ...CL, easing: easeOut }) : interpolate(t, [close, close + 5], [1, 0.006], { ...CL, easing: Easing.in(Easing.cubic) });
   const bloom = Math.max(interpolate(t, [0, 1, 3], [0.5, 0.3, 0], CL), interpolate(t, [close + 3, close + 5, dur], [0, 1, 0.4], CL));
-  const dial = t < 13; // dial-up box at 1.8x speed (≈12 f), then the take
+  const dialing = t < dial; // dial-up box compressed into `dial` frames (13 = 1.8× speed), then the take
   const lift = interpolate(t, [0, 8], [0, 1], { ...CL, easing: easeOut });
   return (
     <div style={{ position: "absolute", inset: 0, perspective: 2200, pointerEvents: "none" }}>
@@ -27,10 +27,10 @@ export function Flash({ f, at, dur = 30, slot, plate, path, crop, rect = { x: 26
         transform: `translateZ(${40 * lift}px) rotateX(${4 * tilt}deg) rotateY(${-5 * tilt}deg) scale(${sx}, ${sy})` }}>
         <div style={{ position: "absolute", inset: -24, background: "rgba(0,0,0,0.55)", filter: "blur(30px)", transform: "translate(18px, 30px)", opacity: sy }} />
         <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: T.ink, border: `1px solid ${T.line2}`, borderRadius: 6 }}>
-          <Sequence from={at + 13} layout="none">{!dial && <Slot slot={slot} plate={plate} crop={crop} from={from} />}</Sequence>
-          {dial && (
+          <Sequence from={at + dial} layout="none">{!dialing && <Slot slot={slot} plate={plate} crop={crop} from={from} />}</Sequence>
+          {dialing && (
             <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: T.ink }}>
-              <DialupBox path={path} t={Math.max(0, t - 1)} k={1.9} speed={1.8} />
+              <DialupBox path={path} t={Math.max(0, t - 1)} k={Math.min(1.9, rect.w / 560)} speed={(1.8 * 13) / dial} />
             </div>
           )}
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 10%, rgba(255,240,228,0.6) 42%, #fff4ee 50%, rgba(255,240,228,0.6) 58%, transparent 90%)",

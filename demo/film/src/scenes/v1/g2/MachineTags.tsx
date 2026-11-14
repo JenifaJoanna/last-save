@@ -50,7 +50,7 @@ export function LogStrip({ f, at, x, y }: { f: number; at: number; x: number; y:
   if (p <= 0) return null;
   const n = Math.floor(p * text.length);
   return (
-    <OnFloor x={x} y={y} w={660} d={58} z={2}>
+    <OnFloor x={x} y={y} w={620} d={58} z={2}>
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", gap: 12, padding: "0 16px", borderLeft: `3px solid ${T.alive}`,
         background: "linear-gradient(90deg, rgba(69,227,148,0.12), transparent)", fontFamily: FONT.mono, fontSize: 27, color: T.text, whiteSpace: "pre" }}>
         <span style={{ color: T.alive }}>{">"}</span>{text.slice(0, n)}{p >= 1 ? <svg width={36} height={60} viewBox="0 0 24 24" preserveAspectRatio="none" fill="none" stroke={T.alive} strokeWidth={3.2} style={{ marginLeft: 14, flexShrink: 0 }}><path d="M3.5 12.5l6 6L20.5 5" /></svg> : <span style={{ color: T.gold }}>█</span>}
