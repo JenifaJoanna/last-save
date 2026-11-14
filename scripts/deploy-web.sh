@@ -5,6 +5,14 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 set -a; . ./.env.local; set +a
+# Instance: NAME=<factory instance> (e.g. v2dev, ember-rift) wires a v2 instance; otherwise v1 defaults.
+if [ -n "${NAME:-}" ]; then
+  export VITE_LICENCE_CONTRACT="${VITE_LICENCE_CONTRACT:-$NAME.lastsave-factory.testnet}"
+  export VITE_OFFICIAL_URL="${VITE_OFFICIAL_URL:-https://emberrift-$NAME.pages.dev}"
+  export VITE_RELAYER_URL="${VITE_RELAYER_URL:-https://lastsave-relay.pages.dev}"
+  export VITE_RELAYER_ACCOUNT="${VITE_RELAYER_ACCOUNT:-relay.lastsave-studio.testnet}"
+  export VITE_FACTORY="${VITE_FACTORY:-lastsave-factory.testnet}"
+fi
 export VITE_LICENCE_CONTRACT="${VITE_LICENCE_CONTRACT:-lastsave-licence.testnet}"
 export VITE_PLATFORM_URL="${VITE_PLATFORM_URL:-https://last-save.pages.dev}"
 export VITE_OFFICIAL_URL="${VITE_OFFICIAL_URL:-https://emberrift.pages.dev}"
