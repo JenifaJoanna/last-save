@@ -1,29 +1,29 @@
-// Sign in: one numbered list. With a wallet (NEAR Connect): 1 NEAR wallet, gas-free key; 2 Ethereum wallet; the
-// localhost test key. Without a wallet: practice offline vs bots, or the tap-through preview. The live arena sits beside it.
+// Sign in: your own wallet first. 1 NEAR wallet (NEAR Connect: Meteor extension or web, Intear, Nightly, Ledger), asked
+// to approve one gas-free key; 2 Ethereum wallet (MetaMask, Rabby, Coinbase through NEAR Connect's Ethereum executor,
+// controlling a 0x NEAR account). Secondary and labelled: "Judge demo · no wallet" (practice offline, tap-through preview).
 import { Fragment, useEffect, useState } from "react";
 import { useLocation, useSearch } from "wouter";
 import { Heartbeat } from "../components/brand";
 import { typing, usePrimary } from "../components/terminal/nav";
-import { Bracket, Button, MenuRow, ScreenTitle } from "../components/ui";
-import { DEV_ALLOWED } from "../lib/devsigner";
+import { Bracket, MenuRow, ScreenTitle } from "../components/ui";
+import { useEvmWallets } from "../lib/eip6963";
 import { useInfo } from "../lib/licence";
 import { useWallet } from "../lib/wallet";
 import { PREVIEW } from "../preview/store";
 import { PLAY_URL } from "./Landing";
 
 const PREVIEW_URL: string = (import.meta.env.VITE_PREVIEW_URL as string | undefined) ?? "https://last-save-preview.pages.dev";
-type Group = "wallet" | "none";
-type Option = { id: string; group: Group; title: string; sub: string; tag?: string; run: () => void };
+type Group = "wallet" | "demo";
+type Option = { id: string; group: Group; title: string; sub: React.ReactNode; tag?: React.ReactNode; run: () => void };
 const GROUP_LABEL: Record<Group, string> = {
-  wallet: "With a wallet · NEAR Connect",
-  none: "Without a wallet · nothing is saved, no licence needed",
+  wallet: "Your wallet · NEAR Connect",
+  demo: "Judge demo · no wallet · nothing is saved, nothing is signed",
 };
 const openTab = (url: string) => { window.open(url, "_blank", "noopener"); };
 
 export default function Signin() {
-  const { ready, accountId, signIn, devSignIn, connecting } = useWallet();
-  const [devAcct, setDevAcct] = useState("");
-  const [devKey, setDevKey] = useState("");
+  const { ready, accountId, signIn, connecting } = useWallet();
+  const evm = useEvmWallets();
   const [sel, setSel] = useState(0);
   const [, navigate] = useLocation();
   const search = useSearch();
@@ -31,17 +31,22 @@ export default function Signin() {
   const target = next.startsWith("/app") ? next : "/app/library";
   const info = useInfo(8000);
   const dead = info.data?.status === "Dead";
+  const detected = evm.slice(0, 3);
   const options: Option[] = [
-    { id: "near", group: "wallet", title: "NEAR wallet", sub: "Meteor, Intear, Nightly, Ledger, NEAR CLI · holder actions cost you no gas", tag: "gas-free", run: () => signIn("near") },
-    { id: "evm", group: "wallet", title: "Ethereum wallet", sub: "MetaMask and other EVM wallets sign NEAR transactions · you pay your own gas", run: () => signIn("evm") },
-    ...(DEV_ALLOWED ? [{ id: "dev", group: "wallet" as const, title: "Test account key", sub: "local build only · a testnet key you paste", run: () => setSel(devRow) }] : []),
-    { id: "practice", group: "none", title: "Practice offline", sub: "Ember Rift against bots in your browser · no account, no server", tag: "↗", run: () => openTab(`${PLAY_URL}?practice=1`) },
-    ...(PREVIEW ? [] : [{ id: "preview", group: "none" as const, title: "Tap-through preview", sub: "Every screen with scripted personas · nothing is sent to chain", tag: "↗", run: () => openTab(PREVIEW_URL) }]),
+    { id: "near", group: "wallet", title: "NEAR wallet", sub: "Meteor (extension or web), Intear, Nightly, Ledger · you approve one gas-free key in your wallet", tag: "gas-free", run: () => signIn("near") },
+    { id: "evm", group: "wallet", title: "Ethereum wallet", run: () => signIn("evm"),
+      sub: detected.length ? (
+        <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">MetaMask, Rabby, Coinbase control a NEAR account · found here:
+          {detected.map((w) => <span key={w.uuid} className="inline-flex items-center gap-1"><img src={w.icon} alt="" className="size-3.5" />{w.name}</span>)}
+        </span>
+      ) : "MetaMask, Rabby, Coinbase control a NEAR account (0x…) · you approve each action",
+      tag: "EVM" },
+    { id: "practice", group: "demo", title: "Practice offline", sub: "Ember Rift against bots in your browser · no account, no server", tag: "↗", run: () => openTab(`${PLAY_URL}?practice=1`) },
+    ...(PREVIEW ? [] : [{ id: "preview", group: "demo" as const, title: "Tap-through preview", sub: "Every screen with scripted personas · nothing is sent to chain", tag: "↗", run: () => openTab(PREVIEW_URL) }]),
   ];
-  const devRow = options.findIndex((o) => o.id === "dev");
   const busy = connecting && options[sel]?.group === "wallet";
   useEffect(() => { if (ready && accountId) navigate(target, { replace: true }); }, [ready, accountId, target, navigate]);
-  usePrimary({ label: busy ? "Waiting for wallet…" : options[sel]?.group === "none" ? "Open" : "Connect", run: () => options[sel]?.run(), disabled: !ready || connecting }, [ready, connecting, sel]);
+  usePrimary({ label: busy ? "Waiting for wallet…" : options[sel]?.group === "demo" ? "Open" : "Connect", run: () => options[sel]?.run(), disabled: !ready || connecting }, [ready, connecting, sel]);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (typing(e)) return;
@@ -55,12 +60,12 @@ export default function Signin() {
   return (
     <div className="mx-auto grid max-w-6xl items-start gap-8 lg:grid-cols-[1fr_1.1fr]">
       <div>
-        <ScreenTitle eyebrow="NEAR testnet · no real money" sub="Your licence, your choice after a shutdown and your game progress all follow this account.">Sign in</ScreenTitle>
+        <ScreenTitle eyebrow="NEAR testnet · no real money" sub="Connect the wallet you already use. Your licence, your choice after a shutdown and your game progress all follow that account.">Sign in</ScreenTitle>
         <div className="grid gap-1">
           {options.map((o, i) => (
             <Fragment key={o.id}>
               {(i === 0 || options[i - 1].group !== o.group) && (
-                <p className={`label flex items-center gap-3 px-3 text-[11px] ${o.group === "none" ? "mt-4 text-muted" : "text-alive"}`}>
+                <p className={`label flex items-center gap-3 px-3 ${o.group === "demo" ? "mt-6 text-[10px] text-faint" : "text-[11px] text-alive"}`}>
                   {GROUP_LABEL[o.group]}<span aria-hidden className="h-px flex-1 border-t border-dashed border-line-2" />
                 </p>
               )}
@@ -69,17 +74,10 @@ export default function Signin() {
             </Fragment>
           ))}
         </div>
-        {DEV_ALLOWED && sel === devRow && (
-          <div data-print className="mt-3 grid gap-2 border border-dashed border-line-2 p-4">
-            <input value={devAcct} onChange={(e) => setDevAcct(e.target.value.trim())} placeholder="lastsave-mira.testnet" spellCheck={false} className="mono h-10 border border-line-2 bg-void px-3 outline-none focus:border-gold" />
-            <input value={devKey} onChange={(e) => setDevKey(e.target.value.trim())} type="password" placeholder="ed25519:…" spellCheck={false} className="mono h-10 border border-line-2 bg-void px-3 outline-none focus:border-gold" />
-            <Button variant="ghost" size="sm" disabled={!/\.testnet$/.test(devAcct) || !devKey.startsWith("ed25519:")} onClick={() => { devSignIn({ accountId: devAcct, privateKey: devKey }); setDevKey(""); }}>Use test key</Button>
-          </div>
-        )}
         <Bracket className="mt-6 text-[13px] leading-relaxed text-muted">
           <p className="label text-[12px] text-alive">What signing in does</p>
-          <p className="mt-2">Wallets connect through NEAR Connect. A NEAR wallet is also asked to add one limited key: it can only call this licence&apos;s free actions (report the server down, choose a refund or pledge, claim host pay), never move your NEAR. Those actions then cost you nothing, because a relayer pays their gas.</p>
-          <p className="mt-2">Buying a licence or registering a host always opens your wallet for approval. An Ethereum wallet signs every action itself and pays its own gas.</p>
+          <p className="mt-2">Your wallet opens through NEAR Connect and you approve there. A NEAR wallet is also asked to add one limited key: it can only call this licence&apos;s free actions (report the server down, choose a refund or pledge, set or claim host pay), never move your NEAR. Those actions then cost you nothing, because a relayer pays their gas.</p>
+          <p className="mt-2">Buying a licence or registering a host always opens your wallet. An Ethereum wallet controls a NEAR account whose name is its 0x address; it approves every action itself.</p>
         </Bracket>
       </div>
       <div data-print className="relative hidden aspect-[4/5] overflow-hidden border border-line-2 bg-ink-2 lg:block">

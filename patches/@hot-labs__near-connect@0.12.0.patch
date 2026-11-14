@@ -1,0 +1,15 @@
+diff --git a/build/SandboxedWallet/executor.js b/build/SandboxedWallet/executor.js
+index 6e8bdc24a679cecb4ca23f0421ae9d50105b24d6..20e45c51eab89f1e3ed8bc6a39b0e7ecd69d75ff 100644
+--- a/build/SandboxedWallet/executor.js
++++ b/build/SandboxedWallet/executor.js
+@@ -227,7 +227,9 @@ class SandboxExecutor {
+                 success(null);
+                 return;
+             }
+-            const panel = window.open(event.data.params.url, "_blank", event.data.params.features);
++            // Last Save patch: open wallet pages (Meteor web, Ethereum Wallets) as a new tab in the same window, never a
++            // sized popup window. No features string, and the opener is kept so the wallet page can post its result back.
++            const panel = window.open(event.data.params.url, "_blank");
+             const panelId = panel ? (0, uuid_1.uuid4)() : null;
+             const handler = (ev) => {
+                 const url = (0, url_1.parseUrl)(event.data.params.url);

@@ -7,6 +7,7 @@ import { CONTRACT } from "../../lib/near";
 import { blip, setSound, soundOn } from "../../lib/sound";
 import { PREVIEW } from "../../preview/store";
 import { Boot, Dialup } from "./effects";
+import { AccountChip } from "./AccountChip";
 import { KeycapBar, SoundToggle, StatusBar } from "./chrome";
 import { neighbours, PrimaryContext, screenFor, typing, type Primary } from "./nav";
 
@@ -115,6 +116,7 @@ export function Terminal({ children }: { children: ReactNode }) {
           </a>
           <div className="flex min-w-0 items-center gap-2">
             {PREVIEW && <Suspense fallback={null}><PreviewStrip /></Suspense>}
+            {!PREVIEW && <AccountChip />}
             <SoundToggle />
           </div>
         </header>

@@ -15,6 +15,18 @@ export const KEY_ALLOWANCE_YOCTO = "250000000000000000000000";
 
 const slot = (accountId: string) => `lastsave:fckey:${CONTRACT}:${accountId}`;
 
+let covers: Promise<boolean> | null = null;
+/** True when the relayer pays for this licence instance (its /health lists CONTRACT). If it does not, the app asks
+ *  for no gas-free key and every action goes through the user's wallet instead of failing at the relayer. */
+export function relayerCovers(): Promise<boolean> {
+  if (!RELAYER_URL) return Promise.resolve(false);
+  covers ??= fetch(`${RELAYER_URL.replace(/\/$/, "")}/health`)
+    .then((r) => r.json() as Promise<{ ok?: boolean; receivers?: string[] }>)
+    .then((h) => !!h.ok && (h.receivers ?? []).includes(CONTRACT))
+    .catch(() => { covers = null; return false; });
+  return covers;
+}
+
 export { newSecret, publicKeyFromSecret };
 
 /** The function-call key this browser holds for `accountId` on this instance, if any. */

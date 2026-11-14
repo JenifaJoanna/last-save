@@ -1,8 +1,8 @@
 // NEAR Connect (@hot-labs/near-connect): the wallet connector NEAR's docs recommend for new apps.
 // Wallet code runs in sandboxed iframes loaded from a public manifest; one connector instance per page, loaded lazily.
-// On testnet the modal lists Meteor, Intear, Ledger, Nightly and NEAR CLI; "evm" opens the Ethereum-wallets executor
-// (evm-on-near.dev). WalletConnect and Unity need a Reown project id (VITE_WALLETCONNECT_PROJECT_ID) and a
-// @walletconnect/sign-client passed as `walletConnect`; without one NEAR Connect leaves them out rather than broken.
+// On testnet the picker lists Meteor (extension and web), Intear, Nightly, Ledger, NEAR CLI and Ethereum Wallets.
+// "Ethereum Wallets" is NEAR Connect's Ethereum executor (evm-on-near.dev): MetaMask, Rabby or Coinbase controls a
+// 0x NEAR account natively (NEP-518). WalletConnect and Unity need a Reown project id, so NEAR Connect leaves them out.
 import type { NearConnector, NearWalletBase } from "@hot-labs/near-connect";
 import { CONTRACT } from "./near";
 import { GASLESS_METHODS, KEY_ALLOWANCE_YOCTO } from "./gasless";
@@ -19,19 +19,26 @@ export function connector(): Promise<NearConnector> {
   return shared;
 }
 
-/** Opens NEAR Connect. "near" asks the wallet to also add this app's function-call key (gas-free holder actions);
- *  "evm" goes straight to MetaMask and other Ethereum wallets, which sign NEAR transactions but cannot add that key. */
-export async function connectWallet(kind: SignInKind, publicKey: string | null): Promise<NearWalletBase> {
+export interface Connected { wallet: NearWalletBase; walletId: string; walletName: string; keyRequested: boolean }
+
+/** Opens NEAR Connect. "near" shows every testnet wallet; "evm" goes straight to the Ethereum executor.
+ *  When the picked wallet can add a function-call key at sign-in and `publicKey` is given, the wallet is asked to add
+ *  it (the user approves that in their own wallet). Ethereum Wallets cannot, so they sign every action themselves. */
+export async function connectWallet(kind: SignInKind, publicKey: string | null): Promise<Connected> {
   const c = await connector();
-  if (kind === "evm") return c.connect({ walletId: EVM_WALLET_ID });
-  if (!publicKey) return c.connect();
-  return c.connect({
+  const walletId = kind === "evm" ? EVM_WALLET_ID : await c.selectWallet();
+  const w = await c.wallet(walletId);
+  const canKey = !!w.manifest.features?.signInWithFunctionCallKey;
+  const keyRequested = canKey && !!publicKey;
+  const wallet = await c.connect(keyRequested && publicKey ? {
+    walletId,
     addFunctionCallKey: {
       contractId: CONTRACT, publicKey,
       allowMethods: { anyMethod: false, methodNames: [...GASLESS_METHODS] },
       gasAllowance: { kind: "limited", amount: KEY_ALLOWANCE_YOCTO },
     },
-  });
+  } : { walletId });
+  return { wallet, walletId, walletName: w.manifest.name, keyRequested };
 }
 
 /** The account a restored session belongs to, if any. */
@@ -44,6 +51,15 @@ export async function restoredAccount(): Promise<{ wallet: NearWalletBase; accou
   } catch { return null; }
 }
 
+/** The transaction hash in whatever shape the wallet returned (NEAR outcome, or the Ethereum executor's result). */
+export function hashOf(outcome: unknown): string | null {
+  const o = (Array.isArray(outcome) ? outcome[outcome.length - 1] : outcome) as Record<string, unknown> | undefined;
+  if (!o || typeof o !== "object") return typeof o === "string" ? o : null;
+  const tx = o.transaction as { hash?: string } | undefined;
+  const to = o.transaction_outcome as { id?: string } | undefined;
+  return tx?.hash ?? to?.id ?? (o.nearTransactionHash as string | undefined) ?? (o.hash as string | undefined) ?? null;
+}
+
 /** Sends one function call through the connected wallet. Returns the tx hash and whether any receipt failed. */
 export async function walletCall(method: string, args: Record<string, unknown>, gasTgas: number, depositYocto: string): Promise<{ hash: string | null; failed: boolean }> {
   const c = await connector();
@@ -52,6 +68,7 @@ export async function walletCall(method: string, args: Record<string, unknown>, 
     receiverId: CONTRACT,
     actions: [{ type: "FunctionCall", params: { methodName: method, args, gas: (BigInt(gasTgas) * 10n ** 12n).toString(), deposit: depositYocto } }],
   });
-  const hash = (outcome as { transaction?: { hash?: string } } | undefined)?.transaction?.hash ?? null;
-  return { hash, failed: JSON.stringify((outcome as { status?: unknown } | undefined)?.status ?? "").includes("Failure") };
+  const status = JSON.stringify((outcome as { status?: unknown } | undefined)?.status ?? "");
+  const receipts = JSON.stringify((outcome as { receipts_outcome?: unknown } | undefined)?.receipts_outcome ?? "");
+  return { hash: hashOf(outcome), failed: status.includes("Failure") || receipts.includes("\"Failure\"") };
 }

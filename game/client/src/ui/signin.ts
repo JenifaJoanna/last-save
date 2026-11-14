@@ -1,5 +1,7 @@
-// Sign-in terminal: numbered menu (1 connect wallet, 2 practice offline), wallet picker (NEAR Connect: Meteor, Intear,
-// Nightly, Ledger, NEAR CLI; or a pasted testnet key), and the red ACCESS DENIED readout. Digits select, Enter confirms, Esc goes back.
+// Sign-in terminal: numbered menu (1 connect your wallet, 2 judge demo: practice offline, no wallet), wallet sign-in
+// through NEAR Connect (Meteor extension or web, Intear, Nightly, Ledger), and the red ACCESS DENIED readout.
+// Digits select, Enter confirms, Esc goes back. A pasted-key signer exists only for capture/e2e: localhost AND a build
+// made with VITE_CAPTURE_SIGNER=1, opened with ?capture=1. Users never see it.
 import type { DeniedCode } from "../../../shared/protocol";
 import { loginMessage, newSessionKey, signLoginWithKey, type Session } from "../session";
 import { walletLogin } from "../wallet";
@@ -8,6 +10,8 @@ const $ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode = 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const hex = (u: Uint8Array) => [...u].map((b) => b.toString(16).padStart(2, "0")).join("");
 const SESSION_MS = 12 * 3600_000;
+const CAPTURE = ["localhost", "127.0.0.1"].includes(location.hostname) && import.meta.env.VITE_CAPTURE_SIGNER === "1"
+  && new URLSearchParams(location.search).has("capture");
 
 export interface SigninOpts {
   host: string;
@@ -77,17 +81,17 @@ function menu(list: HTMLElement, opts: Opt[], back?: () => void): void {
 
 function mainScreen(o: SigninOpts, card: HTMLElement): void {
   win(card, "Ready", `<div class="eyebrow">Sign in</div><h1 class="display display-sunset">Ember<br>Rift</h1>
-    <p class="lede">Sign in with the NEAR testnet account that holds your licence. One signature starts a session. Nothing is sent on-chain.</p>
+    <p class="lede">Sign in with your own wallet: the NEAR testnet account that holds your licence. One signature starts a session. Nothing is sent on-chain.</p>
     <ol class="menu"></ol><p class="err" id="err" role="alert"></p>${foot(o, "1–2 select · enter confirm")}`);
   menu($(".menu", card), [
-    { label: "Connect wallet", act: () => walletScreen(o, card) },
-    { label: "Practice offline", act: () => { hideSignin(); o.onPractice(); } },
+    { label: "Connect your wallet", act: () => walletScreen(o, card) },
+    { label: "Judge demo · no wallet: practice offline", act: () => { hideSignin(); o.onPractice(); } },
   ]);
 }
 
 function walletScreen(o: SigninOpts, card: HTMLElement): void {
   win(card, "Wallet", `<div class="eyebrow">Connect wallet</div>
-    <p class="lede">Pick the wallet that holds your Ember Rift licence. It signs one login message; nothing goes on-chain.</p>
+    <p class="lede">Pick the wallet that holds your Ember Rift licence: Meteor (extension or web), Intear, Nightly or Ledger. It signs one login message; nothing goes on-chain.</p>
     <ol class="menu"></ol><p class="err" id="err" role="alert"></p>
     <div class="actions"><button class="keycap" id="back">Back <kbd>Esc</kbd></button></div>${foot(o, "1–2 select · enter confirm")}`);
   const err = $("#err", card);
@@ -113,7 +117,7 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
   const back = () => mainScreen(o, card);
   menu($(".menu", card), [
     { label: "NEAR wallet (NEAR Connect)", act: wallet() },
-    { label: "Testnet key", act: () => keyScreen(o, card) },
+    ...(CAPTURE ? [{ label: "Capture signer (localhost only)", act: () => keyScreen(o, card) }] : []),
   ], back);
   $("#back", card).onclick = back;
 }

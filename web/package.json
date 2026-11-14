@@ -12,6 +12,8 @@
   "dependencies": {
     "@base-ui/react": "1.9.0",
     "@hot-labs/near-connect": "0.12.0",
+    "@noble/curves": "1.9.2",
+    "@noble/hashes": "1.8.0",
     "buffer": "6.0.3",
     "clsx": "2.1.1",
     "lucide-react": "1.72.0",

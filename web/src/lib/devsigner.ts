@@ -1,8 +1,11 @@
-// Localhost-only test signer: lets the team exercise every contract action from a local build with testnet
-// test accounts, without importing keys into a third-party wallet. Refuses to run on any other host.
+// Capture/e2e-only test signer: lets scripts drive every contract action from a local build with testnet test
+// accounts. It has no user-facing UI. It runs only on localhost AND only in a build made with VITE_CAPTURE_SIGNER=1;
+// a capture script then sets sessionStorage "lastsave.devsigner" = {"accountId","privateKey"} before loading the page,
+// or calls window.__lastSaveCapture.signIn({ accountId, privateKey }). It is never "your wallet".
 import { CONTRACT } from "./near";
 
-export const DEV_ALLOWED = typeof location !== "undefined" && ["localhost", "127.0.0.1"].includes(location.hostname);
+const LOCAL = typeof location !== "undefined" && ["localhost", "127.0.0.1"].includes(location.hostname);
+export const DEV_ALLOWED = LOCAL && import.meta.env.VITE_CAPTURE_SIGNER === "1";
 const KEY = "lastsave.devsigner";
 
 export interface DevSession { accountId: string; privateKey: string }

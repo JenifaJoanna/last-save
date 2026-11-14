@@ -1,6 +1,9 @@
 packages:
-  - "game/server"
-  - "game/client"
-  - "host"
-  - "server-bundle"
-  - "web"
+  - game/server
+  - game/client
+  - host
+  - server-bundle
+  - web
+
+patchedDependencies:
+  '@hot-labs/near-connect@0.12.0': patches/@hot-labs__near-connect@0.12.0.patch

@@ -8,10 +8,10 @@ import { useEvm } from "../../lib/licence";
 import { near, shortHash } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
 import { PREVIEW } from "../../preview/store";
+import { PayoutBinder, SCAN } from "./payout-binder";
 import { sfx } from "../../preview/sound";
 import { useToast } from "../../lib/toast";
 
-const SCAN = "https://sepolia.basescan.org";
 const RPCS = ["https://sepolia.base.org", "https://base-sepolia-rpc.publicnode.com"];
 export const eth = (wei: string, dp = 6) => { const v = Number(BigInt(wei || "0")) / 1e18; return v.toFixed(dp).replace(/\.?0+$/, "") || "0"; };
 const STATUS: Record<string, { label: string; c: string }> = {
@@ -63,7 +63,7 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
     setSending(true);
     try {
       if (PREVIEW) { sfx("scan"); await new Promise((r) => setTimeout(r, 1600)); sfx("confirm"); toast.push({ kind: "ok", title: "Relayed to Base Sepolia", body: "Anyone can broadcast the stored signed transaction. (Preview: nothing was sent.)" }); }
-      else { const h = await relayRaw(p.signedTx); toast.push({ kind: "ok", title: "Relayed to Base Sepolia", body: h === "landed" ? "Already on Base Sepolia." : "Broadcast. It lands in a few seconds.", href: p.txHash ? `${SCAN}/tx/${p.txHash}` : undefined }); }
+      else { const h = await relayRaw(p.signedTx); toast.push({ kind: "ok", title: "Relayed to Base Sepolia", body: h === "landed" ? "Already on Base Sepolia." : `Broadcast to ${shortHash(p.to, 4)}. It lands in a few seconds.`, hash: p.txHash ?? undefined, href: p.txHash ? `${SCAN}/tx/${p.txHash}` : undefined, linkText: "Open on Basescan" }); }
       onAct();
     } catch (e) { toast.push({ kind: "error", title: "Relay failed", body: (e instanceof Error ? e.message : String(e)).slice(0, 140) }); }
     finally { setSending(false); }
@@ -73,7 +73,7 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-2 text-[15px]"><b className="label text-[13px]">Epoch {p.epoch}</b><span className="text-muted">{p.verified} verified sessions</span>
           <span className={`label border px-1.5 py-0.5 text-[10px] ${st.c}`}>{p.relayed ? "On Base Sepolia" : st.label}</span></p>
-        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted"><span className="num text-text">{eth(p.valueWei)} ETH</span><ArrowRightLeft className="size-3.5" /><span className="mono">{shortHash(p.to, 6)}</span>
+        <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted"><span className="num text-text">{eth(p.valueWei)} ETH</span><ArrowRightLeft className="size-3.5" />{PREVIEW ? <span className="mono">{shortHash(p.to, 6)}</span> : <a href={`${SCAN}/address/${p.to}`} target="_blank" rel="noopener" className="mono text-muted hover:text-text">{shortHash(p.to, 6)}</a>}
           {p.nonce !== null && <span className="text-faint">· nonce {p.nonce}</span>}<span className="text-faint">· {near(p.nearDebited)} Ⓝ moved to EVM-settled</span></p>
         {p.status === "Signed" && <Transmission p={p} />}
       </div>
@@ -88,29 +88,25 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
 
 export function EvmPayouts({ mine }: { mine: HostView | undefined }) {
   const evm = useEvm(5000);
-  const { call, pending, gasless } = useWallet();
-  const [addr, setAddr] = useState("");
   if (!evm.data) return null;
   const { info, payouts } = evm.data;
-  const valid = /^0x[0-9a-fA-F]{40}$/.test(addr.trim());
+  const minePayouts = mine?.payoutEvm ? payouts.filter((p) => p.to.toLowerCase() === mine.payoutEvm?.toLowerCase()) : [];
   return (
     <Card className="mt-4 !p-0" title={<span className="flex items-center gap-2 px-5 pt-5"><Radio className="size-5 text-cyan" />Get paid on Base Sepolia</span>}>
       <div className="grid grid-cols-1 gap-4 px-5 pb-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="min-w-0 text-[15px] leading-relaxed text-muted">
-          <p>The licence contract controls one Base Sepolia address through NEAR Chain Signatures. NEAR's MPC network signs for the contract; no person or server holds the key.</p>
+          <p>The licence contract controls one Base Sepolia address through NEAR Chain Signatures. NEAR's MPC network signs for the contract; no person or server holds the key. Each payout lands in the address the host bound with its own Ethereum wallet.</p>
           <div className="bracket mt-3 p-3">
             <p className="eyebrow text-[10px]">Contract's Base address</p>
             <Copy text={info.address} className="mt-1 !px-0" />
-            <p className="mt-1 text-xs text-faint">derived from <span className="mono">{info.contract}</span> + path <span className="mono">{info.path}</span> on <span className="mono">{info.mpc}</span> · chain {info.chainId}</p>
+            <p className="mt-1 text-xs text-faint">derived from <span className="mono">{info.contract}</span> + path <span className="mono">{info.path}</span> on <span className="mono">{info.mpc}</span> · chain {info.chainId}
+              {!PREVIEW && <> · <a href={`${SCAN}/address/${info.address}`} target="_blank" rel="noopener" className="text-gold">Basescan<ExternalLink className="ml-0.5 inline size-3" /></a></>}</p>
           </div>
         </div>
         {mine && (
-          <motion.div layout className="grid min-w-0 content-start gap-2">
-            <p className="break-words text-[13px] text-muted">{mine.payoutEvm ? <>Your epochs pay out to <span className="mono text-text">{shortHash(mine.payoutEvm, 6)}</span> on Base Sepolia.</> : "Your epochs pay out in NEAR. Switch to Base Sepolia:"}</p>
-            {!mine.payoutEvm && (<>
-              <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="0x… your Base Sepolia address" spellCheck={false} className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold" />
-              <Button variant="ghost" disabled={!valid} loading={pending === "set_payout_evm"} onClick={async () => { if (await call("set_payout_evm", { address: addr.trim() }, { gasTgas: 30, label: "Payout address set" })) evm.refresh(); }}>Pay me on Base Sepolia{gasless ? " · gas-free" : ""}</Button>
-            </>)}
+          <motion.div layout className="min-w-0">
+            <PayoutBinder hostId={mine.hostId} current={mine.payoutEvm ?? null} onDone={evm.refresh} />
+            {mine.payoutEvm && <p className="mt-2 text-[12px] text-faint">{minePayouts.length ? `${minePayouts.length} payout${minePayouts.length === 1 ? "" : "s"} to this address below.` : "No epoch has paid this address yet: payouts appear below once an epoch with verified sessions is claimed and signed."}</p>}
           </motion.div>
         )}
       </div>

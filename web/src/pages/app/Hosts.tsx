@@ -20,7 +20,7 @@ const STEPS = [
 ];
 
 export default function Hosts() {
-  const { accountId, call, pending, gasless: GASLESS } = useWallet();
+  const { accountId, call, pending, gasless: GASLESS, gaslessPublicKey } = useWallet();
   const info = useInfo(5000);
   const hosts = useHosts(6000);
   const d = info.data;
@@ -31,9 +31,12 @@ export default function Hosts() {
   const [epoch, setEpoch] = useState("");
   const lastDone = d?.currentEpoch !== null && d?.currentEpoch !== undefined ? Math.max(0, d.currentEpoch - 1) : null;
 
+  // The contract needs an ed25519 host key; blank uses this browser's wallet-approved gas-free key.
+  const hostKey = pubkey.trim() || gaslessPublicKey || "";
+  const keyOk = /^ed25519:[1-9A-HJ-NP-Za-km-z]{32,60}$/.test(hostKey);
   const register = async () => {
-    if (!/^https:\/\/.+/.test(endpoint)) return;
-    if (await call("register_host", { endpoint: endpoint.trim().replace(/\/$/, ""), host_pubkey: pubkey.trim() || "none" }, { deposit: toYocto("0.01"), gasTgas: 60, label: "Host registered" })) hosts.refresh();
+    if (!/^https:\/\/.+/.test(endpoint) || !keyOk) return;
+    if (await call("register_host", { endpoint: endpoint.trim().replace(/\/$/, ""), host_pubkey: hostKey }, { deposit: toYocto("0.01"), gasTgas: 60, label: "Host registered" })) hosts.refresh();
   };
   const claim = async () => {
     const e = epoch === "" ? lastDone : Number(epoch);
@@ -88,11 +91,11 @@ export default function Hosts() {
                   <input value={endpoint} onChange={(e) => setEndpoint(e.target.value)} placeholder="https://your-host.trycloudflare.com" spellCheck={false}
                     className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold" />
                 </label>
-                <label className="grid gap-1.5 text-sm text-muted">Host public key (optional)
-                  <input value={pubkey} onChange={(e) => setPubkey(e.target.value)} placeholder="ed25519:…" spellCheck={false}
+                <label className="grid gap-1.5 text-sm text-muted">Host public key{gaslessPublicKey ? " · blank uses this browser's gas-free key" : ""}
+                  <input value={pubkey} onChange={(e) => setPubkey(e.target.value)} placeholder={gaslessPublicKey ? `${gaslessPublicKey.slice(0, 18)}…` : "ed25519:…"} spellCheck={false}
                     className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold" />
                 </label>
-                <Button onClick={register} loading={pending === "register_host"} disabled={!released || !accountId || !/^https:\/\/.+/.test(endpoint)}><Link2 className="size-4" />Register host (0.01 Ⓝ)</Button>
+                <Button onClick={register} loading={pending === "register_host"} disabled={!released || !accountId || !keyOk || !/^https:\/\/.+/.test(endpoint)}><Link2 className="size-4" />Register host (0.01 Ⓝ)</Button>
               </div>
             )}
           </Card>

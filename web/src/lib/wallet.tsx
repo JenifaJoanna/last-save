@@ -1,18 +1,21 @@
-// Wallet context: NEAR Connect (NEAR and Ethereum wallets), the localhost test signer, account state, contract calls
-// with tx links. At sign-in the app generates a key and asks the wallet to add it as a function-call key for this
-// licence instance's zero-deposit methods; holder actions then go out as NEP-366 delegates and the relayer pays gas.
+// Wallet context: the user's own wallet through NEAR Connect (NEAR wallets, or Ethereum wallets via NEAR Connect's
+// Ethereum executor), account state, contract calls with tx links. At sign-in the app generates a key and asks the
+// wallet to add it as a function-call key for this licence instance's zero-deposit methods; the user approves that in
+// their wallet. Holder actions then go out as NEP-366 delegates and the relayer pays gas. The capture-only test signer
+// (devsigner.ts) has no UI and never runs outside a localhost capture build.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { connectWallet, connector, restoredAccount, walletCall, type SignInKind } from "./connector";
-import { devCall, loadDev, saveDev, type DevSession } from "./devsigner";
-import { gaslessCall, GASLESS_METHODS, keyUsable, loadKey, newSecret, publicKeyFromSecret, RELAYER_URL, saveKey, waitForKey } from "./gasless";
-import { txUrl } from "./near";
+import { connectWallet, connector, EVM_WALLET_ID, restoredAccount, walletCall, type SignInKind } from "./connector";
+import { DEV_ALLOWED, devCall, loadDev, saveDev, type DevSession } from "./devsigner";
+import { gaslessCall, GASLESS_METHODS, keyUsable, loadKey, newSecret, publicKeyFromSecret, RELAYER_URL, relayerCovers, saveKey, waitForKey } from "./gasless";
+import { accountUrl, txUrl } from "./near";
 import { useToast } from "./toast";
 
 export interface CallOpts { deposit?: string; gasTgas?: number; label: string }
+export type WalletKind = "near" | "evm" | "capture";
 export interface WalletState {
   ready: boolean;
   accountId: string | null;
-  /** Opens NEAR Connect: "near" (default) also adds the gas-free key; "evm" opens Ethereum wallets. */
+  /** Opens NEAR Connect: "near" (default) lists every testnet wallet and asks for the gas-free key; "evm" opens Ethereum wallets. */
   signIn: (kind?: SignInKind) => void;
   signOut: () => Promise<void>;
   call: (method: string, args: Record<string, unknown>, o: CallOpts) => Promise<string | null>;
@@ -22,15 +25,24 @@ export interface WalletState {
   isDev: boolean;
   /** True when this session's holder actions go through the relayer (the player pays no gas). */
   gasless: boolean;
+  /** The wallet's display name ("Meteor Wallet", "Ethereum Wallets"), when known. */
+  walletName?: string | null;
+  kind?: WalletKind | null;
+  /** Public half of the wallet-approved gas-free key, when this browser holds one. */
+  gaslessPublicKey?: string | null;
 }
 
 export const Ctx = createContext<WalletState | null>(null);
 const panicOf = (msg: string) => msg.match(/Smart contract panicked: ([^"\\]+)/)?.[1];
+const LAST = "lastsave:wallet";
+const loadLast = (): { id: string; name: string } | null => { try { return JSON.parse(localStorage.getItem(LAST) ?? "null"); } catch { return null; } };
+const saveLast = (v: { id: string; name: string } | null) => { try { if (v) localStorage.setItem(LAST, JSON.stringify(v)); else localStorage.removeItem(LAST); } catch { /* storage blocked */ } };
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const toast = useToast();
   const [ready, setReady] = useState(false);
   const [walletAccount, setWalletAccount] = useState<string | null>(null);
+  const [last, setLast] = useState(loadLast);
   const [dev, setDev] = useState<DevSession | null>(() => loadDev());
   const [key, setKey] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
@@ -41,9 +53,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   // Restore a session, then follow NEAR Connect's sign-in/out events.
   useEffect(() => {
     let live = true;
+    void relayerCovers(); // warm it, so a sign-in click opens the wallet without waiting on the network
     const onIn = (p: { accounts: { accountId: string }[] }) => { if (live) setWalletAccount(p.accounts[0]?.accountId ?? null); };
     const onOut = () => { if (live) { setWalletAccount(null); setKey(null); } };
-    restoredAccount().then((r) => { if (live && r) setWalletAccount(r.accountId); }).finally(() => live && setReady(true));
+    restoredAccount().then((r) => { if (live && r) { setWalletAccount(r.accountId); const v = { id: r.wallet.manifest.id, name: r.wallet.manifest.name }; saveLast(v); setLast(v); } })
+      .finally(() => live && setReady(true));
     connector().then((c) => { c.on("wallet:signIn", onIn); c.on("wallet:signOut", onOut); }).catch(() => setReady(true));
     return () => { live = false; connector().then((c) => { c.off("wallet:signIn", onIn); c.off("wallet:signOut", onOut); }).catch(() => {}); };
   }, []);
@@ -60,19 +74,27 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const signIn = useCallback((kind: SignInKind = "near") => {
     if (connecting) return;
-    const secret = kind === "near" && RELAYER_URL ? newSecret() : null;
-    pendingKey.current = secret;
     setConnecting(true);
-    connectWallet(kind, secret ? publicKeyFromSecret(secret) : null)
-      .then(async (w) => {
-        const id = (await w.getAccounts())[0]?.accountId ?? null;
+    let secret: string | null = null;
+    relayerCovers()
+      .then((ok) => { secret = ok ? newSecret() : null; pendingKey.current = secret; return connectWallet(kind, secret ? publicKeyFromSecret(secret) : null); })
+      .then(async ({ wallet, walletId, walletName, keyRequested }) => {
+        const id = (await wallet.getAccounts())[0]?.accountId ?? null;
         setWalletAccount(id);
-        if (!id || !secret) return;
+        const v = { id: walletId, name: walletName }; saveLast(v); setLast(v);
+        if (!id) return;
+        if (!keyRequested || !secret) {
+          toast.push({ kind: "info", title: `Signed in with ${walletName}`, body: walletId === EVM_WALLET_ID
+            ? `${id} is a NEAR account your Ethereum wallet controls. Each action opens your wallet to approve.`
+            : "Each action opens your wallet to approve." });
+          return;
+        }
         if (await waitForKey(id, publicKeyFromSecret(secret))) {
           saveKey(id, secret); setKey(secret);
-          toast.push({ kind: "ok", title: "Signed in, gas-free", body: "Your wallet added a key that can only call this licence's free actions. The relayer pays their gas." });
+          toast.push({ kind: "ok", title: `Signed in with ${walletName} · gas-free`, body: "Your wallet added a key that can only call this licence's free actions. The relayer pays their gas.",
+            href: `${accountUrl(id)}?tab=accesskeys`, linkText: "See the key on NearBlocks" });
         } else {
-          toast.push({ kind: "info", title: "Signed in", body: "This wallet did not add the gas-free key, so each action opens your wallet and you pay the gas." });
+          toast.push({ kind: "info", title: `Signed in with ${walletName}`, body: "The wallet did not add the gas-free key, so each action opens your wallet and you pay the gas." });
         }
       })
       .catch((e) => {
@@ -82,25 +104,32 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       .finally(() => { pendingKey.current = null; setConnecting(false); });
   }, [connecting, toast]);
 
-  const devSignIn = useCallback((sess: DevSession) => { saveDev(sess); setDev(sess); }, []);
+  const devSignIn = useCallback((sess: DevSession) => { if (!DEV_ALLOWED) return; saveDev(sess); setDev(sess); }, []);
+  // Capture/e2e hook: only exists in a localhost build made with VITE_CAPTURE_SIGNER=1. No UI reaches it.
+  useEffect(() => {
+    if (!DEV_ALLOWED) return;
+    (window as unknown as { __lastSaveCapture?: unknown }).__lastSaveCapture = { signIn: devSignIn, signOut: () => { saveDev(null); setDev(null); } };
+  }, [devSignIn]);
+
   const signOut = useCallback(async () => {
     if (dev) { saveDev(null); setDev(null); return; }
     if (walletAccount) saveKey(walletAccount, null);
     setKey(null);
     try { const c = await connector(); await c.disconnect(); } catch { /* already signed out */ }
     setWalletAccount(null);
-  }, [dev, walletAccount]);
+    toast.push({ kind: "info", title: "Disconnected", body: "This browser forgot its gas-free key. Your licence stays on chain." });
+  }, [dev, walletAccount, toast]);
 
   const gaslessKey = RELAYER_URL && accountId ? (dev?.privateKey ?? key) : null;
   const call = useCallback(async (method: string, args: Record<string, unknown>, o: CallOpts) => {
-    const fail = (body: string, hash?: string | null) => { toast.push({ kind: "error", title: `${o.label} failed`, body, href: hash ? txUrl(hash) : undefined }); return null; };
+    const fail = (body: string, hash?: string | null) => { toast.push({ kind: "error", title: `${o.label} failed`, body, hash: hash ?? undefined, href: hash ? txUrl(hash) : undefined }); return null; };
+    const done = (hash: string, body: string, kind: "ok" | "info" = "ok", title = o.label) => { toast.push({ kind, title, body, hash, href: txUrl(hash), linkText: "Open on NearBlocks" }); return hash; };
     if (gaslessKey && accountId && GASLESS_METHODS.has(method) && (o.deposit ?? "0") === "0") {
       setPending(method);
       try {
         const r = await gaslessCall(accountId, gaslessKey, method, args, o.gasTgas ?? 100);
         if (r.failure) return fail(r.failure, r.hash);
-        toast.push({ kind: r.pending ? "info" : "ok", title: r.pending ? `${o.label}: submitted` : o.label, body: "Gas paid by the relayer: you paid 0 Ⓝ.", href: txUrl(r.hash) });
-        return r.hash;
+        return done(r.hash, "Gas paid by the relayer: you paid 0 Ⓝ.", r.pending ? "info" : "ok", r.pending ? `${o.label}: submitted` : o.label);
       } catch (e) { return fail((e instanceof Error ? e.message : String(e)).slice(0, 160)); } finally { setPending(null); }
     }
     if (dev) {
@@ -108,8 +137,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       try {
         const r = await devCall(dev, method, args, o.gasTgas ?? 100, o.deposit ?? "0");
         if (r.failure) return fail(r.failure, r.hash);
-        toast.push({ kind: "ok", title: o.label, body: "Confirmed on NEAR testnet.", href: txUrl(r.hash) });
-        return r.hash;
+        return done(r.hash, "Confirmed on NEAR testnet (capture signer).");
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         if (/Exceeded|timeout|TIMEOUT|PENDING/.test(msg)) { toast.push({ kind: "info", title: `${o.label}: submitted`, body: "Still running in an OutLayer enclave. The dashboard updates when it lands." }); return "pending"; }
@@ -121,16 +149,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       const { hash, failed } = await walletCall(method, args, o.gasTgas ?? 100, o.deposit ?? "0");
       if (failed) return fail("The contract refused it. Open the transaction for the reason.", hash);
-      toast.push({ kind: "ok", title: o.label, body: "Confirmed on NEAR testnet.", href: hash ? txUrl(hash) : undefined });
-      return hash;
+      if (hash) return done(hash, "Approved in your wallet · confirmed on NEAR testnet.");
+      toast.push({ kind: "ok", title: o.label, body: "Approved in your wallet · confirmed on NEAR testnet." });
+      return "sent";
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       return fail(panicOf(msg) ?? (/reject|cancel|closed/i.test(msg) ? "You cancelled in the wallet." : msg.slice(0, 160)));
     } finally { setPending(null); }
   }, [accountId, toast, dev, gaslessKey, signIn]);
 
-  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending, connecting, devSignIn, isDev: !!dev, gasless: !!gaslessKey }),
-    [ready, accountId, signIn, signOut, call, pending, connecting, devSignIn, dev, gaslessKey]);
+  const kind: WalletKind | null = dev ? "capture" : walletAccount ? (last?.id === EVM_WALLET_ID ? "evm" : "near") : null;
+  const walletName = dev ? "Capture signer" : walletAccount ? last?.name ?? null : null;
+  const gaslessPublicKey = useMemo(() => { try { return gaslessKey ? publicKeyFromSecret(gaslessKey) : null; } catch { return null; } }, [gaslessKey]);
+  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending, connecting, devSignIn, isDev: !!dev, gasless: !!gaslessKey, walletName, kind, gaslessPublicKey }),
+    [ready, accountId, signIn, signOut, call, pending, connecting, devSignIn, dev, gaslessKey, walletName, kind, gaslessPublicKey]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
