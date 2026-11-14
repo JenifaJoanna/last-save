@@ -6,6 +6,7 @@ import { Film, XCut } from "./film/Film";
 import { Vertical, VERTICAL_FRAMES } from "./film/Vertical";
 import { X_TOTAL } from "./film/xcut";
 import { XOPEN, XOpen } from "./film/XOpen";
+import { ThumbArt } from "./film/Thumb";
 import { f, PLACED, TOTAL_FRAMES } from "./film/timeline";
 import { FrameA } from "./frames/FrameA";
 import { FrameB } from "./frames/FrameB";
@@ -25,6 +26,9 @@ export function Root() {
         {PLACED.map((s) => (
           <Composition key={s.id} id={s.id} component={SCENE_COMPONENTS[s.id]} durationInFrames={s.frames} fps={30} width={1920} height={1080} />
         ))}
+      </Folder>
+      <Folder name="Thumbnails">
+        <Composition id="Thumb" component={ThumbArt} durationInFrames={600} fps={30} width={1920} height={1080} />
       </Folder>
       <Folder name="StyleFrames">
         <Composition id="FrameA" component={FrameA} durationInFrames={120} fps={30} width={1920} height={1080} />
