@@ -70,7 +70,13 @@ export default function Store() {
                   {guaranteed && <span className="label inline-flex items-center gap-1.5 border border-alive/60 px-2 py-1 text-[10px] text-alive"><BadgeCheck className="size-3.5" />Forever guarantee</span>}
                 </div>
                 {dead ? (
-                  <p className="mt-4 text-sm text-muted">The studio has gone dark. <b className="text-text">100% of this price goes to the keep-alive pool</b> that pays community hosts for every licence holder they serve.</p>
+                  <div className="mt-5">
+                    <div className="flex gap-1" aria-label="90% to the keep-alive pool, 10% to the gas-free budget">
+                      {Array.from({ length: 10 }, (_, i) => <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05, duration: 0 }} className={`h-3 flex-1 ${i < 9 ? "bg-gold" : "bg-cyan"}`} />)}
+                    </div>
+                    <div className="mt-2 flex justify-between text-xs text-muted"><span className="text-gold">90% to the keep-alive pool</span><span className="text-cyan">10% gas-free budget</span></div>
+                    <p className="mt-3 text-sm text-muted">The studio has gone dark. After the mint&rsquo;s storage fee, <b className="text-text">90% of this price goes to the keep-alive pool</b> that pays community hosts for every licence holder they serve, and 10% to the budget that pays the gas for probes, the release and host claims.</p>
+                  </div>
                 ) : (
                   <div className="mt-5">
                     <div className="flex gap-1" aria-label={`${100 - lockedPct}% to the studio, ${lockedPct}% locked for you`}>

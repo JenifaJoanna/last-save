@@ -132,7 +132,7 @@ export function YourChoice({ d, mine, refresh }: { d: Info; mine: LicenceView | 
   return (
     <Card eyebrow={`Your licence #${mine.tokenId}`} title={mine.choice ? (mine.choice === "Refund" ? "You took your refund" : "You pledged to the hosts") : open ? "Choose what your share does" : "Your share is locked for you"}>
       <p className="num text-3xl text-gold">{near(mine.potShare)} Ⓝ</p>
-      <p className="mt-1 text-[13px] text-muted">{mine.postDeath ? "Bought after shutdown: your whole price went to the hosts' pool." : "locked by contract when you bought"}</p>
+      <p className="mt-1 text-[13px] text-muted">{mine.postDeath ? "Bought after shutdown: 90% of your price went to the hosts' pool, 10% to the gas-free budget." : "locked by contract when you bought"}</p>
       {open && (
         <div className="mt-4 grid gap-1">
           <MenuRow big n={1} title="Refund" sub={`take ${near(mine.potShare)} Ⓝ back`} selected={sel === 0} onSelect={() => setSel(0)} onOpen={() => void choose("Refund")} right={pending === "choose" && sel === 0 ? "…" : undefined} />

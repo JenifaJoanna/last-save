@@ -24,7 +24,7 @@ const SECTIONS: { name: string; icon: typeof Store; tiles: Tile[] }[] = [
     { title: "Release running", sub: "release.wasm in the enclave", step: "releasing", path: "/app/afterlife" },
     { title: "Released · refund or pledge", sub: "yuna chooses: tap Refund it or Pledge", step: "released", as: "yuna", path: "/app/afterlife" },
     { title: "After the choices", sub: "Refunds and pledges, where every yocto went", step: "chosen", as: "mira", path: "/app/afterlife" },
-    { title: "Buy after the shutdown", sub: "ines buys: 100% to the hosts' pool", step: "chosen", as: "ines", path: "/app/store" },
+    { title: "Buy after the shutdown", sub: "ines buys: 90% to the hosts' pool", step: "chosen", as: "ines", path: "/app/store" },
   ] },
   { name: "Fans keep it alive", icon: Server, tiles: [
     { title: "Fan-host terminal", sub: "One command: verify, decrypt, restore, serve", step: "postbuy", as: "fanhost", path: "/host-run" },

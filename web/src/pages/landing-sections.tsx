@@ -102,7 +102,7 @@ export function Trust() {
 
 export const FAQ = [
   { q: "The server code is public after release. Can pirates skip the licence?", a: "Yes, anyone can run the released build. They earn nothing from the keep-alive pool: hosts are paid only for sessions signed by real licence holders, and your progress and the paid hosts follow the licence." },
-  { q: "What if the keep-alive pool runs out?", a: "The dashboard shows its runway in epochs. Licences sold after the shutdown put 100% of their price into the pool, pledges top it up, and hosts can keep hosting for free." },
+  { q: "What if the keep-alive pool runs out?", a: "The dashboard shows its runway in epochs. Licences sold after the shutdown put 90% of their price into the pool (10% pays the gas for probes and host claims), pledges top it up, and hosts can keep hosting for free." },
   { q: "Why would a studio opt in?", a: "Player pressure to keep bought games playable, a guarantee badge it can put next to the price, and royalties on every resale." },
   { q: "Who decides that the studio is gone?", a: "Code. Anyone can trigger a probe; an enclave checks that the official server is serving licence holders. Enough failed probes spaced in time, a quorum of holders reporting it down, or the studio's own end-of-service call flips the contract to Dead. A single missed probe or an OutLayer hiccup does not count." },
   { q: "What exactly do I trust?", a: "NEAR, OutLayer's TEE workers on Intel TDX, and OutLayer's keystore (master derived by NEAR MPC, keystores approved by a DAO). Not the studio, and not Last Save." },

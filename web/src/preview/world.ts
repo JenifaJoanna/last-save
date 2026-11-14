@@ -104,11 +104,12 @@ export const STEPS: Step[] = [
     });
     Object.assign(w.info.totals, { pot_locked: "0", refunded: Y(0.2), pledged: Y(0.2), pool: Y(0.2) });
   } },
-  { id: "postbuy", label: "ines buys after the shutdown: 100% to the hosts' pool", short: "Post-death buy", persona: "ines", apply: (w, t) => {
+  { id: "postbuy", label: "ines buys after the shutdown: 90% to the hosts' pool, 10% to the gas-free budget", short: "Post-death buy", persona: "ines", apply: (w, t) => {
     w.licences[acct("ines")] = { token_id: "5", owner_id: acct("ines"), pot_share: "0", choice: null, minted_at_ms: t - 20e3, post_death: true };
     w.tokens.push({ token_id: "5", owner_id: acct("ines") });
-    Object.assign(w.info.totals, { supply: 5, pool: Y(0.448) });
-    ev(w, t - 20e3, "buy", "minted", `${acct("ines")} licence #5 · after shutdown, all to the pool`);
+    // 0.25 N minus ~0.002 N mint storage = 0.248 N net: 90% to the pool, 10% to the ops budget (sale.rs, OPS_SALE_BPS)
+    Object.assign(w.info.totals, { supply: 5, pool: Y(0.4232), ops_budget: (BigInt(w.info.totals.ops_budget) + BigInt(Y(0.0248))).toString() });
+    ev(w, t - 20e3, "buy", "minted", `${acct("ines")} licence #5 · after shutdown, 90% to the pool`);
   } },
   { id: "hosted", label: "A fan hosts the released build with one command", short: "Hosted", persona: "fanhost", apply: (w, t) => {
     w.hosts.push({ host_id: acct("fanhost"), endpoint: "https://emberrift-community.pages.dev", host_pubkey: "ed25519:99YdQ46e8nYXhzXDE7kusYjSGfvPkinngQthJ5derrWh", registered_at_ms: t - 240e3, epochs_paid: 0, sessions_paid: 0, earned: "0" });

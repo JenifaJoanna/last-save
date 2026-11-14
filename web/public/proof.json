@@ -1,8 +1,8 @@
 {
   "schema": "lastsave-proof/1",
-  "generated_at": "2026-11-14T09:39:01.276Z",
+  "generated_at": "2026-11-14T10:27:57.241Z",
   "repo": "https://github.com/JenifaJoanna/last-save",
-  "commit": "8302bc764124f819f85135cf37d751c7f744ab6e",
+  "commit": "d062373259cf6954c8ee785f0c009cae4653e6a4",
   "network": "NEAR testnet (+ Base Sepolia for payouts)",
   "verify": {
     "command": "pnpm verify",
@@ -27,12 +27,12 @@
       "label": "v2 dev instance (same code as the judge instance; built before the CI pipeline)",
       "exists": true,
       "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3372 N · 1 host(s), 2 claim(s)",
-      "checked_at": "2026-11-14T09:38:54.310Z",
+      "checked_at": "2026-11-14T10:27:41.429Z",
       "counts": {
-        "pass": 17,
+        "pass": 18,
         "fail": 0,
         "na": 5,
-        "warn": 1
+        "warn": 0
       },
       "pins": {
         "codeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
@@ -97,7 +97,7 @@
           "group": "Money",
           "label": "Buckets non-negative and covered by the balance",
           "status": "pass",
-          "reason": "no negative bucket; spendable 1.7181 N covers tracked 1.2574 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.8802 N)"
+          "reason": "no negative bucket; spendable 1.7244 N covers tracked 1.2336 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.8564 N)"
         },
         {
           "id": "config.programs",
@@ -131,8 +131,8 @@
           "id": "artifact.mirrors",
           "group": "Artifacts",
           "label": "Encrypted artifact: every mirror's sha256 = on-chain",
-          "status": "warn",
-          "reason": "encrypted artifact: 1/2 mirrors serve sha256 8aed87d3…8622 (github raw ✓ · platform mirror ✗ serves the site HTML, not the file); the pinned hash makes a missing mirror harmless, but the list on chain has a dead entry"
+          "status": "pass",
+          "reason": "encrypted artifact: 2/2 mirrors serve sha256 8aed87d3…8622 (github raw ✓ · platform mirror ✓)"
         },
         {
           "id": "artifact.walrus",
@@ -218,7 +218,7 @@
       "label": "v1 judge instance (own deployed code, locked, Dead, released)",
       "exists": true,
       "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3841 N · 1 host(s), 2 claim(s)",
-      "checked_at": "2026-11-14T09:38:57.003Z",
+      "checked_at": "2026-11-14T10:27:44.337Z",
       "counts": {
         "pass": 13,
         "fail": 0,
@@ -479,7 +479,7 @@
         },
         "artifact.mirrors": {
           "ember-rift.lastsave-factory.testnet": "pending",
-          "v2dev.lastsave-factory.testnet": "warn",
+          "v2dev.lastsave-factory.testnet": "pass",
           "lastsave-licence.testnet": "pass"
         },
         "config.commitment": {
@@ -920,7 +920,7 @@
     {
       "id": "afterlife",
       "version": "v1",
-      "claim": "Each holder takes a refund of their pot share or pledges it to the keep-alive pool, once. Sales after death put 100% into the pool.",
+      "claim": "Each holder takes a refund of their pot share or pledges it to the keep-alive pool, once. Sales after death put their price, net of mint storage, into the pool (v1: all of it; v2: 90%, with 10% to the gas-free ops budget).",
       "checks": {
         "totals.sane": {
           "ember-rift.lastsave-factory.testnet": "pending",
@@ -1093,7 +1093,7 @@
       "checks": {
         "artifact.mirrors": {
           "ember-rift.lastsave-factory.testnet": "pending",
-          "v2dev.lastsave-factory.testnet": "warn",
+          "v2dev.lastsave-factory.testnet": "pass",
           "lastsave-licence.testnet": "pass"
         },
         "release.artifact": {
@@ -1129,9 +1129,9 @@
       },
       "code": [
         {
-          "at": "host/lib/mirrors.mjs:30",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/mirrors.mjs#L30",
-          "commit": "0706e09"
+          "at": "host/lib/mirrors.mjs:32",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/lib/mirrors.mjs#L32",
+          "commit": "1e142d8"
         },
         {
           "at": "host/lib/prepare.mjs:52",
@@ -1584,7 +1584,7 @@
         },
         "artifact.mirrors": {
           "ember-rift.lastsave-factory.testnet": "pending",
-          "v2dev.lastsave-factory.testnet": "warn",
+          "v2dev.lastsave-factory.testnet": "pass",
           "lastsave-licence.testnet": "pass"
         }
       },
@@ -1607,23 +1607,23 @@
           "commit": "0706e09"
         },
         {
-          "at": "host/lib/mirrors.mjs:30",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/0706e097c301ee826734e76f10f8a72fe0e3b907/host/lib/mirrors.mjs#L30",
-          "commit": "0706e09"
+          "at": "host/lib/mirrors.mjs:32",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/lib/mirrors.mjs#L32",
+          "commit": "1e142d8"
         }
       ],
       "tests": [
         {
           "name": "studio 404 -> walrus verified, stops there and prints one line each",
           "at": "artifact.test.ts:45",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L45",
-          "commit": "e2a676b"
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/test/artifact.test.ts#L45",
+          "commit": "1e142d8"
         },
         {
           "name": "skips a mirror that serves the wrong bytes and reports tampering when none matches",
           "at": "artifact.test.ts:55",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L55",
-          "commit": "e2a676b"
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/test/artifact.test.ts#L55",
+          "commit": "1e142d8"
         },
         {
           "name": "PUTs the exact JSON bytes with epochs=53&permanent=true and returns the blob id",
@@ -1688,15 +1688,15 @@
       "tests": [
         {
           "name": "refuses an attestation whose subject digest is not the on-chain build_hash",
-          "at": "artifact.test.ts:76",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L76",
-          "commit": "e2a676b"
+          "at": "artifact.test.ts:82",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/test/artifact.test.ts#L82",
+          "commit": "1e142d8"
         },
         {
           "name": "refuses a different workflow, a foreign signer identity",
-          "at": "artifact.test.ts:84",
-          "url": "https://github.com/JenifaJoanna/last-save/blob/e2a676b2f1b2c2ae8d9830d1d28bec066aa92df3/host/test/artifact.test.ts#L84",
-          "commit": "e2a676b"
+          "at": "artifact.test.ts:90",
+          "url": "https://github.com/JenifaJoanna/last-save/blob/1e142d870f407f75933af72fdb39e98d2835b0d8/host/test/artifact.test.ts#L90",
+          "commit": "1e142d8"
         }
       ]
     },

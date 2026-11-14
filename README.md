@@ -47,7 +47,7 @@ DEATH    the studio's own word never keeps it alive:
            studio: end_of_service()
          release(): anyone; OutLayer runs release.wasm, which re-reads the contract over RPC, requires Dead, outputs K
 AFTER    each holder: choose(Refund) -> pot share back, or choose(Pledge) -> keep-alive pool
-         buy_licence() after death sends 100% to the pool
+         buy_licence() after death: price minus mint storage, 90% to the pool, 10% to the gas-free ops budget (v1: all to the pool)
          a fan runs `pnpm host`: reads K + artifact hash from chain, verifies, decrypts, restores the last snapshot,
            serves it (wrangler dev + cloudflared, or Cloudflare), register_host()
          claim_epoch(): probe.wasm verifies holder-signed sessions at that host; the pool pays per unique verified holder
@@ -220,8 +220,8 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
 They earn nothing from the pool: hosts are paid only for sessions signed by real licence holders, and your progress and
 the paid hosts follow the licence.
 
-**What if the pool runs out?** The dashboard shows its runway. Post-shutdown sales put 100% of their price into the
-pool, pledges top it up, and hosts can keep hosting for free.
+**What if the pool runs out?** The dashboard shows its runway. Post-shutdown sales put 90% of their price into the
+pool (10% funds the gas-free budget for probes and claims; v1 put in 100%), pledges top it up, and hosts can keep hosting for free.
 
 **Why would a studio opt in?** Player pressure to keep bought games playable, a guarantee badge it can show next to the
 price, and royalties on every resale.

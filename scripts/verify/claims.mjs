@@ -35,7 +35,7 @@ export const CLAIMS = [
     checks: ["release.key", "release.artifact"], tx: { v1: /\d\d:\d\d release /i, v2: /^release/i },
     code: [[`${L}/release.rs`, "pub fn release"], [`${L}/release.rs`, "pub fn on_release"]],
     tests: [[`${T}/t_release.rs`, "release_while_alive_refused"], [`${T}/t_release.rs`, "release_success_stores_key_after_commitment_check"], [`${T}/t_release.rs`, "release_refused_or_failed_outputs_do_not_release"]] },
-  { id: "afterlife", version: "v1", claim: "Each holder takes a refund of their pot share or pledges it to the keep-alive pool, once. Sales after death put 100% into the pool.",
+  { id: "afterlife", version: "v1", claim: "Each holder takes a refund of their pot share or pledges it to the keep-alive pool, once. Sales after death put their price, net of mint storage, into the pool (v1: all of it; v2: 90%, with 10% to the gas-free ops budget).",
     checks: ["totals.sane"], tx: { v1: /refund|pledge|post-shutdown/i, v2: /choose|buy_licence fanhost/i },
     code: [[`${L}/afterlife.rs`, "pub fn choose"]],
     tests: [[`${T}/t_release.rs`, "refund_pays_the_holder_and_updates_totals"], [`${T}/t_release.rs`, "pledge_moves_the_share_to_the_pool_and_is_final"], [`${T}/t_release.rs`, "refund_twice_and_pledge_after_refund_refused"], [`${T}/t_sale.rs`, "buy_after_death_goes_to_pool_with_no_pot_share"]] },

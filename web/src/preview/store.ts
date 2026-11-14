@@ -71,7 +71,7 @@ export async function act(method: string, args: Record<string, unknown>, label: 
       await wait(900); sfx("confirm");
       if (i < at("sold")) goto("sold", cur.persona);
       else if (cur.persona === "ines" || i >= at("chosen")) goto(i >= at("postbuy") ? cur.step : "postbuy", "ines");
-      return { ok: true, title: label, body: i >= at("dead") ? "Bought after the shutdown: the whole price went to the hosts' pool." : "Licence minted. 40% of the price is locked for you by contract." };
+      return { ok: true, title: label, body: i >= at("dead") ? "Bought after the shutdown: 90% of the price went to the hosts' pool, 10% to the gas-free budget." : "Licence minted. 40% of the price is locked for you by contract." };
     case "probe_official": {
       const p = cur.persona;
       sfx("scan"); world.info.probe.in_flight = true; world.info.probe.in_flight_since_ms = Date.now(); emit();
