@@ -67,7 +67,7 @@ function ServerLine({ f }: { f: number }) {
     <div style={{ position: "absolute", left: SERVER_LINE.x, top: SERVER_LINE.y, display: "flex", alignItems: "center", gap: 22, padding: "16px 26px", opacity: p, transform: `translateX(${(1 - p) * -14}px)`,
       background: "rgba(10,8,20,0.86)", borderLeft: `6px solid ${T.alive}`, boxShadow: "0 20px 44px rgba(0,0,0,0.6)" }}>
       <span style={{ width: 24, height: 24, borderRadius: 12, background: T.alive, opacity: blink ? 1 : 0.45, boxShadow: `0 0 16px ${T.alive}` }} />
-      <Label size={SERVER_LINE.size} color={T.text} track={0.08}>{SERVER_LINE.text}</Label>
+      <Label size={SERVER_LINE.size} color={T.text} track={0.08}>{SERVER_LINE.text} · <span style={{ color: T.alive }}>{SERVER_LINE.status}</span></Label>
     </div>
   );
 }
