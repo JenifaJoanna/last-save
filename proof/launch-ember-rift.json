@@ -62,6 +62,75 @@
         "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-49e114638d42bc0d.bin"
       ],
       "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-14T15:43:40.999Z",
+      "hash": "BMZrfBV9eFqVmvaJF2WR7Eawh2pKzFCYiWeMqQv1RgU8",
+      "url": "https://testnet.nearblocks.io/txns/BMZrfBV9eFqVmvaJF2WR7Eawh2pKzFCYiWeMqQv1RgU8",
+      "instance": "ember-rift.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "1.8737 NEAR",
+      "min_deposit": "0.3737 NEAR",
+      "evm_address": "0x7A8e0779Ba1726693DAd36443b024A22D78E935A",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-14T15:44:07.756Z",
+      "hash": "8KbiPGRK24yxAZzeCFViA8mdVHg7p94q8gqaMyykr4im",
+      "url": "https://testnet.nearblocks.io/txns/8KbiPGRK24yxAZzeCFViA8mdVHg7p94q8gqaMyykr4im",
+      "failure": null,
+      "storage_cost": "7010000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T15:47:55.239Z",
+      "hash": "8QLFvX4HQ7nj8ZvCtP5X122Lvt38rVrEgp8r2w9PMdxs",
+      "url": "https://testnet.nearblocks.io/txns/8QLFvX4HQ7nj8ZvCtP5X122Lvt38rVrEgp8r2w9PMdxs",
+      "failure": null,
+      "escrow_verified": false,
+      "logs": [
+        "[[yNEAR charged: \"1000000000000000000000\"]]",
+        "Execution promise failed: Failed. Refunded 29000000000000000000000 yoctoNEAR"
+      ]
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-14T15:52:05.449Z",
+      "hash": "CaemKvtu4NEGDsu8XoxxpVaZ9h7ZJDq9Xgy9bCwWfe4w",
+      "url": "https://testnet.nearblocks.io/txns/CaemKvtu4NEGDsu8XoxxpVaZ9h7ZJDq9Xgy9bCwWfe4w",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1133224900000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 249511011, time_ms: 1332 }, Cost: 1133224900000000000000 yoctoNEAR, Refund: 28866775100000000000000 yoctoNEAR, Cached WASM from 2026-11-14T09:44:40.528838+00:00"
+      ]
+    },
+    {
+      "step": "snapkey",
+      "at": "2026-11-14T15:52:33.989Z",
+      "hash": "2DNFaPmmSKkSBqUink1vnEHNW1itrRvTnBLkfGjuT8YK",
+      "url": "https://testnet.nearblocks.io/txns/2DNFaPmmSKkSBqUink1vnEHNW1itrRvTnBLkfGjuT8YK",
+      "public_key": "ed25519:Ba1wgjJRnaEHfPuGhnKGvrq5FTEE77Au4pFe5ondLVkK",
+      "methods": [
+        "post_snapshot"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-14T15:53:05.197Z",
+      "url": "https://emberrift-ember-rift.pages.dev",
+      "worker": "emberrift-ember-rift-arena",
+      "build_hash": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2"
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-14T15:53:17.261Z",
+      "summary": "ember-rift.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x7a8e0779ba1726693dad36443b024a22d78e935a ops=1.5000 NEAR escrowed=true verified=true",
+      "problems": []
     }
   ]
 }

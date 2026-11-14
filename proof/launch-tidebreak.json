@@ -48,6 +48,25 @@
         "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/tidebreak-ce76edeadfd317d6.bin"
       ],
       "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-14T15:49:28.704Z",
+      "hash": "H8rabBqa7dzFiCYHW5vSFJDQnLyJSk2sC5YUaydDc4EA",
+      "url": "https://testnet.nearblocks.io/txns/H8rabBqa7dzFiCYHW5vSFJDQnLyJSk2sC5YUaydDc4EA",
+      "instance": "tidebreak.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "0.6729 NEAR",
+      "min_deposit": "0.3729 NEAR",
+      "evm_address": "0x6f5d9cb592AdC7FD31567b71Ea9151f88e31C0a3",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-14T15:49:29.634Z",
+      "summary": "tidebreak.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x6f5d9cb592adc7fd31567b71ea9151f88e31c0a3 ops=0.3000 NEAR escrowed=false verified=false",
+      "problems": []
     }
   ]
 }

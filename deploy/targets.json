@@ -10,13 +10,17 @@
     "https://last-save-preview.pages.dev/play/",
     "https://lastsave-relay.pages.dev/health",
     "https://emberrift-v2dev.pages.dev/",
-    "https://emberrift-v2dev.pages.dev/health"
+    "https://emberrift-v2dev.pages.dev/health",
+    "https://emberrift-ember-rift.pages.dev/",
+    "https://emberrift-ember-rift.pages.dev/health",
+    "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin"
   ],
   "workers": [
     "emberrift-arena",
     "emberrift-community-arena",
     "lastsave-relay-relayer",
-    "emberrift-v2dev-arena"
+    "emberrift-v2dev-arena",
+    "emberrift-ember-rift-arena"
   ],
   "expected_gone": [
     "https://kiln-cdn-v2walrus.pages.dev/"
