@@ -1,6 +1,7 @@
 // Sound cue sheet. `at` is seconds from the scene start (scene given) and is anchored to narration words where noted
 // (scene voAt + the word's scribe_v3 start). Files in public/sfx/v1/ (provenance: public/sfx/v1/sfx-provenance.json).
 // Score: Eleven Music music_v2_5, candidate 1 (warm retro synth, 84 BPM); runners-up c2/c3 kept in public/music/v1/.
+import { MATCH_CUT, MATCH_FROM, MATCH_HITS } from "../scenes/v1/g3/match";
 import type { SceneId } from "./timeline";
 
 export interface Cue { file: string; at: number; scene: SceneId; volume?: number; dur?: number; rate?: number; fadeOut?: number }
@@ -22,9 +23,9 @@ export const SFX: Cue[] = [
   { scene: "S06", file: "deny-b.mp3", at: 7.56, volume: 0.5, rate: 0.85 }, // "refuses"
   { scene: "S07", file: "key.mp3", at: 6.84, volume: 0.5 },                // "single transaction"
   { scene: "S07", file: "win.mp3", at: 9.26, volume: 0.4 },                // "no keys"
-  { scene: "S08", file: "dash.mp3", at: 1.5, volume: 0.5 },
-  { scene: "S08", file: "shard.mp3", at: 3.2, volume: 0.45 },
-  { scene: "S08", file: "hit.mp3", at: 5.0, volume: 0.5 },
+  { scene: "S08", file: "dash.mp3", at: MATCH_CUT / 30 + 0.2, volume: 0.45 },  // into the arena
+  // one hit per real hit in the take (g3/match.ts, from the builder's hit log), on the same frame as the punch-in
+  ...MATCH_HITS.map((h): Cue => ({ scene: "S08", file: "hit.mp3", at: MATCH_CUT / 30 + h - MATCH_FROM, volume: 0.5 })),
   { scene: "S09", file: "key.mp3", at: 1.9, volume: 0.55 },                // "goes dark": the delete command
   { scene: "S09", file: "glitch.mp3", at: 5.04, volume: 0.45 },            // "disappears": studio copy gone
   { scene: "S09", file: "crt-off.mp3", at: 7.1, volume: 0.6 },             // CONNECTION LOST collapse

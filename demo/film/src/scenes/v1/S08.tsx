@@ -11,11 +11,11 @@ import { Label } from "../../ds/type";
 import { Slot } from "../../film/Slot";
 import { scene } from "../../film/timeline";
 import { DeviceShot } from "./g3/Device";
-import { ARENA, MATCH_CROP, MATCH_FROM, MATCH_HITS, playerAt, PUNCH, SERVER_LINE } from "./g3/match";
+import { ARENA, MATCH_CROP, MATCH_CUT, MATCH_FROM, MATCH_HITS, playerAt, PUNCH, SERVER_LINE } from "./g3/match";
 import { easeInOut, easeOut, lerp, prog } from "./g3/motion";
 import { S07Lines } from "./S07";
 
-const CUT = 32; // match crossfade f32-42 (10 f)
+const CUT = MATCH_CUT; // match crossfade f32-42 (10 f)
 const BLEED = { x: -40, y: -40, w: 2000, h: 1160 }; // the key art's full-frame rect, a little past the frame edges
 const ART = { w: 1456, h: 816, core: { x: 1000, y: 322 } }; // key art px; core = the arena's burning centre
 

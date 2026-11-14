@@ -1,6 +1,8 @@
 // S08 tune sheet for the `match` take (game client as mira on the official server). TUNE WHEN THE TAKE LANDS with the
 // builder's hit log. Preview values (preview/match.mp4, practice mode): sign-in 0-2 s, countdown 2-5 s, GO at 5 s.
 
+/** S08 frame where the match take crossfades in (f32–42). */
+export const MATCH_CUT = 32;
 /** Take second at the match cut-in (S08 f32): the first frame must already read as a busy arena. */
 export const MATCH_FROM = 6;
 /** Take seconds of each hit (punch-in + shake; cues.ts wires a hit SFX to these). Placeholders inside the first 6 s. */
