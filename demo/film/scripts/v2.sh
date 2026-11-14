@@ -31,7 +31,8 @@ if [ -f public/footage/raw/match.events.json ]; then node scripts/hits.mjs; else
 for d in public/footage/raw/*/; do if [ -f "$d/frames.json" ]; then node scripts/burst.mjs "$(basename "$d")"; fi; done
 
 step "judge-run facts"
-if [ -f scripts/facts.mjs ] && [ -f "$REPO/proof/judge-v2.json" ]; then node scripts/facts.mjs
+if [ -f scripts/facts.mjs ] && [ -f "$REPO/proof/judge-v2.json" ]; then
+  node scripts/facts.mjs || { [ $FINAL = 1 ] && exit 1; problems+=("judge facts incomplete: MISSING values render on screen"); }
 elif [ $FINAL = 1 ]; then echo "proof/judge-v2.json or scripts/facts.mjs missing: no final without the judge facts"; exit 1
 else echo "judge proof not there yet: facts stay as they are"; problems+=("judge facts not swapped"); fi
 
