@@ -1,0 +1,66 @@
+{
+ "id": "V09",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "The enclave confirms the studio is gone, and releases the server.",
+ "heard": "The Enclave confirms the studio is gone and releases the server.",
+ "match": true,
+ "lastWordEnd": 3.88,
+ "words": [
+  {
+   "w": "The",
+   "s": 0.14,
+   "e": 0.2
+  },
+  {
+   "w": "Enclave",
+   "s": 0.26,
+   "e": 0.62
+  },
+  {
+   "w": "confirms",
+   "s": 0.68,
+   "e": 1.24
+  },
+  {
+   "w": "the",
+   "s": 1.28,
+   "e": 1.38
+  },
+  {
+   "w": "studio",
+   "s": 1.44,
+   "e": 1.76
+  },
+  {
+   "w": "is",
+   "s": 1.82,
+   "e": 1.96
+  },
+  {
+   "w": "gone",
+   "s": 2,
+   "e": 2.3
+  },
+  {
+   "w": "and",
+   "s": 2.8,
+   "e": 2.92
+  },
+  {
+   "w": "releases",
+   "s": 2.96,
+   "e": 3.38
+  },
+  {
+   "w": "the",
+   "s": 3.42,
+   "e": 3.52
+  },
+  {
+   "w": "server.",
+   "s": 3.56,
+   "e": 3.88
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "id": "V13",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "Same players. Same progress. The host is paid per real player session — signed by the players themselves.",
+ "heard": "Same players, same progress. The host is paid per real player session, signed by the players themselves.",
+ "match": true,
+ "lastWordEnd": 6.96,
+ "words": [
+  {
+   "w": "Same",
+   "s": 0.26,
+   "e": 0.46
+  },
+  {
+   "w": "players,",
+   "s": 0.54,
+   "e": 1
+  },
+  {
+   "w": "same",
+   "s": 1.54,
+   "e": 1.78
+  },
+  {
+   "w": "progress.",
+   "s": 1.82,
+   "e": 2.38
+  },
+  {
+   "w": "The",
+   "s": 2.88,
+   "e": 2.94
+  },
+  {
+   "w": "host",
+   "s": 2.98,
+   "e": 3.2
+  },
+  {
+   "w": "is",
+   "s": 3.26,
+   "e": 3.38
+  },
+  {
+   "w": "paid",
+   "s": 3.44,
+   "e": 3.68
+  },
+  {
+   "w": "per",
+   "s": 3.74,
+   "e": 3.84
+  },
+  {
+   "w": "real",
+   "s": 4.019,
+   "e": 4.18
+  },
+  {
+   "w": "player",
+   "s": 4.28,
+   "e": 4.52
+  },
+  {
+   "w": "session,",
+   "s": 4.64,
+   "e": 5
+  },
+  {
+   "w": "signed",
+   "s": 5.5,
+   "e": 5.76
+  },
+  {
+   "w": "by",
+   "s": 5.78,
+   "e": 5.88
+  },
+  {
+   "w": "the",
+   "s": 5.9,
+   "e": 6
+  },
+  {
+   "w": "players",
+   "s": 6.04,
+   "e": 6.34
+  },
+  {
+   "w": "themselves.",
+   "s": 6.36,
+   "e": 6.96
+  }
+ ]
+}

@@ -1,0 +1,111 @@
+{
+ "id": "V14",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "Hosts can even be paid on Base. NEAR's MPC network signs for the contract, so no one holds that key.",
+ "heard": "Hosts can even be paid on base. NEAR's MPC network signs for the contract, so no one holds that key.",
+ "match": true,
+ "lastWordEnd": 6.62,
+ "words": [
+  {
+   "w": "Hosts",
+   "s": 0.14,
+   "e": 0.48
+  },
+  {
+   "w": "can",
+   "s": 0.54,
+   "e": 0.7
+  },
+  {
+   "w": "even",
+   "s": 0.76,
+   "e": 0.96
+  },
+  {
+   "w": "be",
+   "s": 0.98,
+   "e": 1.14
+  },
+  {
+   "w": "paid",
+   "s": 1.2,
+   "e": 1.44
+  },
+  {
+   "w": "on",
+   "s": 1.48,
+   "e": 1.62
+  },
+  {
+   "w": "base.",
+   "s": 1.66,
+   "e": 1.96
+  },
+  {
+   "w": "NEAR's",
+   "s": 2.5,
+   "e": 2.82
+  },
+  {
+   "w": "MPC",
+   "s": 2.9,
+   "e": 3.42
+  },
+  {
+   "w": "network",
+   "s": 3.46,
+   "e": 3.76
+  },
+  {
+   "w": "signs",
+   "s": 3.88,
+   "e": 4.14
+  },
+  {
+   "w": "for",
+   "s": 4.16,
+   "e": 4.24
+  },
+  {
+   "w": "the",
+   "s": 4.26,
+   "e": 4.34
+  },
+  {
+   "w": "contract,",
+   "s": 4.4,
+   "e": 4.92
+  },
+  {
+   "w": "so",
+   "s": 5.22,
+   "e": 5.34
+  },
+  {
+   "w": "no",
+   "s": 5.5,
+   "e": 5.66
+  },
+  {
+   "w": "one",
+   "s": 5.7,
+   "e": 5.82
+  },
+  {
+   "w": "holds",
+   "s": 5.88,
+   "e": 6.12
+  },
+  {
+   "w": "that",
+   "s": 6.18,
+   "e": 6.34
+  },
+  {
+   "w": "key.",
+   "s": 6.4,
+   "e": 6.62
+  }
+ ]
+}

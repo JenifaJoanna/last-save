@@ -1,0 +1,92 @@
+{
+  "voice": "Evan - Calm, Grounded & Reflective (ElevenLabs premade, TWutjvRaJqAX89preB4e)",
+  "model": "eleven_v4 via POST /v1/text-to-dialogue/with-timestamps",
+  "source": "DEMO-STORY v3, approved by the owner via the coordinator on 14 Nov (all six new lines as written)",
+  "settings": {
+    "stability": 0.5,
+    "similarity": 0.8
+  },
+  "lines": [
+    {
+      "id": "V01",
+      "tag": "[calm]",
+      "text": "When a publisher turns off its servers, the game you paid for goes with it."
+    },
+    {
+      "id": "V02",
+      "tag": "[warm]",
+      "text": "Last Save is a licence that outlives its publisher."
+    },
+    {
+      "id": "V03",
+      "tag": "[thoughtful]",
+      "text": "In June, Europe chose not to make it law, and asked the industry for an end-of-life code instead. Last Save is that promise, enforced by code, with a refund already locked in."
+    },
+    {
+      "id": "V04",
+      "tag": "[calm]",
+      "text": "Each licence is an NFT on NEAR. The studio earns a royalty on every resale, and forty percent of every sale is locked, by contract, for the day the studio leaves."
+    },
+    {
+      "id": "V05",
+      "tag": "[calm]",
+      "text": "So the server build is encrypted, stored in two places and logged publicly before launch. Its key sits in an enclave that only this contract, running this exact program, can open. No single party can take it back. Not the studio, and not us."
+    },
+    {
+      "id": "V06",
+      "tag": "[warm]",
+      "text": "And you don't have to trust us on that. Anyone can try to release it early, fake a shutdown or drain the pool, and the contract refuses every attempt."
+    },
+    {
+      "id": "V07",
+      "tag": "[calm]",
+      "text": "Any studio can do the same. The licence code lives on NEAR as one global contract, and a new game launches in a single transaction, born with no keys."
+    },
+    {
+      "id": "V08",
+      "tag": "[serious]",
+      "text": "Then the studio goes dark. Its servers stop, and its download link disappears with them. The studio's word can't keep a game alive here, only players actually being served can, so when the checks fail three times, the contract marks it dead."
+    },
+    {
+      "id": "V09",
+      "tag": "[calm]",
+      "text": "The enclave confirms the studio is gone, and releases the server."
+    },
+    {
+      "id": "V10",
+      "tag": "[warm]",
+      "text": "Every holder decides, without paying gas: take their share back, or keep the game alive. New players fund it too."
+    },
+    {
+      "id": "V11",
+      "tag": "[calm]",
+      "text": "Now the build is public for good, on Walrus and on the Internet Archive."
+    },
+    {
+      "id": "V12",
+      "tag": "[calm]",
+      "text": "A fan clicks one button or runs one command. It fetches the archived copy, checks it against the hash and the build record from day one, and restores everyone's progress."
+    },
+    {
+      "id": "V13",
+      "tag": "[warm]",
+      "text": "Same players. Same progress. The host is paid per real player session — signed by the players themselves."
+    },
+    {
+      "id": "V14",
+      "tag": "[calm]",
+      "text": "Hosts can even be paid on Base. NEAR's MPC network signs for the contract, so no one holds that key."
+    },
+    {
+      "id": "V15",
+      "tag": "[calm]",
+      "text": "Every claim in this film is one command away. Run verify, and it checks each one against the chain.",
+      "speak": "Every claim in this film is one command away. Run verify — and it checks each one against the chain."
+    },
+    {
+      "id": "V16",
+      "tag": "[warm]",
+      "text": "Last Save. Built on NEAR."
+    }
+  ]
+}

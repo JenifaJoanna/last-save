@@ -1,0 +1,81 @@
+{
+ "id": "V11",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "Now the build is public for good, on Walrus and on the Internet Archive.",
+ "heard": "Now the build is public for good, on Walrus and on the Internet Archive.",
+ "match": true,
+ "lastWordEnd": 4.36,
+ "words": [
+  {
+   "w": "Now",
+   "s": 0.14,
+   "e": 0.32
+  },
+  {
+   "w": "the",
+   "s": 0.36,
+   "e": 0.44
+  },
+  {
+   "w": "build",
+   "s": 0.48,
+   "e": 0.64
+  },
+  {
+   "w": "is",
+   "s": 0.68,
+   "e": 0.8
+  },
+  {
+   "w": "public",
+   "s": 0.86,
+   "e": 1.14
+  },
+  {
+   "w": "for",
+   "s": 1.22,
+   "e": 1.36
+  },
+  {
+   "w": "good,",
+   "s": 1.4,
+   "e": 1.62
+  },
+  {
+   "w": "on",
+   "s": 2.08,
+   "e": 2.22
+  },
+  {
+   "w": "Walrus",
+   "s": 2.26,
+   "e": 2.74
+  },
+  {
+   "w": "and",
+   "s": 2.96,
+   "e": 3.18
+  },
+  {
+   "w": "on",
+   "s": 3.32,
+   "e": 3.4
+  },
+  {
+   "w": "the",
+   "s": 3.44,
+   "e": 3.5
+  },
+  {
+   "w": "Internet",
+   "s": 3.54,
+   "e": 3.78
+  },
+  {
+   "w": "Archive.",
+   "s": 3.88,
+   "e": 4.36
+  }
+ ]
+}

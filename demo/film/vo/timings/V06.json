@@ -1,0 +1,156 @@
+{
+ "id": "V06",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "And you don't have to trust us on that. Anyone can try to release it early, fake a shutdown or drain the pool, and the contract refuses every attempt.",
+ "heard": "And you don't have to trust us on that. Anyone can try to release it early, fake a shutdown, or drain the pool, and the contract refuses every attempt.",
+ "match": true,
+ "lastWordEnd": 8.72,
+ "words": [
+  {
+   "w": "And",
+   "s": 0.1,
+   "e": 0.18
+  },
+  {
+   "w": "you",
+   "s": 0.24,
+   "e": 0.38
+  },
+  {
+   "w": "don't",
+   "s": 0.42,
+   "e": 0.62
+  },
+  {
+   "w": "have",
+   "s": 0.66,
+   "e": 0.78
+  },
+  {
+   "w": "to",
+   "s": 0.82,
+   "e": 0.9
+  },
+  {
+   "w": "trust",
+   "s": 0.96,
+   "e": 1.18
+  },
+  {
+   "w": "us",
+   "s": 1.24,
+   "e": 1.34
+  },
+  {
+   "w": "on",
+   "s": 1.42,
+   "e": 1.52
+  },
+  {
+   "w": "that.",
+   "s": 1.56,
+   "e": 1.78
+  },
+  {
+   "w": "Anyone",
+   "s": 2.28,
+   "e": 2.56
+  },
+  {
+   "w": "can",
+   "s": 2.64,
+   "e": 2.78
+  },
+  {
+   "w": "try",
+   "s": 2.8,
+   "e": 2.94
+  },
+  {
+   "w": "to",
+   "s": 2.98,
+   "e": 3.06
+  },
+  {
+   "w": "release",
+   "s": 3.1,
+   "e": 3.36
+  },
+  {
+   "w": "it",
+   "s": 3.42,
+   "e": 3.5
+  },
+  {
+   "w": "early,",
+   "s": 3.56,
+   "e": 3.86
+  },
+  {
+   "w": "fake",
+   "s": 4.32,
+   "e": 4.46
+  },
+  {
+   "w": "a",
+   "s": 4.52,
+   "e": 4.58
+  },
+  {
+   "w": "shutdown,",
+   "s": 4.64,
+   "e": 5.16
+  },
+  {
+   "w": "or",
+   "s": 5.22,
+   "e": 5.36
+  },
+  {
+   "w": "drain",
+   "s": 5.4,
+   "e": 5.62
+  },
+  {
+   "w": "the",
+   "s": 5.66,
+   "e": 5.74
+  },
+  {
+   "w": "pool,",
+   "s": 5.8,
+   "e": 6.06
+  },
+  {
+   "w": "and",
+   "s": 6.52,
+   "e": 6.6
+  },
+  {
+   "w": "the",
+   "s": 6.64,
+   "e": 6.72
+  },
+  {
+   "w": "contract",
+   "s": 6.78,
+   "e": 7.22
+  },
+  {
+   "w": "refuses",
+   "s": 7.26,
+   "e": 7.74
+  },
+  {
+   "w": "every",
+   "s": 8,
+   "e": 8.26
+  },
+  {
+   "w": "attempt.",
+   "s": 8.3,
+   "e": 8.72
+  }
+ ]
+}

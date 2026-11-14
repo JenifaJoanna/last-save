@@ -5,7 +5,7 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts LastSave out/last-save-film.mp4 --codec h264 --pixel-format yuv420p",
-    "render:vertical": "remotion render src/index.ts LastSaveVertical out/last-save-45s-vertical.mp4 --codec h264 --pixel-format yuv420p"
+    "vo": "node scripts/vo.mjs"
   },
   "dependencies": {
     "@remotion/cli": "4.0.543",

@@ -1,0 +1,86 @@
+{
+ "id": "V01",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "When a publisher turns off its servers, the game you paid for goes with it.",
+ "heard": "When a publisher turns off its servers, the game you paid for goes with it.",
+ "match": true,
+ "lastWordEnd": 4.48,
+ "words": [
+  {
+   "w": "When",
+   "s": 0.18,
+   "e": 0.26
+  },
+  {
+   "w": "a",
+   "s": 0.3,
+   "e": 0.38
+  },
+  {
+   "w": "publisher",
+   "s": 0.42,
+   "e": 0.82
+  },
+  {
+   "w": "turns",
+   "s": 0.92,
+   "e": 1.16
+  },
+  {
+   "w": "off",
+   "s": 1.22,
+   "e": 1.34
+  },
+  {
+   "w": "its",
+   "s": 1.38,
+   "e": 1.52
+  },
+  {
+   "w": "servers,",
+   "s": 1.6,
+   "e": 2.08
+  },
+  {
+   "w": "the",
+   "s": 2.58,
+   "e": 2.66
+  },
+  {
+   "w": "game",
+   "s": 2.7,
+   "e": 2.9
+  },
+  {
+   "w": "you",
+   "s": 2.94,
+   "e": 3.04
+  },
+  {
+   "w": "paid",
+   "s": 3.1,
+   "e": 3.34
+  },
+  {
+   "w": "for",
+   "s": 3.4,
+   "e": 3.58
+  },
+  {
+   "w": "goes",
+   "s": 3.88,
+   "e": 4.1
+  },
+  {
+   "w": "with",
+   "s": 4.16,
+   "e": 4.3
+  },
+  {
+   "w": "it.",
+   "s": 4.34,
+   "e": 4.48
+  }
+ ]
+}

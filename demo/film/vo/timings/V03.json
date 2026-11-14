@@ -1,0 +1,166 @@
+{
+ "id": "V03",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "In June, Europe chose not to make it law, and asked the industry for an end-of-life code instead. Last Save is that promise, enforced by code, with a refund already locked in.",
+ "heard": "In June, Europe chose not to make it law and asked the industry for an end-of-life code instead. LastSave is that promise, enforced by code with a refund already locked in.",
+ "match": false,
+ "lastWordEnd": 11.52,
+ "words": [
+  {
+   "w": "In",
+   "s": 0.14,
+   "e": 0.24
+  },
+  {
+   "w": "June,",
+   "s": 0.38,
+   "e": 0.78
+  },
+  {
+   "w": "Europe",
+   "s": 1.22,
+   "e": 1.46
+  },
+  {
+   "w": "chose",
+   "s": 1.56,
+   "e": 1.82
+  },
+  {
+   "w": "not",
+   "s": 1.98,
+   "e": 2.24
+  },
+  {
+   "w": "to",
+   "s": 2.28,
+   "e": 2.36
+  },
+  {
+   "w": "make",
+   "s": 2.4,
+   "e": 2.54
+  },
+  {
+   "w": "it",
+   "s": 2.58,
+   "e": 2.68
+  },
+  {
+   "w": "law",
+   "s": 2.74,
+   "e": 2.94
+  },
+  {
+   "w": "and",
+   "s": 3.28,
+   "e": 3.38
+  },
+  {
+   "w": "asked",
+   "s": 3.48,
+   "e": 3.66
+  },
+  {
+   "w": "the",
+   "s": 3.7,
+   "e": 3.8
+  },
+  {
+   "w": "industry",
+   "s": 3.86,
+   "e": 4.32
+  },
+  {
+   "w": "for",
+   "s": 4.34,
+   "e": 4.42
+  },
+  {
+   "w": "an",
+   "s": 4.46,
+   "e": 4.58
+  },
+  {
+   "w": "end-of-life",
+   "s": 4.62,
+   "e": 5.14
+  },
+  {
+   "w": "code",
+   "s": 5.24,
+   "e": 5.42
+  },
+  {
+   "w": "instead.",
+   "s": 5.44,
+   "e": 5.94
+  },
+  {
+   "w": "LastSave",
+   "s": 6.58,
+   "e": 7.18
+  },
+  {
+   "w": "is",
+   "s": 7.34,
+   "e": 7.48
+  },
+  {
+   "w": "that",
+   "s": 7.54,
+   "e": 7.74
+  },
+  {
+   "w": "promise,",
+   "s": 7.8,
+   "e": 8.22
+  },
+  {
+   "w": "enforced",
+   "s": 8.54,
+   "e": 9
+  },
+  {
+   "w": "by",
+   "s": 9.04,
+   "e": 9.18
+  },
+  {
+   "w": "code",
+   "s": 9.22,
+   "e": 9.48
+  },
+  {
+   "w": "with",
+   "s": 9.84,
+   "e": 9.94
+  },
+  {
+   "w": "a",
+   "s": 10,
+   "e": 10.06
+  },
+  {
+   "w": "refund",
+   "s": 10.1,
+   "e": 10.46
+  },
+  {
+   "w": "already",
+   "s": 10.68,
+   "e": 10.98
+  },
+  {
+   "w": "locked",
+   "s": 11.06,
+   "e": 11.3
+  },
+  {
+   "w": "in.",
+   "s": 11.38,
+   "e": 11.52
+  }
+ ]
+}

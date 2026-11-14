@@ -1,0 +1,231 @@
+{
+ "id": "V05",
+ "tts": "eleven_v4",
+ "stt": "scribe_v3",
+ "text": "So the server build is encrypted, stored in two places and logged publicly before launch. Its key sits in an enclave that only this contract, running this exact program, can open. No single party can take it back. Not the studio, and not us.",
+ "heard": "So the server build is encrypted, stored in two places, and logged publicly before launch. Its key sits in an enclave that only this contract running this exact program can open. No single party can take it back, not the studio and not us.",
+ "match": true,
+ "lastWordEnd": 15.56,
+ "words": [
+  {
+   "w": "So",
+   "s": 0.12,
+   "e": 0.2
+  },
+  {
+   "w": "the",
+   "s": 0.24,
+   "e": 0.34
+  },
+  {
+   "w": "server",
+   "s": 0.4,
+   "e": 0.62
+  },
+  {
+   "w": "build",
+   "s": 0.7,
+   "e": 0.92
+  },
+  {
+   "w": "is",
+   "s": 0.96,
+   "e": 1.04
+  },
+  {
+   "w": "encrypted,",
+   "s": 1.08,
+   "e": 1.66
+  },
+  {
+   "w": "stored",
+   "s": 2.08,
+   "e": 2.26
+  },
+  {
+   "w": "in",
+   "s": 2.28,
+   "e": 2.4
+  },
+  {
+   "w": "two",
+   "s": 2.48,
+   "e": 2.6
+  },
+  {
+   "w": "places,",
+   "s": 2.7,
+   "e": 3.18
+  },
+  {
+   "w": "and",
+   "s": 3.34,
+   "e": 3.44
+  },
+  {
+   "w": "logged",
+   "s": 3.54,
+   "e": 3.78
+  },
+  {
+   "w": "publicly",
+   "s": 3.92,
+   "e": 4.42
+  },
+  {
+   "w": "before",
+   "s": 4.46,
+   "e": 4.82
+  },
+  {
+   "w": "launch.",
+   "s": 4.86,
+   "e": 5.18
+  },
+  {
+   "w": "Its",
+   "s": 5.76,
+   "e": 5.92
+  },
+  {
+   "w": "key",
+   "s": 6,
+   "e": 6.26
+  },
+  {
+   "w": "sits",
+   "s": 6.32,
+   "e": 6.48
+  },
+  {
+   "w": "in",
+   "s": 6.52,
+   "e": 6.58
+  },
+  {
+   "w": "an",
+   "s": 6.6,
+   "e": 6.72
+  },
+  {
+   "w": "enclave",
+   "s": 6.82,
+   "e": 7.24
+  },
+  {
+   "w": "that",
+   "s": 7.24,
+   "e": 7.46
+  },
+  {
+   "w": "only",
+   "s": 7.52,
+   "e": 7.84
+  },
+  {
+   "w": "this",
+   "s": 7.9,
+   "e": 8.119
+  },
+  {
+   "w": "contract",
+   "s": 8.16,
+   "e": 8.68
+  },
+  {
+   "w": "running",
+   "s": 8.88,
+   "e": 9.12
+  },
+  {
+   "w": "this",
+   "s": 9.2,
+   "e": 9.4
+  },
+  {
+   "w": "exact",
+   "s": 9.46,
+   "e": 9.9
+  },
+  {
+   "w": "program",
+   "s": 10.02,
+   "e": 10.48
+  },
+  {
+   "w": "can",
+   "s": 10.62,
+   "e": 10.76
+  },
+  {
+   "w": "open.",
+   "s": 10.82,
+   "e": 11.1
+  },
+  {
+   "w": "No",
+   "s": 11.7,
+   "e": 11.84
+  },
+  {
+   "w": "single",
+   "s": 12.02,
+   "e": 12.24
+  },
+  {
+   "w": "party",
+   "s": 12.36,
+   "e": 12.58
+  },
+  {
+   "w": "can",
+   "s": 12.64,
+   "e": 12.76
+  },
+  {
+   "w": "take",
+   "s": 12.8,
+   "e": 12.94
+  },
+  {
+   "w": "it",
+   "s": 12.96,
+   "e": 13.06
+  },
+  {
+   "w": "back,",
+   "s": 13.1,
+   "e": 13.34
+  },
+  {
+   "w": "not",
+   "s": 13.8,
+   "e": 13.92
+  },
+  {
+   "w": "the",
+   "s": 13.96,
+   "e": 14.04
+  },
+  {
+   "w": "studio",
+   "s": 14.12,
+   "e": 14.5
+  },
+  {
+   "w": "and",
+   "s": 14.86,
+   "e": 14.98
+  },
+  {
+   "w": "not",
+   "s": 15.04,
+   "e": 15.24
+  },
+  {
+   "w": "us.",
+   "s": 15.32,
+   "e": 15.56
+  }
+ ]
+}
