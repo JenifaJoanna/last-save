@@ -1,7 +1,7 @@
 // S07 Any studio (10.4 s, V07 at 0.3 s). Opens where S06's roll lands: ScreenFrame "Terminal" with the `t-factory`
-// take (the real `create_instance` for studio #2 "Tidebreak"). On "single transaction" the terminal drops to texture
-// and the new instance account lifts off its line as 56 px film type; the `x-factory` flash opens behind it and, on
-// "born with no keys", "0 access keys" lifts off the explorer. Both lines hold while the key art prints onto the screen
+// take (the real `pnpm -s studio:launch tidebreak`), cut so its "launches" row prints on "launches" and the result
+// block on "single transaction". Then the terminal drops to texture and the account line lifts off its row as 56 px
+// film type; the `x-factory` flash opens behind it and, on "born", "access keys: 0 · born locked" lifts off its row. Both lines hold while the key art prints onto the screen
 // and the camera pulls out of the glass to LS-0001 in space (frame-B pose); S08 opens on that pose and steps them out.
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { Camera, CONTENT, ScreenFrame } from "../../ds/screen";
@@ -13,7 +13,7 @@ import { FACTORY, KEYS_LINE, S07_BEATS, S07_SLOTS } from "./g3/factory";
 import { Flash } from "./g3/Flash";
 import { KeyLine } from "./g3/KeyLine";
 import { easeInOut, lerp, prog } from "./g3/motion";
-import { TermTake, TERM_K, termX, termY } from "./g3/TermTake";
+import { GRID, rowTop, TermCuts, TERM_K, termX, termY } from "./g3/TermTake";
 
 const FLASH_DUR = 33;
 
@@ -26,17 +26,18 @@ export function KeyArtScreen({ print = 1 }: { print?: number }) {
   );
 }
 
-/** The two S07 key lines; `f` may be negative-offset by S08 to keep them on screen across the seam. */
+/** The two S07 key lines, each lifted off its own row of the take; `f` may be offset by S08 to hold them across the seam. */
 export function S07Lines({ f, out, push = 1 }: { f: number; out?: number; push?: number }) {
   const fy = CONTENT.y + CONTENT.h / 2;
-  const acc = { x: 960 + (CONTENT.x + termX(196) - 960) * push, y: fy + (CONTENT.y + termY(FACTORY.account.y) - fy) * push };
+  const at = (row: number) => ({ x: 960 + (CONTENT.x + termX(GRID.x0 + 2 * GRID.col) - 960) * push, y: fy + (CONTENT.y + termY(rowTop(row)) - fy) * push });
+  const k0 = (GRID.size * TERM_K * push) / S07_SLOTS.size;
   return (
     <>
-      <KeyLine f={f} at={S07_BEATS.account} from={acc} fromScale={(26 * TERM_K * push) / S07_SLOTS.size} to={S07_SLOTS.account} size={S07_SLOTS.size} accent={T.gold} out={out}>
-        {FACTORY.account.text}
+      <KeyLine f={f} at={S07_BEATS.account} from={at(FACTORY.rows.account)} fromScale={k0} to={S07_SLOTS.account} size={S07_SLOTS.size} accent={T.gold} out={out}>
+        <span style={{ color: T.gold }}>{FACTORY.account.text}</span>  <span style={{ color: T.alive }}>{FACTORY.account.status}</span>
       </KeyLine>
-      <KeyLine f={f} at={S07_BEATS.keys} from={{ x: 700, y: 480 }} fromScale={0.4} to={S07_SLOTS.keys} size={S07_SLOTS.size} accent={T.gold} out={out}>
-        <span style={{ color: T.gold, fontWeight: 600 }}>{KEYS_LINE.zero}</span>{KEYS_LINE.rest}
+      <KeyLine f={f} at={S07_BEATS.keys} from={at(FACTORY.rows.keys)} fromScale={k0} to={S07_SLOTS.keys} size={S07_SLOTS.size} accent={T.alive} out={out}>
+        {KEYS_LINE.head}<span style={{ color: T.alive }}>{KEYS_LINE.tail}</span>
       </KeyLine>
     </>
   );
@@ -51,7 +52,7 @@ export function S07() {
   const texture = stepped(prog(f, S07_BEATS.account - 4, S07_BEATS.account + 2), 3);
   const terminal = (
     <AbsoluteFill style={{ opacity: lerp(1, TEXTURE.opacity, texture), filter: texture > 0 ? `blur(${TEXTURE.blur * texture}px)` : undefined }}>
-      <TermTake slot={FACTORY.slot} from={FACTORY.from} />
+      <TermCuts slot={FACTORY.slot} cuts={FACTORY.cuts} end={total} />
     </AbsoluteFill>
   );
 
