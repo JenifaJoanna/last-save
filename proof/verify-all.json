@@ -1,0 +1,1494 @@
+[
+  {
+    "instance": {
+      "id": "ember-rift.lastsave-factory.testnet",
+      "kind": "factory",
+      "label": "v2 judge instance (factory, global contract, Chain Signatures, Walrus, provenance)",
+      "factory": "lastsave-factory.testnet"
+    },
+    "network": "testnet",
+    "at": "2026-11-14T18:06:19.935Z",
+    "exists": true,
+    "state": "Ember Rift · Dead (players) · key escrowed · 5 licences · pool 0.4232 N",
+    "pins": {
+      "codeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "release": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+      "probe": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+      "keyCommitment": "6144be6dd6022300a40fd892949ae50b1c17aa42083abcef60651636e471ef7d",
+      "artifactSha256": "49e114638d42bc0d4bce2997511d2552faca29ef0119faf12f65197964098d66",
+      "buildHash": "f357f5fa0fa423b4363d5c202110ee18a995849882d08af66c8ede1f00f623f2"
+    },
+    "results": [
+      {
+        "id": "code.hash",
+        "group": "Code",
+        "label": "Contract code is the published code",
+        "status": "pass",
+        "reason": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code",
+        "onAccount": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "pinned": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "factory": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "publishProof": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "ms": 262
+      },
+      {
+        "id": "code.global_bytes",
+        "group": "Code",
+        "label": "Published global code is readable and hashes to its id",
+        "status": "pass",
+        "reason": "anyone can read the code: 332,631 B, sha256 2f1f41ee…f7ca = its hash (immutable, by hash)",
+        "bytes": 332631,
+        "sha256": "2f1f41ee02477393f068580e26b384c320191201ac93df6f696c06164c31f7ca",
+        "ms": 338
+      },
+      {
+        "id": "keys.none",
+        "group": "Code",
+        "label": "0 access keys on the instance (locked)",
+        "status": "pass",
+        "reason": "0 access keys: nobody can redeploy, drain or delete the contract",
+        "ms": 261
+      },
+      {
+        "id": "factory.hash",
+        "group": "Factory",
+        "label": "Factory points at the same global hash",
+        "status": "pass",
+        "reason": "lastsave-factory.testnet code_hash() = 4Awoknek…6rt1 = the published global hash",
+        "ms": 262
+      },
+      {
+        "id": "factory.listed",
+        "group": "Factory",
+        "label": "Instance listed by the factory",
+        "status": "pass",
+        "reason": "listed in lastsave-factory.testnet.instances(): created by lastsave-studio.testnet, status Ready",
+        "row": {
+          "account_id": "ember-rift.lastsave-factory.testnet",
+          "creator": "lastsave-studio.testnet",
+          "deposit": "1873750000000000000000000",
+          "created_ms": 1794671007242,
+          "status": "Ready"
+        },
+        "ms": 262
+      },
+      {
+        "id": "escrow.verified",
+        "group": "Escrow",
+        "label": "Escrow attested by the enclave",
+        "status": "pass",
+        "reason": "escrowed; attest() verified key commitment, artifact hash and build hash in the enclave (2026-11-14 15:51 UTC)",
+        "ms": 17
+      },
+      {
+        "id": "escrow.rule",
+        "group": "Escrow",
+        "label": "Keystore access rule is exactly release.wasm + this contract",
+        "status": "pass",
+        "reason": "keystore rule in tx 8KbiPGRK…r4im: key opens only for caller = ember-rift.lastsave-factory.testnet AND code = release.wasm 0a02917b…53ca",
+        "tx": "8KbiPGRK24yxAZzeCFViA8mdVHg7p94q8gqaMyykr4im",
+        "ms": 490
+      },
+      {
+        "id": "totals.sane",
+        "group": "Money",
+        "label": "Buckets non-negative and covered by the balance",
+        "status": "pass",
+        "reason": "no negative bucket; spendable 2.2504 N covers tracked 1.6681 N (pot locked 0.0000 N, pool 0.4232 N, evm settled 0.0000 N, ops budget 1.2448 N)",
+        "ms": 17
+      },
+      {
+        "id": "config.programs",
+        "group": "Pins",
+        "label": "release/probe wasm hashes = committed artifacts/ files",
+        "status": "pass",
+        "reason": "release.wasm 0a02917b…53ca and probe.wasm 9c23f7ea…221a on chain = sha256 of artifacts/ files",
+        "files": [
+          "artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ],
+        "ms": 17
+      },
+      {
+        "id": "config.commitment",
+        "group": "Pins",
+        "label": "Key commitment, artifact hash and build hash are set",
+        "status": "pass",
+        "reason": "key commitment 6144be6d…ef7d, artifact 49e11463…8d66 (271,868 B), build hash f357f5fa…23f2 are set on chain",
+        "ms": 16
+      },
+      {
+        "id": "config.artifact_file",
+        "group": "Pins",
+        "label": "Encrypted artifact = committed file",
+        "status": "pass",
+        "reason": "encrypted artifact 49e11463…8d66 = artifacts/ember-rift-49e114638d42bc0d.bin",
+        "ms": 16
+      },
+      {
+        "id": "programs.mirrors",
+        "group": "Artifacts",
+        "label": "Enclave programs download from every mirror",
+        "status": "pass",
+        "reason": "release.wasm: 2/2 mirrors serve sha256 0a02917b…53ca; probe.wasm: 2/2 mirrors serve sha256 9c23f7ea…221a",
+        "ms": 220
+      },
+      {
+        "id": "artifact.mirrors",
+        "group": "Artifacts",
+        "label": "Encrypted artifact: every mirror's sha256 = on-chain",
+        "status": "warn",
+        "reason": "encrypted artifact: 2/3 mirrors serve sha256 49e11463…8d66 (studio copy ? fetch failed · walrus ✓ · github raw ✓); the pinned hash makes a missing mirror harmless, but the list on chain has a dead entry",
+        "mirrors": [
+          {
+            "url": "https://kiln-cdn-ember-rift.pages.dev/ember-rift-49e114638d42bc0d.bin",
+            "label": "studio copy",
+            "ok": false,
+            "status": 0,
+            "error": "fetch failed"
+          },
+          {
+            "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
+            "label": "walrus",
+            "ok": true,
+            "status": 200,
+            "error": null
+          },
+          {
+            "url": "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-49e114638d42bc0d.bin",
+            "label": "github raw",
+            "ok": true,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "ms": 193
+      },
+      {
+        "id": "artifact.walrus",
+        "group": "Artifacts",
+        "label": "Walrus mirror serves it",
+        "status": "pass",
+        "reason": "walrus: 1/1 mirrors serve sha256 49e11463…8d66 (walrus ✓)",
+        "mirrors": [
+          {
+            "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/8IE89dAnW8hs2rqzNoUbU9KNF4Z0MJ8nCaHHDfDv6d4",
+            "label": "walrus",
+            "ok": true,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "ms": 145
+      },
+      {
+        "id": "release.key",
+        "group": "Release",
+        "label": "Released key hashes to the commitment",
+        "status": "na",
+        "reason": "not released yet (status Dead); the key stays sealed in the enclave until the contract is Dead",
+        "ms": 16
+      },
+      {
+        "id": "release.artifact",
+        "group": "Release",
+        "label": "Released key decrypts the artifact to build_hash",
+        "status": "na",
+        "reason": "not released yet (status Dead); the key stays sealed in the enclave until the contract is Dead",
+        "ms": 16
+      },
+      {
+        "id": "chainsig.address",
+        "group": "Chain Signatures",
+        "label": "Payer address re-derived from public inputs",
+        "status": "pass",
+        "reason": "0x7A8e0779Ba1726693DAd36443b024A22D78E935A = derive(v1.signer-prod.testnet root key, ember-rift.lastsave-factory.testnet, \"lastsave/host-payouts\"); the signer contract's own view agrees",
+        "derived": "0x7A8e0779Ba1726693DAd36443b024A22D78E935A",
+        "onChain": "0x7a8e0779ba1726693dad36443b024a22d78e935a",
+        "config": "0x7a8e0779ba1726693dad36443b024a22d78e935a",
+        "viaSigner": "0x7A8e0779Ba1726693DAd36443b024A22D78E935A",
+        "signer": "v1.signer-prod.testnet",
+        "path": "lastsave/host-payouts",
+        "ms": 1224
+      },
+      {
+        "id": "chainsig.payouts",
+        "group": "Chain Signatures",
+        "label": "Signed payouts mined on Base Sepolia",
+        "status": "na",
+        "reason": "no payout booked yet (a verified host claim books one)",
+        "ms": 766
+      },
+      {
+        "id": "provenance",
+        "group": "Provenance",
+        "label": "Build attested by GitHub Actions (Sigstore) for the on-chain build hash",
+        "status": "pass",
+        "reason": "build_hash f357f5fa…23f2 is attested: built by workflow .github/workflows/release-build.yml at commit f2a8851, logged 2026-11-14 15:40 UTC (Rekor #3881246795) https://search.sigstore.dev/?logIndex=3881246795",
+        "provenance": {
+          "repo": "JenifaJoanna/last-save",
+          "workflow": ".github/workflows/release-build.yml",
+          "ref": "refs/tags/build-ember-rift",
+          "commit": "f2a8851a95ada0a8bec46863957002143b860abe",
+          "runId": "43611428713",
+          "runUrl": "https://github.com/JenifaJoanna/last-save/actions/runs/43611428713/attempts/1",
+          "rekorIndex": 3881246795,
+          "integratedTime": "2026-11-14T15:40:58.000Z",
+          "rfc3161": 0,
+          "san": "https://github.com/JenifaJoanna/last-save/.github/workflows/release-build.yml@refs/tags/build-ember-rift",
+          "source": "api.github.com attestations"
+        },
+        "ms": 2087
+      },
+      {
+        "id": "manifest.txs",
+        "group": "Proof",
+        "label": "Every tx in the proof manifests resolves on RPC",
+        "status": "pass",
+        "reason": "14/14 listed txs are on chain, final, executed as listed [launch-ember-rift.json, judge-v2.json]",
+        "rows": [
+          {
+            "hash": "BMZrfBV9eFqVmvaJF2WR7Eawh2pKzFCYiWeMqQv1RgU8",
+            "label": "instance",
+            "expect": "success",
+            "file": "proof/launch-ember-rift.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/BMZrfBV9eFqVmvaJF2WR7Eawh2pKzFCYiWeMqQv1RgU8"
+          },
+          {
+            "hash": "8KbiPGRK24yxAZzeCFViA8mdVHg7p94q8gqaMyykr4im",
+            "label": "escrow",
+            "expect": "success",
+            "file": "proof/launch-ember-rift.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/8KbiPGRK24yxAZzeCFViA8mdVHg7p94q8gqaMyykr4im"
+          },
+          {
+            "hash": "8QLFvX4HQ7nj8ZvCtP5X122Lvt38rVrEgp8r2w9PMdxs",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-ember-rift.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/8QLFvX4HQ7nj8ZvCtP5X122Lvt38rVrEgp8r2w9PMdxs"
+          },
+          {
+            "hash": "CaemKvtu4NEGDsu8XoxxpVaZ9h7ZJDq9Xgy9bCwWfe4w",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-ember-rift.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/CaemKvtu4NEGDsu8XoxxpVaZ9h7ZJDq9Xgy9bCwWfe4w"
+          },
+          {
+            "hash": "2DNFaPmmSKkSBqUink1vnEHNW1itrRvTnBLkfGjuT8YK",
+            "label": "snapkey",
+            "expect": "success",
+            "file": "proof/launch-ember-rift.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2DNFaPmmSKkSBqUink1vnEHNW1itrRvTnBLkfGjuT8YK"
+          },
+          {
+            "hash": "584FqeDjbQeswogFfFG9zfZd7HBcwnuQod2jyeEwFjic",
+            "label": "buy_licence lastsave-mira.testnet",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/584FqeDjbQeswogFfFG9zfZd7HBcwnuQod2jyeEwFjic"
+          },
+          {
+            "hash": "DBvd3DFypcTsjUfrLMRCyECWbmjR6xJqzFjXmZqsdXym",
+            "label": "buy_licence lastsave-kofi.testnet",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/DBvd3DFypcTsjUfrLMRCyECWbmjR6xJqzFjXmZqsdXym"
+          },
+          {
+            "hash": "2VQepMNxrNZLUnFmpbVP2GmAVpg7rtbgUN3ECdgaKVkV",
+            "label": "probe_official #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2VQepMNxrNZLUnFmpbVP2GmAVpg7rtbgUN3ECdgaKVkV"
+          },
+          {
+            "hash": "2zudGnKMkMe83ht3XF516ekXbdZ44n4d6jyDACs8LEF4",
+            "label": "report_down lastsave-mira.testnet",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2zudGnKMkMe83ht3XF516ekXbdZ44n4d6jyDACs8LEF4"
+          },
+          {
+            "hash": "5bjVvdHeddKZFRJi8QAPZuLEnme8WQ6nhghtdV7CxfgC",
+            "label": "report_down again lastsave-mira.testnet",
+            "expect": "failure",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Already reported in th",
+            "url": "https://testnet.nearblocks.io/txns/5bjVvdHeddKZFRJi8QAPZuLEnme8WQ6nhghtdV7CxfgC"
+          },
+          {
+            "hash": "3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ",
+            "label": "release #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/3G9RePCYaS2SqkRvgbmbc7RJ7DWBEnihWQ4EinF4HgEZ"
+          },
+          {
+            "hash": "2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A",
+            "label": "release #2 (gas-free)",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2JXHPCjRFVStQLpqxLqn4B57afWGjHsXeMgMJYgpMw3A"
+          },
+          {
+            "hash": "2Xdg9r3bxpp3jdXc818sqhr3QrxYxhu9Msu384wnuGWg",
+            "label": "tx",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2Xdg9r3bxpp3jdXc818sqhr3QrxYxhu9Msu384wnuGWg"
+          },
+          {
+            "hash": "JDspLTRgDqWWQ1UDERkF58H86tURGmvaY8Az5QJbFDAW",
+            "label": "tx",
+            "expect": "success",
+            "file": "proof/judge-v2.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/JDspLTRgDqWWQ1UDERkF58H86tURGmvaY8Az5QJbFDAW"
+          }
+        ],
+        "files": [
+          "proof/launch-ember-rift.json",
+          "proof/judge-v2.json"
+        ],
+        "tally": {
+          "ok": 14,
+          "total": 14
+        },
+        "ms": 1129
+      },
+      {
+        "id": "rebuild.release",
+        "group": "Rebuild",
+        "label": "release.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print 0a02917b…53ca; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/release ./scripts/outlayer-build-wasm.sh --dir outlayer/release --target wasm32-wasip2 --keep",
+        "want": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "ms": 16
+      },
+      {
+        "id": "rebuild.probe",
+        "group": "Rebuild",
+        "label": "probe.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print 9c23f7ea…221a; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/probe ./scripts/outlayer-build-wasm.sh --dir outlayer/probe --target wasm32-wasip2 --keep",
+        "want": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "ms": 16
+      },
+      {
+        "id": "rebuild.licence",
+        "group": "Rebuild",
+        "label": "Licence wasm rebuild",
+        "status": "na",
+        "reason": "not bit-reproducible: the published licence wasm is cargo (rust 1.86) + wasm-opt output from a local toolchain. Its identity is the hash 4Awoknek…6rt1 and its public on-chain bytes (rows above); the source is contracts/licence",
+        "ms": 16
+      }
+    ],
+    "counts": {
+      "pass": 16,
+      "fail": 0,
+      "na": 6,
+      "warn": 1
+    },
+    "elapsed_ms": 2533
+  },
+  {
+    "instance": {
+      "id": "v2dev.lastsave-factory.testnet",
+      "kind": "factory",
+      "label": "v2 dev instance (same code as the judge instance; built before the CI pipeline)",
+      "factory": "lastsave-factory.testnet"
+    },
+    "network": "testnet",
+    "at": "2026-11-14T18:06:22.468Z",
+    "exists": true,
+    "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3372 N · 1 host(s), 2 claim(s)",
+    "pins": {
+      "codeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "release": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+      "probe": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+      "keyCommitment": "f2772b9f97d804708437485cf5ad2e6148d0b9a662d313612261c73b9badf033",
+      "artifactSha256": "8aed87d3d43cecffe906c621f19103fe710feac3662bcf750ebbfbd9a4208622",
+      "buildHash": "d31168055435d68224fd34f68119fdf67b7cbf2a454c9474eee0922f02f550c8"
+    },
+    "results": [
+      {
+        "id": "code.hash",
+        "group": "Code",
+        "label": "Contract code is the published code",
+        "status": "pass",
+        "reason": "global code 4Awoknek…6rt1 = published hash = factory.code_hash(); no local code",
+        "onAccount": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "pinned": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "factory": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "publishProof": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+        "ms": 220
+      },
+      {
+        "id": "code.global_bytes",
+        "group": "Code",
+        "label": "Published global code is readable and hashes to its id",
+        "status": "pass",
+        "reason": "anyone can read the code: 332,631 B, sha256 2f1f41ee…f7ca = its hash (immutable, by hash)",
+        "bytes": 332631,
+        "sha256": "2f1f41ee02477393f068580e26b384c320191201ac93df6f696c06164c31f7ca",
+        "ms": 311
+      },
+      {
+        "id": "keys.none",
+        "group": "Code",
+        "label": "0 access keys on the instance (locked)",
+        "status": "pass",
+        "reason": "0 access keys: nobody can redeploy, drain or delete the contract",
+        "ms": 295
+      },
+      {
+        "id": "factory.hash",
+        "group": "Factory",
+        "label": "Factory points at the same global hash",
+        "status": "pass",
+        "reason": "lastsave-factory.testnet code_hash() = 4Awoknek…6rt1 = the published global hash",
+        "ms": 220
+      },
+      {
+        "id": "factory.listed",
+        "group": "Factory",
+        "label": "Instance listed by the factory",
+        "status": "pass",
+        "reason": "listed in lastsave-factory.testnet.instances(): created by lastsave-studio.testnet, status Ready",
+        "row": {
+          "account_id": "v2dev.lastsave-factory.testnet",
+          "creator": "lastsave-studio.testnet",
+          "deposit": "1372650000000000000000000",
+          "created_ms": 1794642850079,
+          "status": "Ready"
+        },
+        "ms": 277
+      },
+      {
+        "id": "escrow.verified",
+        "group": "Escrow",
+        "label": "Escrow attested by the enclave",
+        "status": "pass",
+        "reason": "escrowed; attest() verified key commitment, artifact hash and build hash in the enclave (2026-11-14 08:43 UTC)",
+        "ms": 5
+      },
+      {
+        "id": "escrow.rule",
+        "group": "Escrow",
+        "label": "Keystore access rule is exactly release.wasm + this contract",
+        "status": "pass",
+        "reason": "keystore rule in tx F6Jcw556…VAgD: key opens only for caller = v2dev.lastsave-factory.testnet AND code = release.wasm 9fafaf8e…2b7a",
+        "tx": "F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+        "ms": 501
+      },
+      {
+        "id": "totals.sane",
+        "group": "Money",
+        "label": "Buckets non-negative and covered by the balance",
+        "status": "pass",
+        "reason": "no negative bucket; spendable 1.6809 N covers tracked 1.2336 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.8564 N)",
+        "ms": 4
+      },
+      {
+        "id": "config.programs",
+        "group": "Pins",
+        "label": "release/probe wasm hashes = committed artifacts/ files",
+        "status": "pass",
+        "reason": "release.wasm 9fafaf8e…2b7a and probe.wasm b0cb38e1…b0b4 on chain = sha256 of artifacts/ files",
+        "files": [
+          "artifacts/lastsave-release-9fafaf8e41724533.wasm",
+          "artifacts/lastsave-probe-b0cb38e1bc3e77ec.wasm"
+        ],
+        "ms": 4
+      },
+      {
+        "id": "config.commitment",
+        "group": "Pins",
+        "label": "Key commitment, artifact hash and build hash are set",
+        "status": "pass",
+        "reason": "key commitment f2772b9f…f033, artifact 8aed87d3…8622 (584,610 B), build hash d3116805…50c8 are set on chain",
+        "ms": 4
+      },
+      {
+        "id": "config.artifact_file",
+        "group": "Pins",
+        "label": "Encrypted artifact = committed file",
+        "status": "pass",
+        "reason": "encrypted artifact 8aed87d3…8622 = artifacts/ember-rift-8aed87d3d43cecff.bin",
+        "ms": 4
+      },
+      {
+        "id": "programs.mirrors",
+        "group": "Artifacts",
+        "label": "Enclave programs download from every mirror",
+        "status": "pass",
+        "reason": "release.wasm: 2/2 mirrors serve sha256 9fafaf8e…2b7a; probe.wasm: 2/2 mirrors serve sha256 b0cb38e1…b0b4",
+        "ms": 80
+      },
+      {
+        "id": "artifact.mirrors",
+        "group": "Artifacts",
+        "label": "Encrypted artifact: every mirror's sha256 = on-chain",
+        "status": "pass",
+        "reason": "encrypted artifact: 2/2 mirrors serve sha256 8aed87d3…8622 (github raw ✓ · platform mirror ✓)",
+        "mirrors": [
+          {
+            "url": "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-8aed87d3d43cecff.bin",
+            "label": "github raw",
+            "ok": true,
+            "status": 200,
+            "error": null
+          },
+          {
+            "url": "https://last-save.pages.dev/mirror/ember-rift-8aed87d3d43cecff.bin",
+            "label": "platform mirror",
+            "ok": true,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "ms": 420
+      },
+      {
+        "id": "artifact.walrus",
+        "group": "Artifacts",
+        "label": "Walrus mirror serves it",
+        "status": "na",
+        "reason": "no Walrus mirror in artifact.urls (this instance predates it)",
+        "ms": 4
+      },
+      {
+        "id": "release.key",
+        "group": "Release",
+        "label": "Released key hashes to the commitment",
+        "status": "pass",
+        "reason": "sha256(released key dff0a6d0…9d51) = on-chain key_commitment",
+        "ms": 4
+      },
+      {
+        "id": "release.artifact",
+        "group": "Release",
+        "label": "Released key decrypts the artifact to build_hash",
+        "status": "pass",
+        "reason": "released key decrypts the artifact (AES-256-GCM) to 584,578 B whose sha256 d3116805…50c8 = on-chain build_hash",
+        "ms": 420
+      },
+      {
+        "id": "chainsig.address",
+        "group": "Chain Signatures",
+        "label": "Payer address re-derived from public inputs",
+        "status": "pass",
+        "reason": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA = derive(v1.signer-prod.testnet root key, v2dev.lastsave-factory.testnet, \"lastsave/host-payouts\"); the signer contract's own view agrees",
+        "derived": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA",
+        "onChain": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea",
+        "config": "0xfe8a6a6a417e3ccc4d73191c62361207dfe01aea",
+        "viaSigner": "0xFe8A6a6a417E3CCC4D73191C62361207dfe01AEA",
+        "signer": "v1.signer-prod.testnet",
+        "path": "lastsave/host-payouts",
+        "ms": 1166
+      },
+      {
+        "id": "chainsig.payouts",
+        "group": "Chain Signatures",
+        "label": "Signed payouts mined on Base Sepolia",
+        "status": "pass",
+        "reason": "1/1 signed payouts: sender = derived payer, mined on Base Sepolia with status 1 (#0 0x735106…e8eb)",
+        "rows": [
+          {
+            "id": 0,
+            "host": "lastsave-fanhost.testnet",
+            "status": "Signed",
+            "hashes": [
+              "0x2c988e9de24e39574bed2ec76710e07506a846bd97532a6faea6aa849c3347b6",
+              "0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+              "0xd011b2609bd233ff235ea3c14d07d226097e4392505b4db3d35dfdfeaeb6a229",
+              "0x4445fe677adbb11b19894f298e5e6ec46af07b1afeb70c9b0249bafd0fe1f128"
+            ],
+            "link": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb",
+            "state": "mined",
+            "problem": null,
+            "block": 58635246
+          }
+        ],
+        "links": [
+          {
+            "id": 0,
+            "url": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb"
+          }
+        ],
+        "ms": 1609
+      },
+      {
+        "id": "provenance",
+        "group": "Provenance",
+        "label": "Build attested by GitHub Actions (Sigstore) for the on-chain build hash",
+        "status": "na",
+        "reason": "no build attestation for d3116805…50c8 (built before the CI pipeline or not published yet)",
+        "ms": 738
+      },
+      {
+        "id": "manifest.txs",
+        "group": "Proof",
+        "label": "Every tx in the proof manifests resolves on RPC",
+        "status": "pass",
+        "reason": "35/35 listed txs are on chain, final, executed as listed [launch-v2dev.json, run-v2dev-20261114T0857Z.json]",
+        "rows": [
+          {
+            "hash": "6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy",
+            "label": "instance",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/6PfuSLNVmcDo8sEiDQmG1TVAqG4eCwNUW9gm9GRUxGRy"
+          },
+          {
+            "hash": "F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD",
+            "label": "escrow",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/F6Jcw556XyC1Dr2eckKxiPzSSurmXTBsqc3m92QfVAgD"
+          },
+          {
+            "hash": "FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/FnKAkUMWnZeTCfC3karVfkzEeYo9skZxPHjKB2S42pLD"
+          },
+          {
+            "hash": "GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/GWC5EoEDr1CDGLCGuKGPJJSr61se6VE41EW6o9iTh7u9"
+          },
+          {
+            "hash": "GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/GBuvBJYwT2K1PgQwdRRpy3TtevVsYSaGt5afkoda86MC"
+          },
+          {
+            "hash": "EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N",
+            "label": "snapkey",
+            "expect": "success",
+            "file": "proof/launch-v2dev.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/EUAL2tXBnncWyyRBYS1XJuG4UHLQYhddL2azbg3cUJ3N"
+          },
+          {
+            "hash": "DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7",
+            "label": "buy_licence lastsave-mira.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/DWK7tXYg4X1i5TRhDNekuFVD8aAgUN3JgpyU2o8QqDQ7"
+          },
+          {
+            "hash": "Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ",
+            "label": "buy_licence lastsave-kofi.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/Dyf6W5XMKBzW2mBeQFnJEWxM2hojv7hfH1zt3SFvnSFQ"
+          },
+          {
+            "hash": "5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB",
+            "label": "buy_licence lastsave-yuna.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/5waq17UsAWN8c3XPUYGwyFLNcnCstKMdZiK7yfvcP6pB"
+          },
+          {
+            "hash": "5T9RaQKvs2B3fMxf2RFCDGJxaj9LccCusULNd8eL9LH8",
+            "label": "buy_licence lastsave-dario.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/5T9RaQKvs2B3fMxf2RFCDGJxaj9LccCusULNd8eL9LH8"
+          },
+          {
+            "hash": "3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS",
+            "label": "probe_official #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/3MWVsW7Hq8HFPxyr8fdvoi2hCmdgXNuExDJmCnskr7FS"
+          },
+          {
+            "hash": "EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc",
+            "label": "report_down lastsave-mira.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/EzkXnw7m26Pv6aeiYLEM4wf6GVZpTkzVQb6KhKLNVxUc"
+          },
+          {
+            "hash": "6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj",
+            "label": "report_down again lastsave-mira.testnet",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Already reported in th",
+            "url": "https://testnet.nearblocks.io/txns/6Qz8RYrnbuZqtHiuP7afLRzkBTU7dNnW7uQwJS4q88Cj"
+          },
+          {
+            "hash": "J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa",
+            "label": "probe_official r1 #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/J5iyiRkvuNCMLnh9QSW78V2sHQ7ZwB3tPa6ydVnUk9Fa"
+          },
+          {
+            "hash": "6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K",
+            "label": "probe_official r2 #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/6gim2dfJM9zZNCEC214FZpzJsJUYQgGEanKQ6i7f5o6K"
+          },
+          {
+            "hash": "13LRSaUHm81qH1Wa3aKbbM4sXdaYjVeF9CFtCu8kCFtL",
+            "label": "probe_official r3 #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/13LRSaUHm81qH1Wa3aKbbM4sXdaYjVeF9CFtCu8kCFtL"
+          },
+          {
+            "hash": "ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR",
+            "label": "release #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/ju7Suoea5F8A2yinTfRrYwkbnp7kWbKWAeVqx4DWezR"
+          },
+          {
+            "hash": "14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG",
+            "label": "choose Refund lastsave-yuna.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/14aMWkgDhb3e6RybLidLQ9X2UG29EbCHH8WdGHmbtGFG"
+          },
+          {
+            "hash": "4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x",
+            "label": "choose Refund lastsave-dario.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/4P14vEncvMNJwbGxmn8Dg34qq3KjmYQAvurEvUJ8QN9x"
+          },
+          {
+            "hash": "6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC",
+            "label": "choose Pledge lastsave-mira.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/6fbFXUduqQWECbR9VseUAK9f3LwjFXMtuvYCpyQmEkVC"
+          },
+          {
+            "hash": "239XVX2fkA96jpGLgd1xpa9dtzaXuggGm8dix86E217b",
+            "label": "choose Pledge lastsave-kofi.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/239XVX2fkA96jpGLgd1xpa9dtzaXuggGm8dix86E217b"
+          },
+          {
+            "hash": "8cLny67JuTPBgHmgJ8USxZoNtKaAf49ftAkQgFDEqyLV",
+            "label": "choose again lastsave-mira.testnet",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}",
+            "url": "https://testnet.nearblocks.io/txns/8cLny67JuTPBgHmgJ8USxZoNtKaAf49ftAkQgFDEqyLV"
+          },
+          {
+            "hash": "2TVWuLdHKHWnEftfgSt4csCtykQJbLLa3itop1JWsCyC",
+            "label": "choose again lastsave-yuna.testnet",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Choice already made\"}}",
+            "url": "https://testnet.nearblocks.io/txns/2TVWuLdHKHWnEftfgSt4csCtykQJbLLa3itop1JWsCyC"
+          },
+          {
+            "hash": "HszrLpFGCYgVkoY9dfF3jVSJhHArq31wPU8hsFNDquWx",
+            "label": "buy_licence lastsave-fanhost.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/HszrLpFGCYgVkoY9dfF3jVSJhHArq31wPU8hsFNDquWx"
+          },
+          {
+            "hash": "9Mvz2AH68rgrMiiZDJxzBzwsGzTMjzyHN2ch2dqDtyag",
+            "label": "choose (must be refused)",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This licence has no lo",
+            "url": "https://testnet.nearblocks.io/txns/9Mvz2AH68rgrMiiZDJxzBzwsGzTMjzyHN2ch2dqDtyag"
+          },
+          {
+            "hash": "GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW",
+            "label": "register_host",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/GgoAPAcHdNXFrdoEnv7QkifKi5iXvZsZ5seYkYC4j6oW"
+          },
+          {
+            "hash": "CzRjx4Y5RPMxH9T8bzxs46bvnYT8GVv6Gtzs9uT5kGrY",
+            "label": "create throwaway e2e-nl-mwg7fc6x.lastsave-fanhost.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/CzRjx4Y5RPMxH9T8bzxs46bvnYT8GVv6Gtzs9uT5kGrY"
+          },
+          {
+            "hash": "E2eWm7zEdD8i8crCw1AiqQnDzwNLUX4MTzqYuc7shsHP",
+            "label": "delete throwaway e2e-nl-mwg7fc6x.lastsave-fanhost.testnet",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/E2eWm7zEdD8i8crCw1AiqQnDzwNLUX4MTzqYuc7shsHP"
+          },
+          {
+            "hash": "cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7",
+            "label": "claim_epoch 10 #1",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/cwucJfkGEZH4ZSZgUZenFkG17JXp2A6x3Avuum7iAx7"
+          },
+          {
+            "hash": "8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "label": "claim_epoch 10 again",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: This epoch is already ",
+            "url": "https://testnet.nearblocks.io/txns/8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY"
+          },
+          {
+            "hash": "4SMyfs7t7bAzcNgRSdGReaKvxhmzmS4FEVKvt5zfGuhD",
+            "label": "set_payout_evm (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/4SMyfs7t7bAzcNgRSdGReaKvxhmzmS4FEVKvt5zfGuhD"
+          },
+          {
+            "hash": "7bzn8WJQ2VUkeGRBQLg8PPYGMZiApqr5Xhc98yV8ZjsL",
+            "label": "set_payout_evm with a malformed address (must be refused)",
+            "expect": "failure",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": "{\"ActionError\":{\"index\":0,\"kind\":{\"FunctionCallError\":{\"ExecutionError\":\"Smart contract panicked: Address must be 0x plu",
+            "url": "https://testnet.nearblocks.io/txns/7bzn8WJQ2VUkeGRBQLg8PPYGMZiApqr5Xhc98yV8ZjsL"
+          },
+          {
+            "hash": "2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
+            "label": "claim_epoch 11 (EVM rail) #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL"
+          },
+          {
+            "hash": "4VkUpQJkRB4HruwFW3X1ot1vXebB5i5pZCezviN45vgE",
+            "label": "sign_evm_payout #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/4VkUpQJkRB4HruwFW3X1ot1vXebB5i5pZCezviN45vgE"
+          },
+          {
+            "hash": "4rWMQp2ubNw4w33uzRhZmP5EKHzKQ16oQSwLXyRGMN9Z",
+            "label": "bump_evm_payout #1 (gas-free)",
+            "expect": "success",
+            "file": "proof/run-v2dev-20261114T0857Z.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/4rWMQp2ubNw4w33uzRhZmP5EKHzKQ16oQSwLXyRGMN9Z"
+          }
+        ],
+        "files": [
+          "proof/launch-v2dev.json",
+          "proof/run-v2dev-20261114T0857Z.json"
+        ],
+        "tally": {
+          "ok": 35,
+          "total": 35
+        },
+        "ms": 1853
+      },
+      {
+        "id": "rebuild.release",
+        "group": "Rebuild",
+        "label": "release.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print 9fafaf8e…2b7a; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/release ./scripts/outlayer-build-wasm.sh --dir outlayer/release --target wasm32-wasip2 --keep",
+        "want": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "ms": 3
+      },
+      {
+        "id": "rebuild.probe",
+        "group": "Rebuild",
+        "label": "probe.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print b0cb38e1…b0b4; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/probe ./scripts/outlayer-build-wasm.sh --dir outlayer/probe --target wasm32-wasip2 --keep",
+        "want": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "ms": 3
+      },
+      {
+        "id": "rebuild.licence",
+        "group": "Rebuild",
+        "label": "Licence wasm rebuild",
+        "status": "na",
+        "reason": "not bit-reproducible: the published licence wasm is cargo (rust 1.86) + wasm-opt output from a local toolchain. Its identity is the hash 4Awoknek…6rt1 and its public on-chain bytes (rows above); the source is contracts/licence",
+        "ms": 3
+      }
+    ],
+    "counts": {
+      "pass": 18,
+      "fail": 0,
+      "na": 5,
+      "warn": 0
+    },
+    "elapsed_ms": 2294
+  },
+  {
+    "instance": {
+      "id": "lastsave-licence.testnet",
+      "kind": "v1",
+      "label": "v1 judge instance (own deployed code, locked, Dead, released)",
+      "factory": null
+    },
+    "network": "testnet",
+    "at": "2026-11-14T18:06:24.762Z",
+    "exists": true,
+    "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3841 N · 1 host(s), 2 claim(s)",
+    "pins": {
+      "codeHash": "c884be5a4e263cdd1d85ae63722d457961e751d6cbbe8ae190953d7c254b16d2",
+      "release": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+      "probe": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+      "keyCommitment": "5bb6b0cf211414cdcf27e6f836a03b242cf13f1e8b372845ed2e3d8230c6678f",
+      "artifactSha256": "ad3eb4f5560a8ae0bffd402587ef9d7d33bf9fa6485e0a9f079d68136fee21d2",
+      "buildHash": "b723c6d4854b1b8688a0a4a1191dda26d0492d6cf28a26cd1c88e7ac222bc967"
+    },
+    "results": [
+      {
+        "id": "code.hash",
+        "group": "Code",
+        "label": "Contract code is the published code",
+        "status": "pass",
+        "reason": "code sha256 c884be5a…16d2 = pinned (proof/launch manifest) = deploy tx 33hTa6kh…LxUr",
+        "onChain": "c884be5a4e263cdd1d85ae63722d457961e751d6cbbe8ae190953d7c254b16d2",
+        "ms": 447
+      },
+      {
+        "id": "code.global_bytes",
+        "group": "Code",
+        "label": "Published global code is readable and hashes to its id",
+        "status": "na",
+        "reason": "v1 deploys its own code; there is no global contract",
+        "ms": 2
+      },
+      {
+        "id": "keys.none",
+        "group": "Code",
+        "label": "0 access keys on the instance (locked)",
+        "status": "pass",
+        "reason": "0 access keys: nobody can redeploy, drain or delete the contract",
+        "ms": 232
+      },
+      {
+        "id": "factory.hash",
+        "group": "Factory",
+        "label": "Factory points at the same global hash",
+        "status": "na",
+        "reason": "v1 was deployed directly, not by the factory",
+        "ms": 2
+      },
+      {
+        "id": "factory.listed",
+        "group": "Factory",
+        "label": "Instance listed by the factory",
+        "status": "na",
+        "reason": "not a factory instance",
+        "ms": 2
+      },
+      {
+        "id": "escrow.verified",
+        "group": "Escrow",
+        "label": "Escrow attested by the enclave",
+        "status": "pass",
+        "reason": "escrowed; attest() verified key commitment, artifact hash and build hash in the enclave (2026-11-13 20:58 UTC)",
+        "ms": 5
+      },
+      {
+        "id": "escrow.rule",
+        "group": "Escrow",
+        "label": "Keystore access rule is exactly release.wasm + this contract",
+        "status": "pass",
+        "reason": "keystore rule in tx 4Ztpt7PF…YvMH: key opens only for caller = lastsave-licence.testnet AND code = release.wasm 9fafaf8e…2b7a",
+        "tx": "4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+        "ms": 454
+      },
+      {
+        "id": "totals.sane",
+        "group": "Money",
+        "label": "Buckets non-negative and covered by the balance",
+        "status": "pass",
+        "reason": "no negative bucket; spendable 1.7491 N covers tracked 0.3841 N (pot locked 0.0000 N, pool 0.3841 N)",
+        "ms": 4
+      },
+      {
+        "id": "config.programs",
+        "group": "Pins",
+        "label": "release/probe wasm hashes = committed artifacts/ files",
+        "status": "pass",
+        "reason": "release.wasm 9fafaf8e…2b7a and probe.wasm b0cb38e1…b0b4 on chain = sha256 of artifacts/ files",
+        "files": [
+          "artifacts/lastsave-release-9fafaf8e41724533.wasm",
+          "artifacts/lastsave-probe-b0cb38e1bc3e77ec.wasm"
+        ],
+        "ms": 4
+      },
+      {
+        "id": "config.commitment",
+        "group": "Pins",
+        "label": "Key commitment, artifact hash and build hash are set",
+        "status": "pass",
+        "reason": "key commitment 5bb6b0cf…678f, artifact ad3eb4f5…21d2 (581,053 B), build hash b723c6d4…c967 are set on chain",
+        "ms": 4
+      },
+      {
+        "id": "config.artifact_file",
+        "group": "Pins",
+        "label": "Encrypted artifact = committed file",
+        "status": "pass",
+        "reason": "encrypted artifact ad3eb4f5…21d2 = artifacts/ember-rift-ad3eb4f5560a8ae0.bin",
+        "ms": 4
+      },
+      {
+        "id": "programs.mirrors",
+        "group": "Artifacts",
+        "label": "Enclave programs download from every mirror",
+        "status": "pass",
+        "reason": "release.wasm: 2/2 mirrors serve sha256 9fafaf8e…2b7a; probe.wasm: 2/2 mirrors serve sha256 b0cb38e1…b0b4",
+        "ms": 106
+      },
+      {
+        "id": "artifact.mirrors",
+        "group": "Artifacts",
+        "label": "Encrypted artifact: every mirror's sha256 = on-chain",
+        "status": "pass",
+        "reason": "encrypted artifact: 2/2 mirrors serve sha256 ad3eb4f5…21d2 (github raw ✓ · platform mirror ✓)",
+        "mirrors": [
+          {
+            "url": "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-ad3eb4f5560a8ae0.bin",
+            "label": "github raw",
+            "ok": true,
+            "status": 200,
+            "error": null
+          },
+          {
+            "url": "https://last-save.pages.dev/mirror/ember-rift-ad3eb4f5560a8ae0.bin",
+            "label": "platform mirror",
+            "ok": true,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "ms": 128
+      },
+      {
+        "id": "artifact.walrus",
+        "group": "Artifacts",
+        "label": "Walrus mirror serves it",
+        "status": "na",
+        "reason": "no Walrus mirror in artifact.urls (this instance predates it)",
+        "ms": 4
+      },
+      {
+        "id": "release.key",
+        "group": "Release",
+        "label": "Released key hashes to the commitment",
+        "status": "pass",
+        "reason": "sha256(released key fb0ac47f…e490) = on-chain key_commitment",
+        "ms": 4
+      },
+      {
+        "id": "release.artifact",
+        "group": "Release",
+        "label": "Released key decrypts the artifact to build_hash",
+        "status": "pass",
+        "reason": "released key decrypts the artifact (AES-256-GCM) to 581,021 B whose sha256 b723c6d4…c967 = on-chain build_hash",
+        "ms": 128
+      },
+      {
+        "id": "chainsig.address",
+        "group": "Chain Signatures",
+        "label": "Payer address re-derived from public inputs",
+        "status": "na",
+        "reason": "v1 pays hosts in NEAR only; Chain Signatures arrived in v2",
+        "ms": 4
+      },
+      {
+        "id": "chainsig.payouts",
+        "group": "Chain Signatures",
+        "label": "Signed payouts mined on Base Sepolia",
+        "status": "na",
+        "reason": "no Chain Signatures payouts on a v1 instance",
+        "ms": 4
+      },
+      {
+        "id": "provenance",
+        "group": "Provenance",
+        "label": "Build attested by GitHub Actions (Sigstore) for the on-chain build hash",
+        "status": "na",
+        "reason": "v1 predates the CI build pipeline; its build hash is checked by decrypting the released artifact",
+        "ms": 4
+      },
+      {
+        "id": "manifest.txs",
+        "group": "Proof",
+        "label": "Every tx in the proof manifests resolves on RPC",
+        "status": "pass",
+        "reason": "24/24 listed txs are on chain, final, executed as listed [judge-run.md, launch-lastsave-licence.json]",
+        "rows": [
+          {
+            "hash": "33hTa6khdCc94xTwPPFAC1SC7PpSwEWTkeUFN25WLxUr",
+            "label": "deploy",
+            "expect": "success",
+            "file": "proof/launch-lastsave-licence.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/33hTa6khdCc94xTwPPFAC1SC7PpSwEWTkeUFN25WLxUr"
+          },
+          {
+            "hash": "4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH",
+            "label": "escrow",
+            "expect": "success",
+            "file": "proof/launch-lastsave-licence.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/4Ztpt7PFKdWUTawGrQ5aA53PXnNCVtvHt6Fk2eVpYvMH"
+          },
+          {
+            "hash": "B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu",
+            "label": "attest",
+            "expect": "success",
+            "file": "proof/launch-lastsave-licence.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/B2VM5c9yixFZT2eV4LAsHeJFQNWX48t8JVCPRwvK44gu"
+          },
+          {
+            "hash": "EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om",
+            "label": "lock",
+            "expect": "success",
+            "file": "proof/launch-lastsave-licence.json",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/EmH8toyFEpym4bc5o1Mh1zQGpUygUWXaKZpoGrszj3om"
+          },
+          {
+            "hash": "GPhminv2idpSWgbVx3udNbQchgoGENb1QjVgwhsz53Kz",
+            "label": "02:34 buy (yuna, filmed) GPhminv2… token #1, 0.1 locked, 0.15 minus mint storage to the studio",
+            "title": "02:34 buy (yuna, filmed)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/GPhminv2idpSWgbVx3udNbQchgoGENb1QjVgwhsz53Kz"
+          },
+          {
+            "hash": "331bcFHBwQRoZZgcaNLQJ4Q2qB6fu5RyBwyAxkJBBnGd",
+            "label": "02:35 buys (mira, kofi, dario) 331bcFHB… HiMGKqLA… HBe1ydUQ… tokens #2–4; pot 0.4",
+            "title": "02:35 buys (mira, kofi, dario)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/331bcFHBwQRoZZgcaNLQJ4Q2qB6fu5RyBwyAxkJBBnGd"
+          },
+          {
+            "hash": "HiMGKqLAqcCdUK34Cp7tja6QZgAq7gNHQhPn89HN4QiW",
+            "label": "02:35 buys (mira, kofi, dario) 331bcFHB… HiMGKqLA… HBe1ydUQ… tokens #2–4; pot 0.4",
+            "title": "02:35 buys (mira, kofi, dario)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/HiMGKqLAqcCdUK34Cp7tja6QZgAq7gNHQhPn89HN4QiW"
+          },
+          {
+            "hash": "HBe1ydUQMTQUgjgHah6CEpGCMUWrgyEFf4xKiqA1PmXp",
+            "label": "02:35 buys (mira, kofi, dario) 331bcFHB… HiMGKqLA… HBe1ydUQ… tokens #2–4; pot 0.4",
+            "title": "02:35 buys (mira, kofi, dario)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/HBe1ydUQMTQUgjgHah6CEpGCMUWrgyEFf4xKiqA1PmXp"
+          },
+          {
+            "hash": "FDhVT1jgmL79ZS2e3HNiAMHeAQqW2aADn37yRJ9hkuyZ",
+            "label": "02:36 probe (alive) FDhVT1jg… probe.wasm verified 4 holder-signed sessions on the official server",
+            "title": "02:36 probe (alive)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/FDhVT1jgmL79ZS2e3HNiAMHeAQqW2aADn37yRJ9hkuyZ"
+          },
+          {
+            "hash": "7WJDcTBpB3msb67ZTekEqQYez3faC1XDkLw9EmigeS81",
+            "label": "02:48 probe → failure 1 7WJDcTBp… unreachable",
+            "title": "02:48 probe → failure 1",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/7WJDcTBpB3msb67ZTekEqQYez3faC1XDkLw9EmigeS81"
+          },
+          {
+            "hash": "5Ckj335e76ZfrUU3WLZEFqLNtq9TaLEU73GynmP34qWu",
+            "label": "02:49 probe → failure 2 5Ckj335e… unreachable",
+            "title": "02:49 probe → failure 2",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/5Ckj335e76ZfrUU3WLZEFqLNtq9TaLEU73GynmP34qWu"
+          },
+          {
+            "hash": "GJWMDYefkTpm3zQ4PCxQiztpLeqYRnuWhYcKL5hRHNGv",
+            "label": "02:51 probe → inconclusive GJWMDYef… OutLayer run timed out; not counted, as designed",
+            "title": "02:51 probe → inconclusive",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/GJWMDYefkTpm3zQ4PCxQiztpLeqYRnuWhYcKL5hRHNGv"
+          },
+          {
+            "hash": "8yjRPbsgGFevZkGuFDgBXH1CytvUqQruCxiDngKZXDEm",
+            "label": "02:58 probe → failure 3 → Dead 8yjRPbsg… cause \"probes\"",
+            "title": "02:58 probe → failure 3 → Dead",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/8yjRPbsgGFevZkGuFDgBXH1CytvUqQruCxiDngKZXDEm"
+          },
+          {
+            "hash": "AxEXFj6GxprNfPohgXoFMKMQnLVf439faQijq1kbMcfn",
+            "label": "03:00 release AxEXFj6G… release.wasm read status Dead, output K; sha256(K) = commitment; K public on-chain",
+            "title": "03:00 release",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/AxEXFj6GxprNfPohgXoFMKMQnLVf439faQijq1kbMcfn"
+          },
+          {
+            "hash": "oRtXVocHDa1H8bhERcueex1L6gSwGfeeYGSs4PtEun9",
+            "label": "03:01 refund (yuna, filmed) oRtXVocH… 0.1 back",
+            "title": "03:01 refund (yuna, filmed)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/oRtXVocHDa1H8bhERcueex1L6gSwGfeeYGSs4PtEun9"
+          },
+          {
+            "hash": "2yxCg4QAuoAE7tB1gAubovuGujNdzTZSEqgBp1HzkdK6",
+            "label": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi) 2yxCg4QA… 9wSxYP5r… BAXoyi3h… pool 0.2",
+            "title": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2yxCg4QAuoAE7tB1gAubovuGujNdzTZSEqgBp1HzkdK6"
+          },
+          {
+            "hash": "9wSxYP5rP46RxDgUzwn6LEwxi8s6bz4rGJEqRbm5WGGK",
+            "label": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi) 2yxCg4QA… 9wSxYP5r… BAXoyi3h… pool 0.2",
+            "title": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/9wSxYP5rP46RxDgUzwn6LEwxi8s6bz4rGJEqRbm5WGGK"
+          },
+          {
+            "hash": "BAXoyi3hyhM3XdETb7smwSzjPrcWjjzJq9zgCbP68iCh",
+            "label": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi) 2yxCg4QA… 9wSxYP5r… BAXoyi3h… pool 0.2",
+            "title": "03:02 pledge (mira, filmed), refund (dario), pledge (kofi)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/BAXoyi3hyhM3XdETb7smwSzjPrcWjjzJq9zgCbP68iCh"
+          },
+          {
+            "hash": "2dJNA1AgNWueowGmFJGCEmZYMifdQmbGpXv4uJhwfJsc",
+            "label": "03:03 post-shutdown buy (fanhost, filmed) 2dJNA1Ag… token #5, pot share 0, pool 0.448",
+            "title": "03:03 post-shutdown buy (fanhost, filmed)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/2dJNA1AgNWueowGmFJGCEmZYMifdQmbGpXv4uJhwfJsc"
+          },
+          {
+            "hash": "EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh",
+            "label": "03:06 register_host (local, tunnel) EZve8FLQ… `pnpm host --local`: key ↔ commitment, artifact hash, decrypt, build hash, snapshot #7 restored",
+            "title": "03:06 register_host (local, tunnel)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/EZve8FLQBbSyudVgfVbxZZkPaUXf6YZy1BygbjJc8uJh"
+          },
+          {
+            "hash": "tpW2JXZUsddE346UuhrtYV9PB9HDLS1HRfaDVL7XrP1",
+            "label": "03:19 claim_epoch(8) tpW2JXZU… 3 holder sessions verified in the enclave → 0.03 paid",
+            "title": "03:19 claim_epoch(8)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/tpW2JXZUsddE346UuhrtYV9PB9HDLS1HRfaDVL7XrP1"
+          },
+          {
+            "hash": "Fo3oehCCG8GxrwLy696sp8GjKbrSfaxE6K3uf7AKHFF1",
+            "label": "03:22 claim_epoch Fo3oehCC… second paid epoch (host earned 0.06 total)",
+            "title": "03:22 claim_epoch",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/Fo3oehCCG8GxrwLy696sp8GjKbrSfaxE6K3uf7AKHFF1"
+          },
+          {
+            "hash": "8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a",
+            "label": "03:24 register_host (persistent) 8fqYhcQ8… https://emberrift-community.pages.dev, the released build on Cloudflare, progress restored",
+            "title": "03:24 register_host (persistent)",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/8fqYhcQ85uzEvhX5S9ZzouKA3jNQvSp735Aqtv2kSB1a"
+          },
+          {
+            "hash": "9aE28ja2MgZtcifHnKHxBgNTdKio5o9WgfoxRarrw1W5",
+            "label": "( 9aE28ja2… ) the next pass paid.",
+            "title": "( 9aE28ja2… ) the next pass paid.",
+            "file": "proof/judge-run.md",
+            "state": "ok",
+            "failure": null,
+            "url": "https://testnet.nearblocks.io/txns/9aE28ja2MgZtcifHnKHxBgNTdKio5o9WgfoxRarrw1W5"
+          }
+        ],
+        "files": [
+          "proof/judge-run.md",
+          "proof/launch-lastsave-licence.json"
+        ],
+        "tally": {
+          "ok": 24,
+          "total": 24
+        },
+        "ms": 1116
+      },
+      {
+        "id": "rebuild.release",
+        "group": "Rebuild",
+        "label": "release.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print 9fafaf8e…2b7a; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/release ./scripts/outlayer-build-wasm.sh --dir outlayer/release --target wasm32-wasip2 --keep",
+        "want": "9fafaf8e417245337c30af82b045ecd0b75a6e2885f1c03300808a3f4f472b7a",
+        "ms": 3
+      },
+      {
+        "id": "rebuild.probe",
+        "group": "Rebuild",
+        "label": "probe.wasm rebuilds to the on-chain hash",
+        "status": "na",
+        "reason": "not run by default (--rebuild); must print b0cb38e1…b0b4; command listed below",
+        "command": "OUTLAYER_OUT_DIR=$PWD/local/repro/probe ./scripts/outlayer-build-wasm.sh --dir outlayer/probe --target wasm32-wasip2 --keep",
+        "want": "b0cb38e1bc3e77eccabd6db0e21a6d8747d63955ccfd649ad3f8d7d349e0b0b4",
+        "ms": 3
+      },
+      {
+        "id": "rebuild.licence",
+        "group": "Rebuild",
+        "label": "Licence wasm rebuild",
+        "status": "na",
+        "reason": "not bit-reproducible: the published licence wasm is cargo (rust 1.86) + wasm-opt output from a local toolchain. Its identity is the hash c884be5a…16d2 and its public on-chain bytes (rows above); the source is contracts/licence",
+        "ms": 3
+      }
+    ],
+    "counts": {
+      "pass": 13,
+      "fail": 0,
+      "na": 10,
+      "warn": 0
+    },
+    "elapsed_ms": 1577
+  }
+]
