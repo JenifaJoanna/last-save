@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Film helper for the explorer beats: reads the chain straight from PUBLIC RPCs (no explorer site, no app), printing the
 # exact command as a gold "$ " prompt line first. Each recipe is one read; nothing is signed or sent.
-#   bash scripts/ops/chain-view.sh <keys|account|tx|release-state|evm-tx> <arg> [sender]
+#   bash scripts/ops/chain-view.sh <keys|account|tx|tx-refusal|release-state|evm-tx> <arg> [sender]
 set -euo pipefail
 NEAR_RPC="${NEAR_RPC:-https://near-testnet.drpc.org}"
 BASE_RPC="https://sepolia.base.org"
@@ -13,9 +13,11 @@ case "${1:-}" in
     show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"view_account\",\"finality\":\"final\",\"account_id\":\"$2\"}}' | jq '{account: \"$2\", global_contract_hash: .result.global_contract_hash, code_hash: .result.code_hash, block_height: .result.block_height}'" ;;
   tx)       # one transaction: who signed, what it called, and its final status
     show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"EXPERIMENTAL_tx_status\",\"params\":{\"tx_hash\":\"$2\",\"sender_account_id\":\"$3\",\"wait_until\":\"FINAL\"}}' | jq '{tx: .result.transaction.hash, signer: .result.transaction.signer_id, receiver: .result.transaction.receiver_id, calls: [.result.transaction.actions[] | (.FunctionCall // .Delegate.delegate_action.actions[0].FunctionCall // .) | {method: .method_name, deposit}] , status: (.result.status | keys[0])}'" ;;
+  tx-refusal)  # a relayed (NEP-366) call and the contract's own refusal: the outer tx succeeds, the inner receipt fails
+    show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"EXPERIMENTAL_tx_status\",\"params\":{\"tx_hash\":\"$2\",\"sender_account_id\":\"$3\",\"wait_until\":\"FINAL\"}}' | jq '{tx: .result.transaction.hash, relayer: .result.transaction.signer_id, sender: .result.transaction.receiver_id, call: (.result.transaction.actions[0].Delegate.delegate_action | {receiver: .receiver_id, method: .actions[0].FunctionCall.method_name}), refused: ([.result.receipts_outcome[].outcome.status | select(.Failure) | .Failure.ActionError.kind.FunctionCallError.ExecutionError] | first)}'" ;;
   release-state)  # the licence's lifecycle state and the released server key, read from the contract itself
     show "curl -s $NEAR_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"query\",\"params\":{\"request_type\":\"call_function\",\"finality\":\"final\",\"account_id\":\"$2\",\"method_name\":\"get_info\",\"args_base64\":\"e30=\"}}' | jq '.result.result | implode | fromjson | {contract: .contract_id, status, cause, released_key, released_at_ms}'" ;;
   evm-tx)   # a Base Sepolia transaction receipt (status 0x1 = success)
     show "curl -s $BASE_RPC -H 'content-type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"$2\"]}' | jq '{tx: .result.transactionHash, from: .result.from, to: .result.to, block: .result.blockNumber, status: .result.status}'" ;;
-  *) echo "usage: chain-view.sh <keys|account|tx|release-state|evm-tx> <arg> [sender]" >&2; exit 2 ;;
+  *) echo "usage: chain-view.sh <keys|account|tx|tx-refusal|release-state|evm-tx> <arg> [sender]" >&2; exit 2 ;;
 esac
