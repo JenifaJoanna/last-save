@@ -1,8 +1,8 @@
 {
   "schema": "lastsave-proof/1",
-  "generated_at": "2026-11-14T09:34:10.864Z",
+  "generated_at": "2026-11-14T09:39:01.276Z",
   "repo": "https://github.com/JenifaJoanna/last-save",
-  "commit": "ade624fa45fe5d2a6bf277fb43fbf55bb6eb4a31",
+  "commit": "8302bc764124f819f85135cf37d751c7f744ab6e",
   "network": "NEAR testnet (+ Base Sepolia for payouts)",
   "verify": {
     "command": "pnpm verify",
@@ -27,12 +27,12 @@
       "label": "v2 dev instance (same code as the judge instance; built before the CI pipeline)",
       "exists": true,
       "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3372 N · 1 host(s), 2 claim(s)",
-      "checked_at": "2026-11-14T09:33:59.735Z",
+      "checked_at": "2026-11-14T09:38:54.310Z",
       "counts": {
-        "pass": 16,
+        "pass": 17,
         "fail": 0,
         "na": 5,
-        "warn": 2
+        "warn": 1
       },
       "pins": {
         "codeHash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
@@ -97,7 +97,7 @@
           "group": "Money",
           "label": "Buckets non-negative and covered by the balance",
           "status": "pass",
-          "reason": "no negative bucket; spendable 1.7405 N covers tracked 1.2797 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.9025 N)"
+          "reason": "no negative bucket; spendable 1.7181 N covers tracked 1.2574 N (pot locked 0.0000 N, pool 0.3372 N, evm settled 0.0400 N, ops budget 0.8802 N)"
         },
         {
           "id": "config.programs",
@@ -166,9 +166,14 @@
           "id": "chainsig.payouts",
           "group": "Chain Signatures",
           "label": "Signed payouts mined on Base Sepolia",
-          "status": "warn",
-          "reason": "0/1 signed payouts mined on Base Sepolia; #0 signed on NEAR, not broadcast yet (anyone can: node scripts/chainsig/relay.mjs v2dev.lastsave-factory.testnet)",
-          "links": []
+          "status": "pass",
+          "reason": "1/1 signed payouts: sender = derived payer, mined on Base Sepolia with status 1 (#0 0x735106…e8eb)",
+          "links": [
+            {
+              "id": 0,
+              "url": "https://sepolia.basescan.org/tx/0x7351064ac55d55fb81d42419451667fcca35d49e18286385e26b4eb78d52e8eb"
+            }
+          ]
         },
         {
           "id": "provenance",
@@ -182,7 +187,7 @@
           "group": "Proof",
           "label": "Every tx in the proof manifests resolves on RPC",
           "status": "pass",
-          "reason": "30/30 listed txs are on chain, final, executed as listed [launch-v2dev.json, run-v2dev-20261114T0857Z.json]"
+          "reason": "35/35 listed txs are on chain, final, executed as listed [launch-v2dev.json, run-v2dev-20261114T0857Z.json]"
         },
         {
           "id": "rebuild.release",
@@ -213,7 +218,7 @@
       "label": "v1 judge instance (own deployed code, locked, Dead, released)",
       "exists": true,
       "state": "Ember Rift · Dead (probes) · key released · 5 licences · pool 0.3841 N · 1 host(s), 2 claim(s)",
-      "checked_at": "2026-11-14T09:34:02.289Z",
+      "checked_at": "2026-11-14T09:38:57.003Z",
       "counts": {
         "pass": 13,
         "fail": 0,
@@ -1425,7 +1430,7 @@
       "checks": {
         "chainsig.payouts": {
           "ember-rift.lastsave-factory.testnet": "pending",
-          "v2dev.lastsave-factory.testnet": "warn",
+          "v2dev.lastsave-factory.testnet": "pass",
           "lastsave-licence.testnet": "na"
         },
         "totals.sane": {
@@ -1448,6 +1453,12 @@
             "hash": "8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
             "label": "claim_epoch 10 again",
             "url": "https://testnet.nearblocks.io/txns/8mF8CPsiyMwopTcqPxPVMapAmFZKbrkdum8wFCjKq5pY",
+            "instance": "v2dev.lastsave-factory.testnet"
+          },
+          {
+            "hash": "2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
+            "label": "claim_epoch 11 (EVM rail) #1 (gas-free)",
+            "url": "https://testnet.nearblocks.io/txns/2P1eiUqXeDRm3KEBjJJRDwkGYEk7mxoRVmVvW3aftcVL",
             "instance": "v2dev.lastsave-factory.testnet"
           }
         ]
