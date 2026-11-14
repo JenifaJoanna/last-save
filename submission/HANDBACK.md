@@ -1,6 +1,6 @@
 # Last Save — handback (v2, final)
 
-Status, 15 Nov 2026 ~01:00 IST: v2 is built and live on NEAR testnet, with wallet-first sign-in. The judge instance
+Status, 15 Nov 2026 ~02:00 IST: v2 is built and live on NEAR testnet, with wallet-first sign-in. The judge instance
 `ember-rift` was launched, played, shut down and declared dead on camera; its **key was released on 15 Nov at 01:05 IST**
 (tx ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N, `proof/judge-v2-release.json`), after filming.
 All film takes are delivered. Nothing has been posted or submitted.
@@ -32,9 +32,9 @@ All film takes are delivered. Nothing has been posted or submitted.
 | lastsave-licence (v1 judge) | 13 | 0 | 0 | 10 |
 
 ## Evidence
-- `proof/judge-v2.json`: the filmed judge run, 70 of 75 assertions. The 5 misses: the release (then still pending; now
-  recorded in `proof/judge-v2-release.json`, 3 / 3) and the probe-path
-  death checks (the instance died by the 2-of-4 holder report quorum instead). Afterlife facts read from chain: refunds
+- `proof/judge-v2.json`: the filmed judge run with the release folded in, 70 of 72 assertions (release details in
+  `proof/judge-v2-release.json`). The 2 misses are the probe-path death checks: the instance died by the 2-of-4 holder
+  report quorum instead. Afterlife facts read from chain: refunds
   2 / 0.2 Ⓝ, pledges 2 / 0.2 Ⓝ, pool 0.2 → 0.423 Ⓝ around the post-death buy, runway 8 epochs; every on-camera take
   with its tx.
 - `proof/launch-ember-rift.json`: CI build (Rekor 3881246795), Walrus blob, studio CDN, mirrors, instance, escrow,
@@ -55,7 +55,7 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Game server unit / integration | 55 / 15 | 0 |
 | Server bundle / host CLI | 6 / 30 | 0 |
 | Web wallet library | 5 | 0 |
-| v2 judge e2e (ember-rift) | 70 + 3 release checks after it landed | 2 (probe-path death checks: it died by holder reports) |
+| v2 judge e2e (ember-rift), release folded in | 70 | 2 (probe-path death checks: it died by holder reports) |
 | v2dev e2e (full lifecycle) | 173 | 1 (a test that ignored Base's L1 data fee; re-verified) |
 
 Not covered: a person running the MetaMask paths (sign-in, payout address by signature); the 0x-account game login (not
@@ -69,11 +69,11 @@ on the dev instance (labelled) because the judge instance's release landed only 
 `JUDGE.md`.
 
 ## Identity gate
-`node scripts/check-identity.mjs --live` → `ok … live=38` (repo, build output, git authorship, Worker configs, every
+`node scripts/check-identity.mjs --live` → `ok … live=44` (repo, build output, git authorship, Worker configs, every
 deployed page; deleted pages listed as expected gone).
 
 ## Submission drafts
-- `submission/FORM.md`: idea text 1,883 chars. Declaration fields left EMPTY for the submitter: lead name, email, team
+- `submission/FORM.md`: idea text 1,885 chars. Declaration fields left EMPTY for the submitter: lead name, email, team
   size, mainnet payout address, consent. `demoUrl` = the submitter's X post (draft `submission/X-POST.md`, not posted).
 - `submission/LAUNCH-CHECK.md`: re-run end to end on production on 15 Nov after the wallet-first rebuild: 57 items,
   38 pass, 4 fail (1 fixed, 2 partly fixed, 1 proposed; fixes deployed at 1e8edfa), 5 not covered, 10 n/a.

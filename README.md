@@ -179,7 +179,7 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 | End-to-end on NEAR testnet (`pnpm e2e`, dev instance: buy → play → probes → kill → death → release → refund/pledge → post-shutdown buy → fan host → claim) | 98 / 98 assertions |
 | End-to-end on the v2 dev instance (`proof/v2-e2e.md`): v1 lifecycle + gas-free relayer + relayer refusals + factory + an MPC-signed, fee-bumped Base Sepolia payout mined on-chain | 173 / 174 (the one miss is a test assertion that ignored Base's L1 data fee; re-verified to the wei) |
 | The locked v1 judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
-| The v2 judge instance `ember-rift` (`proof/judge-v2.json`): preflight, relayer guards, factory, buy, play, alive probe, report, kill, death, release | 70 / 75 in the filmed run; the release then landed (3 / 3 release checks in `proof/judge-v2-release.json`). The 2 lasting misses are the probe-path death checks: it died by holder reports instead |
+| The v2 judge instance `ember-rift` (`proof/judge-v2.json`): preflight, relayer guards, factory, buy, play, alive probe, report, kill, death, release | 70 / 72 with the release folded in (details in `proof/judge-v2-release.json`). The 2 misses are the probe-path death checks: it died by holder reports instead |
 | Real wallet (Meteor Web, testnet) on the dev instance: sign-in with the limited key, licence buy, host registration, NEP-413 game login | done by hand, each tx read back on chain |
 
 ## What is real and what is rehearsed

@@ -8,7 +8,7 @@ Form: one submission at nearhackathon.com (or POST /api/applications). One proje
 | tracks | `nfts` (NFTs That Do Something), `games` (Games With Real Economies) | agent |
 | projectUrl | https://github.com/JenifaJoanna/last-save | agent |
 | demoUrl | the public X post URL, after the submitter posts it (draft in X-POST.md) | submitter posts, agent fills |
-| idea | below (about 1,850 chars, limit 2,000) | agent |
+| idea | below (1,885 chars, limit 2,000) | agent |
 | leadName | **left empty — declaration, the submitter fills** | submitter |
 | email | **left empty — declaration, the submitter fills** | submitter |
 | size | **left empty — declaration, the submitter fills** | submitter |
