@@ -7,6 +7,7 @@ import { Heartbeat } from "../components/brand";
 import { typing, usePrimary } from "../components/terminal/nav";
 import { Bracket, MenuRow, ScreenTitle } from "../components/ui";
 import { useEvmWallets } from "../lib/eip6963";
+import { relayerCovers } from "../lib/gasless";
 import { useInfo } from "../lib/licence";
 import { useWallet } from "../lib/wallet";
 import { PREVIEW } from "../preview/store";
@@ -24,6 +25,8 @@ const openTab = (url: string) => { window.open(url, "_blank", "noopener"); };
 export default function Signin() {
   const { ready, accountId, signIn, connecting } = useWallet();
   const evm = useEvmWallets();
+  const [free, setFree] = useState(false);
+  useEffect(() => { let live = true; void relayerCovers().then((ok) => { if (live) setFree(ok); }); return () => { live = false; }; }, []);
   const [sel, setSel] = useState(0);
   const [, navigate] = useLocation();
   const search = useSearch();
@@ -33,7 +36,7 @@ export default function Signin() {
   const dead = info.data?.status === "Dead";
   const detected = evm.slice(0, 3);
   const options: Option[] = [
-    { id: "near", group: "wallet", title: "NEAR wallet", sub: "Meteor (extension or web), Intear, Nightly, Ledger · you approve one gas-free key in your wallet", tag: "gas-free", run: () => signIn("near") },
+    { id: "near", group: "wallet", title: "NEAR wallet", sub: free ? "Meteor (extension or web), Intear, Nightly, Ledger · you approve one gas-free key in your wallet" : "Meteor (extension or web), Intear, Nightly, Ledger · you approve each action in your wallet", tag: free ? "gas-free" : "NEAR", run: () => signIn("near") },
     { id: "evm", group: "wallet", title: "Ethereum wallet", run: () => signIn("evm"),
       sub: detected.length ? (
         <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">MetaMask, Rabby, Coinbase control a NEAR account · found here:
@@ -76,7 +79,9 @@ export default function Signin() {
         </div>
         <Bracket className="mt-6 text-[13px] leading-relaxed text-muted">
           <p className="label text-[12px] text-alive">What signing in does</p>
-          <p className="mt-2">Your wallet opens through NEAR Connect and you approve there. A NEAR wallet is also asked to add one limited key: it can only call this licence&apos;s free actions (report the server down, choose a refund or pledge, set or claim host pay), never move your NEAR. Those actions then cost you nothing, because a relayer pays their gas.</p>
+          {free
+            ? <p className="mt-2">Your wallet opens through NEAR Connect and you approve there. A NEAR wallet is also asked to add one limited key: it can only call this licence&apos;s free actions (report the server down, choose a refund or pledge, set or claim host pay), never move your NEAR. Those actions then cost you nothing, because a relayer pays their gas.</p>
+            : <p className="mt-2">Your wallet opens through NEAR Connect and you approve there. The gas-free relayer does not cover this licence instance, so no extra key is asked for and your wallet approves every action.</p>}
           <p className="mt-2">Buying a licence or registering a host always opens your wallet. An Ethereum wallet controls a NEAR account whose name is its 0x address; it approves every action itself.</p>
         </Bracket>
       </div>
