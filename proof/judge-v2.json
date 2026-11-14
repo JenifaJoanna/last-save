@@ -781,11 +781,257 @@
       "name": "release",
       "title": "key released and verified",
       "started_at": "2026-11-14T17:51:40.138Z",
-      "status": "running",
-      "txs": [],
-      "readback": {},
-      "assertions": [],
-      "notes": []
+      "status": "failed",
+      "txs": [
+        {
+          "label": "release #1 (gas-free)",
+          "hash": "9qAt6Qzo57XHSeT1vaKvJcBNz439s9aUvXNiuTGPkJom",
+          "url": "https://testnet.nearblocks.io/txns/9qAt6Qzo57XHSeT1vaKvJcBNz439s9aUvXNiuTGPkJom",
+          "failure": null
+        },
+        {
+          "label": "release #2 (gas-free)",
+          "hash": "DtpqLBKEFB6nK6Pu5TGT1Pm94dmeTJgiD88uf8Fd6gvn",
+          "url": "https://testnet.nearblocks.io/txns/DtpqLBKEFB6nK6Pu5TGT1Pm94dmeTJgiD88uf8Fd6gvn",
+          "failure": null
+        },
+        {
+          "label": "release #3 (gas-free)",
+          "hash": "pzbP1uYkpSzeJx7nprugWGxF17SSxbg8Hhdt3bwPwNH",
+          "url": "https://testnet.nearblocks.io/txns/pzbP1uYkpSzeJx7nprugWGxF17SSxbg8Hhdt3bwPwNH",
+          "failure": null
+        },
+        {
+          "label": "release #4 (gas-free)",
+          "hash": "D7vgE9NeM5MuvP8fmU9T7XWYeoEuYf6YKRYd8ZmPwnSN",
+          "url": "https://testnet.nearblocks.io/txns/D7vgE9NeM5MuvP8fmU9T7XWYeoEuYf6YKRYd8ZmPwnSN",
+          "failure": null
+        },
+        {
+          "label": "release #5 (gas-free)",
+          "hash": "2VoxrYGJuW9sbddC1tDd5s6VsK3WpGYPvkoJ9cZrnhPX",
+          "url": "https://testnet.nearblocks.io/txns/2VoxrYGJuW9sbddC1tDd5s6VsK3WpGYPvkoJ9cZrnhPX",
+          "failure": null
+        },
+        {
+          "label": "release #6 (gas-free)",
+          "hash": "EhLZYiR75Gf3WfkGNjEDco9L3Wdo62uF2NdxNbKvwXkB",
+          "url": "https://testnet.nearblocks.io/txns/EhLZYiR75Gf3WfkGNjEDco9L3Wdo62uF2NdxNbKvwXkB",
+          "failure": null
+        },
+        {
+          "label": "release #7 (gas-free)",
+          "hash": "2iukE1QtNLQwacnax9UX1CGkk1kVqr4JAjUC4csnueLK",
+          "url": "https://testnet.nearblocks.io/txns/2iukE1QtNLQwacnax9UX1CGkk1kVqr4JAjUC4csnueLK",
+          "failure": null
+        },
+        {
+          "label": "release #8 (gas-free)",
+          "hash": "FiiLWxU8CsoEXQ4uHYoRtEsfVpRsrKELZRkSmbJAjGGp",
+          "url": "https://testnet.nearblocks.io/txns/FiiLWxU8CsoEXQ4uHYoRtEsfVpRsrKELZRkSmbJAjGGp",
+          "failure": null
+        },
+        {
+          "label": "release #9 (gas-free)",
+          "hash": "BqPLAbS1TLJwcjUyduo8XoKCeBBgLVre53B42xiT97Fq",
+          "url": "https://testnet.nearblocks.io/txns/BqPLAbS1TLJwcjUyduo8XoKCeBBgLVre53B42xiT97Fq",
+          "failure": null
+        },
+        {
+          "label": "release #10 (gas-free)",
+          "hash": "Ery3ajwd6ASYnrvMxGypKWTXfPcv3vT5PbNBed3oUvPE",
+          "url": "https://testnet.nearblocks.io/txns/Ery3ajwd6ASYnrvMxGypKWTXfPcv3vT5PbNBed3oUvPE",
+          "failure": null
+        },
+        {
+          "label": "release #11 (gas-free)",
+          "hash": "CNJiXAVw89BmsAZ9h8UjgHLUpdVHD9btqodeVAqGEDhM",
+          "url": "https://testnet.nearblocks.io/txns/CNJiXAVw89BmsAZ9h8UjgHLUpdVHD9btqodeVAqGEDhM",
+          "failure": null
+        },
+        {
+          "label": "release #12 (gas-free)",
+          "hash": "CiHdDNHGJEGKoW9KnWAxt3iAfsr2o8WuRj39XB2hVzrd",
+          "url": "https://testnet.nearblocks.io/txns/CiHdDNHGJEGKoW9KnWAxt3iAfsr2o8WuRj39XB2hVzrd",
+          "failure": null
+        },
+        {
+          "label": "release #13 (gas-free)",
+          "hash": "75dKZfJVt6fo6JBmRAkqc5TDLUPZRYFrgb8KSMPrzxDU",
+          "url": "https://testnet.nearblocks.io/txns/75dKZfJVt6fo6JBmRAkqc5TDLUPZRYFrgb8KSMPrzxDU",
+          "failure": null
+        },
+        {
+          "label": "release #14 (gas-free)",
+          "hash": "5JWr5V8TwbSt7k3soejbVwdX7qZgpWoQjhGWxcsp2rX4",
+          "url": "https://testnet.nearblocks.io/txns/5JWr5V8TwbSt7k3soejbVwdX7qZgpWoQjhGWxcsp2rX4",
+          "failure": null
+        }
+      ],
+      "readback": {
+        "attempts": [
+          {
+            "n": 1,
+            "outcome": "inconclusive",
+            "hash": "9qAt6Qzo57XHSeT1vaKvJcBNz439s9aUvXNiuTGPkJom",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 2,
+            "outcome": "inconclusive",
+            "hash": "DtpqLBKEFB6nK6Pu5TGT1Pm94dmeTJgiD88uf8Fd6gvn",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 3,
+            "outcome": "inconclusive",
+            "hash": "pzbP1uYkpSzeJx7nprugWGxF17SSxbg8Hhdt3bwPwNH",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 4,
+            "outcome": "inconclusive",
+            "hash": "D7vgE9NeM5MuvP8fmU9T7XWYeoEuYf6YKRYd8ZmPwnSN",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 5,
+            "outcome": "inconclusive",
+            "hash": "2VoxrYGJuW9sbddC1tDd5s6VsK3WpGYPvkoJ9cZrnhPX",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 6,
+            "outcome": "inconclusive",
+            "hash": "EhLZYiR75Gf3WfkGNjEDco9L3Wdo62uF2NdxNbKvwXkB",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 7,
+            "outcome": "inconclusive",
+            "hash": "2iukE1QtNLQwacnax9UX1CGkk1kVqr4JAjUC4csnueLK",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 8,
+            "outcome": "inconclusive",
+            "hash": "FiiLWxU8CsoEXQ4uHYoRtEsfVpRsrKELZRkSmbJAjGGp",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 9,
+            "outcome": "inconclusive",
+            "hash": "BqPLAbS1TLJwcjUyduo8XoKCeBBgLVre53B42xiT97Fq",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 10,
+            "outcome": "inconclusive",
+            "hash": "Ery3ajwd6ASYnrvMxGypKWTXfPcv3vT5PbNBed3oUvPE",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 11,
+            "outcome": "inconclusive",
+            "hash": "CNJiXAVw89BmsAZ9h8UjgHLUpdVHD9btqodeVAqGEDhM",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 12,
+            "outcome": "inconclusive",
+            "hash": "CiHdDNHGJEGKoW9KnWAxt3iAfsr2o8WuRj39XB2hVzrd",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 13,
+            "outcome": "inconclusive",
+            "hash": "75dKZfJVt6fo6JBmRAkqc5TDLUPZRYFrgb8KSMPrzxDU",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          },
+          {
+            "n": 14,
+            "outcome": "inconclusive",
+            "hash": "5JWr5V8TwbSt7k3soejbVwdX7qZgpWoQjhGWxcsp2rX4",
+            "detail": "Release timed out, retry",
+            "relayed": true,
+            "outer_signer": "relay.lastsave-studio.testnet",
+            "signer_delta": "0"
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "release: every gas-free attempt was signed by the relayer",
+          "pass": true,
+          "detail": "14 attempt(s)"
+        },
+        {
+          "name": "release: lastsave-kofi.testnet paid nothing on the gas-free attempts",
+          "pass": true,
+          "detail": "0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N, 0.0000 N"
+        },
+        {
+          "name": "release: the ops budget paid OutLayer (fell by at least 0.0200 N per landed call)",
+          "pass": true,
+          "detail": "0.2800 N for 14"
+        },
+        {
+          "name": "release landed (conclusive)",
+          "pass": false,
+          "detail": "14 attempt(s)"
+        },
+        {
+          "name": "released_key is public on chain",
+          "pass": false,
+          "detail": ""
+        },
+        {
+          "name": "released_at_ms is set",
+          "pass": false,
+          "detail": "null"
+        }
+      ],
+      "notes": [],
+      "ended_at": "2026-11-14T18:23:55.369Z"
     }
   ],
   "unenforced": [
@@ -895,27 +1141,27 @@
   "balances_end": {
     "lastsave-mira.testnet": "0.5328 N",
     "lastsave-kofi.testnet": "0.3864 N",
-    "lastsave-yuna.testnet": "0.3341 N",
-    "lastsave-dario.testnet": "0.3478 N",
-    "lastsave-fanhost.testnet": "1.1037 N"
+    "lastsave-yuna.testnet": "0.4341 N",
+    "lastsave-dario.testnet": "0.4478 N",
+    "lastsave-fanhost.testnet": "1.1006 N"
   },
-  "net_cost_players_and_fanhost": "0.0000 N",
-  "finished_at": "2026-11-14T16:37:52.067Z",
+  "net_cost_players_and_fanhost": "-0.0968 N",
+  "finished_at": "2026-11-14T18:23:56.556Z",
   "totals": {
-    "assertions": 69,
-    "passed": 67,
-    "failed": 2,
+    "assertions": 75,
+    "passed": 70,
+    "failed": 5,
     "phases_passed": 8,
-    "phases_failed": 1
+    "phases_failed": 2
   },
   "afterlife": {
-    "read_at": "2026-11-14T18:06:45.285Z",
-    "block_height": 277691740,
+    "read_at": "2026-11-14T18:24:53.835Z",
+    "block_height": 277693648,
     "status": "Dead",
     "pool_yocto": "423299000000000000000000",
     "pool_near": "0.423",
-    "ops_budget_yocto": "1244811000000000000000000",
-    "ops_budget_near": "1.244",
+    "ops_budget_yocto": "1084811000000000000000000",
+    "ops_budget_near": "1.084",
     "epoch_cap_yocto": "50000000000000000000000",
     "epoch_cap_near": "0.05",
     "epoch_ms": 120000,
