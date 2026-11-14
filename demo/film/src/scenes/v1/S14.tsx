@@ -10,9 +10,9 @@ import { T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
 import { Slot } from "../../film/Slot";
 import { DeniedLine, EpochChip, HudLift } from "./g5/back-parts";
-import { BACK_PLATE, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, KEY_DENIED, TAKE_FROM } from "./g5/facts";
+import { BACK_PLATE, BACK_SOURCE, SIGNIN_TAKE, WALLET_CUT_LABEL, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, KEY_DENIED, TAKE_FROM } from "./g5/facts";
 import { HostTerminal } from "./g5/host-term";
-import { c, DialUp, inOut, out, ramp, roll, RollBand, word } from "./g5/kit";
+import { c, DialUp, inOut, out, ramp, roll, RollBand, Tag, word } from "./g5/kit";
 
 const W = (s: number) => word("S14", s);
 const S13_LAST = scene("S13").frames - 1;
@@ -28,6 +28,7 @@ const CHIP = W(6.36) - 18; // host totals lift on "signed by the players", land 
 const PAID = CHIP; // the earned amount prints with the chip
 const RISE = W(6.36) - 2; // on "themselves" the amount keeps rising toward the camera
 const END = scene("S14").frames;
+const SIGNIN_CUT = OPEN + Math.round((SIGNIN_TAKE.cut - SIGNIN_TAKE.from) * 30); // fallback take: its own cut
 
 export function S14() {
   const f = useCurrentFrame();
@@ -60,14 +61,19 @@ export function S14() {
       {f >= OPEN && f < BOUNCE + 10 && (
         <AbsoluteFill style={{ clipPath: `inset(${(1 - crt) * 49.8}% 0 ${(1 - crt) * 49.8}% 0)`, transform: `translateY(${r1.outY}px)` }}>
           <AbsoluteFill style={{ filter: dimGame > 0.01 ? `brightness(${1 - dimGame})` : undefined, transform: `scale(${interpolate(f, [OPEN, BOUNCE], [1, 1.03], c)})` }}>
-            {f < MATCH ? (
+            {BACK_SOURCE === "signin" ? (
+              <Sequence from={OPEN} layout="none"><Slot slot="signin" plate={BACK_PLATE} from={SIGNIN_TAKE.from} /></Sequence>
+            ) : f < MATCH ? (
               <Sequence from={OPEN} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backSignin} /></Sequence>
             ) : (
               <Sequence from={MATCH} layout="none"><Slot slot="back" plate={BACK_PLATE} from={TAKE_FROM.backMatch} /></Sequence>
             )}
           </AbsoluteFill>
+          {BACK_SOURCE === "back" && <>
           <HudLift crop={HUD_BOARD} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={players} to={{ x: 150, y: 190 }} scale={1.9} tag="Same players" />
           <HudLift crop={HUD_ME} seqFrom={MATCH} takeFrom={TAKE_FROM.backMatch} lift={progress} to={{ x: 150, y: 640 }} scale={1.9} tag="Same progress" />
+          </>}
+          {BACK_SOURCE === "signin" && f >= SIGNIN_CUT && <Tag color={T.cyan} size={26} style={{ position: "absolute", right: 64, top: 986 }}>{WALLET_CUT_LABEL}</Tag>}
         </AbsoluteFill>
       )}
       {crt > 0 && crt < 1 && <div style={{ position: "absolute", left: 0, right: 0, top: 539, height: 2, background: T.text, opacity: 1 - crt, boxShadow: "0 0 24px rgba(239,229,208,0.8)" }} />}

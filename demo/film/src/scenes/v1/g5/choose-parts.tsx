@@ -6,8 +6,9 @@ import { Terminal } from "../../../ds/crt";
 import { Label, Mono } from "../../../ds/type";
 import { stepped, T } from "../../../ds/tokens";
 import { Slot } from "../../../film/Slot";
-import { CHOOSE_CROP, KEY_PLEDGED, KEY_REFUNDED, KEY_SPLIT, KEY_TOAST, TAKE_END, TAKE_FROM } from "./facts";
-import { LiftPlate, printIn, Tag } from "./kit";
+import { CHOOSE_CROP, KEY_PLEDGED, KEY_REFUNDED, KEY_SPLIT, KEY_TOAST, TAKE_END, TAKE_FROM, WALLET_PILL } from "./facts";
+import { LiftPlate, printIn, ramp, Tag } from "./kit";
+import { interpolate } from "remotion";
 
 export const DW = 780;
 export const DH = 440;
@@ -121,6 +122,23 @@ export function PoolPanel({ f, at, rise }: { f: number; at: number; rise: number
       <div style={{ clipPath: `inset(0 0 ${(1 - p(0)) * 100}% 0)` }}>
         <Mono size={56} color={T.text}>{KEY_SPLIT.line}</Mono>
       </div>
+    </div>
+  );
+}
+
+/** postbuy-wallet.mp4's connected-wallet pill ("jenifajoanna · METEOR WALLET") lifted from the page header (top right)
+ * to a band above the pool panel, 56 px, held to the end of the scene. */
+export function WalletPill({ f, at }: { f: number; at: number }) {
+  const up = ramp(f, at, at + 12);
+  if (up <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", left: interpolate(up, [0, 1], [WALLET_PILL.from.x, 960]), top: interpolate(up, [0, 1], [WALLET_PILL.from.y, 190]),
+      transform: `translate(-50%, -50%) scale(${interpolate(up, [0, 1], [0.3, 1])})`, opacity: Math.min(1, up * 3) }}>
+      <LiftPlate lift={up} edge={T.alive} style={{ display: "flex", alignItems: "center", gap: 24, padding: "16px 40px 18px" }}>
+        <span style={{ width: 20, height: 20, borderRadius: 10, background: T.alive }} />
+        <Mono size={56} color={T.text}>{WALLET_PILL.account}</Mono>
+        <Label size={56} track={0.12} color={T.muted}>{WALLET_PILL.wallet}</Label>
+      </LiftPlate>
     </div>
   );
 }

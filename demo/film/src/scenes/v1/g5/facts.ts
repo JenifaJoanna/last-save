@@ -15,8 +15,6 @@ export const POOL = { total: rs("poolTotal"), runwayEpochs: rn("runwayEpochs"), 
 /** Host epoch claim (run proof, claim phase): verified holder sessions and the NEAR paid. */
 export const CLAIM = { sessions: ran("sessionsVerified"), paid: ra("hostPaid") };
 
-/** The fan's host command, as on the Hosts page (web/src/pages/app/Hosts.tsx CMD) with the e2e host account. */
-export const HOST_CMD = "pnpm host --local --account lastsave-fanhost.testnet"; // the e2e host account (fixed by the run harness)
 
 /** Seconds into each take where the slot starts playing (the 1-s hold at the take's start is skipped). TUNE per take. */
 export const TAKE_FROM: Record<string, number> = {
@@ -27,7 +25,6 @@ export const TAKE_FROM: Record<string, number> = {
   // refund2 (dario #2, 12.1 s): REFUND selected from 0 s, toast 9.4 s, card flips to "You took your refund" 11.7 s; its
   // in-point puts the flip on S11 f95, then the take's last frame holds (TAKE_END; no wait is skipped).
   refund2: 9.43, pledge: 10.83, pledge2: 5.83,
-  hostbtn: 1.0, "t-host": 0.6,
   backSignin: 1.0, backMatch: 9.0, // back: pending (real-wallet take on v2dev ~00:30), TUNE when it lands
   bounce: 0.6, epoch: 1.0, // bounce.mp4: the denied panel is up from 0.5 s; epoch.mp4: the host card is static
 };
@@ -57,12 +54,23 @@ export const CHOOSE_POINTS = { refunded: { x: 0.5, y: 0.2 }, title: { x: 0.25, y
  * 14 Nov 23:21), signed by the in-app judge-demo signer: captioned. "wallet-v2dev": the real-wallet post-death buy on the
  * v2dev instance (wallet approval → licence → 90/10), no caption, plus the instance chip. Swap = this one line plus the
  * TUNE in-point/crop below once the take lands. The pool numbers stay ember-rift's (run facts). */
-export const POSTBUY: "wallet-v2dev" | "demo-ember-rift" = "demo-ember-rift";
+export const POSTBUY: "wallet-v2dev" | "demo-ember-rift" = "wallet-v2dev";
 const STORE_CARD = { x: 880 / 1920, y: 236 / 1080, w: 860 / 1920, h: 398 / 1080 };
 export const POSTBUY_TAKE = {
-  "demo-ember-rift": { from: 8.0, crop: STORE_CARD }, // ines: buy toast ≈ 9 s, "You own licence #5" ≈ 11 s
-  "wallet-v2dev": { from: 8.0, crop: STORE_CARD }, // TUNE when the wallet take lands (in-point on the wallet approval)
+  "demo-ember-rift": { slot: "postbuy", from: 8.0, crop: STORE_CARD, cutAt: null as number | null }, // ines: toast ≈ 9 s, "#5" ≈ 11 s
+  // postbuy-wallet.mp4 (6.0 s, v2dev, Meteor Web): cursor on BUY AND FUND THE HOSTS to 2.5 s, the take's own cut at
+  // 2.77 s (the Meteor tab where the purchase was approved), then toast "Licence bought · Approved in your wallet" and
+  // "You own licence #6.". In-point 2.24 s puts the take's cut on S11 f212 (cutAt). The card sits ~90 px lower after the
+  // cut, so the crop is taller-placed than ines's.
+  "wallet-v2dev": { slot: "postbuy-wallet", from: 2.24, crop: { x: 880 / 1920, y: 300 / 1080, w: 860 / 1920, h: 398 / 1080 }, cutAt: 212 as number | null },
 }[POSTBUY];
+/** The wallet take's header, verbatim (connected-wallet pill, top right of the page): the honest proof of a real wallet. */
+export const WALLET_PILL = { account: "jenifajoanna", wallet: "METEOR WALLET", from: { x: 1500, y: 28 } };
+export const WALLET_CUT_LABEL = "cut · approved in Meteor Wallet";
+/** S14 fallback if the game-client `back` re-shoot fails: signin.mp4 (14.9 s: /signin 0–3 s → wallet list 3.0 s →
+ * Meteor Connect 6.6 s → the take's cut 10.37 s → header "jenifajoanna · METEOR WALLET · GAS-FREE"). In-point TUNE. */
+export const BACK_SOURCE: "back" | "signin" = "back";
+export const SIGNIN_TAKE = { from: 8.6, cut: 10.37 }; // the take's cut lands on S14 f27 + (10.37 − from)·30
 /** Honest captions (S04's wording). pledge, pledge2 and ines's postbuy show no wallet approval: the judge-demo signer
  * signed them. */
 export const DEMO_SIGNER = "signed by the judge-demo signer · no wallet";
@@ -85,9 +93,6 @@ export const KEY_DENIED = { line: "ACCESS DENIED · NO LICENCE", from: { x: 950,
 /** term.html geometry for terminal takes (demo/capture/term.html: 1800×980 window centred, 8 px padding, 40 px bar,
  * 18/26 px player padding, 26 rows). The screen below the bar, as a fraction of the 1920×1080 take: */
 export const TERM_CROP = { x: 68 / 1920, y: 98 / 1080, w: 1784 / 1920, h: 924 / 1080 };
-/** Row of each lifted t-host line in the take (0 = the `$ pnpm host` line). Guesses from host/lib order. TUNE. */
-export const HOST_ROWS = { walrus: 3, hash: 6, provenance: 4, snapshot: 8, register: 11 };
-export const TERM_ROW = { top: 18 / 924, h: 34.4 / 924 }; // first row offset and row height, as fractions of TERM_CROP.h
 
 // ---- v2 legibility pass: key lines lifted as film type (≥ 56 px after camera, ≥ 45 f, ≤ 4 px/f). Positions are TUNE. ----
 /** S11 toast body, verbatim from web/src/lib/wallet.tsx (gasless toast). Title is texture. */
@@ -108,14 +113,27 @@ export const KEY_PLEDGED = { title: "You pledged to the hosts", value: rs("locke
 // mint's storage fee comes off before the 90 %, so it is never derived here); while MISSING the number holds at `before`.
 // line: the post-shutdown store card's split legend, verbatim (postbuy.mp4).
 export const KEY_SPLIT = { before: loose("poolBefore") ?? "0.2", after: loose("poolTotal") ?? loose("poolAfter"), line: "90% to the keep-alive pool · 10% gas-free budget" };
-/** S13 key lines in the host CLI's own formats (host/lib/mirrors.mjs, provenance.mjs); values from the launch proof
- * (Walrus aggregator host, CI build commit, Rekor index and time). */
-export const KEY_WALRUS = [`walrus ${ra("walrusHost")} …`, "200, sha256 matches on-chain ✓"];
-export const KEY_PROVENANCE = ["provenance ✓ built by workflow", ra("workflow"), `at commit ${ra("commit7")}, logged ${ra("rekorLogged")}`, `(Rekor #${ra("rekorIndex")})`];
+/** S13 (V12 locked 15 Nov: "A fan runs one command. It fetches a public copy, checks it against the hash from day one,
+ * and restores everyone's progress."). No one-button beat: no deploy take exists, so that beat and its slot are gone. */
+/** t-host.mp4: term.html replay (3840×2160) of the real `pnpm host` run on v2dev (cast 152 s, idle capped → 21.1 s).
+ * Line times in the VIDEO (s): ≈ cast − 0.2 s until the tunnel, then idle-capped. Measured from the replay's rows. */
+export const HOST_VIDEO = { command: 0.83, released: 1.64, github: 2.03, warning: 2.8, snapshot: 3.03, local: 4.78, tunnel: 7.8, serving: 10.8, register: 13.8 };
+/** One honest cut: just after "tunnel up" (video 8.0 s) to just before register_host (video 13.6 s); the real run waited
+ * ≈ 81 s for the tunnel to answer (cast 11 s → 92 s). Labelled on screen. `at` is the S13 frame. */
+export const HOST_CUT = { at: 255, to: 13.6, label: "cut · 81 s later" };
+/** Rows of the replay in the 1920×1080 frame of the take: first row y 151 (centre), pitch 32.8 px. */
+export const TERM_ROWS = { y0: 151, pitch: 32.8, released: 2, github: 3, snapshot: 10, register: 14 };
+/** The take's own text for each lift (wrapped for film size, nothing added). Wanted after-set keys to replace the
+ * literals: keyCommitment12 ("f2772b9f97d8"), snapshotSeq ("2"), registerHostTx ("3hQdHRjg…QJCa"), artifactMirror. */
+export const KEY_HOSTLINES = {
+  github: ["github raw raw.githubusercontent.com …", "200, sha256 matches on-chain ✓"],
+  released: ["released key matches the on-chain commitment", "(f2772b9f97d8...)"],
+  snapshot: ["restoring progress snapshot #2"],
+  register: ["register_host:", "https://testnet.nearblocks.io/txns/", "3hQdHRjgEtpCx8KQW1dm85MgMf4H3nAYhUT9r5kkQJCa"],
+};
 /** Layout (TUNE): S11 toast centre, S13 lift band centre (content px), S12 key line top (frame px). */
 export const LAYOUT = { toast: { x: 960, y: 540 }, s13LiftY: 640, s12LineY: 880 };
 /** S14 stand-ins while `back` / `bounce` are pending, so the open never sits on a near-black "Take pending" card
  * (scripts/check-dead-air). Game-client plates from public/plates; tagged as stand-ins by Slot. */
 export const BACK_PLATE = "match.png";
 export const BOUNCE_PLATE = "kill-lost.png";
-export const HOSTBTN_PLATE = "status-released.png"; // S13 stand-in while `hostbtn` is pending (no dead air)

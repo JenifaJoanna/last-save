@@ -14,7 +14,8 @@ import { Slot } from "../../film/Slot";
 import { InstanceChip, JUDGE_CHIP } from "../../film/Instance";
 import { Embers, Nebula } from "../../frames/b/Space";
 import { DH, DW, GLASS, HOLDERS, MiniDevice, PledgedLine, PoolPanel, RefundedLine, RelayerToast } from "./g5/choose-parts";
-import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP } from "./g5/facts";
+import { CHOOSE_POINTS, DEMO_SIGNER, LAYOUT, PLEDGES_DEMO_SIGNED, POSTBUY, POSTBUY_TAKE, RELEASED_KEY, V2DEV_CHIP, WALLET_CUT_LABEL } from "./g5/facts";
+import { WalletPill } from "./g5/choose-parts";
 import { c, inOut, out, ramp, Tag, word } from "./g5/kit";
 
 const W = (s: number) => word("S11", s);
@@ -121,9 +122,9 @@ export function S11() {
         <AbsoluteFill style={{ transform: `scale(${0.5 + 0.5 * shop})`, opacity: Math.min(1, shop * 2.2) }}>
           <Camera scale={push}>
             <ScreenFrame title={f >= POOL_AT ? "Licence status" : "Store"} mode="dead" titleAt={f >= POOL_AT ? POOL_AT : NEW - 6}>
-              {f < POOL_AT && (
+              {(f < POOL_AT || POSTBUY === "wallet-v2dev") && (
                 <AbsoluteFill style={{ opacity: 1 - 0.6 * panelUp, filter: panelUp > 0.01 ? `blur(${(3 * panelUp).toFixed(2)}px)` : undefined }}>
-                  <Sequence from={NEW - 6} layout="none"><Slot slot="postbuy" from={POSTBUY_TAKE.from} crop={POSTBUY_TAKE.crop} /></Sequence>
+                  <Sequence from={NEW - 6} layout="none"><Slot slot={POSTBUY_TAKE.slot} from={POSTBUY_TAKE.from} crop={POSTBUY_TAKE.crop} /></Sequence>
                 </AbsoluteFill>
               )}
             </ScreenFrame>
@@ -146,6 +147,9 @@ export function S11() {
           </div>
         );
       })()}
+      {/* a real external wallet bought this licence: its header pill lifts as proof; the take's own cut is labelled */}
+      {POSTBUY === "wallet-v2dev" && <WalletPill f={f} at={NEW - 4} />}
+      {POSTBUY_TAKE.cutAt !== null && f >= POSTBUY_TAKE.cutAt && <Tag color={T.cyan} size={26} style={{ position: "absolute", right: 64, top: 986 }}>{WALLET_CUT_LABEL}</Tag>}
       <Embers count={8} seed={31} />
       <AbsoluteFill style={{ pointerEvents: "none", background: "radial-gradient(120% 100% at 50% 50%, transparent 62%, rgba(5,4,10,0.5) 100%)", opacity: 1 - shop }} />
     </AbsoluteFill>
