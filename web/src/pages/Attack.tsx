@@ -11,11 +11,11 @@ const TARGET: string = (import.meta.env.VITE_ATTACK_TARGET as string | undefined
 const RELAYER_ACCOUNT: string = (import.meta.env.VITE_RELAYER_ACCOUNT as string | undefined) ?? "";
 const CODE = "https://github.com/JenifaJoanna/last-save/blob/main/contracts/licence/src";
 const ATTACKS = [
-  { id: "early-release", title: "Release the key early", sub: "Grab the server key while the studio still serves players", call: "release()", rule: "release.rs: the key only leaves the enclave after the contract declares the studio gone", code: `${CODE}/release.rs` },
+  { id: "early-release", title: "Release the key early", sub: "Grab the server key while the studio still serves players", call: "release()", rule: "release.rs: the key only leaves the enclave after the contract declares the studio gone", code: `${CODE}/release.rs`, allowed: "after a shutdown anyone may trigger the release; that is the design" },
   { id: "fake-report", title: "Fake a death report", sub: "Report the server down with a licence you don't own", call: 'report_down({ token_id: "1" })', rule: "liveness.rs: only the licence holder can report, once per window", code: `${CODE}/liveness.rs` },
   { id: "drain-pool", title: "Drain the hosting pool", sub: "Claim host pay without hosting anyone", call: "claim_epoch({ epoch: 0 })", rule: "hosts.rs: pay only for sessions holders signed and an enclave verified", code: `${CODE}/hosts.rs` },
   { id: "redirect-payout", title: "Redirect a host's payout", sub: "Point Base Sepolia payouts at an attacker wallet", call: 'set_payout_evm({ address: "0x…dEaD" })', rule: "evm.rs: an address can only be set on the caller's own host record", code: `${CODE}/evm.rs` },
-  { id: "double-sign", title: "Double-pay a host", sub: "Ask NEAR's MPC network to sign a payout again", call: "bump_evm_payout({ id: 0 })", rule: "evm.rs: a re-sign keeps the same nonce, amount and recipient, so only one transfer can land", code: `${CODE}/evm.rs` },
+  { id: "double-sign", title: "Double-pay a host", sub: "Ask NEAR's MPC network to sign the same payout a second time", call: "sign_evm_payout({ id: 0 })", rule: "evm.rs: each payout is signed once; only a fee bump at the same nonce is allowed, so one transfer can land", code: `${CODE}/evm.rs` },
 ];
 type Line = { t: string; c?: string; href?: string };
 
@@ -54,7 +54,7 @@ export default function Attack() {
       push({ t: "> waiting for the contract…", c: "text-faint" });
       const res = await outcome(j.hash);
       if (res === undefined) push({ t: "> no final result yet; open the transaction", c: "text-amber", href: txUrl(j.hash) });
-      else if (res === null) { push({ t: "> ACCEPTED: anyone may do this now (after a shutdown, releasing the key is open to all)", c: "text-alive" }); sfx("confirm"); }
+      else if (res === null) { push({ t: `> ACCEPTED: ${(a as { allowed?: string }).allowed ?? "this call is allowed in the current state"}`, c: "text-alive" }); sfx("confirm"); }
       else { push({ t: `> REFUSED: ${res}`, c: "text-dead" }); push({ t: `  rule: ${a.rule}`, c: "text-faint", href: a.code }); setRefused((n) => n + 1); sfx("powerDown", 0.35); }
     } catch (e) { push({ t: `> network error: ${String(e).slice(0, 80)}`, c: "text-amber" }); }
     finally { setBusy(false); }

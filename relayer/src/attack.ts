@@ -19,7 +19,7 @@ export const ATTACKS: Record<string, { method: string; args: Record<string, unkn
   "fake-report": { method: "report_down", args: { token_id: "1" } }, // "Only the licence holder can report"
   "drain-pool": { method: "claim_epoch", args: { epoch: 0 } }, // "Register as a host first"
   "redirect-payout": { method: "set_payout_evm", args: { address: "0x000000000000000000000000000000000000dEaD" } }, // own host record only
-  "double-sign": { method: "bump_evm_payout", args: { id: 0 } }, // no such payout, or too early to re-sign
+  "double-sign": { method: "sign_evm_payout", args: { id: 0 } }, // "No such payout" or "Already signed": a payout is signed once
 };
 
 const body = z.object({ attack: z.enum(Object.keys(ATTACKS) as [string, ...string[]]), target: z.string().min(2).max(64) }).strict();
