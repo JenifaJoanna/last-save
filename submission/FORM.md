@@ -32,6 +32,6 @@ provenance, decrypts it, restores the last on-chain progress snapshot and hosts 
 session in NEAR, or on Base Sepolia through NEAR Chain Signatures from the contract's own MPC-derived address. Holder
 actions are gas-free: NEP-366 delegates through a relayer, signed by a key the player's own wallet approved via NEAR
 Connect. Demo game: Ember Rift, a real-time 2–8 player arena. Live on NEAR testnet; every transaction is linked in the repo.
-On the judge instance the holders declared the studio gone; its key release is still pending, because the enclave's
-public-RPC reads were rate-limited on the deadline night. The released afterlife (key, fan host, Base payout) is shown on
-the dev instance, which runs the same code.
+On the judge instance the holders declared the studio gone; its key was released on-chain after the enclave's
+public-RPC reads, rate-limited on the deadline night, recovered. The film shows the released afterlife (fan host, Base
+payout) on the dev instance, which runs the same code.

@@ -23,7 +23,7 @@ attack the live contract and watch it refuse.
 | Licence contract v1 (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
 | Licence v2, published once as a global contract | code hash `4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1` ([publish tx](https://testnet.near.rocks/tx/3g7AQ41U5hmiuJUWCxBAXVviVhVGQUQYpqjyU2amWphF)) |
 | Studio factory (one tx per studio, instances born with 0 keys) | [`lastsave-factory.testnet`](https://testnet.near.rocks/account/lastsave-factory.testnet) |
-| v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key release pending (see Known limits). Run: `proof/judge-v2.json` |
+| v2 judge instance | `ember-rift.lastsave-factory.testnet`: launched, played, shut down and declared dead by its holders on 14 Nov; key released 15 Nov 01:05 IST (tx [ADPZTugj…](https://testnet.nearblocks.io/txns/ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N)). Run: `proof/judge-v2.json`, release: `proof/judge-v2-release.json` |
 | Encrypted judge build, preserved | [archive.org: ember-rift-server-ember-rift-lastsave](https://archive.org/details/ember-rift-server-ember-rift-lastsave) (sha256 = the on-chain artifact hash) |
 | v2 dev instance (full lifecycle incl. a Base Sepolia payout) | [`v2dev.lastsave-factory.testnet`](https://testnet.near.rocks/account/v2dev.lastsave-factory.testnet) |
 | Gas-free relayer | https://lastsave-relay.pages.dev (`/health`) |
@@ -177,7 +177,7 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 | End-to-end on NEAR testnet (`pnpm e2e`, dev instance: buy → play → probes → kill → death → release → refund/pledge → post-shutdown buy → fan host → claim) | 98 / 98 assertions |
 | End-to-end on the v2 dev instance (`proof/v2-e2e.md`): v1 lifecycle + gas-free relayer + relayer refusals + factory + an MPC-signed, fee-bumped Base Sepolia payout mined on-chain | 173 / 174 (the one miss is a test assertion that ignored Base's L1 data fee; re-verified to the wei) |
 | The locked v1 judge instance, filmed (`proof/judge-run.md`) | full lifecycle, every step on-chain |
-| The v2 judge instance `ember-rift` (`proof/judge-v2.json`): preflight, relayer guards, factory, buy, play, alive probe, report, kill, death, release | 70 / 75: the 5 misses are the release (pending, see Known limits) and the probe-path death checks (it died by holder reports instead) |
+| The v2 judge instance `ember-rift` (`proof/judge-v2.json`): preflight, relayer guards, factory, buy, play, alive probe, report, kill, death, release | 70 / 75 in the filmed run; the release then landed (3 / 3 release checks in `proof/judge-v2-release.json`). The 2 lasting misses are the probe-path death checks: it died by holder reports instead |
 | Real wallet (Meteor Web, testnet) on the dev instance: sign-in with the limited key, licence buy, host registration, NEP-413 game login | done by hand, each tx read back on chain |
 
 ## What is real and what is rehearsed
@@ -187,7 +187,7 @@ Registering as a host (`register_host`, a signed 0.01 N call from your own accou
 | Every contract call, enclave run, MPC signature and Base Sepolia transfer shown | Liveness timers are seconds (production defaults are days) |
 | The locked judge instances (0 access keys) and their transactions | Ember Rift and its studio are fictional |
 | The escrow rule, refusals and attacks on `/attack` | Most UI actions in the film were driven by a localhost-only capture signer; the wallet sign-in, a post-death buy, a host registration and the game login used a real Meteor Web wallet |
-| The dev instance's real OutLayer release, fan host and Base payout | The film shows those afterlife beats on the dev instance `v2dev` (labelled), because the judge instance's release is pending |
+| The dev instance's real OutLayer release, fan host and Base payout | The film shows those afterlife beats on the dev instance `v2dev` (labelled): the judge instance's release landed only after filming |
 | Walrus storage and the Sigstore attestation | NEAR testnet and Base Sepolia only; Walrus testnet retention is limited |
 
 The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE.md`](JUDGE.md).
@@ -206,7 +206,8 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
 - The pinned release and probe programs read chain state inside the enclave through public RPCs (FastNEAR, then
   dRPC). On the deadline night both rate-limited (HTTP 429), so those reads failed, OutLayer returned a failure and the
   contract counted each run inconclusive, as designed. The judge instance `ember-rift` therefore died by holder reports
-  (2 of 4, after one counted probe failure), and its release waits for the RPCs to answer again; anyone can retry it.
+  (2 of 4, after one counted probe failure), and its release needed 14 inconclusive runs before it landed on 15 Nov at 01:05 IST
+  through the same gas-free retry anyone can trigger.
   `v1` and `v2dev` show completed, real OutLayer releases with the same code. Fix for v3: more RPC fallbacks, including
   an archival endpoint, inside the wasm.
 - A host account needs ~0.05 testnet NEAR per paid claim; gas-free claims come out of the instance's ops budget.

@@ -1,7 +1,8 @@
 # Last Save — handback (v2, final)
 
 Status, 15 Nov 2026 ~01:00 IST: v2 is built and live on NEAR testnet, with wallet-first sign-in. The judge instance
-`ember-rift` was launched, played, shut down and declared dead on camera; its **key release is pending** (Known limits).
+`ember-rift` was launched, played, shut down and declared dead on camera; its **key was released on 15 Nov at 01:05 IST**
+(tx ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N, `proof/judge-v2-release.json`), after filming.
 All film takes are delivered. Nothing has been posted or submitted.
 
 ## Repository
@@ -16,7 +17,7 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Tap-through preview (no wallet) | https://last-save-preview.pages.dev | live |
 | Gas-free relayer | https://lastsave-relay.pages.dev | live (`/relay`, `/attack`) |
 | Encrypted judge build | https://archive.org/details/ember-rift-server-ember-rift-lastsave | public; sha256 = on-chain artifact hash |
-| Judge instance | `ember-rift.lastsave-factory.testnet` | Dead (cause: players), release pending |
+| Judge instance | `ember-rift.lastsave-factory.testnet` | Dead (cause: players), released 15 Nov 01:05 IST |
 | Dev instance | `v2dev.lastsave-factory.testnet` | Dead (cause: probes), released, community host serving |
 | Second studio | `tidebreak.lastsave-factory.testnet` | Alive, launched in one transaction; not on sale (escrow needs OutLayer) |
 | Official judge server | https://emberrift-ember-rift.pages.dev | shut down 14 Nov 22:08 IST as the demo; stays dead |
@@ -51,17 +52,18 @@ All film takes are delivered. Nothing has been posted or submitted.
 | Game server unit / integration | 55 / 15 | 0 |
 | Server bundle / host CLI | 6 / 30 | 0 |
 | Web wallet library | 5 | 0 |
-| v2 judge e2e (ember-rift) | 70 | 5 (release pending; died by reports, not probes) |
+| v2 judge e2e (ember-rift) | 70 + 3 release checks after it landed | 2 (probe-path death checks: it died by holder reports) |
 | v2dev e2e (full lifecycle) | 173 | 1 (a test that ignored Base's L1 data fee; re-verified) |
 
 Not covered: a person running the MetaMask paths (sign-in, payout address by signature); the 0x-account game login (not
-built); ember-rift's release and its afterlife (pending).
+built); hosting and claims on ember-rift after its release (being set up).
 
 ## Real vs rehearsed
 Real: every contract call, enclave run, MPC signature, Base transfer, relayed attack and refusal; the locked instances;
 Walrus, Sigstore and the archive.org copy; the Meteor Web wallet runs above. Rehearsed: seconds-scale liveness timers;
 a fictional game and studio; most film UI actions driven by a localhost-only capture signer; the afterlife beats shown
-on the dev instance (labelled) because the judge instance's release is pending. Full map: README and `JUDGE.md`.
+on the dev instance (labelled) because the judge instance's release landed only after filming. Full map: README and
+`JUDGE.md`.
 
 ## Identity gate
 `node scripts/check-identity.mjs --live` → `ok … live=38` (repo, build output, git authorship, Worker configs, every
@@ -73,8 +75,9 @@ deployed page; deleted pages listed as expected gone).
 - `submission/LAUNCH-CHECK.md`: launch checklist results on the deployed site.
 
 ## Known limits (details in README)
-- ember-rift's release is pending: the pinned enclave programs read the chain through public RPCs (FastNEAR, then dRPC),
-  which rate-limited on the deadline night; OutLayer counted the runs inconclusive by design. A retry runs every 10 min.
+- ember-rift's release took 14 inconclusive runs: the pinned enclave programs read the chain through public RPCs (FastNEAR,
+  then dRPC), which rate-limited on the deadline night; OutLayer counted those runs inconclusive by design, and a gas-free
+  retry every 10 minutes landed it at 01:05 IST. Fix for v3: more RPC fallbacks inside the wasm.
 - Meteor adds the gas-free key as any zero-deposit method on the one contract (not our 8-method list); it can never
   attach a deposit.
 - Not built: EIP-191 login for 0x accounts; NEAR Auth (shared tenant accepts only localhost); passkeys (mainnet-only).
