@@ -10,9 +10,8 @@ import { T } from "../ds/tokens";
 import { S09 } from "../scenes/v1/S09";
 import { S9 } from "../scenes/v1/g4/t09";
 
-/** S09 frame used: two frames before the alert card slides in. The title and sun have resolved, the probe log ends on
- * DEAD, and it falls between the first two flicker dips. */
-export const THUMB_FRAME = S9.alert - 2;
+/** S09 frame used: after the flicker dips, with the log (1 counted probe failure, holder reports, quorum, DEAD) complete. */
+export const THUMB_FRAME = S9.alert + 24; // the DEAD row fully printed; the alert card (its real posted title) has landed
 
 export function ThumbArt() {
   return (
