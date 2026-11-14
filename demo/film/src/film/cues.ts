@@ -27,7 +27,7 @@ export const SFX: Cue[] = [
   { scene: "S09", file: "probe-fail.mp3", at: 12.88, volume: 0.5 },        // "three times"
   { scene: "S09", file: "probe-fail.mp3", at: 13.4, volume: 0.5, rate: 1.12 },
   { scene: "S09", file: "probe-fail.mp3", at: 13.92, volume: 0.5, rate: 1.25 },
-  { scene: "S09", file: "flatline.mp3", at: 15.04, volume: 0.35, dur: 2.15 }, // "dead"; fades into the silence
+  { scene: "S09", file: "flatline.mp3", at: 15.04, volume: 0.1, dur: 2.15 }, // "dead"; fades into the silence
   { scene: "S09", file: "alert.mp3", at: 15.6, volume: 0.4 },
   { scene: "S10", file: "decode.mp3", at: 3.36, volume: 0.5 },             // "releases"
   { scene: "S10", file: "unlock.mp3", at: 4.0, volume: 0.45 },

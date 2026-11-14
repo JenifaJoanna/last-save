@@ -27,6 +27,8 @@ const ACTS = {
     { section_name: "Live match", duration_ms: 8000, positive_local_styles: ["energy lift", "fuller drums", "bright synth lead motif", "playful"], negative_local_styles: [] },
     { section_name: "Studio goes dark", duration_ms: 15500, positive_local_styles: ["thinning out", "drums drop away", "detuned low pad", "uneasy pulse", "tension"], negative_local_styles: ["bright lead", "drums"] },
   ],
+  // X cut (≤ 2:20): S06 and S07 are dropped (-20.2 s) and the match is trimmed to 6 s (-2 s).
+  act1x: (c) => ACTS.act1(c).map((s) => s.section_name === "Explain" ? { ...s, duration_ms: 41800 } : s.section_name === "Live match" ? { ...s, duration_ms: 6000 } : s),
   act2: (c) => [
     { section_name: "Release", duration_ms: 6000, positive_local_styles: ["warm bloom", `${c.key.split(" to ")[1]} chord`, "soft chime", "relief"], negative_local_styles: ["drums"] },
     { section_name: "Afterlife", duration_ms: 42000, positive_local_styles: ["hopeful", "steady groove returns", "soft drums", "arpeggio", "even dynamics under speech", `in ${c.key.split(" to ")[1]}`], negative_local_styles: ["minor key", "tension"] },
