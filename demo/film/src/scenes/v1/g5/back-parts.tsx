@@ -4,7 +4,7 @@ import { interpolate, Sequence } from "remotion";
 import { Label, Mono } from "../../../ds/type";
 import { stepped, T } from "../../../ds/tokens";
 import { Slot } from "../../../film/Slot";
-import { CLAIM } from "./facts";
+import { KEY_DENIED, KEY_HOST } from "./facts";
 import { LiftPlate, printIn, Tag } from "./kit";
 
 type Crop = { x: number; y: number; w: number; h: number };
@@ -44,20 +44,30 @@ function Check({ size }: { size: number }) {
   );
 }
 
-/** "4 player-signed sessions verified" then "Host paid 0.04 Ⓝ" (numbers: g5/facts CLAIM). `f` relative to the chip start. */
+/** The host card's totals as epoch.mp4 shows them ("8 sessions paid · 0.08 Ⓝ earned", values g5/facts KEY_HOST):
+ * the sessions line first, the earned amount prints at `paidAt`. */
 export function EpochChip({ f, lift, paidAt }: { f: number; lift: number; paidAt: number }) {
   const row2 = printIn(f, paidAt);
   return (
     <LiftPlate lift={lift} edge={T.alive} style={{ padding: "26px 44px 30px" }}>
-      <Label size={24} color={T.cyan} track={0.18} style={{ opacity: 0.45 }}>{"// Epoch claimed · community host"}</Label>
+      <Label size={24} color={T.cyan} track={0.18} style={{ opacity: 0.45 }}>{`// Your host · ${KEY_HOST.who}`}</Label>
       <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 14 }}>
         <Check size={60} />
-        <Mono size={56} color={T.text}>{CLAIM.sessions} player-signed sessions verified</Mono>
+        <Mono size={56} color={T.text}>{KEY_HOST.sessions} sessions paid ·</Mono>
       </div>
       <div style={{ display: "flex", alignItems: "baseline", gap: 22, marginTop: 18, clipPath: `inset(0 0 ${(1 - row2) * 100}% 0)` }}>
-        <Label size={56} color={T.text}>Host paid</Label>
-        <Mono size={96} weight={600} color={T.alive} style={{ lineHeight: 1.05, textShadow: "0 0 34px rgba(69,227,148,0.35)" }}>{CLAIM.paid} Ⓝ</Mono>
+        <Mono size={96} weight={600} color={T.alive} style={{ lineHeight: 1.05, textShadow: "0 0 34px rgba(69,227,148,0.35)" }}>{KEY_HOST.earned} Ⓝ</Mono>
+        <Mono size={56} color={T.text}>earned</Mono>
       </div>
+    </LiftPlate>
+  );
+}
+
+/** bounce.mp4's refusal headline at film size. */
+export function DeniedLine({ lift }: { lift: number }) {
+  return (
+    <LiftPlate lift={lift} edge={T.dead} style={{ padding: "18px 44px 20px" }}>
+      <Mono size={60} weight={600} color={T.dead}>{KEY_DENIED.line}</Mono>
     </LiftPlate>
   );
 }

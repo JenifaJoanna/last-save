@@ -1,16 +1,16 @@
 // S14 Back in (8.4 s, V13 at 0.6 s). Opens frozen on S13's last pose (the register_host line lifted) and dials up into
 // the community host; the dial-up box opens like a CRT into the full-frame game client (`back`: sign in with NEAR →
 // licence checked → the match). "Same players" lifts the scoreboard, "Same progress" lifts the level / Emberwing card.
-// A channel roll to `bounce` (a non-holder refused, ~1.2 s) on "per real player session", another to the Hosts page
-// `epoch` take; on "signed by the players themselves" the epoch result lifts off the glass and its paid amount keeps
-// rising toward the camera, where S15 takes it to the Base payout row.
+// A channel roll to `bounce` (ines, no licence, refused; ~1.3 s) on "per real player session", where "ACCESS DENIED · NO
+// LICENCE" lifts; another to the Hosts page `epoch` take (v2dev); on "signed by the players themselves" the host card's
+// totals ("8 sessions paid · 0.08 Ⓝ earned") lift off the glass and the amount keeps rising toward the camera (S15 seam).
 import { AbsoluteFill, Freeze, interpolate, Sequence, useCurrentFrame } from "remotion";
 import { Camera, ScreenFrame } from "../../ds/screen";
 import { T } from "../../ds/tokens";
 import { scene } from "../../film/timeline";
 import { Slot } from "../../film/Slot";
-import { EpochChip, HudLift } from "./g5/back-parts";
-import { BACK_PLATE, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, TAKE_FROM } from "./g5/facts";
+import { DeniedLine, EpochChip, HudLift } from "./g5/back-parts";
+import { BACK_PLATE, BOUNCE_PLATE, CONTENT_CROP, EPOCH_FOCUS, HUD_BOARD, HUD_ME, KEY_DENIED, TAKE_FROM } from "./g5/facts";
 import { HostTerminal } from "./g5/host-term";
 import { c, DialUp, inOut, out, ramp, roll, RollBand, word } from "./g5/kit";
 
@@ -21,10 +21,11 @@ const MATCH = W(0.54) + 10; // cut from sign-in to the running match
 const PLAYERS = MATCH; // "Same players" lift
 const PROGRESS = W(1.82) - 6; // "Same progress" lift
 const DROP = W(2.88) - 4; // lifts sink back on "The host"
-const BOUNCE = W(3.74) - 12; // roll to the refusal ("per real player session")
-const EPOCH = BOUNCE + 38; // roll to the Hosts page
-const CHIP = W(5.5) - 8; // epoch result lifts on "signed", the 56 px line holds ≥ 45 f
-const PAID = W(5.5) + 8; // "Host paid" prints
+const BOUNCE = W(3.74) - 18; // roll to the refusal ("per real player session")
+const DENIED = [BOUNCE + 10, 186] as const; // "ACCESS DENIED · NO LICENCE" lifts above the frame, holds ≥ 45 f
+const EPOCH = BOUNCE + 48; // roll to the Hosts page (bounce on screen ≈ 1.3 s)
+const CHIP = W(6.36) - 18; // host totals lift on "signed by the players", land before "themselves", hold ≥ 45 f
+const PAID = CHIP; // the earned amount prints with the chip
 const RISE = W(6.36) - 2; // on "themselves" the amount keeps rising toward the camera
 const END = scene("S14").frames;
 
@@ -42,6 +43,9 @@ export function S14() {
   const chipUp = ramp(f, CHIP, CHIP + 12);
   const rise = ramp(f, RISE, END, out);
   const rack = chipUp;
+  const dUp = ramp(f, DENIED[0], DENIED[0] + 10);
+  const dDown = ramp(f, DENIED[1], DENIED[1] + 7, inOut);
+  const denied = dUp * (1 - dDown);
 
   return (
     <AbsoluteFill style={{ background: T.void, overflow: "hidden" }}>
@@ -77,7 +81,9 @@ export function S14() {
       {f >= BOUNCE && f < EPOCH + 10 && (
         <AbsoluteFill style={{ transform: `translateY(${f < EPOCH ? r1.inY : r2.outY}px)` }}>
           <Camera scale={bouncePush}>
-            <Sequence from={BOUNCE} layout="none"><Slot slot="bounce" plate={BOUNCE_PLATE} from={TAKE_FROM.bounce} /></Sequence>
+            <AbsoluteFill style={{ filter: dUp > 0.01 ? `blur(${(3 * dUp).toFixed(2)}px) brightness(${1 - 0.55 * dUp})` : undefined }}>
+              <Sequence from={BOUNCE} layout="none"><Slot slot="bounce" plate={BOUNCE_PLATE} from={TAKE_FROM.bounce} /></Sequence>
+            </AbsoluteFill>
           </Camera>
         </AbsoluteFill>
       )}
@@ -94,6 +100,12 @@ export function S14() {
         </AbsoluteFill>
       )}
       {r2.band && <RollBand y={r2.inY} />}
+      {denied > 0.001 && (
+        <div style={{ position: "absolute", left: interpolate(dUp, [0, 1], [KEY_DENIED.from.x, KEY_DENIED.to.x]), top: interpolate(dUp, [0, 1], [KEY_DENIED.from.y, KEY_DENIED.to.y]) - 16 * dDown,
+          transform: `translate(-50%, -50%) scale(${interpolate(dUp, [0, 1], [0.5, 1])})`, opacity: Math.min(1, dUp * 3) * Math.max(0, 1 - 2 * dDown) }}>
+          <DeniedLine lift={denied} />
+        </div>
+      )}
       {chipUp > 0.001 && (
         <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
           <div style={{ transform: `translateY(${interpolate(chipUp, [0, 1], [120, 20]) - 30 * rise}px) scale(${interpolate(chipUp, [0, 1], [0.7, 1]) + 0.16 * rise})`, opacity: Math.min(1, chipUp * 2.5) }}>

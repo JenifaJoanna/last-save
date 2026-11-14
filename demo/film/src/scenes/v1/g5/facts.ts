@@ -3,6 +3,7 @@
 
 import { ra, ran, rs, rn } from "../../../film/run";
 import RUN from "../../../film/run-facts.json";
+import AFTER from "../../../film/run-facts-after.json";
 
 /** Seam S11: the decoded server key S10 ends on; must equal the string S10 draws on its last frame. */
 export const RELEASED_KEY = ra("releasedKey");
@@ -27,7 +28,8 @@ export const TAKE_FROM: Record<string, number> = {
   // in-point puts the flip on S11 f95, then the take's last frame holds (TAKE_END; no wait is skipped).
   refund2: 9.43, pledge: 10.83, pledge2: 5.83,
   hostbtn: 1.0, "t-host": 0.6,
-  backSignin: 1.0, backMatch: 9.0, bounce: 1.0, epoch: 1.0,
+  backSignin: 1.0, backMatch: 9.0, // back: pending (real-wallet take on v2dev ~00:30), TUNE when it lands
+  bounce: 0.6, epoch: 1.0, // bounce.mp4: the denied panel is up from 0.5 s; epoch.mp4: the host card is static
 };
 
 /** Crop of a full-page LS-0001 take (fractions of 1920×1080) to its content rect (ds/screen.tsx CONTENT), so a take
@@ -73,7 +75,12 @@ export const HUD_BOARD = { x: 10 / 1920, y: 44 / 1080, w: 300 / 1920, h: 150 / 1
 export const HUD_ME = { x: 10 / 1920, y: 950 / 1080, w: 300 / 1920, h: 118 / 1080 };
 
 /** /app/hosts: focus for the epoch take (the "Your host" card, right column of max-w-6xl, x ≈ 1042–1536). TUNE. */
-export const EPOCH_FOCUS = { fx: 1290, fy: 600, scale: 1.4 };
+export const EPOCH_FOCUS = { fx: 1200, fy: 690, scale: 1.4 }; // epoch.mp4: "Your host" card x 1050–1530, y 610–800
+/** S14 key lines, verbatim from the takes (v2dev). The host card shows the host's totals, not one epoch. Wanted after-set
+ * keys: hostSessionsPaid ("8") and hostEarned ("0.08"); until they exist the take's own text is used. */
+const after = (k: string): string | null => { const v = (AFTER.values as Record<string, unknown>)[k]; return v === null || v === undefined || typeof v === "object" ? null : String(v); };
+export const KEY_HOST = { who: "fanhost", sessions: after("hostSessionsPaid") ?? "8", earned: after("hostEarned") ?? "0.08" };
+export const KEY_DENIED = { line: "ACCESS DENIED · NO LICENCE", from: { x: 950, y: 468 }, to: { x: 960, y: 210 } }; // bounce.mp4 panel
 
 /** term.html geometry for terminal takes (demo/capture/term.html: 1800×980 window centred, 8 px padding, 40 px bar,
  * 18/26 px player padding, 26 rows). The screen below the bar, as a fraction of the 1920×1080 take: */
