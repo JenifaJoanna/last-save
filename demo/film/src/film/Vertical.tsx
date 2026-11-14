@@ -78,10 +78,14 @@ export function Vertical() {
           <Audio src={staticFile("music/v1/c1-act2.mp3")} volume={(x) => MUSIC.gain * MUSIC.duckUnderVo * interpolate(x, [0, 18, VERTICAL_FRAMES - placed[1].at - 60, VERTICAL_FRAMES - placed[1].at - 12], [0, 1, 1, 0], clamp)} />
         </Sequence>
       )}
+      <Sequence from={0} durationInFrames={f(INTRO)} name="hook">
+        <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: interpolate(fr, [f(INTRO) - 6, f(INTRO)], [1, 0], clamp) }}>
+          <Display size={92} tone="cream" style={{ textAlign: "center", transform: `translateY(${(1 - Math.min(1, fr / 8)) * 12}px)`, opacity: Math.min(1, fr / 6) }}>{"We killed\nour server."}</Display>
+        </AbsoluteFill>
+      </Sequence>
       <Sequence from={VERTICAL_FRAMES - f(OUTRO)} name="end card">
         <AbsoluteFill style={{ background: T.void, alignItems: "center", justifyContent: "center", gap: 28, opacity: interpolate(fr - (VERTICAL_FRAMES - f(OUTRO)), [0, 8], [0, 1], clamp) }}>
-          <Display size={76} tone="cream" style={{ textAlign: "center" }}>{"We killed\nour server."}</Display>
-          <Display size={76} style={{ textAlign: "center" }}>{"You still\nhave the game."}</Display>
+          <Display size={78} style={{ textAlign: "center" }}>{"You still\nhave the game."}</Display>
           <Label size={26} color={T.muted}>last-save.pages.dev · built on NEAR</Label>
         </AbsoluteFill>
       </Sequence>
