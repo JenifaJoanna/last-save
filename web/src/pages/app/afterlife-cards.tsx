@@ -4,7 +4,7 @@ import { Check, Cpu, HandCoins, KeyRound, Loader2, Lock, Megaphone, RotateCcw, S
 import type { ReactNode } from "react";
 import { Button, Card, Copy, Note } from "../../components/ui";
 import type { Info, LicenceView } from "../../lib/licence";
-import { ago, duration, GASLESS, near, shortHash, toYocto } from "../../lib/near";
+import { ago, duration, near, shortHash, toYocto } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
 
 const OUTLAYER_DEPOSIT = toYocto("0.02");
@@ -12,9 +12,9 @@ const CAUSE: Record<string, string> = { probes: "probes found no players being s
 export const causeText = (c: string | null) => (c ? CAUSE[c] ?? c : "");
 
 export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
-  const { call, pending, accountId } = useWallet();
+  const { call, pending, accountId, gasless: GASLESS } = useWallet();
   const dead = d.status === "Dead";
-  const run = async () => { if (await call("probe_official", {}, { deposit: OUTLAYER_DEPOSIT, gasTgas: 300, label: "Probe finished" })) refresh(); };
+  const run = async () => { if (await call("probe_official", {}, { deposit: GASLESS ? "0" : OUTLAYER_DEPOSIT, gasTgas: 300, label: "Probe finished" })) refresh(); };
   return (
     <Card eyebrow="Proof of life" title="Is the studio still serving players?">
       <div className="flex items-center gap-2">
@@ -35,7 +35,7 @@ export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
 }
 
 export function HolderVote({ d, mine, refresh }: { d: Info; mine: LicenceView | null; refresh: () => void }) {
-  const { call, pending } = useWallet();
+  const { call, pending, gasless: GASLESS } = useWallet();
   const needed = d.reportsNeeded ?? Math.max(1, Math.ceil((d.liveSupply * d.quorumBps) / 10000));
   const pct = needed > 0 ? Math.min(100, (d.reportsInWindow / needed) * 100) : 0;
   const dead = d.status === "Dead";
@@ -64,11 +64,11 @@ function StepRow({ done, active, icon, label, sub }: { done: boolean; active?: b
 }
 
 export function Release({ d, refresh }: { d: Info; refresh: () => void }) {
-  const { call, pending, accountId } = useWallet();
+  const { call, pending, accountId, gasless: GASLESS } = useWallet();
   const dead = d.status === "Dead";
   const released = !!d.releasedKey;
   const inflight = d.releaseState === "InFlight";
-  const release = async () => { if (await call("release", {}, { deposit: OUTLAYER_DEPOSIT, gasTgas: 300, label: "Release finished" })) refresh(); };
+  const release = async () => { if (await call("release", {}, { deposit: GASLESS ? "0" : OUTLAYER_DEPOSIT, gasTgas: 300, label: "Release finished" })) refresh(); };
   return (
     <Card eyebrow="The escrow" title={released ? "The server is released" : dead ? "Ready to release" : "Sealed until shutdown"}>
       <ol className="relative before:absolute before:bottom-4 before:left-4 before:top-4 before:w-px before:bg-line">
@@ -87,7 +87,7 @@ export function Release({ d, refresh }: { d: Info; refresh: () => void }) {
 }
 
 export function YourChoice({ d, mine, refresh }: { d: Info; mine: LicenceView | null; refresh: () => void }) {
-  const { call, pending } = useWallet();
+  const { call, pending, gasless: GASLESS } = useWallet();
   const dead = d.status === "Dead";
   const choose = async (choice: "Refund" | "Pledge") => {
     if (!mine) return;

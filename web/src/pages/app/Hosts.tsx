@@ -3,7 +3,7 @@ import { Coins, Download, KeyRound, Link2, ServerCog, ShieldCheck, Upload } from
 import { useState } from "react";
 import { Button, Card, Copy, Note, Skeleton } from "../../components/ui";
 import { useHosts, useInfo } from "../../lib/licence";
-import { accountUrl, ago, duration, GASLESS, near, shortAcct, shortHash, toYocto } from "../../lib/near";
+import { accountUrl, ago, duration, near, shortAcct, shortHash, toYocto } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
 import { EvmPayouts } from "./evm-payouts";
 
@@ -19,7 +19,7 @@ const STEPS = [
 ];
 
 export default function Hosts() {
-  const { accountId, call, pending } = useWallet();
+  const { accountId, call, pending, gasless: GASLESS } = useWallet();
   const info = useInfo(5000);
   const hosts = useHosts(6000);
   const d = info.data;
@@ -37,7 +37,7 @@ export default function Hosts() {
   const claim = async () => {
     const e = epoch === "" ? lastDone : Number(epoch);
     if (e === null || !Number.isInteger(e) || e < 0) return;
-    if (await call("claim_epoch", { epoch: e }, { deposit: toYocto("0.02"), gasTgas: 300, label: `Epoch ${e} claimed` })) { hosts.refresh(); info.refresh(); }
+    if (await call("claim_epoch", { epoch: e }, { deposit: GASLESS ? "0" : toYocto("0.02"), gasTgas: 300, label: `Epoch ${e} claimed` })) { hosts.refresh(); info.refresh(); }
   };
 
   return (

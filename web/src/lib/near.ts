@@ -3,8 +3,6 @@ import { PREVIEW, previewCodeHash, previewKeys, previewView } from "../preview/s
 export const NETWORK = "testnet";
 export const CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
 export const STUDIO: string = (import.meta.env.VITE_STUDIO as string | undefined) ?? "lastsave-studio.testnet";
-/** Holder actions go through the NEP-366 relayer: the player signs, the relayer pays gas. */
-export const GASLESS: boolean = PREVIEW || !!(import.meta.env.VITE_RELAYER_URL as string | undefined);
 export const OFFICIAL_URL: string = ((import.meta.env.VITE_OFFICIAL_URL as string | undefined) ?? "").replace(/\/$/, "");
 const RPCS = ["https://test.rpc.fastnear.com", "https://near-testnet.drpc.org"];
 
@@ -16,7 +14,7 @@ export class RpcError extends Error {
   constructor(message: string, readonly kind: "missing" | "network" | "contract") { super(message); }
 }
 
-async function rpc<T>(method: string, params: unknown): Promise<T> {
+export async function rpc<T>(method: string, params: unknown): Promise<T> {
   let last: unknown;
   for (const url of RPCS) {
     for (let attempt = 0; attempt < 3; attempt++) {

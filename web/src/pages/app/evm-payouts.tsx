@@ -69,7 +69,7 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
 
 export function EvmPayouts({ mine }: { mine: HostView | undefined }) {
   const evm = useEvm(5000);
-  const { call, pending } = useWallet();
+  const { call, pending, gasless } = useWallet();
   const [addr, setAddr] = useState("");
   if (!evm.data) return null;
   const { info, payouts } = evm.data;
@@ -90,7 +90,7 @@ export function EvmPayouts({ mine }: { mine: HostView | undefined }) {
             <p className="text-sm text-muted">{mine.payoutEvm ? <>Your epochs pay out to <span className="mono text-text">{shortHash(mine.payoutEvm, 6)}</span> on Base Sepolia.</> : "Your epochs pay out in NEAR. Switch to Base Sepolia:"}</p>
             {!mine.payoutEvm && (<>
               <input value={addr} onChange={(e) => setAddr(e.target.value)} placeholder="0x… your Base Sepolia address" spellCheck={false} className="mono h-11 rounded-xl border border-line bg-white/[0.03] px-3 text-text outline-none focus:border-cyan/60" />
-              <Button variant="ghost" disabled={!valid} loading={pending === "set_payout_evm"} onClick={async () => { if (await call("set_payout_evm", { address: addr.trim() }, { gasTgas: 30, label: "Payout address set" })) evm.refresh(); }}>Pay me on Base Sepolia · gas-free</Button>
+              <Button variant="ghost" disabled={!valid} loading={pending === "set_payout_evm"} onClick={async () => { if (await call("set_payout_evm", { address: addr.trim() }, { gasTgas: 30, label: "Payout address set" })) evm.refresh(); }}>Pay me on Base Sepolia{gasless ? " · gas-free" : ""}</Button>
             </>)}
           </motion.div>
         )}

@@ -1,6 +1,7 @@
 // Wallet context: wallet-selector (Meteor, MyNearWallet), account state, contract calls with tx links.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { devCall, loadDev, saveDev, type DevSession } from "./devsigner";
+import { browserKey, gaslessCall, GASLESS_METHODS, RELAYER_URL } from "./gasless";
 import { CONTRACT, txUrl } from "./near";
 import { useToast } from "./toast";
 
@@ -17,6 +18,8 @@ export interface WalletState {
   pending: string | null;
   devSignIn: (s: DevSession) => void;
   isDev: boolean;
+  /** True when this session's holder actions go through the relayer (the player pays no gas). */
+  gasless: boolean;
 }
 
 export const Ctx = createContext<WalletState | null>(null);
@@ -72,7 +75,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try { await (await w.selector.wallet()).signOut(); } catch { /* already signed out */ }
   }, [dev]);
 
+  const gaslessKey = RELAYER_URL && accountId ? (dev?.privateKey ?? browserKey(accountId)) : null;
   const call = useCallback(async (method: string, args: Record<string, unknown>, o: CallOpts) => {
+    if (gaslessKey && accountId && GASLESS_METHODS.has(method)) {
+      setPending(method);
+      try {
+        const r = await gaslessCall(accountId, gaslessKey, method, args, o.gasTgas ?? 100);
+        if (r.failure) { toast.push({ kind: "error", title: `${o.label} failed`, body: r.failure, href: txUrl(r.hash) }); return null; }
+        toast.push({ kind: r.pending ? "info" : "ok", title: r.pending ? `${o.label}: submitted` : o.label, body: "Gas paid by the relayer: you paid 0 Ⓝ.", href: txUrl(r.hash) });
+        return r.hash;
+      } catch (e) {
+        toast.push({ kind: "error", title: `${o.label} failed`, body: (e instanceof Error ? e.message : String(e)).slice(0, 160) });
+        return null;
+      } finally { setPending(null); }
+    }
     if (dev) {
       setPending(method);
       try {
@@ -110,9 +126,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       toast.push({ kind: "error", title: `${o.label} failed`, body: smash ?? (/reject|cancel|closed/i.test(msg) ? "You cancelled in the wallet." : msg.slice(0, 160)) });
       return null;
     } finally { setPending(null); }
-  }, [accountId, toast, dev]);
+  }, [accountId, toast, dev, gaslessKey]);
 
-  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending, devSignIn, isDev: !!dev }), [ready, accountId, signIn, signOut, call, pending, devSignIn, dev]);
+  const value = useMemo(() => ({ ready, accountId, signIn, signOut, call, pending, devSignIn, isDev: !!dev, gasless: !!gaslessKey }), [ready, accountId, signIn, signOut, call, pending, devSignIn, dev, gaslessKey]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
