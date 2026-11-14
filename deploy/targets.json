@@ -5,7 +5,9 @@
     "https://emberrift.pages.dev/",
     "https://emberrift.pages.dev/health",
     "https://emberrift-community.pages.dev/",
-    "https://emberrift-community.pages.dev/health"
+    "https://emberrift-community.pages.dev/health",
+    "https://last-save-preview.pages.dev/",
+    "https://last-save-preview.pages.dev/play/"
   ],
   "workers": [
     "emberrift-arena",

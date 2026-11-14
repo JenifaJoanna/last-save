@@ -6,6 +6,8 @@ import { ToastProvider } from "./lib/toast";
 import { WalletProvider } from "./lib/wallet";
 import Landing from "./pages/Landing";
 import "./styles.css";
+import { PREVIEW } from "./preview/store";
+import { PreviewWalletProvider } from "./preview/PreviewWallet";
 
 const Signin = lazy(() => import("./pages/Signin"));
 const How = lazy(() => import("./pages/How"));
@@ -17,13 +19,20 @@ const Play = lazy(() => import("./pages/app/Play"));
 const Afterlife = lazy(() => import("./pages/app/Afterlife"));
 const Hosts = lazy(() => import("./pages/app/Hosts"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const PreviewIndex = lazy(() => import("./preview/PreviewIndex"));
+const HostRun = lazy(() => import("./preview/HostRun"));
+const PreviewDock = lazy(() => import("./preview/PreviewDock").then((m) => ({ default: m.PreviewDock })));
 
 const Fallback = () => <div className="grid min-h-dvh place-items-center"><div className="skeleton h-8 w-40" /></div>;
 
 function App() {
   return (
     <Suspense fallback={<Fallback />}>
+      {PREVIEW && <PreviewDock />}
       <Switch>
+        {PREVIEW && <Route path="/" component={PreviewIndex} />}
+        {PREVIEW && <Route path="/home" component={Landing} />}
+        {PREVIEW && <Route path="/host-run" component={HostRun} />}
         <Route path="/" component={Landing} />
         <Route path="/how"><How /></Route>
         <Route path="/signin" component={Signin} />
@@ -57,9 +66,7 @@ if (root) {
   createRoot(root).render(
     <StrictMode>
       <ToastProvider>
-        <WalletProvider>
-          <App />
-        </WalletProvider>
+        {PREVIEW ? <PreviewWalletProvider><App /></PreviewWalletProvider> : <WalletProvider><App /></WalletProvider>}
       </ToastProvider>
     </StrictMode>,
   );

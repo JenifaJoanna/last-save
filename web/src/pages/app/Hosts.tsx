@@ -3,8 +3,9 @@ import { Coins, Download, KeyRound, Link2, ServerCog, ShieldCheck, Upload } from
 import { useState } from "react";
 import { Button, Card, Copy, Note, Skeleton } from "../../components/ui";
 import { useHosts, useInfo } from "../../lib/licence";
-import { accountUrl, ago, duration, near, shortAcct, toYocto } from "../../lib/near";
+import { accountUrl, ago, duration, GASLESS, near, shortAcct, shortHash, toYocto } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
+import { EvmPayouts } from "./evm-payouts";
 
 const CMD = `git clone https://github.com/JenifaJoanna/last-save && cd last-save
 pnpm install
@@ -78,7 +79,7 @@ export default function Hosts() {
                   <input value={epoch} onChange={(e) => setEpoch(e.target.value.replace(/\D/g, ""))} inputMode="numeric" placeholder={lastDone !== null ? `${lastDone} (last completed)` : "—"}
                     className="h-11 rounded-xl border border-line bg-white/[0.03] px-3 text-text outline-none focus:border-ember/60" />
                 </label>
-                <Button onClick={claim} loading={pending === "claim_epoch"} disabled={!released}><Coins className="size-4" />Claim epoch</Button>
+                <Button onClick={claim} loading={pending === "claim_epoch"} disabled={!released}><Coins className="size-4" />Claim epoch{GASLESS ? " · gas-free" : ""}</Button>
               </div>
             ) : (
               <div className="grid gap-3">
@@ -103,13 +104,14 @@ export default function Hosts() {
             {(hosts.data ?? []).map((h) => (
               <li key={h.hostId} className="grid gap-2 px-6 py-4 sm:grid-cols-[1fr_auto_auto] sm:items-center sm:gap-6">
                 <span className="min-w-0"><a href={accountUrl(h.hostId)} target="_blank" rel="noopener" className="font-medium no-underline hover:underline">{h.hostId}</a><span className="mono block truncate text-faint">{h.endpoint}</span></span>
-                <span className="text-sm text-muted">{h.epochsPaid} {h.epochsPaid === 1 ? "epoch" : "epochs"} · {h.sessionsPaid} sessions · since {ago(h.registeredAt)}</span>
+                <span className="text-sm text-muted">{h.epochsPaid} {h.epochsPaid === 1 ? "epoch" : "epochs"} · {h.sessionsPaid} sessions · since {ago(h.registeredAt)}{h.payoutEvm && <span className="ml-2 rounded-full border border-cyan/30 bg-cyan/10 px-2 py-0.5 text-[11px] font-semibold text-cyan">pays out on Base · <span className="mono">{shortHash(h.payoutEvm, 4)}</span></span>}</span>
                 <span className="num text-lg font-semibold text-alive">{near(h.earned)} Ⓝ</span>
               </li>
             ))}
           </ul>
         )}
       </Card>
+      <EvmPayouts mine={mineHost} />
     </div>
   );
 }

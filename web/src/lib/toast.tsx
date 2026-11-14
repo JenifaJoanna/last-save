@@ -20,7 +20,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <Ctx.Provider value={api}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex w-[min(380px,calc(100vw-32px))] flex-col gap-2" aria-live="polite">
+      <div className={`fixed right-4 z-[70] flex w-[min(380px,calc(100vw-32px))] flex-col gap-2 ${import.meta.env.VITE_PREVIEW === "1" ? "bottom-[84px] sm:bottom-24" : "bottom-4"}`} aria-live="polite">
         <AnimatePresence initial={false}>
           {items.map((t) => (
             <motion.div key={t.id} layout initial={{ opacity: 0, y: 16, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, x: 40 }}

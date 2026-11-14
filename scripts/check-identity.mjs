@@ -21,7 +21,7 @@ const TERMS = [
 const WORKERS_SUB = dec("Z2FicmllbGF4eQ==");
 const ALLOWED_AUTHOR = /^Jenifa ?Joanna <[^>]+>$/;
 const BINARY = /\.(wasm|png|jpe?g|webp|gif|mp[34]|wav|ogg|woff2?|ttf|ico|zip|gz|br)$/i;
-const BUILD_DIRS = ["web/dist", "game/client/dist", "game/server/dist", "server-bundle/dist", "demo/out", "outlayer/dist"];
+const BUILD_DIRS = ["web/dist", "web/dist-preview", "game/client/dist", "game/server/dist", "server-bundle/dist", "demo/out", "outlayer/dist"];
 
 const failures = [];
 const fail = (msg) => failures.push(msg);

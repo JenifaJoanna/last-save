@@ -16,6 +16,7 @@ dist-web/
 local/
 game/client/dist/
 web/dist/
+web/dist-preview/
 game/server/dist/
 server-bundle/dist/
 .host/

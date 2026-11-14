@@ -5,12 +5,15 @@ import { Card, LinkButton, Note, Skeleton, StatusBadge } from "../../components/
 import { useHosts, useInfo } from "../../lib/licence";
 import { OFFICIAL_URL, shortAcct } from "../../lib/near";
 import { PLAY_URL } from "../Landing";
+import { PREVIEW } from "../../preview/store";
 
 interface Health { ok: boolean; players: number | null; ms: number | null }
 
 function useHealth(url: string): Health | null {
   const [h, setH] = useState<Health | null>(null);
+  const dead = useInfo(6000).data?.status === "Dead";
   useEffect(() => {
+    if (PREVIEW) { const off = url.includes("emberrift.pages.dev") && dead; setH(off ? { ok: false, players: null, ms: null } : { ok: true, players: url.includes("community") ? 3 : 4, ms: url.includes("community") ? 48 : 31 }); return; }
     if (!url) { setH({ ok: false, players: null, ms: null }); return; }
     let alive = true;
     const run = async () => {
@@ -27,7 +30,7 @@ function useHealth(url: string): Health | null {
     void run();
     const t = window.setInterval(run, 8000);
     return () => { alive = false; window.clearInterval(t); };
-  }, [url]);
+  }, [url, dead]);
   return h;
 }
 
@@ -45,7 +48,7 @@ function ServerRow({ name, kind, url }: { name: string; kind: "official" | "comm
           ? <span className="text-alive">Online{h.players !== null ? ` · ${h.players} playing` : ""}{h.ms !== null ? ` · ${h.ms} ms` : ""}</span>
           : <span className="inline-flex items-center gap-1.5 text-dead"><WifiOff className="size-4" />Unreachable</span>}
       </div>
-      <LinkButton href={`${PLAY_URL}?server=${encodeURIComponent(url)}`} external size="sm" variant={h?.ok ? "primary" : "ghost"}><Gamepad2 className="size-4" />Play</LinkButton>
+      <LinkButton href={PREVIEW ? `${PLAY_URL}?practice=1` : `${PLAY_URL}?server=${encodeURIComponent(url)}`} external size="sm" variant={h?.ok ? "primary" : "ghost"}><Gamepad2 className="size-4" />Play</LinkButton>
     </li>
   );
 }

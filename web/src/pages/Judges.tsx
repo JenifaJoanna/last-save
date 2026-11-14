@@ -1,10 +1,11 @@
 // Judge guide: what to check, live facts from chain, how to reproduce, track fit.
-import { BadgeCheck, CircleDashed, FileCode2, GitBranch, PlayCircle, Terminal } from "lucide-react";
+import { BadgeCheck, CircleDashed, Factory, FileCode2, GitBranch, PlayCircle, Terminal } from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { SiteFooter, SiteNav } from "../components/SiteNav";
 import { Card, Copy, Ext, Skeleton } from "../components/ui";
-import { useInfo, useLockedKeys } from "../lib/licence";
-import { accountUrl, codeHash, CONTRACT } from "../lib/near";
+import { FACTORY, useInfo, useInstances, useLockedKeys } from "../lib/licence";
+import { accountUrl, ago, codeHash, CONTRACT } from "../lib/near";
 
 const REPO = "https://github.com/JenifaJoanna/last-save";
 
@@ -14,6 +15,25 @@ function Fact({ label, value, ok }: { label: string; value: ReactNode; ok?: bool
       <span className="flex items-center gap-2 text-sm text-muted">{ok === undefined ? null : ok ? <BadgeCheck className="size-4 text-alive" /> : <CircleDashed className="size-4 text-faint" />}{label}</span>
       <span className="min-w-0 text-sm">{value}</span>
     </li>
+  );
+}
+
+function Studios() {
+  const inst = useInstances();
+  if (!inst.data || inst.data.length === 0) return null;
+  return (
+    <Card eyebrow="Global contract · studio factory" title="Any studio launches its own Last Save in one transaction">
+      <p className="text-[15px] text-muted">The licence code is published once on NEAR as a global contract. <Ext href={accountUrl(FACTORY)}>{FACTORY}</Ext> creates an instance that uses that exact code hash and is born with 0 access keys, so nobody can ever change it.</p>
+      <ul className="mt-4 divide-y divide-line rounded-xl border border-line">
+        {inst.data.map((x, i) => (
+          <motion.li key={x.accountId} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="grid gap-1 px-4 py-3 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-4">
+            <span className="num text-sm text-faint">#{i + 1}</span>
+            <span className="min-w-0"><b>{x.title}</b> <span className="text-muted">by {x.studio}</span><span className="mono block truncate text-faint">{x.accountId}</span></span>
+            <span className="text-sm"><span className="text-alive">{x.keys} access keys</span><span className="text-faint"> · {ago(x.createdAt)}</span></span>
+          </motion.li>
+        ))}
+      </ul>
+    </Card>
   );
 }
 
@@ -39,6 +59,7 @@ function Body() {
           <Fact label="Status" value={d ? `${d.status}${d.cause ? ` (${d.cause})` : ""}` : sk} />
         </ul>
       </Card>
+      <Studios />
       <div className="grid gap-4 lg:grid-cols-2">
         <Card eyebrow="Reproduce it" title="Run the whole lifecycle yourself">
           <ol className="grid gap-3 text-[15px] text-muted">
@@ -51,7 +72,7 @@ function Body() {
           <ul className="grid gap-3 text-[15px] text-muted">
             <li><b className="text-text">The NFT does something:</b> it is the key to the game, the claim on a locked refund, a vote on whether the studio is gone, and the identity that hosts are paid for serving.</li>
             <li><b className="text-text">A real economy:</b> sale splits, a refund pot, a keep-alive pool funded by pledges and post-shutdown sales, per-session host payouts, NEP-199 resale royalties.</li>
-            <li><b className="text-text">NEAR features used:</b> NEP-171/177/178/181/199 tokens, NEP-297 events, NEP-413 signed logins, yield/resume through OutLayer, contract-owned TEE secrets.</li>
+            <li><b className="text-text">NEAR features used:</b> NEP-171/177/178/181/199 tokens, NEP-297 events, NEP-413 signed logins, yield/resume through OutLayer, contract-owned TEE secrets, Chain Signatures (host payouts on Base Sepolia), global contracts (one-tx studio factory), NEP-366 meta-transactions (gas-free holder actions).</li>
           </ul>
           <p className="mt-4"><Ext href={REPO}><GitBranch className="size-4" />Source code (MIT)</Ext></p>
         </Card>

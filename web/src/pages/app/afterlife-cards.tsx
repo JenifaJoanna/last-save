@@ -4,7 +4,7 @@ import { Check, Cpu, HandCoins, KeyRound, Loader2, Lock, Megaphone, RotateCcw, S
 import type { ReactNode } from "react";
 import { Button, Card, Copy, Note } from "../../components/ui";
 import type { Info, LicenceView } from "../../lib/licence";
-import { ago, duration, near, shortHash, toYocto } from "../../lib/near";
+import { ago, duration, GASLESS, near, shortHash, toYocto } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
 
 const OUTLAYER_DEPOSIT = toYocto("0.02");
@@ -28,7 +28,7 @@ export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
       {d.probeInFlight && <Note><span className="inline-flex items-center gap-2"><Loader2 className="size-4 animate-spin" />An enclave is checking the official server for signed player sessions…</span></Note>}
       {d.probeError && !d.probeInFlight && <p className="mt-2 text-xs text-faint">Last probe note: {d.probeError}</p>}
       <Button className="mt-5 w-full" variant="ghost" onClick={run} disabled={dead || !accountId || d.probeInFlight} loading={pending === "probe_official"}>
-        <Cpu className="size-4" />{dead ? "Probing ended" : "Run a probe (anyone, ~0.002 Ⓝ)"}
+        <Cpu className="size-4" />{dead ? "Probing ended" : GASLESS ? "Run a probe · anyone, gas-free" : "Run a probe (anyone, ~0.002 Ⓝ)"}
       </Button>
     </Card>
   );
@@ -46,7 +46,7 @@ export function HolderVote({ d, mine, refresh }: { d: Info; mine: LicenceView | 
       <p className="mt-3 text-sm text-muted">{d.liveSupply === 0 ? "No licences sold yet, so nobody can vote." : <><b className="text-text">{d.reportsInWindow} of {needed}</b> holder reports needed within {duration(d.reportWindowMs || 0)}</>}</p>
       <p className="mt-1 text-xs text-faint">{d.quorumBps / 100}% of the {d.liveSupply} licences sold before shutdown. One report per licence per window.</p>
       <Button className="mt-5 w-full" variant="ghost" onClick={report} disabled={dead || !mine || mine.postDeath} loading={pending === "report_down"}>
-        <Megaphone className="size-4" />{dead ? "Vote closed" : mine ? "Report it down" : "Holders only"}
+        <Megaphone className="size-4" />{dead ? "Vote closed" : mine ? (GASLESS ? "Report it down · gas-free" : "Report it down") : "Holders only"}
       </Button>
     </Card>
   );
@@ -79,7 +79,7 @@ export function Release({ d, refresh }: { d: Info; refresh: () => void }) {
       </ol>
       {released && d.releasedKey && <div className="mt-4 rounded-xl border border-alive/25 bg-alive/5 p-3"><p className="eyebrow text-[10px]">Released server key</p><Copy text={d.releasedKey} label={shortHash(d.releasedKey, 14)} className="mt-1" /></div>}
       {dead && !released && (
-        <Button className="mt-5 w-full" onClick={release} loading={pending === "release"} disabled={!accountId || inflight}><KeyRound className="size-4" />{d.releaseError ? "Retry the release" : "Release the server"}</Button>
+        <Button className="mt-5 w-full" onClick={release} loading={pending === "release"} disabled={!accountId || inflight}><KeyRound className="size-4" />{d.releaseError ? "Retry the release" : "Release the server"}{GASLESS ? " · gas-free" : ""}</Button>
       )}
       {d.releaseError && !released && <p className="mt-2 text-xs text-faint">Last attempt: {d.releaseError}. Anyone can retry.</p>}
     </Card>
@@ -102,6 +102,7 @@ export function YourChoice({ d, mine, refresh }: { d: Info; mine: LicenceView | 
         <div className="mt-5 grid gap-2 sm:grid-cols-2">
           <Button variant="ghost" onClick={() => choose("Refund")} loading={pending === "choose"}><Undo2 className="size-4" />Refund it</Button>
           <Button onClick={() => choose("Pledge")} loading={pending === "choose"}><HandCoins className="size-4" />Pledge to hosts</Button>
+          {GASLESS && <p className="text-xs text-faint sm:col-span-2">Either way you pay no gas: you sign, the relayer pays, and it cannot change what you signed.</p>}
         </div>
       )}
       {!dead && <p className="mt-4 text-sm text-faint">If the studio goes dark you can take it back or pledge it to fans who host. The choice moves with the licence if you sell it.</p>}
@@ -118,6 +119,7 @@ export function Money({ d }: { d: Info }) {
     { label: "Pledged", v: d.pledged, c: "bg-ember" },
     { label: "Keep-alive pool", v: d.pool, c: "bg-cyan" },
     { label: "Paid to hosts", v: d.paidOut, c: "bg-alive" },
+    ...(d.evmSettled !== null ? [{ label: "EVM-settled (paid on Base)", v: d.evmSettled, c: "bg-[#8b7bff]" }] : []),
   ];
   return (
     <Card eyebrow="Where the money is" title="Every yoctoNEAR accounted for">
@@ -126,6 +128,7 @@ export function Money({ d }: { d: Info }) {
           <li key={r.label} className="flex items-center gap-3 text-[15px]"><span className={`size-2.5 rounded-sm ${r.c}`} /><span className="flex-1 text-muted">{r.label}</span><span className="num font-semibold">{near(r.v)} Ⓝ</span></li>
         ))}
       </ul>
+      {d.evmSettled !== null && <p className="mt-3 text-xs leading-relaxed text-faint">EVM-settled NEAR stays on the contract for good: it backs host payouts already sent on Base Sepolia, and no method can withdraw it.</p>}
       <div className="mt-5 flex items-center gap-2 rounded-xl border border-line bg-white/[0.02] px-4 py-3 text-sm">
         <RotateCcw className="size-4 text-cyan" />
         {runway === null ? <span className="text-muted">Pool pays {near(d.payPerSession)} Ⓝ per verified holder session.</span>

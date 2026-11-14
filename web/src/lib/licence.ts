@@ -1,5 +1,6 @@
 // Contract read model: normalises get_info and friends defensively, polls, exposes hooks.
 import { useEffect, useRef, useState } from "react";
+import { PREVIEW, subscribe } from "../preview/store";
 import { accessKeyCount, CONTRACT, RpcError, view } from "./near";
 
 type J = Record<string, unknown>;
@@ -19,6 +20,7 @@ export interface Info {
   epochMs: number; payPerSession: string; epochCap: string; currentEpoch: number | null;
   officialEndpoint: string; artifactSha: string; buildHash: string; releaseSha: string; probeSha: string; keyCommitment: string;
   snapshot: { seq: number; hash: string; at: number } | null;
+  evmSettled: string | null; opsBudget: string | null;
 }
 
 export function normalizeInfo(raw: unknown): Info {
@@ -42,6 +44,7 @@ export function normalizeInfo(raw: unknown): Info {
     officialEndpoint: s(c.official_endpoint), artifactSha: s(o(c.artifact).sha256), buildHash: s(o(c.artifact).build_hash),
     releaseSha: s(o(c.release).sha256), probeSha: s(o(c.probe).sha256), keyCommitment: s(c.key_commitment),
     snapshot: snap.hash ? { seq: n(snap.seq), hash: s(snap.hash), at: n(snap.at_ms) } : null,
+    evmSettled: t.evm_settled === undefined ? null : s(t.evm_settled, "0"), opsBudget: t.ops_budget === undefined ? null : s(t.ops_budget, "0"),
   };
 }
 
@@ -52,10 +55,10 @@ export const normalizeLicence = (raw: unknown): LicenceView | null => {
   return { tokenId: s(r.token_id), owner: s(r.owner_id), potShare: s(r.pot_share, "0"), choice: s(r.choice) || null, mintedAt: n(r.minted_at_ms), postDeath: b(r.post_death) };
 };
 
-export interface HostView { hostId: string; endpoint: string; registeredAt: number; epochsPaid: number; sessionsPaid: number; earned: string }
+export interface HostView { hostId: string; endpoint: string; registeredAt: number; epochsPaid: number; sessionsPaid: number; earned: string; payoutEvm: string | null }
 export const normalizeHosts = (raw: unknown): HostView[] => (Array.isArray(raw) ? raw : []).map((h) => {
   const r = o(h);
-  return { hostId: s(r.host_id), endpoint: s(r.endpoint), registeredAt: n(r.registered_at_ms), epochsPaid: n(r.epochs_paid), sessionsPaid: n(r.sessions_paid), earned: s(r.earned, "0") };
+  return { hostId: s(r.host_id), endpoint: s(r.endpoint), registeredAt: n(r.registered_at_ms), epochsPaid: n(r.epochs_paid), sessionsPaid: n(r.sessions_paid), earned: s(r.earned, "0"), payoutEvm: s(r.payout_evm) || null };
 });
 
 export interface Activity { kind: string; at: number; text: string; detail: J }
@@ -87,7 +90,8 @@ export function usePoll<T>(fn: () => Promise<T>, ms: number, deps: unknown[] = [
     };
     void run();
     const t = window.setInterval(run, ms);
-    return () => { alive = false; window.clearInterval(t); };
+    const unsub = PREVIEW ? subscribe(() => void run()) : undefined;
+    return () => { alive = false; window.clearInterval(t); unsub?.(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...deps, nonce, ms]);
   return { ...state, refresh: () => setNonce((x) => x + 1) };
@@ -115,4 +119,27 @@ export const useSnapshot = (ms = 10000) => usePoll(async () => {
     players = o(json.players) as unknown as Record<string, PlayerProgress>;
   } catch { players = {}; }
   return { seq: n(raw.seq), hash: s(raw.hash), at: n(raw.at_ms), players };
+}, ms);
+
+export interface EvmPayout { id: number; hostId: string; epoch: number; to: string; verified: number; valueWei: string; nearDebited: string; nonce: number | null; status: string; signedTx: string | null; txHash: string | null; relayed: boolean }
+export interface EvmInfo { address: string; nextNonce: number; mpc: string; path: string; chainId: number; contract: string; weiPerSession: string }
+/** Chain Signatures payouts (licence v2). Missing on v1 contracts, which the UI treats as "not offered". */
+export const useEvm = (ms = 6000) => usePoll(async () => {
+  const [i, p] = await Promise.all([view("evm_payout_info"), view<unknown[]>("get_evm_payouts", { from_index: 0, limit: 20 })]);
+  if (!i) return null;
+  const r = o(i);
+  const info: EvmInfo = { address: s(r.address), nextNonce: n(r.next_nonce), mpc: s(r.mpc), path: s(r.path), chainId: n(r.chain_id, 84532), contract: s(r.contract, CONTRACT), weiPerSession: s(r.demo_wei_per_session ?? r.wei_per_session, "0") };
+  const payouts: EvmPayout[] = (Array.isArray(p) ? p : []).map((x) => {
+    const q = o(x);
+    return { id: n(q.id), hostId: s(q.host_id), epoch: n(q.epoch), to: s(q.to), verified: n(q.verified), valueWei: s(q.value_wei, "0"), nearDebited: s(q.near_debited, "0"),
+      nonce: q.nonce === null || q.nonce === undefined ? null : n(q.nonce), status: s(q.status, "Owed"), signedTx: s(q.signed_tx) || null, txHash: s(q.tx_hash) || null, relayed: q.relayed === true };
+  });
+  return { info, payouts };
+}, ms);
+
+export const FACTORY: string = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
+export interface Instance { name: string; accountId: string; title: string; studio: string; keys: number; createdAt: number }
+export const useInstances = (ms = 15000) => usePoll(async () => {
+  const raw = await view<unknown[]>("instances", {}, FACTORY);
+  return (Array.isArray(raw) ? raw : []).map((x) => { const r = o(x); return { name: s(r.name), accountId: s(r.account_id), title: s(r.title), studio: s(r.studio), keys: n(r.keys), createdAt: n(r.created_at_ms) } as Instance; });
 }, ms);

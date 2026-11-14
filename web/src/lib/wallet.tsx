@@ -8,7 +8,7 @@ type Selector = Awaited<ReturnType<typeof import("@near-wallet-selector/core").s
 type Modal = ReturnType<typeof import("@near-wallet-selector/modal-ui").setupModal>;
 
 export interface CallOpts { deposit?: string; gasTgas?: number; label: string }
-interface WalletState {
+export interface WalletState {
   ready: boolean;
   accountId: string | null;
   signIn: () => void;
@@ -19,7 +19,7 @@ interface WalletState {
   isDev: boolean;
 }
 
-const Ctx = createContext<WalletState | null>(null);
+export const Ctx = createContext<WalletState | null>(null);
 
 async function load(): Promise<{ selector: Selector; modal: Modal; fc: typeof import("@near-wallet-selector/core").actionCreators }> {
   const [{ Buffer }, core, modalUi, meteor, mnw] = await Promise.all([

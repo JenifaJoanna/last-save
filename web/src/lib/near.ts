@@ -1,7 +1,10 @@
 // Read-only NEAR access for the platform: failover RPC with backoff, views, formatting, explorer links.
+import { PREVIEW, previewCodeHash, previewKeys, previewView } from "../preview/store";
 export const NETWORK = "testnet";
 export const CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
 export const STUDIO: string = (import.meta.env.VITE_STUDIO as string | undefined) ?? "lastsave-studio.testnet";
+/** Holder actions go through the NEP-366 relayer: the player signs, the relayer pays gas. */
+export const GASLESS: boolean = PREVIEW || !!(import.meta.env.VITE_RELAYER_URL as string | undefined);
 export const OFFICIAL_URL: string = ((import.meta.env.VITE_OFFICIAL_URL as string | undefined) ?? "").replace(/\/$/, "");
 const RPCS = ["https://test.rpc.fastnear.com", "https://near-testnet.drpc.org"];
 
@@ -38,6 +41,7 @@ async function rpc<T>(method: string, params: unknown): Promise<T> {
 }
 
 export async function view<T>(method: string, args: Record<string, unknown> = {}, contract = CONTRACT): Promise<T> {
+  if (PREVIEW) return previewView(method, args) as T;
   const res = await rpc<{ result: number[] }>("query", { request_type: "call_function", finality: "optimistic", account_id: contract, method_name: method,
     args_base64: btoa(JSON.stringify(args)) });
   const text = new TextDecoder().decode(Uint8Array.from(res.result));
@@ -45,11 +49,13 @@ export async function view<T>(method: string, args: Record<string, unknown> = {}
 }
 
 export async function accessKeyCount(account: string): Promise<number> {
+  if (PREVIEW) return previewKeys();
   const r = await rpc<{ keys: unknown[] }>("query", { request_type: "view_access_key_list", finality: "final", account_id: account });
   return r.keys.length;
 }
 
 export async function codeHash(account: string): Promise<string> {
+  if (PREVIEW) return previewCodeHash();
   const r = await rpc<{ code_hash: string }>("query", { request_type: "view_account", finality: "final", account_id: account });
   return r.code_hash;
 }
