@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildLoginMessage, generateSessionKey, signHello, signLogin } from "../../../shared/auth";
 import { Chain } from "../../src/chain";
-import { verifyJoin } from "../../src/login";
+import { MemoryNonceBook, verifyJoin } from "../../src/login";
 import { makeHello, newPilot } from "../helpers/keys";
 import { FakeRpc } from "../helpers/fakeRpc";
 
@@ -12,8 +12,9 @@ async function setup() {
   const rpc = await new FakeRpc().start();
   rpc.allow(mira.account, mira.public);
   const chain = new Chain({ urls: [rpc.url], cacheMs: 60_000, backoffMs: 1 });
+  const nonces = new MemoryNonceBook();
   const join = (h: ReturnType<typeof makeHello>, host = "official") =>
-    verifyJoin({ login: h.login, proof: h.proof, hostId: host, licenceContract: CONTRACT, chain, nowMs: Date.now() });
+    verifyJoin({ login: h.login, proof: h.proof, hostId: host, licenceContract: CONTRACT, chain, nonces, nowMs: Date.now() });
   return { rpc, chain, join };
 }
 
@@ -22,9 +23,10 @@ describe("login verification", () => {
     const { rpc, join } = await setup();
     const h = makeHello(mira);
     expect(await join(h)).toMatchObject({ ok: true, accountId: mira.account });
-    const again = { ...h, proof: signHello({ host: "official", accountId: mira.account, sessionSecret: h.session.secret }) };
+    const again = { ...h, proof: signHello({ host: "official", accountId: mira.account, sessionSecret: h.session.secret, tsMs: h.proof.ts_ms + 1000 }) };
     expect(await join(again)).toMatchObject({ ok: true });
-    expect(await join(again)).toMatchObject({ ok: true });
+    const later = { ...h, proof: signHello({ host: "official", accountId: mira.account, sessionSecret: h.session.secret, tsMs: h.proof.ts_ms + 2000 }) };
+    expect(await join(later)).toMatchObject({ ok: true });
     await rpc.stop();
   });
 

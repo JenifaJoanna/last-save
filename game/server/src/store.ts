@@ -18,6 +18,7 @@ export class Store {
       kos INTEGER NOT NULL DEFAULT 0, shards INTEGER NOT NULL DEFAULT 0, updated_ms INTEGER NOT NULL)`);
     sql.exec(`CREATE TABLE IF NOT EXISTS logins (id INTEGER PRIMARY KEY AUTOINCREMENT, fp TEXT UNIQUE NOT NULL, account TEXT NOT NULL,
       session_pubkey TEXT NOT NULL, exp_ms INTEGER NOT NULL, login_json TEXT NOT NULL, first_ms INTEGER NOT NULL)`);
+    sql.exec(`CREATE TABLE IF NOT EXISTS login_nonces (nonce TEXT PRIMARY KEY, fp TEXT NOT NULL, hello_ms INTEGER NOT NULL, exp_ms INTEGER NOT NULL)`);
     sql.exec(`CREATE TABLE IF NOT EXISTS receipts (id INTEGER PRIMARY KEY AUTOINCREMENT, account TEXT NOT NULL, nonce TEXT NOT NULL,
       host TEXT NOT NULL, epoch INTEGER, ts_ms INTEGER NOT NULL, login_id INTEGER NOT NULL, receipt_json TEXT NOT NULL, UNIQUE(account, nonce))`);
     sql.exec(`CREATE INDEX IF NOT EXISTS receipts_ts ON receipts (ts_ms)`);
@@ -51,6 +52,20 @@ export class Store {
     this.sql.exec(`INSERT INTO logins (fp, account, session_pubkey, exp_ms, login_json, first_ms) VALUES (?, ?, ?, ?, ?, ?)`,
       fp, login.account_id, sessionPubkey, expMs, JSON.stringify(login), Date.now());
     return Number(this.sql.exec(`SELECT id FROM logins WHERE fp = ?`, fp).one().id);
+  }
+
+  /** NonceBook: a NEP-413 nonce belongs to one login; a reconnect with that login needs a strictly newer hello proof. */
+  claimLoginNonce(c: { login: Login; helloTs: number; expMs: number; nowMs: number }): "ok" | "reused" | "replayed" {
+    return this.tx(() => {
+      this.sql.exec(`DELETE FROM login_nonces WHERE exp_ms <= ?`, c.nowMs);
+      const fp = sha256Hex(`${c.login.account_id}|${c.login.signature}`);
+      const hit = this.sql.exec(`SELECT fp, hello_ms FROM login_nonces WHERE nonce = ?`, c.login.nonce).toArray();
+      if (hit.length && String(hit[0].fp) !== fp) return "reused";
+      if (hit.length && c.helloTs <= Number(hit[0].hello_ms)) return "replayed";
+      this.sql.exec(`INSERT INTO login_nonces (nonce, fp, hello_ms, exp_ms) VALUES (?, ?, ?, ?)
+        ON CONFLICT(nonce) DO UPDATE SET hello_ms = excluded.hello_ms`, c.login.nonce, fp, c.helloTs, c.expMs);
+      return "ok";
+    });
   }
 
   saveReceipt(r: Receipt, loginId: number): boolean {

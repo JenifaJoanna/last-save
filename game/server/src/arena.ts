@@ -141,7 +141,7 @@ export class Arena extends DurableObject<Env> {
     if (msg.v !== PROTOCOL_VERSION) return this.deny(s, "bad_version", `protocol version ${msg.v} is not supported (server speaks ${PROTOCOL_VERSION})`);
     s.verifying = true;
     try {
-      const check = await verifyJoin({ login: msg.login as Login, proof: msg.proof, hostId: this.cfg.hostId, licenceContract: this.cfg.licenceContract, chain: this.chain, nowMs: Date.now() });
+      const check = await verifyJoin({ login: msg.login as Login, proof: msg.proof, hostId: this.cfg.hostId, licenceContract: this.cfg.licenceContract, chain: this.chain, nonces: this.store, nowMs: Date.now() });
       if (!check.ok) return this.deny(s, check.code, check.error);
       await this.ensureEpoch();
       const profile = this.store.profile(check.accountId);
