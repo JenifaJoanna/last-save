@@ -24,9 +24,14 @@ enclave that only the licence contract can open, with one exact release program.
 the contract marks the game dead, the enclave releases the server, each holder takes a refund or pledges to keep it
 alive, and a community host brings everyone back with the same progress.
 
-In this film we launch a real game on NEAR testnet, try to break the contract, shut the official server down, and
-watch the game come back on a community host, paid per real player session (on NEAR or on Base, signed by NEAR's MPC
-network). Every claim is checked by one command: pnpm verify.
+In this film we launch a real game on NEAR testnet (the judge instance, ember-rift), try to break the contract, shut
+the official server down, and its holders report it dead. That night its key release was held up by public-RPC rate
+limits, so the afterlife (the OutLayer release, a fan's community host, host payouts on NEAR and on Base signed by
+NEAR's MPC network) is shown on the dev instance v2dev: the same global code, released for real on 14 Nov. Every
+such frame is labelled. Every claim is checked by one command: pnpm verify --all.
+
+Update: the judge instance's own key was released on 15 Nov 01:05 IST, after filming
+(tx ADPZTugjaHDJZwYMsqR33z8zTxhoE7RsotaT7vTupV8N); `pnpm verify` shows it.
 
 Try it
 Platform: https://last-save.pages.dev
@@ -83,6 +88,7 @@ Try to kill it yourself → last-save.pages.dev/attack
 Verify every claim in the film with one command: last-save.pages.dev/judges
 Code: github.com/JenifaJoanna/last-save
 Built on NEAR · OutLayer · Walrus · Chain Signatures
+Update: the judge instance's own key was released 15 Nov 01:05 IST, after filming (tx ADPZTugj…); `pnpm verify` shows it.
 ```
 
 X autoplays muted: upload `last-save-x.srt` as the caption file. The cold open carries the hook as on-screen type.
