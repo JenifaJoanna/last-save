@@ -10,13 +10,15 @@
     "https://last-save-preview.pages.dev/play/",
     "https://lastsave-relay.pages.dev/health",
     "https://emberrift-v2dev.pages.dev/",
-    "https://emberrift-v2dev.pages.dev/health",
-    "https://kiln-cdn-v2walrus.pages.dev/"
+    "https://emberrift-v2dev.pages.dev/health"
   ],
   "workers": [
     "emberrift-arena",
     "emberrift-community-arena",
     "lastsave-relay-relayer",
     "emberrift-v2dev-arena"
+  ],
+  "expected_gone": [
+    "https://kiln-cdn-v2walrus.pages.dev/"
   ]
 }

@@ -5,7 +5,7 @@
 // Forbidden terms are stored base64-encoded so this file never contains them.
 //
 //   node scripts/check-identity.mjs            repo + build output + configs + authorship
-//   node scripts/check-identity.mjs --live     also fetch deploy/targets.json URLs
+//   node scripts/check-identity.mjs --live     also fetch deploy/targets.json URLs (pages must serve; expected_gone must 404 or not resolve)
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -98,6 +98,13 @@ if (live) {
       liveChecked++;
       scanText(`asset ${a}`, JSON.stringify([...r.headers]) + (await r.text()));
     }
+  }
+  // expected_gone: pages the studio took down on purpose (e.g. kiln-cdn-<name>). They must 404/410 or not resolve at all; a 2xx means the shutdown failed.
+  for (const url of targets.expected_gone ?? []) {
+    if (!/^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)?\.pages\.dev(\/|$)/.test(url)) { fail(`${url}: public URLs must be *.pages.dev`); continue; }
+    const res = await fetch(url, { redirect: "manual" }).catch(() => null);
+    liveChecked++;
+    if (res && !(res.status === 404 || res.status === 410)) fail(`${url}: expected gone but answers ${res.status}`);
   }
   for (const name of targets.workers ?? []) {
     const url = `https://${name}.${WORKERS_SUB}.workers.dev/`;
