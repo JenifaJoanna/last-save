@@ -88,4 +88,4 @@ Failed assertions in full:
 
 ## NEAR spend this run (N)
 
-mira 0.2502, kofi 0.2503, yuna 0.1503, dario 0.1503 (each still holds at least 0.48), fanhost 0.2476 (includes a 0.25 licence, 0.04 earned), studio 0.1581 (relayer funding and OutLayer), relayer account 0.0183.
+mira 0.2502, kofi 0.2503, yuna 0.1503, dario 0.1503 (each still holds at least 0.48), fanhost 0.2476 (includes a 0.25 licence, 0.04 earned), studio net -0.1581 despite receiving about 0.59 from the licence sales, so another session moved studio funds in the same window (this run sent nothing from the studio), relayer account 0.0183 (gas for relayed calls).
