@@ -2,21 +2,24 @@
 # The v2 / final swap in one command: real takes → hit times and burst → judge-run facts → captions → gate → commit the
 # generated files → render the three cuts on m2worker → master → dead-air + OCR checks → loudness summary.
 #
-# Usage: scripts/v2.sh [--final] [--only full|x|vertical] [--skip-render]
+# Usage: scripts/v2.sh [--final] [--tag NAME] [--only full|x|vertical] [--skip-render]
 #   default     v2 review cut: out/last-save{,-x,-vertical}-v2.mp4. Gate failures are reported, not fatal.
-#   --final     deliverables: out/last-save{,-x,-vertical}.mp4. final-gate and every render check must pass.
+#   --tag NAME  review cut named -NAME instead of -v2 (e.g. --tag pre for a render before the takes land).
+#   --final     deliverables: out/last-save{,-x,-vertical}.mp4. final-gate and every render check must pass. A -v2
+#               cut rendered from this same commit whose checks passed is promoted (copied) instead of re-rendered:
+#               each render leaves <out>.commit (the commit it was rendered from) and <out>.checks (ok | fail).
 #   --only      render one cut (repeatable); --skip-render stops after the commit (for checking inputs).
 # Refuses to render while demo/film sources have uncommitted edits other than its own generated files: m2worker
 # pulls from GitHub, so a retune that isn't pushed would silently not be in the render.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 FILM="$PWD"; REPO="$(cd ../.. && pwd)"
-FINAL=0; SKIP=0; ONLY=()
+FINAL=0; SKIP=0; ONLY=(); TAG=v2
 while [ $# -gt 0 ]; do case "$1" in
-  --final) FINAL=1 ;; --skip-render) SKIP=1 ;; --only) ONLY+=("$2"); shift ;;
-  *) echo "usage: $0 [--final] [--only full|x|vertical] [--skip-render]"; exit 2 ;; esac; shift; done
+  --final) FINAL=1 ;; --skip-render) SKIP=1 ;; --only) ONLY+=("$2"); shift ;; --tag) TAG="$2"; shift ;;
+  *) echo "usage: $0 [--final] [--tag NAME] [--only full|x|vertical] [--skip-render]"; exit 2 ;; esac; shift; done
 [ ${#ONLY[@]} -eq 0 ] && ONLY=(full x vertical)
-SUFFIX=$([ $FINAL = 1 ] && echo "" || echo "-v2")
+SUFFIX=$([ $FINAL = 1 ] && echo "" || echo "-$TAG")
 step() { printf '\n== %s\n' "$*"; }
 problems=()
 
@@ -55,23 +58,25 @@ git push -q origin main
 [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "push did not land"; exit 1; }
 [ $SKIP = 1 ] && { echo "inputs ready at $(git rev-parse --short HEAD); --skip-render given"; exit 0; }
 
-step "render on m2worker"
-"$REPO/scripts/remote/m2-sync.sh"
+step "render on m2worker, master, then dead-air + OCR checks and loudness"
 comp() { case "$1" in full) echo LastSave ;; x) echo LastSaveX ;; vertical) echo LastSaveVertical ;; *) echo "unknown cut $1" >&2; exit 2 ;; esac; }
 name() { case "$1" in full) echo last-save ;; x) echo last-save-x ;; vertical) echo last-save-vertical ;; esac; }
+HEAD_SHA="$(git rev-parse HEAD)"; SYNCED=0
 for cut in "${ONLY[@]}"; do
-  raw="$(name "$cut")${SUFFIX}-raw.mp4"; out="out/$(name "$cut")${SUFFIX}.mp4"
+  out="out/$(name "$cut")${SUFFIX}.mp4"; rev="out/$(name "$cut")-v2.mp4"
+  if [ $FINAL = 1 ] && [ -f "$rev" ] && [ "$(cat "$rev.commit" 2>/dev/null)" = "$HEAD_SHA" ] && [ "$(cat "$rev.checks" 2>/dev/null)" = ok ]; then
+    cp "$rev" "$out"; echo "$HEAD_SHA" > "$out.commit"; echo ok > "$out.checks"
+    echo "-- $out: promoted $rev (rendered from $HEAD_SHA, checks passed)"; continue
+  fi
+  if [ $SYNCED = 0 ]; then "$REPO/scripts/remote/m2-sync.sh"; SYNCED=1; fi
+  raw="$(name "$cut")${SUFFIX}-raw.mp4"
   ~/.agents/bin/disk-check
   "$REPO/scripts/remote/m2-render.sh" "$(comp "$cut")" "$raw" --color-space=bt709
   scripts/master.sh "out/$raw" "$out"
-  rm -f "out/$raw"
-done
-
-step "render checks (dead air + OCR) and loudness"
-for cut in "${ONLY[@]}"; do
-  out="out/$(name "$cut")${SUFFIX}.mp4"
+  rm -f "out/$raw"; echo "$HEAD_SHA" > "$out.commit"
   echo "-- $out"
-  node scripts/check-render.mjs "$out" --ocr || { [ $FINAL = 1 ] && exit 1; problems+=("$out fails render checks"); }
+  if node scripts/check-render.mjs "$out" --ocr; then echo ok > "$out.checks"
+  else echo fail > "$out.checks"; [ $FINAL = 1 ] && exit 1; problems+=("$out fails render checks"); fi
   ffmpeg -hide_banner -nostats -i "$out" -af ebur128=peak=true -f null - 2>&1 | grep -A14 Summary | grep -E "I:|LRA:|Peak:" || true
   ffprobe -v error -show_entries format=duration -of csv=p=0 "$out"
 done
