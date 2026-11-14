@@ -10,6 +10,7 @@ import V09 from "../../vo/timings/V09.json";
 import V12 from "../../vo/timings/V12.json";
 import V13 from "../../vo/timings/V13.json";
 import { MUSIC, S09_DEAD, SFX } from "./cues";
+import { AFTER_SCENES, INSTANCE_CHIP, NoChip } from "./Instance";
 import { f, scene, type SceneId } from "./timeline";
 
 const has = (p: string) => getStaticFiles().some((x) => x.name === p);
@@ -56,8 +57,16 @@ export function Vertical() {
         return (
           <Sequence key={p.id} from={p.at} durationInFrames={p.frames} name={p.id}>
             <div style={{ position: "absolute", left: 0, top: BAND_Y, width: 1080, height: 1080 * K, overflow: "hidden" }}>
-              <div style={{ position: "absolute", width: 1920, height: 1080, transform: `translateX(${540 - p.focus * K}px) scale(${K})`, transformOrigin: "0 0" }}><C /></div>
+              <div style={{ position: "absolute", width: 1920, height: 1080, transform: `translateX(${540 - p.focus * K}px) scale(${K})`, transformOrigin: "0 0" }}><NoChip><C /></NoChip></div>
             </div>
+            {AFTER_SCENES.has(p.id) && ( // v2dev's real afterlife: said in the header, since the band crops the frame's corner chip
+              <div style={{ position: "absolute", top: 352, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                {p.id === "S10" ? (<>
+                  <Label size={28} color={T.gold} track={0.08} weight={700}>Real OutLayer release · dev instance v2dev</Label>
+                  <Label size={24} color={T.gold} track={0.12}>same code · 14 Nov</Label>
+                </>) : <Label size={24} color={T.gold} track={0.12}>{INSTANCE_CHIP}</Label>}
+              </div>
+            )}
             {p.vo && <Captions vo={p.vo} voAt={p.voAt ?? 0} />}
             {p.vo && has(`vo/v4/${p.vo}.mp3`) && <Sequence from={f(p.voAt ?? 0)}><Audio src={staticFile(`vo/v4/${p.vo}.mp3`)} /></Sequence>}
             {SFX.filter((c) => c.scene === p.id && has(`sfx/v1/${c.file}`)).map((c) => (
