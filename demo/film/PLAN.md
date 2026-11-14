@@ -97,7 +97,10 @@ composition plan timed to the film. Candidates, each an auditioned 30-s sketch, 
 (1) warm retro-synth underscore at 84 BPM: analog pads, soft arpeggio, tape hiss, no drums until 0:40;
 (2) minimal electronic at 90 BPM: Rhodes, sub pulse, light glitch percussion;
 (3) dark synthwave at 80 BPM: slow pulse, gated pads, a hopeful major-key lift in the second half.
-Leaning (1): it sits under speech, and its arpeggio can step with the terminal's stepped motion.
+Picked (1), recorded as `c1-act1` (101.6 s) + `c1-act2` (62.4 s). Measured section RMS follows the planned shape
+(open −34.9 dB, title −31.0, explain −18.7, match −17.3, tension −20.7; release −31.5, afterlife −21.1, resolve −21.5);
+c2 is flat (−16 to −18 throughout) and c3 doesn't recede under tension. X-length acts `c1-act1x`/`c1-act2x` are composed
+for the X cut. Nobody has listened to these yet; the owner's ear decides.
 Shape: enter at 0:02, swell at the title (0:12), duck to −20 dB under VO, lift at the match (1:16–1:26), thin out on
 "goes dark", **hard stop at 1:41.5** on the flatline, silence 1:42–1:44, return in a major key on "releases" (1:47),
 swell at "Same players" (2:15), resolve on the end card (2:44), tail to 2:46.
