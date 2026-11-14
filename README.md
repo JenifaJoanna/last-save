@@ -71,8 +71,14 @@ a Base payout: all cost the player 0 NEAR. Zero-deposit `probe_official` / `rele
 contract's own `ops_budget` (funded at launch, plus 10 % of every post-death sale), throttled so nobody can drain it.
 *Trust line:* the relayer can only pay. It verifies the delegate signature and the key's permissions, forwards only
 zero-deposit calls of an allowlist to allowlisted instances, rate-limits, and cannot change what the player signed.
-Wallets: Meteor and MyNearWallet cannot sign delegates through wallet-selector 10, so those users fall back to a normal
-paid transaction; a session holding a function-call key goes gas-free.
+*Sign-in:* wallets connect through **NEAR Connect** (`@hot-labs/near-connect`; the deprecated wallet-selector is gone).
+On testnet that offers Meteor, Intear, Ledger, Nightly and NEAR CLI, plus Ethereum wallets (MetaMask) through the
+evm-on-near executor. At sign-in a NEAR wallet is asked to add one function-call key that this app generated and that can
+only call this licence's zero-deposit methods; holder actions are then signed as NEP-366 delegates and the relayer pays.
+Verified on chain: a key with the app's exact parameters signed a delegate that the protocol accepted and the relayer
+paid for ([tx BM781HeC…](https://testnet.nearblocks.io/txns/BM781HeCWRQr4RYd882WgWCr81Z5ivBqmyhbYSruRiuh)). Not yet
+verified with a person at a real wallet: that Meteor or Intear adds the key during their own sign-in. Ethereum wallets
+cannot add that key, so their users pay normal gas. You can also play without any wallet (practice offline).
 
 **2. Host payouts on Base Sepolia, signed by NEAR's MPC network (Chain Signatures).** The licence contract controls one
 Base Sepolia address derived from `v1.signer-prod.testnet` with path `lastsave/host-payouts`; no person or server holds
@@ -190,7 +196,12 @@ The full claim-by-claim map, with transactions, code lines and tests, is [`JUDGE
 - OutLayer runs occasionally time out (we saw ~10 minutes of timeouts once). Those runs are inconclusive by design and
   can be retried by anyone; each failed attempt costs its caller 0.001 testnet NEAR.
 - A host account needs ~0.05 testnet NEAR per paid claim; gas-free claims come out of the instance's ops budget.
-- Meteor and MyNearWallet cannot sign NEP-366 delegates through wallet-selector 10, so their users pay normal gas.
+- Gas-free holder actions need the wallet to add the app's function-call key at sign-in (NEAR Connect's
+  `addFunctionCallKey`); a wallet that declines, and every Ethereum wallet, pays normal gas instead.
+- No email or Google login yet: the shared NEAR Auth testnet login only accepts a `http://localhost:3000` callback, so it
+  needs its own client id for our domains. No passkey sign-in: that NEAR Connect executor is mainnet-only.
+- The game server's single-use NEP-413 login nonce (replay refusal) landed after the ember-rift build was cut, so the
+  judge instance's server checks recipient, host and expiry but not nonce reuse.
 - The deploy-to-Cloudflare template deploys into the clicker's own account; we prove it by local build and dry run.
 - Testnet only. Demo timers are seconds-scale; production defaults are days.
 
@@ -236,7 +247,7 @@ MIT. `scripts/outlayer-build-wasm.sh` is vendored from OutLayer (MIT OR Apache-2
 ## Built with, and disclosure
 
 Built during the NEAR Hackathon window (repository created 13 Nov 2026; no earlier code). Libraries: near-sdk 5
-(contract), wasi-http-client, ed25519-dalek, aes-gcm, sha2 (OutLayer programs), near-api-js, @near-wallet-selector,
+(contract), wasi-http-client, ed25519-dalek, aes-gcm, sha2 (OutLayer programs), near-api-js, NEAR Connect (@hot-labs/near-connect),
 @noble/curves|hashes|ciphers, PixiJS 8, React 19, Tailwind 4, motion, wouter, lucide-react, Cloudflare Workers + Durable
 Objects, wrangler, vitest, near-workspaces, NEAR Chain Signatures (MPC signer), NEP-591 global contracts, NEP-366
 meta-transactions, Walrus (testnet publisher/aggregator), Sigstore / GitHub artifact attestations, Base Sepolia. AI assistance: code, tests and copy were written with AI coding agents (Claude
