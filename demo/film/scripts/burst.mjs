@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 // Turns a screenshot burst into a take: public/footage/raw/<slot>/frames.json ([{ file, t }], t = seconds from the first
 // shot) → public/footage/raw/<slot>.mp4 at 30 fps, each shot held for its real capture interval (no interpolation, no
-// speed-up; the last shot holds 1 s). Used for `hostbtn` when the persona browser can't screen-record.
-// Usage: node scripts/burst.mjs <slot>
+// speed-up; the last shot holds 1 s). Each change of shot dissolves over --blend frames (default 4, a tmix of the
+// held frames: holds are untouched), so the page steps softly under the scene's continuous push instead of
+// reading as a slideshow. Used for `hostbtn` when the persona browser can't screen-record.
+// Usage: node scripts/burst.mjs <slot> [--blend 4]
 import { execFileSync } from "node:child_process";
 import { existsSync, linkSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const slot = process.argv[2];
+const blend = process.argv.includes("--blend") ? Number(process.argv[process.argv.indexOf("--blend") + 1]) : 4;
+if (!Number.isInteger(blend) || blend < 1 || blend > 10) { process.stderr.write("burst: --blend must be 1–10 frames\n"); process.exit(2); }
 if (!slot || !/^[a-z0-9-]+$/.test(slot)) { process.stderr.write("usage: node scripts/burst.mjs <slot>\n"); process.exit(2); }
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dir = join(root, "public", "footage", "raw", slot);
@@ -33,7 +37,7 @@ if (shots.some((x) => extname(x.file).toLowerCase() !== ext)) { process.stderr.w
 const out = join(root, "public", "footage", "raw", `${slot}.mp4`);
 try {
   execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-framerate", "30", "-i", join(seq, `f%05d${ext}`),
-    "-vf", "format=yuv420p", "-c:v", "libx264", "-crf", "14", "-preset", "slow", "-r", "30", "-movflags", "+faststart", out]);
+    "-vf", `${blend > 1 ? `tmix=frames=${blend},` : ""}format=yuv420p`, "-c:v", "libx264", "-crf", "14", "-preset", "slow", "-r", "30", "-movflags", "+faststart", out]);
 } finally { rmSync(seq, { recursive: true, force: true }); }
 const span = shots[shots.length - 1].t + 1;
-process.stdout.write(`burst: ${shots.length} shots over ${span.toFixed(1)} s → public/footage/raw/${slot}.mp4 (${(shots.length / span).toFixed(1)} shots/s)\n`);
+process.stdout.write(`burst: ${shots.length} shots over ${span.toFixed(1)} s → public/footage/raw/${slot}.mp4 (${(shots.length / span).toFixed(1)} shots/s, ${blend}-frame dissolves)\n`);
