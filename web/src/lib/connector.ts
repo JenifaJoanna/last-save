@@ -1,5 +1,8 @@
-// NEAR Connect (@hot-labs/near-connect): the wallet connector NEAR's docs recommend (wallet-selector is deprecated).
+// NEAR Connect (@hot-labs/near-connect): the wallet connector NEAR's docs recommend for new apps.
 // Wallet code runs in sandboxed iframes loaded from a public manifest; one connector instance per page, loaded lazily.
+// On testnet the modal lists Meteor, Intear, Ledger, Nightly and NEAR CLI; "evm" opens the Ethereum-wallets executor
+// (evm-on-near.dev). WalletConnect and Unity need a Reown project id (VITE_WALLETCONNECT_PROJECT_ID) and a
+// @walletconnect/sign-client passed as `walletConnect`; without one NEAR Connect leaves them out rather than broken.
 import type { NearConnector, NearWalletBase } from "@hot-labs/near-connect";
 import { CONTRACT } from "./near";
 import { GASLESS_METHODS, KEY_ALLOWANCE_YOCTO } from "./gasless";

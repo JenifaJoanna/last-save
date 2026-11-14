@@ -1,5 +1,5 @@
-// Sign-in terminal: numbered menu (1 connect wallet, 2 practice offline), wallet picker (Meteor, MyNearWallet,
-// pasted testnet key), and the red ACCESS DENIED readout. Digits select, Enter confirms, Esc goes back.
+// Sign-in terminal: numbered menu (1 connect wallet, 2 practice offline), wallet picker (NEAR Connect: Meteor, Intear,
+// Nightly, Ledger, NEAR CLI; or a pasted testnet key), and the red ACCESS DENIED readout. Digits select, Enter confirms, Esc goes back.
 import type { DeniedCode } from "../../../shared/protocol";
 import { loginMessage, newSessionKey, signLoginWithKey, type Session } from "../session";
 import { walletLogin } from "../wallet";
