@@ -30,7 +30,8 @@ All film takes are delivered. Nothing has been posted or submitted.
 | lastsave-licence (v1 judge) | 13 | 0 | 0 | 10 |
 
 ## Evidence
-- `proof/judge-v2.json`: the judge run, 70 of 75 assertions. The 5 misses: the release (pending) and the probe-path
+- `proof/judge-v2.json`: the filmed judge run, 70 of 75 assertions. The 5 misses: the release (then still pending; now
+  recorded in `proof/judge-v2-release.json`, 3 / 3) and the probe-path
   death checks (the instance died by the 2-of-4 holder report quorum instead). Afterlife facts read from chain: refunds
   2 / 0.2 Ⓝ, pledges 2 / 0.2 Ⓝ, pool 0.2 → 0.423 Ⓝ around the post-death buy, runway 8 epochs; every on-camera take
   with its tx.
