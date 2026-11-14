@@ -98,6 +98,8 @@ export async function release(ctx) {
   }
   const after = await getInfo(ctx);
   const key = after.released_key;
+  // Public on chain once released; recorded in full so the proof (and the film) can show it without another RPC read.
+  if (key) { r.read("released_key", key); r.read("released_at_ms", after.released_at_ms); }
   r.check("released_key is public on chain", Boolean(key) && /^[0-9a-f]{64}$/.test(key));
   if (key) r.check("sha256(K) equals key_commitment", sha256Hex(Buffer.from(key, "hex")) === after.config.key_commitment, `commitment ${after.config.key_commitment.slice(0, 12)}...`);
   r.check("released_at_ms is set", Number.isFinite(after.released_at_ms), String(after.released_at_ms));

@@ -5,7 +5,7 @@
 // README to one archive.org item via the IAS3 API. Keys come from local/ia/keys.env (gitignored, 0600), never printed.
 //   node scripts/archive/ia-upload.mjs --instance <id> [--item <identifier>] [--dry-run]
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { decryptBundle } from "../../server-bundle/lib/crypto.mjs";
 import { fetchVerifiedArtifact } from "../../host/lib/prepare.mjs";
 import { view } from "../lib/near.mjs";
@@ -69,4 +69,12 @@ out(`item https://archive.org/details/${ITEM}: ${files.map(([n]) => n).join(", "
 if (DRY) { out("dry run: nothing uploaded"); process.exit(0); }
 const auth = keys();
 for (const [i, [name, body]] of files.entries()) { await put(name, body, i === 0 ? meta : null, auth); out(`uploaded ${name}`); }
+// Append an "archive" step to the instance's launch proof (same append-only shape launch.mjs writes). Re-read at write
+// time: launch.mjs is finished by the time a build is released, so nothing else holds this file open.
+const PROOF = `proof/launch-${INSTANCE.split(".")[0]}.json`;
+const proof = existsSync(PROOF) ? JSON.parse(readFileSync(PROOF, "utf8")) : { contract: INSTANCE, steps: [] };
+proof.steps.push({ step: "archive", at: new Date().toISOString(), item: ITEM, url: `https://archive.org/details/${ITEM}`, build_hash: rel.build_hash,
+  files: files.map(([name, body]) => ({ name, sha256: sha(body), bytes: body.length })) });
+writeFileSync(PROOF, JSON.stringify(proof, null, 2) + "\n");
+out(`recorded in ${PROOF}`);
 out(`done: https://archive.org/details/${ITEM} (the item page can lag a few minutes while archive.org ingests)`);
