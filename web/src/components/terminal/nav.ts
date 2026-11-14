@@ -49,4 +49,5 @@ export function useHints(h: string[]): void {
 }
 
 /** True when a key event should be left to a text field. */
-export const typing = (e: KeyboardEvent) => !!(e.target as HTMLElement)?.closest?.("input, textarea, select, [contenteditable=true]");
+/** True while keys belong to something else: a text field, or the NEAR Connect wallet modal (Esc closes it, not the screen). */
+export const typing = (e: KeyboardEvent) => !!(e.target as HTMLElement)?.closest?.("input, textarea, select, [contenteditable=true]") || !!document.querySelector(".hot-connector-popup");

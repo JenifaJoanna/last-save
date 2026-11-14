@@ -76,7 +76,7 @@ function Step({ done, active, icon, label, sub }: { done: boolean; active?: bool
   return (
     <li className="grid grid-cols-[1.5rem_1fr] gap-3 py-1.5">
       <span className={`grid size-6 place-items-center border text-[11px] ${done ? "border-alive/60 text-alive" : active ? "blink border-amber text-amber" : "border-line-2 text-faint"}`}>{done ? "✓" : icon}</span>
-      <span className="min-w-0"><span className={`block text-[13px] ${done || active ? "text-text" : "text-muted"}`}>{label}</span>{sub && <span className="block truncate text-[11.5px] text-faint">{sub}</span>}</span>
+      <span className="min-w-0"><span className={`block text-[13px] ${done || active ? "text-text" : "text-muted"}`}>{label}</span>{sub && <span className="block break-words text-[11.5px] text-faint">{sub}</span>}</span>
     </li>
   );
 }

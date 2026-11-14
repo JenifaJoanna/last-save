@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { PartnerLogo, SunEmblem } from "../components/brand";
 import { MENU, useHints, usePrimary, typing } from "../components/terminal/nav";
-import { Bracket, Ext, MenuRow } from "../components/ui";
+import { Bracket, MenuRow } from "../components/ui";
 import { useHosts, useInfo, useLockedKeys } from "../lib/licence";
 import { CONTRACT, near } from "../lib/near";
 import { blip } from "../lib/sound";
@@ -11,6 +11,7 @@ import { blip } from "../lib/sound";
 export const PLAY_URL: string = (import.meta.env.VITE_PLAY_URL as string | undefined) ?? "/play/";
 
 function Facts() {
+  const [, navigate] = useLocation();
   const d = useInfo(5000).data;
   const keys = useLockedKeys().data;
   const hosts = useHosts(10000).data;
@@ -26,7 +27,8 @@ function Facts() {
         <li><span className="num text-gold">{d ? near(d.potLocked) : "…"} Ⓝ</span> locked for holders · <span className="num text-gold">{d ? near(d.pool) : "…"} Ⓝ</span> in the keep-alive pool</li>
         <li><span className="num text-gold">{hosts?.length ?? "…"}</span> community {hosts?.length === 1 ? "host" : "hosts"} registered</li>
       </ul>
-      <Ext href="/judges" className="mt-2">Verify it on-chain</Ext>
+      <a href="/judges" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/judges"); }}
+        className="label mt-2 inline-flex items-center gap-1 text-[12px] text-gold no-underline hover:underline">Verify it on-chain<span aria-hidden>▸</span></a>
     </Bracket>
   );
 }
@@ -79,8 +81,8 @@ export default function Home() {
       </div>
       <div data-print className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-4">
         <span className="label text-[11px] text-faint">Built on</span>
-        <PartnerLogo name="NEAR" src="/brand/near-logo.svg" className="h-5" />
-        <PartnerLogo name="OutLayer" src="/brand/outlayer-logo.png" className="h-5" />
+        <span className="inline-flex items-center gap-2"><PartnerLogo name="NEAR" src="/brand/near-logo.svg" className="h-5" /><span className="label text-[10px] text-faint">licence chain</span></span>
+        <span className="inline-flex items-center gap-2"><PartnerLogo name="OutLayer" src="/brand/outlayer-logo.png" className="h-5" /><span className="label text-[10px] text-faint">enclave escrow</span></span>
         <span className="label text-[11px] text-muted">Chain Signatures · Global contracts · Meta-transactions</span>
       </div>
     </div>

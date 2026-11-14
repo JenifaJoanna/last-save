@@ -13,7 +13,7 @@ function Check({ ok, loading, label, detail }: { ok: boolean; loading?: boolean;
   return (
     <li className="flex gap-3">
       {loading ? <CircleDashed className="mt-0.5 size-5 shrink-0 animate-spin text-faint" /> : ok ? <BadgeCheck className="mt-0.5 size-5 shrink-0 text-alive" /> : <CircleDashed className="mt-0.5 size-5 shrink-0 text-faint" />}
-      <span className="min-w-0"><span className={`block text-[15px] ${ok ? "text-text" : "text-muted"}`}>{label}</span><span className="block truncate text-sm text-faint">{detail}</span></span>
+      <span className="min-w-0"><span className={`block text-[15px] ${ok ? "text-text" : "text-muted"}`}>{label}</span><span className="block break-words text-sm text-faint">{detail}</span></span>
     </li>
   );
 }
