@@ -1,0 +1,144 @@
+{
+ "typing.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/keyboard-typing-5997.mp3"
+ },
+ "key.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/keyboard-press.mp3"
+ },
+ "tick.wav": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/products/fine-print/film/public/sfx/tick.wav"
+ },
+ "cash.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/cash-ting.mp3"
+ },
+ "digits.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/display-digits-3.mp3"
+ },
+ "win.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/quick-win.mp3"
+ },
+ "glitch.mp3": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/video-library/references/strehl-demo/public-demo/sfx/glitch-sound-effect.mp3"
+ },
+ "stamp.wav": {
+  "source": "Drive SFX library (local copy)",
+  "file": "~/Documents/products/fine-print/film/public/sfx/stamp.wav"
+ },
+ "crt-on.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Old CRT monitor powering on: a soft static thump, then a rising high-pitched tube whine that settles. Close, dry.",
+  "duration_seconds": 1.5
+ },
+ "dialup.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Very short retro 1200-baud modem handshake chirp, quiet and clean: two tones and a brief static burst.",
+  "duration_seconds": 0.8
+ },
+ "thunk2.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Two soft heavy metal cartridges set down on a metal plinth one after the other, dull thunks, small room.",
+  "duration_seconds": 1.2
+ },
+ "vault.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A vault lock engaging: a deep mechanical clunk and a short metallic latch.",
+  "duration_seconds": 1.2
+ },
+ "deny-a.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Retro computer terminal access-denied buzz: a short, low square-wave buzz.",
+  "duration_seconds": 0.5
+ },
+ "deny-b.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Short descending two-note error beep from an old computer terminal.",
+  "duration_seconds": 0.5
+ },
+ "dash.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Arcade hover-ship dash: a quick airy synth zip with a soft thump.",
+  "duration_seconds": 0.6
+ },
+ "shard.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Bright crystal shard pickup chime in an arcade game, short.",
+  "duration_seconds": 0.5
+ },
+ "hit.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Arcade impact hit: a short crunchy punch with a bass thump.",
+  "duration_seconds": 0.5
+ },
+ "crt-off.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "CRT television switching off: a sharp electrical pop followed by a falling high-pitched whine.",
+  "duration_seconds": 1.2
+ },
+ "flatline.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Hospital ECG monitor flatline: one continuous steady electronic tone, clean, no beeps.",
+  "duration_seconds": 4
+ },
+ "alert.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A muted chat-app notification ping, soft, single.",
+  "duration_seconds": 0.6
+ },
+ "decode.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Rapid digital data chatter that resolves into one bright, clear chime.",
+  "duration_seconds": 1.6
+ },
+ "unlock.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Warm resonant unlock swell: a soft low swell blooming into a gentle golden shimmer.",
+  "duration_seconds": 2.5
+ },
+ "refund.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Coin-return clink: a few coins dropping into a metal tray.",
+  "duration_seconds": 0.8
+ },
+ "pledge.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A single heavy coin dropped into a glass jar.",
+  "duration_seconds": 0.8
+ },
+ "lobby.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Rising digital lobby chime: three ascending soft synth notes, a game reconnecting.",
+  "duration_seconds": 1
+ },
+ "bounce.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A soft denied thud, like a muffled door closing.",
+  "duration_seconds": 0.5
+ },
+ "coins.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "Coins counted one by one onto a wooden table, quick.",
+  "duration_seconds": 1.2
+ },
+ "radio.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A short radio transmission burst: a squelch and a clean data chirp.",
+  "duration_seconds": 0.8
+ },
+ "impact.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A deep, soft cinematic impact with a subtle high shimmer tail.",
+  "duration_seconds": 3
+ },
+ "probe-fail.mp3": {
+  "source": "ElevenLabs eleven_text_to_sound_v3",
+  "prompt": "A low, muted error blip from a computer terminal, soft.",
+  "duration_seconds": 0.5
+ }
+}

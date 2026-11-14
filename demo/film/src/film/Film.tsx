@@ -3,8 +3,8 @@
 import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile } from "remotion";
 import { T } from "../ds/tokens";
 import { SCENE_COMPONENTS } from "../scenes/v1";
-import { MUSIC, SFX } from "./cues";
-import { f, PLACED, scene, TOTAL_FRAMES } from "./timeline";
+import { MUSIC, SCORE, SFX } from "./cues";
+import { f, PLACED, scene } from "./timeline";
 
 const has = (p: string) => getStaticFiles().some((x) => x.name === p);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -29,17 +29,24 @@ export function Film() {
         <Sequence key={`vo-${s.vo}`} from={s.from + f(s.voAt ?? 0)} name={`vo ${s.vo}`}><Audio src={staticFile(`vo/v4/${s.vo}.mp3`)} /></Sequence>
       ))}
       {SFX.filter((c) => has(`sfx/v1/${c.file}`)).map((c) => (
-        <Sequence key={`${c.file}-${c.at}`} from={(c.scene ? scene(c.scene).from : 0) + f(c.at)} durationInFrames={c.dur ? f(c.dur) : undefined} name={`sfx ${c.file}`}>
-          <Audio src={staticFile(`sfx/v1/${c.file}`)} volume={c.volume ?? 0.7} />
+        <Sequence key={`${c.scene}-${c.file}-${c.at}`} from={scene(c.scene).from + f(c.at)} durationInFrames={c.dur ? f(c.dur) : undefined} name={`sfx ${c.file}`}>
+          <Audio src={staticFile(`sfx/v1/${c.file}`)} playbackRate={c.rate ?? 1}
+            volume={(fr) => (c.volume ?? 0.7) * (c.dur ? interpolate(fr, [f(c.dur) - 8, f(c.dur)], [1, 0], clamp) : 1)} />
         </Sequence>
       ))}
-      {has(MUSIC.file) && (
-        <Audio src={staticFile(MUSIC.file)} volume={(fr) => {
-          const speaking = Math.max(0, ...VO_WINDOWS.map(([a, b]) => interpolate(fr, [a - 9, a, b, b + 12], [0, 1, 1, 0], clamp)));
-          const fade = interpolate(fr, [0, f(1.5), TOTAL_FRAMES - f(2.5), TOTAL_FRAMES], [0, 1, 1, 0], clamp);
-          return MUSIC.gain * fade * (1 - (1 - MUSIC.duckUnderVo) * speaking);
-        }} />
-      )}
+      {SCORE.filter((m) => has(m.file)).map((m) => {
+        const a = f(m.from); const len = f(m.to) - a;
+        return (
+          <Sequence key={m.file} from={a} durationInFrames={len} name={`score ${m.file.split("/").pop()}`}>
+            <Audio src={staticFile(m.file)} volume={(fr) => {
+              const abs = a + fr;
+              const speaking = Math.max(0, ...VO_WINDOWS.map(([s0, s1]) => interpolate(abs, [s0 - 9, s0, s1, s1 + 12], [0, 1, 1, 0], clamp)));
+              const env = interpolate(fr, [0, Math.max(1, f(m.fadeIn)), len - Math.max(1, f(m.fadeOut)), len], [0, 1, 1, 0], clamp);
+              return MUSIC.gain * env * (1 - (1 - MUSIC.duckUnderVo) * speaking);
+            }} />
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 }
