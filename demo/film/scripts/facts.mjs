@@ -40,7 +40,7 @@ try {
   if (opts("extra")[0]) files.extra = load(opts("extra")[0]);
 } catch (e) { die(`cannot read a source: ${e.message}`); }
 
-const S = { run: files.run.json, launch: files.launch.map((l) => l.json), verify: files.verify.json, studio2: files.studio2.json, extra: files.extra?.json ?? {}, buyer: CONFIG.buyer };
+const S = { run: files.run.json, launch: files.launch.map((l) => l.json), verify: files.verify.json, studio2: files.studio2.json, extra: files.extra?.json ?? {}, buyer: cfg.buyer };
 const values = {}, missing = [], rows = [];
 for (const row of MAP) {
   try {

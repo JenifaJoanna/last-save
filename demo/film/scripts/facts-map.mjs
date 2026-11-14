@@ -7,6 +7,7 @@ export const CONFIG = {
     // read from run.files.launch / run.files.verify when present; these are the fallbacks
     launch: ["proof/launch-ember-rift.json"],
     verify: "proof/verify-ember-rift.json",
+    buyer: "lastsave-dario.testnet", // the store take's buyer on the judge run (licence #2, bought on camera)
   },
   dev: {
     instance: "v2dev.lastsave-factory.testnet",
@@ -14,9 +15,9 @@ export const CONFIG = {
     // first file wins per step: v2dev has the instance, v2walrus has the CI build, Rekor and Walrus steps v2dev predates
     launch: ["proof/launch-v2dev.json", "proof/launch-v2walrus.json"],
     verify: null, // pass --verify <path> (pnpm -s verify --instance v2dev --json)
+    buyer: "lastsave-yuna.testnet",
   },
   studio2: "proof/launch-tidebreak.json", // the second studio's instance (S07)
-  buyer: "lastsave-yuna.testnet", // the store take's BUY (S04)
 };
 
 // ---- helpers ----
@@ -63,8 +64,11 @@ export const MAP = [
   { key: "price", src: "run", at: "preflight.config.price", get: (S) => yN(cfg(S).price) },
   { key: "fundPct", src: "run", at: "preflight.config.fund_bps / 100", get: (S) => cfg(S).fund_bps / 100 },
   { key: "lockedShare", src: "run", at: "buy.readback[licence <buyer>].pot_share", get: (S) => yN(phase(S.run, "buy").readback[`licence ${S.buyer}`]?.pot_share) },
-  { key: "licenceNo", src: "run", at: "buy.readback[licence <buyer>].token_id", get: (S) => String(need(phase(S.run, "buy").readback[`licence ${S.buyer}`]?.token_id, "buyer licence token_id")) },
-  { key: "buyTx", src: "run", at: "buy.txs[buy_licence <buyer>].hash", get: (S) => tx(S.run, "buy", `buy_licence ${S.buyer}`).hash },
+  // the store take's own buy: run.takes.store when the run records it (the judge run's on-camera buy), else the buy phase
+  { key: "licenceNo", src: "run", at: "takes.store.token_id | buy.readback[licence <buyer>].token_id",
+    get: (S) => String(S.run.takes?.store?.token_id ?? need(phase(S.run, "buy").readback[`licence ${S.buyer}`]?.token_id, "buyer licence token_id")) },
+  { key: "buyTx", src: "run", at: "takes.store.tx | buy.txs[buy_licence <buyer>].hash",
+    get: (S) => S.run.takes?.store?.tx ?? tx(S.run, "buy", `buy_licence ${S.buyer}`).hash },
   { key: "buildSha", src: "verify", at: "pins.artifactSha256", get: (S) => S.verify.pins.artifactSha256 },
   { key: "releasedSha", src: "verify", at: "pins.artifactSha256", get: (S) => S.verify.pins.artifactSha256 },
   { key: "releaseWasm", src: "verify", at: "pins.release", get: (S) => S.verify.pins.release },
