@@ -9,6 +9,7 @@
 #               cut rendered from this same commit whose checks passed is promoted (copied) instead of re-rendered:
 #               each render leaves <out>.commit (the commit it was rendered from) and <out>.checks (ok | fail).
 #   --only      render one cut (repeatable); --skip-render stops after the commit (for checking inputs).
+# DISK_MIN=<GB> lowers the disk-check floor (default 20), only with explicit owner approval of a lower one.
 # Refuses to render while demo/film sources have uncommitted edits other than its own generated files: m2worker
 # pulls from GitHub, so a retune that isn't pushed would silently not be in the render.
 set -euo pipefail
@@ -24,7 +25,7 @@ step() { printf '\n== %s\n' "$*"; }
 problems=()
 
 step "disk"
-~/.agents/bin/disk-check
+~/.agents/bin/disk-check "${DISK_MIN:-20}"
 
 step "takes (spec + contact sheets in out/takes/)"
 node scripts/takes.mjs --sheets out/takes || { echo "a take breaks the spec: re-shoot it (see above)"; exit 1; }
@@ -70,7 +71,7 @@ for cut in "${ONLY[@]}"; do
   fi
   if [ $SYNCED = 0 ]; then "$REPO/scripts/remote/m2-sync.sh"; SYNCED=1; fi
   raw="$(name "$cut")${SUFFIX}-raw.mp4"
-  ~/.agents/bin/disk-check
+  ~/.agents/bin/disk-check "${DISK_MIN:-20}"
   "$REPO/scripts/remote/m2-render.sh" "$(comp "$cut")" "$raw" --color-space=bt709
   scripts/master.sh "out/$raw" "$out"
   rm -f "out/$raw"; echo "$HEAD_SHA" > "$out.commit"
