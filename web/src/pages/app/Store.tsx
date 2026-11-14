@@ -28,29 +28,32 @@ export default function Store() {
   const locked = keys.data === 0;
   const guaranteed = !!d && d.escrowed && d.escrowVerified && locked;
   const lockedPct = d ? d.fundBps / 100 : 40;
+  // Another studio's instance (for example Tidebreak) shows its own title, studio and art from the contract.
+  const other = !!d && d.title !== "Ember Rift";
+  const title = other && d ? d.title : "Ember Rift";
 
   const buy = async () => {
     if (!d) return;
     const hash = await call("buy_licence", {}, { deposit: d.price, gasTgas: 60, label: "Licence bought" });
     if (hash) { info.refresh(); mine.refresh(); }
   };
-  usePrimary(d && !mine.data && accountId ? { label: dead ? "Buy · fund hosts" : `Buy ${near(d.price)} Ⓝ`, run: () => void buy(), busy: pending === "buy_licence" } : null, [d?.price, dead, !!mine.data, accountId, pending]);
+  usePrimary(d && d.escrowed && !mine.data && accountId ? { label: dead ? "Buy · fund hosts" : `Buy ${near(d.price)} Ⓝ`, run: () => void buy(), busy: pending === "buy_licence" } : null, [d?.price, dead, !!mine.data, accountId, pending]);
 
   return (
     <div className="mx-auto max-w-6xl">
-      <ScreenTitle eyebrow="Ember Rift · Kiln Interactive">Store</ScreenTitle>
+      <ScreenTitle eyebrow={other && d ? `${d.title} · ${d.studio}` : "Ember Rift · Kiln Interactive"}>Store</ScreenTitle>
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
         <div data-print className="card overflow-hidden">
           <div className="relative aspect-video">
-            <img src="/art/ember-rift-key.jpg" alt="Ember Rift key art: hover-skiffs racing across a burning obsidian arena" className="absolute inset-0 size-full object-cover" />
+            <img src={other && d?.media ? d.media : "/art/ember-rift-key.jpg"} alt={other ? `${title} key art` : "Ember Rift key art: hover-skiffs racing across a burning obsidian arena"} className="absolute inset-0 size-full object-cover" />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-transparent" />
-            <a href={`${PLAY_URL}?practice=1`} target="_blank" rel="noopener" className="label absolute right-4 top-4 border border-gold/60 bg-ink/80 px-3 py-1.5 text-[11px] text-gold no-underline hover:bg-ink">Try it offline ▸</a>
+            {!other && <a href={`${PLAY_URL}?practice=1`} target="_blank" rel="noopener" className="label absolute right-4 top-4 border border-gold/60 bg-ink/80 px-3 py-1.5 text-[11px] text-gold no-underline hover:bg-ink">Try it offline ▸</a>}
             <div className="absolute bottom-5 left-6">
-              <h2 className="display text-[clamp(30px,4.4vw,54px)]">Ember Rift</h2>
-              <p className="mt-2 text-sm text-muted">Kiln Interactive · arena · 2–8 players</p>
+              <h2 className="display text-[clamp(30px,4.4vw,54px)]">{title}</h2>
+              <p className="mt-2 text-sm text-muted">{other && d ? <>by <span className="mono">{d.studio}</span> · licence contract <span className="mono">{CONTRACT}</span></> : "Kiln Interactive · arena · 2–8 players"}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 p-6 sm:grid-cols-4">
+          {!other && <><div className="grid grid-cols-2 gap-4 p-6 sm:grid-cols-4">
             {[{ i: Users, t: "Up to 8 skiffs" }, { i: Timer, t: "90-second matches" }, { i: Trophy, t: "Levels + Emberwing skin" }, { i: Repeat, t: "Progress saved on-chain" }].map(({ i: I, t }) => (
               <div key={t} className="flex items-center gap-2.5 text-sm text-muted"><I className="size-4 text-ember" />{t}</div>
             ))}
@@ -58,7 +61,8 @@ export default function Store() {
           <p className="border-t border-line px-6 py-5 text-[15px] leading-relaxed text-muted">
             Pilot a hover-skiff across a burning obsidian arena. Grab shards, take the ember core, and ram rivals over the edge into the rift.
             Your level and the Emberwing skin are saved to the licence contract after every match, so they follow you to any server that hosts the game.
-          </p>
+          </p></>}
+          {other && <p className="border-t border-line px-6 py-5 text-[15px] leading-relaxed text-muted">A second studio launched {title} from the same Last Save factory: the same locked licence contract, the same Forever Guarantee checks below, read live from {CONTRACT}.</p>}
         </div>
 
         <div className="grid content-start gap-4">
@@ -91,9 +95,12 @@ export default function Store() {
                     <Link href="/app/library" className="no-underline"><Button variant="ghost" className="w-full"><Gamepad2 className="size-4" />Go to your library</Button></Link>
                   </div>
                 ) : (
-                  <Button size="lg" className="mt-6 w-full" onClick={buy} loading={pending === "buy_licence"} disabled={!accountId}>
-                    {dead ? "Buy and fund the hosts" : `Buy for ${near(d.price)} Ⓝ`}
-                  </Button>
+                  <>
+                    <Button size="lg" className="mt-6 w-full" onClick={buy} loading={pending === "buy_licence"} disabled={!accountId || !d.escrowed}>
+                      {!d.escrowed ? "Not on sale yet" : dead ? "Buy and fund the hosts" : `Buy for ${near(d.price)} Ⓝ`}
+                    </Button>
+                    {!d.escrowed && <p className="mt-2 text-xs text-muted">The contract sells licences only after the studio escrows the server key in the enclave (check 1 below).</p>}
+                  </>
                 )}
                 <p className="mt-3 text-xs text-faint">Resale royalty {d.royaltyBps / 100}% to the studio (NEP-199). Testnet NEAR only.</p>
               </>

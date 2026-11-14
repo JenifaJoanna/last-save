@@ -99,7 +99,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       })
       .catch((e) => {
         const msg = e instanceof Error ? e.message : String(e);
-        if (!/reject|cancel|closed|abort/i.test(msg)) toast.push({ kind: "error", title: "Sign-in failed", body: msg.slice(0, 160) });
+        if (/reject|cancel|closed|abort/i.test(msg)) toast.push({ kind: "info", title: "Sign-in cancelled", body: "Nothing was signed and no key was added. Pick a wallet to try again." });
+        else toast.push({ kind: "error", title: "Sign-in failed", body: msg.slice(0, 160) });
       })
       .finally(() => { pendingKey.current = null; setConnecting(false); });
   }, [connecting, toast]);

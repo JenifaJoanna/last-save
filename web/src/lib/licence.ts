@@ -10,7 +10,7 @@ const n = (v: unknown, d = 0): number => (typeof v === "number" ? v : typeof v =
 const b = (v: unknown): boolean => v === true;
 
 export interface Info {
-  title: string; studio: string; price: string; fundBps: number; royaltyBps: number;
+  title: string; studio: string; media: string; price: string; fundBps: number; royaltyBps: number;
   status: "Alive" | "Dead"; cause: string | null; diedAt: number | null;
   escrowed: boolean; escrowVerified: boolean; attestedAt: number | null;
   releaseState: "Sealed" | "InFlight" | "Released"; releasedKey: string | null; releasedAt: number | null; releaseError: string | null;
@@ -29,7 +29,7 @@ export function normalizeInfo(raw: unknown): Info {
   const releasedKey = s(r.released_key ?? rel.released_key) || null;
   const state = s(rel.state ?? r.release_state, releasedKey || b(rel.released) ? "Released" : b(rel.in_flight) ? "InFlight" : "Sealed");
   return {
-    title: s(c.title, "Ember Rift"), studio: s(c.studio), price: s(c.price, "0"), fundBps: n(c.fund_bps), royaltyBps: n(c.royalty_bps),
+    title: s(c.title, "Ember Rift"), studio: s(c.studio), media: s(c.media), price: s(c.price, "0"), fundBps: n(c.fund_bps), royaltyBps: n(c.royalty_bps),
     status: s(r.status) === "Dead" ? "Dead" : "Alive", cause: s(r.cause) || null, diedAt: n(r.died_at_ms) || null,
     escrowed: b(r.escrowed), escrowVerified: b(r.escrow_verified), attestedAt: n(r.attested_at_ms) || null,
     releaseState: (["Sealed", "InFlight", "Released"].includes(state) ? state : releasedKey ? "Released" : "Sealed") as Info["releaseState"],
