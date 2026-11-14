@@ -10,7 +10,7 @@ export const SCREENS: Screen[] = [
   { path: "/app/play", title: "Play", sub: "Choose a server", app: true },
   { path: "/app/afterlife", title: "Licence status", n: 3, sub: "Proof of life · escrow · your choice", app: true },
   { path: "/app/hosts", title: "Community hosts", n: 4, sub: "Host the game, get paid per player", app: true },
-  { path: "/how", title: "How it works", n: 5, sub: "The lifecycle in six steps" },
+  { path: "/how", title: "How it works", n: 5, sub: "The lifecycle in four steps" },
   { path: "/judges", title: "Judge guide", n: 6, sub: "Verify every claim in five minutes" },
   { path: "/attack", title: "Try to kill it" },
 ];

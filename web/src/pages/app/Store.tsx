@@ -39,7 +39,7 @@ export default function Store() {
   return (
     <div className="mx-auto max-w-6xl">
       <ScreenTitle eyebrow="Ember Rift · Kiln Interactive">Store</ScreenTitle>
-      <div className="grid items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
         <div data-print className="card overflow-hidden">
           <div className="relative aspect-video">
             <img src="/art/ember-rift-key.jpg" alt="Ember Rift key art: hover-skiffs racing across a burning obsidian arena" className="absolute inset-0 size-full object-cover" />
@@ -101,7 +101,7 @@ export default function Store() {
           </Card>
 
           <Card eyebrow="Forever Guarantee" title="Checked live, not promised">
-            <ul className="grid gap-4">
+            <ul className="grid grid-cols-1 gap-4">
               <Check ok={!!d?.escrowed} loading={!d} label="Server key escrowed in an OutLayer enclave" detail={d?.escrowed ? "Owned by the licence contract" : "Waiting for the studio's escrow"} />
               <Check ok={!!d?.escrowVerified} loading={!d} label="Enclave confirmed the key opens the committed build" detail={d?.buildHash ? `build ${shortHash(d.buildHash, 8)}` : "attest pending"} />
               <Check ok={locked} loading={keys.loading} label="Licence contract locked" detail={keys.data === null ? "reading access keys…" : `${keys.data} access keys on ${CONTRACT}`} />

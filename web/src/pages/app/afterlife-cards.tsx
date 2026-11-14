@@ -14,7 +14,7 @@ const CAUSE: Record<string, string> = { probes: "probes found no players being s
 export const causeText = (c: string | null) => (c ? CAUSE[c] ?? c : "");
 
 /** The last probes as terminal lines: `> PROBE 2/3 ..... FAILED unreachable`. */
-function ProbeLines({ threshold }: { threshold: number }) {
+function ProbeLines({ threshold, lastProbe }: { threshold: number; lastProbe: number | null }) {
   const act = useActivity(4000).data ?? [];
   const probes = act.filter((a) => a.kind === "probe" || a.kind === "death").slice(0, 8).reverse();
   let n = 0;
@@ -25,7 +25,7 @@ function ProbeLines({ threshold }: { threshold: number }) {
     if (out === "failed") { n++; return { k: `${a.at}f`, t: `> PROBE ${n}/${threshold} ....... FAILED`, r: String(a.detail.detail ?? ""), c: "text-dead", at: a.at }; }
     return { k: `${a.at}i`, t: "> PROBE ......... NOT COUNTED", r: "enclave timeout", c: "text-amber", at: a.at };
   }).slice(-4);
-  if (!lines.length) return <p className="mono mt-4 text-faint">&gt; no probe has run yet<span className="caret" /></p>;
+  if (!lines.length) return <p className="mono mt-4 text-faint">&gt; {lastProbe ? `last probe ran ${ago(lastProbe)}` : "no probe has run yet"}<span className="caret" /></p>;
   return (
     <div className="mono mt-4 grid gap-1 border-t border-line pt-3 text-[12px] leading-5">
       {lines.map((l) => <p key={l.k} className="step-in flex justify-between gap-3"><span className={l.c}>{l.t}<span className="text-faint"> {l.r}</span></span><span className="shrink-0 text-faint">{ago(l.at)}</span></p>)}
@@ -46,7 +46,7 @@ export function ProofOfLife({ d, refresh }: { d: Info; refresh: () => void }) {
       </div>
       <p className="mt-3 text-[13px] text-muted"><b className={`num ${d.failures ? "text-dead" : "text-text"}`}>{d.failures}/{d.failThreshold}</b> failed in a row · {d.lastProbe ? `last proof of life ${ago(d.lastAlive)}` : "no probe yet"}</p>
       {d.probeInFlight && <p className="mono mt-2 text-[12px] text-amber">&gt; enclave checking the official server for signed sessions<span className="caret" /></p>}
-      <ProbeLines threshold={d.failThreshold} />
+      <ProbeLines threshold={d.failThreshold} lastProbe={d.lastProbe} />
       <p className="mt-3 text-[11.5px] text-faint">Probes count only {duration(d.probeIntervalMs || 0)} apart. An enclave timeout never counts.</p>
       <Button className="mt-4 w-full" variant="ghost" onClick={run} disabled={dead || !accountId || d.probeInFlight} loading={pending === "probe_official"}>
         <Cpu className="size-4" />{dead ? "Probing ended" : GASLESS ? "Run a probe · gas-free" : "Run a probe · ~0.002 Ⓝ"}
@@ -130,7 +130,7 @@ export function YourChoice({ d, mine, refresh }: { d: Info; mine: LicenceView | 
   });
   if (!mine) return <Card eyebrow="Your licence" title="No licence on this account"><p className="text-[13px] text-muted">Holders choose what happens to their locked share after a shutdown.</p></Card>;
   return (
-    <Card eyebrow={`Your licence #${mine.tokenId}`} title={mine.choice ? (mine.choice === "Refund" ? "You took your refund" : "You pledged to the hosts") : open ? "Choose what your share does" : "Your share is locked for you"}>
+    <Card eyebrow={`Your licence #${mine.tokenId}`} title={mine.choice ? (mine.choice === "Refund" ? "You took your refund" : "You pledged to the hosts") : open ? "Choose what your share does" : mine.postDeath ? "Bought after the shutdown" : "Your share is locked for you"}>
       <p className="num text-3xl text-gold">{near(mine.potShare)} Ⓝ</p>
       <p className="mt-1 text-[13px] text-muted">{mine.postDeath ? "Bought after shutdown: 90% of your price went to the hosts' pool, 10% to the gas-free budget." : "locked by contract when you bought"}</p>
       {open && (
@@ -155,6 +155,7 @@ export function Money({ d }: { d: Info }) {
     { label: "Keep-alive pool", v: d.pool, c: "bg-cyan" },
     { label: "Paid to hosts", v: d.paidOut, c: "bg-alive" },
     ...(d.evmSettled !== null ? [{ label: "EVM-settled (paid on Base)", v: d.evmSettled, c: "bg-violet" }] : []),
+    ...(d.opsBudget !== null ? [{ label: "Gas-free budget", v: d.opsBudget, c: "bg-amber" }] : []),
   ];
   return (
     <Card eyebrow="Where the money is" title="Every yoctoNEAR accounted for">

@@ -54,8 +54,9 @@ export async function accessKeyCount(account: string): Promise<number> {
 
 export async function codeHash(account: string): Promise<string> {
   if (PREVIEW) return previewCodeHash();
-  const r = await rpc<{ code_hash: string }>("query", { request_type: "view_account", finality: "final", account_id: account });
-  return r.code_hash;
+  const r = await rpc<{ code_hash: string; global_contract_hash?: string | null }>("query", { request_type: "view_account", finality: "final", account_id: account });
+  // An instance that runs a global contract reports the all-ones empty hash as code_hash; the code it runs is global_contract_hash.
+  return r.global_contract_hash || r.code_hash;
 }
 
 const YOCTO = 10n ** 24n;

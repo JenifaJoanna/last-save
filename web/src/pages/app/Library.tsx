@@ -29,7 +29,7 @@ export default function LibraryPage() {
         <div>
           <span className="mx-auto grid size-16 place-items-center border border-line-2 bg-ink-2"><ShoppingBag className="size-7 text-ember" /></span>
           <h1 className="display mt-6 text-3xl">Empty library</h1>
-          <p className="mt-3 text-muted">{accountId} has no Ember Rift licence yet. Buy one and part of the price is locked for you by contract.</p>
+          <p className="mt-3 text-muted">{accountId} has no Ember Rift licence yet. {d?.status === "Dead" ? "Buy one now and 90% of the price goes to the pool that pays fans to keep the game running." : "Buy one and part of the price is locked for you by contract."}</p>
           <LinkButton href="/app/store" size="lg" className="mt-8">Go to the store</LinkButton>
         </div>
       </div>
@@ -52,7 +52,7 @@ export default function LibraryPage() {
             <h2 className="display mt-2 text-[clamp(30px,4vw,46px)]">Ember Rift</h2>
             <p className="mt-2 text-sm text-muted">Held by {accountId}{l.mintedAt ? ` · bought ${ago(l.mintedAt)}` : ""}{l.postDeath ? " · bought after shutdown" : ""}</p>
             <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
-              <Stat label="Locked for you" value={`${near(l.potShare)} Ⓝ`} tone="gold" sub={l.choice ? CHOICE_TEXT[l.choice] ?? l.choice : dead ? "Yours to decide" : "Released only on shutdown"} />
+              <Stat label={l.choice ? "Your share" : "Locked for you"} value={`${near(l.potShare)} Ⓝ`} tone="gold" sub={l.choice ? CHOICE_TEXT[l.choice] ?? l.choice : l.postDeath ? "Bought after shutdown" : dead ? "Yours to decide" : "Released only on shutdown"} />
               <Stat label="Level" value={me ? me.level : "—"} sub={me ? `${me.xp.toLocaleString()} XP` : "Play a match to start"} />
               <Stat label="Skin" value={me?.skin === "emberwing" ? <span className="inline-flex items-center gap-1.5 text-gold"><Flame className="size-5" />Emberwing</span> : "Standard"} sub={me ? `${me.matches} matches · ${me.kos} KOs` : "Unlocks at level 3"} />
             </div>
@@ -68,8 +68,12 @@ export default function LibraryPage() {
           <p className="text-[15px] leading-relaxed text-muted">After every match the official server posts a progress snapshot to the licence contract. Any host that takes over restores it, so your level and skin come with you.</p>
           {snap.data ? <p className="mt-4 text-sm text-faint">Latest snapshot #{snap.data.seq} · {ago(snap.data.at)} · <span className="mono">{shortHash(snap.data.hash, 8)}</span></p> : <p className="mt-4 text-sm text-faint">No snapshot posted yet.</p>}
         </Card>
-        <Card eyebrow="If the studio goes dark" title={dead ? "It has. Your share is unlocked." : "Your share unlocks automatically"}>
-          <p className="text-[15px] leading-relaxed text-muted">{dead ? "Take your locked share back as a refund, or pledge it to the pool that pays fans to host the game for everyone." : "Nobody has to announce anything. When probes fail or holders report it down, the contract flips and you choose: refund or pledge."}</p>
+        <Card eyebrow="If the studio goes dark" title={!dead ? "Your share unlocks automatically" : l.choice ? "It has. Your choice is on-chain." : l.postDeath ? "It already had when you bought." : "It has. Your share is unlocked."}>
+          <p className="text-[15px] leading-relaxed text-muted">{!dead ? "Nobody has to announce anything. When probes fail or holders report it down, the contract flips and you choose: refund or pledge."
+            : l.choice === "Refund" ? "Your locked share was sent back to your account."
+            : l.choice ? "Your share went to the keep-alive pool that pays fans to host the game for everyone."
+            : l.postDeath ? "You bought after the shutdown, so 90% of your price went to the keep-alive pool and 10% to the gas-free budget."
+            : "Take your locked share back as a refund, or pledge it to the pool that pays fans to host the game for everyone."}</p>
           <Link href="/app/afterlife" className="label mt-4 inline-block text-[12px] text-gold no-underline hover:underline">Open the licence status ▸</Link>
         </Card>
       </div>

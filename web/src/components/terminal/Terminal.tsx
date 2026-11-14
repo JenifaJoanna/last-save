@@ -108,7 +108,7 @@ export function Terminal({ children }: { children: ReactNode }) {
     <PrimaryContext.Provider value={ctx}>
       <div className="flex h-dvh flex-col gap-2 overflow-hidden bg-void p-2 sm:gap-3 sm:p-3">
         <header className="flex h-9 shrink-0 items-center justify-between gap-3 px-1">
-          <a href="/" onClick={(e) => { e.preventDefault(); go("/"); }} className="flex min-w-0 items-center gap-2.5 no-underline">
+          <a href="/" onClick={(e) => { e.preventDefault(); go("/"); }} aria-label="Last Save home" className="flex min-w-0 items-center gap-2.5 no-underline">
             <span className={`size-2.5 shrink-0 rounded-full blink ${LED[mode]}`} aria-hidden />
             <span className="label hidden whitespace-nowrap text-[13px] text-text min-[480px]:inline">LS-0001</span>
             <span className="label hidden truncate text-[11px] text-faint sm:inline">Last Save · transmission terminal</span>

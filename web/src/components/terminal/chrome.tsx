@@ -20,7 +20,7 @@ export function StatusBar({ title, mode }: { title: string; mode: Mode }) {
   const clock = useClock();
   const bg = mode === "dead" ? "bg-dead" : mode === "released" ? "bg-gold" : "bg-ember";
   return (
-    <div className={`relative grid h-8 shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 text-[#160b05] transition-colors duration-150 sm:px-5 ${bg}`}>
+    <div className={`relative grid h-8 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center sm:grid-cols-[1fr_auto_1fr] gap-3 px-4 text-[#160b05] transition-colors duration-150 sm:px-5 ${bg}`}>
       <span className="label hidden truncate text-[11px] sm:block">LS-0001 · Terminal</span>
       <span className="label col-start-1 truncate text-[12px] sm:col-start-2 sm:text-center" aria-live="polite">{shown}</span>
       <span className="label justify-self-end whitespace-nowrap text-[11px]">{clock} · <span className={MODE_TONE[mode]}>{MODE_TEXT[mode]}</span></span>

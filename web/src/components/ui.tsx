@@ -57,7 +57,7 @@ export function Copy({ text, label, className = "" }: { text: string; label?: st
   const [done, setDone] = useState(false);
   return (
     <button onClick={() => { void navigator.clipboard?.writeText(text); blip("key"); setDone(true); window.setTimeout(() => setDone(false), 1400); }}
-      className={`inline-flex min-w-0 items-center gap-1.5 px-1 py-0.5 text-muted hover:bg-white/5 hover:text-text ${className}`} title="Copy">
+      className={`inline-flex min-w-0 max-w-full items-center gap-1.5 px-1 py-0.5 text-muted hover:bg-white/5 hover:text-text ${className}`} title="Copy">
       <span className="mono truncate">{label ?? text}</span>
       {done ? <Check className="size-3.5 shrink-0 text-alive" /> : <CopyIcon className="size-3.5 shrink-0" />}
     </button>
@@ -71,7 +71,7 @@ export function Ext({ href, children, className = "" }: { href: string; children
 /** A terminal panel: `// EYEBROW`, an uppercase title, prints in on screen entry. */
 export function Card({ children, className = "", title, action, eyebrow }: { children: ReactNode; className?: string; title?: ReactNode; action?: ReactNode; eyebrow?: string }) {
   return (
-    <section data-print className={`card p-5 sm:p-6 ${className}`}>
+    <section data-print className={`card min-w-0 p-5 sm:p-6 ${className}`}>
       {(title || action || eyebrow) && (
         <header className="mb-4 flex items-start justify-between gap-3">
           <div className="min-w-0">{eyebrow && <p className="eyebrow mb-1.5">{eyebrow}</p>}{title && <h2 className="label text-[15px] leading-snug text-text sm:text-base">{title}</h2>}</div>
@@ -107,8 +107,8 @@ export function MenuRow({ n, title, sub, selected, onSelect, onOpen, right, big 
       className={`grid w-full grid-cols-[2.6rem_1fr_auto] items-center gap-3 px-3 text-left ${big ? "py-4" : "py-2.5"} ${selected ? "row-sel" : "text-text"}`}>
       <span className={`num ${big ? "text-2xl" : "text-lg"} ${selected ? "" : "text-gold"}`}>{n}</span>
       <span className="min-w-0">
-        <span className={`display block truncate ${big ? "text-[clamp(18px,2.4vw,26px)]" : "text-[clamp(15px,1.8vw,20px)]"}`}>{title}</span>
-        {sub && <span className={`block truncate text-[12.5px] ${selected ? "text-key-ink/75" : "text-muted"}`}>{sub}</span>}
+        <span className={`display block text-pretty leading-none ${big ? "text-[clamp(18px,2.4vw,26px)]" : "text-[clamp(15px,1.8vw,20px)]"}`}>{title}</span>
+        {sub && <span className={`block text-pretty text-[12.5px] ${selected ? "text-key-ink/75" : "text-muted"}`}>{sub}</span>}
       </span>
       {right && <span className={`num text-sm ${selected ? "" : "text-muted"}`}>{right}</span>}
     </button>

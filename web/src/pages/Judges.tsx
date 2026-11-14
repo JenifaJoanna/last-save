@@ -28,7 +28,7 @@ function Studios() {
           <motion.li key={x.accountId} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="grid gap-1 px-4 py-3 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-4">
             <span className="num text-sm text-faint">#{i + 1}</span>
             <span className="min-w-0"><b>{x.title}</b> <span className="text-muted">by {x.studio}</span><span className="mono block truncate text-faint">{x.accountId}</span></span>
-            <span className="text-sm"><span className="text-alive">{x.keys} access keys</span><span className="text-faint"> · {ago(x.createdAt)}</span></span>
+            <span className="text-sm"><span className={x.keys === 0 ? "text-alive" : "text-muted"}>{x.keys ?? "…"} access keys</span>{x.createdAt ? <span className="text-faint"> · created {ago(x.createdAt)}</span> : null}</span>
           </motion.li>
         ))}
       </ul>
@@ -44,7 +44,7 @@ function Body() {
   const d = info.data;
   const sk = <Skeleton className="h-4 w-48" />;
   return (
-    <div className="grid gap-4">
+    <div className="grid grid-cols-1 gap-4">
       <Card eyebrow="Live facts" title="Read from NEAR testnet right now">
         <ul>
           <Fact label="Licence contract" value={<Ext href={accountUrl(CONTRACT)}>{CONTRACT}</Ext>} />
@@ -59,7 +59,7 @@ function Body() {
         </ul>
       </Card>
       <Studios />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card eyebrow="Reproduce it" title="Run the whole lifecycle yourself">
           <ol className="grid gap-3 text-[15px] text-muted">
             <li className="flex gap-3"><Terminal className="mt-0.5 size-4 shrink-0 text-ember" /><span><code className="mono text-text">pnpm demo:fresh</code> deploys a fresh licence instance with seconds-scale timers, runs buy → probes → death → release → refund/pledge → host → claim against a local server, and prints every transaction.</span></li>

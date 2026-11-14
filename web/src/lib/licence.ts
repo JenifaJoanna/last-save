@@ -151,8 +151,10 @@ async function withReceipts(ps: EvmPayout[]): Promise<EvmPayout[]> {
 }
 
 export const FACTORY: string = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
-export interface Instance { name: string; accountId: string; title: string; studio: string; keys: number; createdAt: number }
+export interface Instance { name: string; accountId: string; title: string; studio: string; keys: number | null; createdAt: number }
+/** Factory instances; the key count is read live from each instance account, not taken from the factory record. */
 export const useInstances = (ms = 15000) => usePoll(async () => {
   const raw = await view<unknown[]>("instances", {}, FACTORY);
-  return (Array.isArray(raw) ? raw : []).map((x) => { const r = o(x); return { name: s(r.name), accountId: s(r.account_id), title: s(r.title), studio: s(r.studio), keys: n(r.keys), createdAt: n(r.created_at_ms) } as Instance; });
+  const list = (Array.isArray(raw) ? raw : []).map((x) => { const r = o(x); return { name: s(r.name), accountId: s(r.account_id), title: s(r.title), studio: s(r.studio ?? r.creator), keys: null, createdAt: n(r.created_at_ms ?? r.created_ms) } as Instance; });
+  return Promise.all(list.map(async (i) => ({ ...i, keys: await accessKeyCount(i.accountId).catch(() => null) })));
 }, ms);

@@ -69,7 +69,7 @@ function Row({ p, onAct }: { p: EvmPayout; onAct: () => void }) {
     finally { setSending(false); }
   };
   return (
-    <li className="grid gap-3 px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-center">
+    <li className="grid grid-cols-1 gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-2 text-[15px]"><b className="label text-[13px]">Epoch {p.epoch}</b><span className="text-muted">{p.verified} verified sessions</span>
           <span className={`label border px-1.5 py-0.5 text-[10px] ${st.c}`}>{p.relayed ? "On Base Sepolia" : st.label}</span></p>
@@ -95,8 +95,8 @@ export function EvmPayouts({ mine }: { mine: HostView | undefined }) {
   const valid = /^0x[0-9a-fA-F]{40}$/.test(addr.trim());
   return (
     <Card className="mt-4 !p-0" title={<span className="flex items-center gap-2 px-5 pt-5"><Radio className="size-5 text-cyan" />Get paid on Base Sepolia</span>}>
-      <div className="grid gap-4 px-5 pb-5 lg:grid-cols-[1.2fr_1fr]">
-        <div className="text-[15px] leading-relaxed text-muted">
+      <div className="grid grid-cols-1 gap-4 px-5 pb-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="min-w-0 text-[15px] leading-relaxed text-muted">
           <p>The licence contract controls one Base Sepolia address through NEAR Chain Signatures. NEAR's MPC network signs for the contract; no person or server holds the key.</p>
           <div className="bracket mt-3 p-3">
             <p className="eyebrow text-[10px]">Contract's Base address</p>

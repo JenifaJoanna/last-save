@@ -33,7 +33,8 @@ function Facts() {
 
 export default function Home() {
   const [, navigate] = useLocation();
-  const dead = useInfo(5000).data?.status === "Dead";
+  const info = useInfo(5000).data;
+  const dead = info?.status === "Dead";
   const [sel, setSel] = useState(0);
   const open = (i: number) => navigate(MENU[i].path);
   usePrimary({ label: `Open ${MENU[sel].n}`, run: () => open(sel) }, [sel]);
@@ -69,7 +70,7 @@ export default function Home() {
         <div>
           <p data-print className="eyebrow mb-2">Summary</p>
           <nav className="grid" aria-label="Summary">
-            {MENU.map((m, i) => <MenuRow key={m.path} n={m.n!} title={m.title} sub={m.sub} selected={sel === i} onSelect={() => setSel(i)} onOpen={() => open(i)} />)}
+            {MENU.map((m, i) => <MenuRow key={m.path} n={m.n!} title={m.title} sub={m.path === "/app/store" && info ? `Ember Rift · ${near(info.price)} Ⓝ licence` : m.sub} selected={sel === i} onSelect={() => setSel(i)} onOpen={() => open(i)} />)}
           </nav>
           <a data-print href="/attack" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/attack"); }} className="label mt-3 flex items-center justify-between border border-dead/50 px-3 py-2.5 text-[12px] text-dead no-underline hover:bg-dead hover:text-[#1a0306]">
             <span>Try to kill it · real attacks, real refusals</span><span aria-hidden>▸</span>

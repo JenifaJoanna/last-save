@@ -33,14 +33,14 @@ function Hero({ d }: { d: Info }) {
   );
 }
 
-const TITLES: Record<string, string> = { buy: "Licence minted", report: "Holder report", death: "Studio declared gone", release: "Server key released", choose: "Holder choice", host: "Host registered", claim: "Epoch claimed", evm_payout: "Base payout" };
+const TITLES: Record<string, string> = { buy: "Licence minted", report: "Holder report", death: "Studio declared gone", release: "Server key released", choose: "Holder choice", host: "Host registered", claim: "Host claim", evm_payout: "Base payout" };
 function toLog(items: Activity[]): LogEntry[] {
   return items.slice(0, 10).map((a, i) => {
     const out = String(a.detail.outcome ?? ""), det = String(a.detail.detail ?? "");
     const tone: LogTone = a.kind === "death" || out === "failed" ? "fail" : out === "inconclusive" || a.kind === "report" ? "warn"
       : a.kind === "release" || a.kind === "evm_payout" || out === "booked" || out === "pledge" ? "gold" : out === "alive" || out === "paid" || out === "registered" ? "ok" : "info";
     const title = a.kind === "probe" ? "Probe" : TITLES[a.kind] ?? a.kind.replace(/_/g, " ");
-    return { id: `${a.at}-${i}`, title, outcome: out === "inconclusive" ? "not counted" : out || undefined, detail: det.replace(/(\d{20,})/g, (m) => `${near(m)} Ⓝ`), when: ago(a.at), tone };
+    return { id: `${a.at}-${i}`, title, outcome: out === "inconclusive" ? "not counted" : out === "none" ? "nothing paid" : out || undefined, detail: det.replace(/(\d{20,})/g, (m) => `${near(m)} Ⓝ`), when: ago(a.at), tone };
   });
 }
 
@@ -84,25 +84,25 @@ export function AfterlifeView() {
     return (
       <div className="grid gap-4">
         {info.missing ? <Note>The licence contract is being deployed to NEAR testnet. This screen fills in as soon as it is live.</Note> : info.error ? <Note tone="dead">{info.error}</Note> : null}
-        <Skeleton className="h-48 w-full" /><div className="grid gap-4 lg:grid-cols-3"><Skeleton className="h-64" /><Skeleton className="h-64" /><Skeleton className="h-64" /></div>
+        <Skeleton className="h-48 w-full" /><div className="grid grid-cols-1 gap-4 lg:grid-cols-3"><Skeleton className="h-64" /><Skeleton className="h-64" /><Skeleton className="h-64" /></div>
       </div>
     );
   }
   return (
-    <div className="grid gap-4">
+    <div className="grid grid-cols-1 gap-4">
       <Hero d={d} />
       {info.error && <Note tone="dead">{info.error}</Note>}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <ProofOfLife d={d} refresh={refresh} />
         <HolderVote d={d} mine={mine.data} refresh={refresh} />
         <Release d={d} refresh={refresh} />
       </div>
-      <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1.2fr]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.2fr)]">
         <YourChoice d={d} mine={mine.data} refresh={refresh} />
         <Money d={d} />
         <Card eyebrow="Community hosts" title={`${hosts.data?.length ?? 0} registered`}>
           {(hosts.data ?? []).length === 0 ? <p className="text-[13px] text-muted">{d.releasedKey ? "No host yet. Anyone can run one command and register." : "Hosts can register once the server is released."}</p> : (
-            <ul className="grid gap-2">
+            <ul className="grid grid-cols-1 gap-2">
               {(hosts.data ?? []).slice(0, 4).map((h) => (
                 <li key={h.hostId} className="flex items-center justify-between gap-3 text-[13px]">
                   <span className="min-w-0"><span className="label block text-[12px]">{shortAcct(h.hostId)}</span><span className="mono block truncate text-faint">{h.endpoint}</span></span>
