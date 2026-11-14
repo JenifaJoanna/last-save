@@ -1,6 +1,6 @@
 // Assembles a cut from placed scenes: scene video, the eleven_v4 narration, SFX cues and the two-act score, with the
 // music ducked under speech. The full film and the X cut share this code; only the edit list and score differ.
-import { AbsoluteFill, Audio, getStaticFiles, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, Freeze, getStaticFiles, interpolate, Sequence, staticFile, useCurrentFrame } from "remotion";
 import type { ReactNode } from "react";
 import { T } from "../ds/tokens";
 import { SCENE_COMPONENTS } from "../scenes/v1";
@@ -22,6 +22,13 @@ function FadeIn({ frames, children }: { frames: number; children: ReactNode }) {
   return <AbsoluteFill style={{ opacity: frames ? interpolate(fr, [0, frames], [0, 1], clamp) : 1 }}>{children}</AbsoluteFill>;
 }
 
+/** Seams where two owners' poses differ: the next scene fades in over the previous scene's frozen last frame. */
+const CROSS: Record<string, number> = { S06: 10 };
+function FrozenTail({ last, show, children }: { last: number; show: number; children: ReactNode }) {
+  const fr = useCurrentFrame();
+  return fr >= last && fr < last + show ? <AbsoluteFill><Freeze frame={last}>{children}</Freeze></AbsoluteFill> : null;
+}
+
 export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[] }) {
   const at = (id: string) => scenes.find((s) => s.id === id);
   const voWindows = scenes.filter((s) => s.vo).map((s) => [s.from + f(s.voAt ?? 0), s.from + f(s.voAt ?? 0) + f(VO_LEN[s.vo!] ?? 5)] as const);
@@ -29,7 +36,18 @@ export function Assembly({ scenes, score }: { scenes: Placed[]; score: ScoreAct[
     <AbsoluteFill style={{ background: T.void }}>
       {scenes.map((s) => {
         const C = SCENE_COMPONENTS[s.id];
-        return <Sequence key={s.id} from={s.from} durationInFrames={s.frames} name={`${s.id} ${s.name}`}><FadeIn frames={s.fadeIn ?? 0}><C /></FadeIn></Sequence>;
+        const i = scenes.indexOf(s); const prev = scenes[i - 1]; const cross = prev && prev.from + prev.frames === s.from ? CROSS[s.id] ?? 0 : 0;
+        const P = prev ? SCENE_COMPONENTS[prev.id] : null;
+        return (
+          <Sequence key={s.id} from={cross && P ? s.from - (prev.frames - 1) : s.from} durationInFrames={cross && P ? prev.frames - 1 + s.frames : s.frames} name={`${s.id} ${s.name}`}>
+            {cross && P ? (
+              <>
+                <FrozenTail last={prev.frames - 1} show={cross}><P /></FrozenTail>
+                <Sequence from={prev.frames - 1}><FadeIn frames={cross}><C /></FadeIn></Sequence>
+              </>
+            ) : <FadeIn frames={s.fadeIn ?? 0}><C /></FadeIn>}
+          </Sequence>
+        );
       })}
       {scenes.filter((s) => s.vo && has(`vo/v4/${s.vo}.mp3`)).map((s) => (
         <Sequence key={`vo-${s.vo}`} from={s.from + f(s.voAt ?? 0)} name={`vo ${s.vo}`}><Audio src={staticFile(`vo/v4/${s.vo}.mp3`)} /></Sequence>
