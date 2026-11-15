@@ -47,7 +47,7 @@ function Transmission({ p }: { p: EvmPayout }) {
   return (
     <div className="mono mt-3 border-l-2 border-gold/70 bg-void/60 px-3 py-2 text-[11.5px] leading-5">
       <p className="label text-[10px] text-gold">// Signed transmission received</p>
-      {lines.map(([k, v], i) => <p key={k} className="step-in truncate" style={{ animationDelay: `${i * 70}ms` }}><span className="text-faint">&gt; {k.padEnd(9, " ")}</span> <span className="text-text">{v}</span></p>)}
+      {lines.map(([k, v], i) => <p key={k} className="step-in flex gap-2" style={{ animationDelay: `${i * 70}ms` }}><span className="w-[11ch] shrink-0 text-faint">&gt; {k}</span><span className="min-w-0 break-all text-text">{v}</span></p>)}
       {p.txHash && !PREVIEW && <a href={`${SCAN}/tx/${p.txHash}`} target="_blank" rel="noopener" className="label mt-1 inline-flex items-center gap-1 text-[10px] text-gold hover:underline">Open on Basescan<ExternalLink className="size-3" /></a>}
     </div>
   );
