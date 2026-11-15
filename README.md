@@ -2,6 +2,10 @@
 
 **We killed our server. You still have the game.**
 
+Submitted version: tag hackathon-submission (935668f). Later commits are post-deadline fixes: https://github.com/JenifaJoanna/last-save/compare/hackathon-submission...main
+
+Demo video: https://x.com/JenifaJoanna/status/2121750915896229896
+
 Last Save is a game licence on NEAR that outlives its publisher. A licence is an NFT. Part of every sale is locked by
 contract. The studio's server build is encrypted, and its key is escrowed in an OutLayer enclave that only the licence
 contract can open, with only one exact release program. When the official server goes dark, the contract flips to
