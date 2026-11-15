@@ -89,7 +89,9 @@ export default function Hosts() {
               <div className="grid gap-3">
                 <label className="grid gap-1.5 text-sm text-muted">Public endpoint
                   <input value={endpoint} onChange={(e) => setEndpoint(e.target.value)} placeholder="https://your-host.trycloudflare.com" spellCheck={false}
-                    className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold" />
+                    aria-invalid={endpoint !== "" && !/^https:\/\/.+/.test(endpoint)}
+                    className="mono h-11 border border-line-2 bg-void px-3 text-text outline-none focus:border-gold aria-[invalid=true]:border-dead" />
+                  {endpoint !== "" && !/^https:\/\/.+/.test(endpoint) && <span className="text-[12px] text-dead" role="alert">Use the https:// address your host prints when it starts.</span>}
                 </label>
                 <label className="grid gap-1.5 text-sm text-muted">Host public key{gaslessPublicKey ? " · blank uses this browser's gas-free key" : ""}
                   <input value={pubkey} onChange={(e) => setPubkey(e.target.value)} placeholder={gaslessPublicKey ? `${gaslessPublicKey.slice(0, 18)}…` : "ed25519:…"} spellCheck={false}

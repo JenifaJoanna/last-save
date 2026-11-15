@@ -2,7 +2,7 @@
 import { BadgeCheck, CircleDashed, Factory, FileCode2, GitBranch, PlayCircle, Terminal } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
-import { Card, Copy, Ext, ScreenTitle, Skeleton } from "../components/ui";
+import { Card, Copy, Ext, Note, ScreenTitle, Skeleton } from "../components/ui";
 import { FACTORY, useInfo, useInstances, useLockedKeys } from "../lib/licence";
 import { accountUrl, ago, codeHash, CONTRACT } from "../lib/near";
 
@@ -15,6 +15,22 @@ function Fact({ label, value, ok }: { label: string; value: ReactNode; ok?: bool
       <span className="min-w-0 text-sm">{value}</span>
     </li>
   );
+}
+
+/** sha256 of the released key's bytes, compared in this browser with the commitment fixed at launch (as the host CLI does). */
+function useKeyMatches(key: string | null | undefined, commitment: string | undefined): boolean | null {
+  const [ok, setOk] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!key || !commitment || !/^[0-9a-f]+$/i.test(key) || key.length % 2) { setOk(null); return; }
+    let live = true;
+    const bytes = new Uint8Array(key.match(/../g)!.map((h) => parseInt(h, 16)));
+    void crypto.subtle.digest("SHA-256", bytes).then((d) => {
+      const hex = [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
+      if (live) setOk(hex === commitment.toLowerCase());
+    }).catch(() => live && setOk(null));
+    return () => { live = false; };
+  }, [key, commitment]);
+  return ok;
 }
 
 function Studios() {
@@ -42,10 +58,12 @@ function Body() {
   const [hash, setHash] = useState<string | null>(null);
   useEffect(() => { codeHash(CONTRACT).then(setHash).catch(() => setHash(null)); }, []);
   const d = info.data;
+  const keyOk = useKeyMatches(d?.releasedKey, d?.keyCommitment);
   const sk = <Skeleton className="h-4 w-48" />;
   return (
     <div className="grid grid-cols-1 gap-4">
       <Card eyebrow="Live facts" title="Read from NEAR testnet right now">
+        {info.error && !d && <Note tone="dead">{info.error}</Note>}
         <ul>
           <Fact label="Licence contract" value={<Ext href={accountUrl(CONTRACT)}>{CONTRACT}</Ext>} />
           <Fact label="Contract code hash" value={hash ? <Copy text={hash} /> : sk} />
@@ -55,7 +73,12 @@ function Body() {
           <Fact label="release.wasm sha256" value={d?.releaseSha ? <Copy text={d.releaseSha} /> : sk} />
           <Fact label="probe.wasm sha256" value={d?.probeSha ? <Copy text={d.probeSha} /> : sk} />
           <Fact label="Encrypted artifact sha256" value={d?.artifactSha ? <Copy text={d.artifactSha} /> : sk} />
+          <Fact label="Build hash (sha256 of the decrypted build)" value={d?.buildHash ? <Copy text={d.buildHash} /> : sk} />
           <Fact label="Status" value={d ? `${d.status}${d.cause ? ` (${d.cause})` : ""}` : sk} />
+          {d?.releasedKey && <>
+            <Fact label="Server key released" ok value={<span className="grid gap-1"><Copy text={d.releasedKey} />{d.releasedAt ? <span className="text-faint">published on-chain by the enclave {ago(d.releasedAt)}</span> : null}</span>} />
+            <Fact label="Key matches its launch commitment" ok={keyOk === true} value={keyOk === null ? sk : keyOk ? <span>yes: sha256(key), computed in this browser, equals <span className="mono">{d.keyCommitment.slice(0, 12)}…</span> fixed at launch</span> : <span className="text-dead">no: the released key does not match the commitment</span>} />
+          </>}
         </ul>
       </Card>
       <Studios />

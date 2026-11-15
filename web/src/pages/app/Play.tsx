@@ -41,7 +41,7 @@ function ServerRow({ name, kind, url }: { name: string; kind: "official" | "comm
       <span className={`grid size-10 place-items-center border border-line-2 bg-ink-2 ${kind === "official" ? "text-ember" : "text-cyan"}`}>{kind === "official" ? <Radio className="size-5" /> : <Server className="size-5" />}</span>
       <div className="min-w-[12rem] flex-1">
         <p className="label text-[13px]">{name}</p>
-        <p className="mono truncate text-muted">{url || "no endpoint"}</p>
+        <p className="mono break-all text-muted" title={url || undefined}>{url || "no endpoint"}</p>
       </div>
       <div className="text-right text-sm">
         {!h ? <Skeleton className="h-4 w-20" /> : h.ok

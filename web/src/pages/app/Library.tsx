@@ -51,10 +51,10 @@ export default function LibraryPage() {
             <p className="eyebrow">Licence #{l.tokenId}</p>
             <h2 className="display mt-2 text-[clamp(30px,4vw,46px)]">Ember Rift</h2>
             <p className="mt-2 text-sm text-muted">Held by {accountId}{l.mintedAt ? ` · bought ${ago(l.mintedAt)}` : ""}{l.postDeath ? " · bought after shutdown" : ""}</p>
-            <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3">
+            <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3">
               <Stat label={l.choice || l.postDeath ? "Your share" : "Locked for you"} value={`${near(l.potShare)} Ⓝ`} tone="gold" sub={l.choice ? CHOICE_TEXT[l.choice] ?? l.choice : l.postDeath ? "Bought after shutdown" : dead ? "Yours to decide" : "Released only on shutdown"} />
               <Stat label="Level" value={me ? me.level : "—"} sub={me ? `${me.xp.toLocaleString()} XP` : "Play a match to start"} />
-              <div className="col-span-2 sm:col-span-1"><Stat label="Skin" value={me?.skin === "emberwing" ? <span className="inline-flex items-center gap-1.5 text-gold"><Flame className="size-5" />Emberwing</span> : "Standard"} sub={me ? `${me.matches} matches · ${me.kos} KOs` : "Unlocks at level 3"} /></div>
+              <div className="col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-1"><Stat label="Skin" value={me?.skin === "emberwing" ? <span className="inline-flex items-center gap-1.5 text-gold"><Flame className="size-5" />Emberwing</span> : "Standard"} sub={me ? `${me.matches} matches · ${me.kos} KOs` : "Unlocks at level 3"} /></div>
             </div>
           </div>
           <div className="flex flex-col justify-end gap-3 md:w-56">

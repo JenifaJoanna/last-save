@@ -25,7 +25,7 @@ export function AccountChip() {
         className="flex min-w-0 items-center gap-2 px-2.5 no-underline hover:bg-white/5 sm:px-3">
         <span className={`size-2 shrink-0 rounded-full ${kind === "evm" ? "bg-cyan" : "bg-alive"}`} aria-hidden />
         <span className="mono min-w-0 max-w-[22vw] truncate text-text sm:max-w-[200px]">{short(accountId)}</span>
-        {walletName && <span className="label hidden whitespace-nowrap text-[10px] text-faint md:inline">{walletName}</span>}
+        {walletName && <span className="label hidden whitespace-nowrap text-[10px] text-faint lg:inline">{walletName}</span>}
         {gasless && <span className="label hidden whitespace-nowrap border border-alive/50 px-1 text-[9.5px] text-alive sm:inline">gas-free</span>}
       </a>
       <button onClick={async () => { setBusy(true); try { await signOut(); navigate("/signin"); } finally { setBusy(false); } }} disabled={busy}

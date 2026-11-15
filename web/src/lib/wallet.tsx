@@ -47,13 +47,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [key, setKey] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
+  // Gas-free only where the relayer pays for this instance. A wallet session gets a key only then (sign-in checks it);
+  // the localhost capture signer has its own key, so it needs the same check or every holder action dies at the relayer.
+  const [covered, setCovered] = useState(false);
   const accountId = dev?.accountId ?? walletAccount;
   const pendingKey = useRef<string | null>(null);
 
   // Restore a session, then follow NEAR Connect's sign-in/out events.
   useEffect(() => {
     let live = true;
-    void relayerCovers(); // warm it, so a sign-in click opens the wallet without waiting on the network
+    void relayerCovers().then((ok) => { if (live) setCovered(ok); }); // warmed early, so a sign-in click opens the wallet at once
     const onIn = (p: { accounts: { accountId: string }[] }) => { if (live) setWalletAccount(p.accounts[0]?.accountId ?? null); };
     const onOut = () => { forgetWallet(); if (live) { setWalletAccount(null); setKey(null); } };
     restoredAccount().then((r) => { if (live && r) { setWalletAccount(r.accountId); const v = { id: r.wallet.manifest.id, name: r.wallet.manifest.name }; saveLast(v); setLast(v); } })
@@ -122,7 +125,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     toast.push({ kind: "info", title: "Disconnected", body: "This browser forgot its gas-free key. Your licence stays on chain." });
   }, [dev, walletAccount, toast]);
 
-  const gaslessKey = RELAYER_URL && accountId ? (dev?.privateKey ?? key) : null;
+  const gaslessKey = RELAYER_URL && accountId ? (dev ? (covered ? dev.privateKey : null) : key) : null;
   const call = useCallback(async (method: string, args: Record<string, unknown>, o: CallOpts) => {
     const fail = (body: string, hash?: string | null) => { toast.push({ kind: "error", title: `${o.label} failed`, body, hash: hash ?? undefined, href: hash ? txUrl(hash) : undefined }); return null; };
     const done = (hash: string, body: string, kind: "ok" | "info" = "ok", title = o.label) => { toast.push({ kind, title, body, hash, href: txUrl(hash), linkText: "Open on NearBlocks" }); return hash; };

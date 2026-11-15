@@ -21,7 +21,7 @@ export class Scene {
   private world = new Container();
   private shardLayer = new Container();
   private textLayer = new Container();
-  private shardSprites = new Map<number, { s: Sprite; born: number; core: boolean }>();
+  private shardSprites = new Map<number, { s: Container; born: number; core: boolean }>();
   private floaters: Floater[] = [];
   private cam = { x: 0, y: 0, s: 1 };
   private time = 0;
@@ -107,9 +107,12 @@ export class Scene {
       let e = this.shardSprites.get(sh.id);
       if (!e) {
         const core = sh.v > 1;
-        const s = new Sprite(core ? this.tex.core : this.tex.shard);
-        s.anchor.set(0.5);
-        if (core) s.blendMode = "add";
+        // Pixi v8: only Containers take children, so the shard and its glow share one (glow drawn on top, as before).
+        const s = new Container();
+        const shard = new Sprite(core ? this.tex.core : this.tex.shard);
+        shard.anchor.set(0.5);
+        s.addChild(shard);
+        if (core) shard.blendMode = "add";
         else {
           const g = new Sprite(this.tex.glow);
           g.anchor.set(0.5); g.tint = SHARD_CYAN; g.blendMode = "add"; g.alpha = 0.5; g.scale.set(0.9);
@@ -131,7 +134,7 @@ export class Scene {
         e.s.scale.set(0.82 * pop);
       }
     }
-    for (const [id, e] of this.shardSprites) if (!seen.has(id)) { e.s.destroy(); this.shardSprites.delete(id); }
+    for (const [id, e] of this.shardSprites) if (!seen.has(id)) { e.s.destroy({ children: true }); this.shardSprites.delete(id); }
   }
 
   floatText(x: number, y: number, text: string, color: number, size = 22): void {

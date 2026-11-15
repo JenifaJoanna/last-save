@@ -51,7 +51,7 @@ export class Hud {
     if (on) { $("lost").hidden = true; this.wasLost = false; $("net").classList.remove("bad"); $("netstate").textContent = "link ok"; $("dot").className = "led blink"; }
   }
 
-  setHost(label: string): void { $("hostlabel").textContent = label; }
+  setHost(label: string): void { const el = $("hostlabel"); el.textContent = label; el.title = label; }
   setPing(ms: number): void { $("ping").textContent = ms > 0 ? `${Math.round(ms)} ms` : ""; }
 
   setProfile(p: Profile): void {

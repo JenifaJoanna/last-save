@@ -22,7 +22,7 @@ export function LogTimeline({ entries, className = "" }: { entries: LogEntry[]; 
             <TimelineIndicator className={cn("!size-2.5 !rounded-none !border-0 group-data-[orientation=vertical]/timeline:-left-6", DOT[e.tone], i === 0 && "blink")} />
           </TimelineHeader>
           <TimelineContent className="!text-[12.5px] text-muted">
-            {e.detail && <span className="mono block truncate">{e.detail}</span>}
+            {e.detail && <span className="mono block break-words">{e.detail}</span>}
             {e.when && <TimelineDate className="!mb-0 !mt-0.5 text-[11px] text-faint">{e.when}</TimelineDate>}
           </TimelineContent>
         </TimelineItem>

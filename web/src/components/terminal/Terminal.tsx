@@ -112,7 +112,7 @@ export function Terminal({ children }: { children: ReactNode }) {
           <a href="/" onClick={(e) => { e.preventDefault(); go("/"); }} aria-label="Last Save home" className="flex min-w-0 items-center gap-2.5 no-underline">
             <span className={`size-2.5 shrink-0 rounded-full blink ${LED[mode]}`} aria-hidden />
             <span className="label hidden whitespace-nowrap text-[13px] text-text min-[480px]:inline">LS-0001</span>
-            <span className="label hidden truncate text-[11px] text-faint sm:inline">Last Save · transmission terminal</span>
+            <span className="label hidden truncate text-[11px] text-faint lg:inline">Last Save · transmission terminal</span>
           </a>
           <div className="flex min-w-0 items-center gap-2">
             {PREVIEW && <Suspense fallback={null}><PreviewStrip /></Suspense>}

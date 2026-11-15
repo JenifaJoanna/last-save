@@ -82,6 +82,9 @@ body.attract #crt, body.attract #ui { display: none; }
 #strip .grp { display: flex; min-width: 0; overflow: hidden; }
 #strip .seg { flex: none; } #strip .seg:last-child { flex: 0 1 auto; overflow: hidden; text-overflow: ellipsis; }
 #strip .seg + .seg::before { content: "·"; margin: 0 10px; }
+/* Mid widths: drop the game name so the host label (official, community, practice) reads in full. */
+@media (max-width: 900px) { #strip .seg.wide:not(#hostlabel) { display: none; } }
+@media (min-width: 721px) and (max-width: 900px) { #strip .code { display: none; } #strip #hostlabel::before { content: none; } }
 #strip .end { justify-self: end; }
 .led { display: inline-block; width: 6px; height: 6px; margin: 0 10px 0 2px; background: var(--color-alive); box-shadow: 0 0 0 2px #160b05; vertical-align: 1px; }
 .led.warn { background: var(--color-amber); } .led.bad { background: var(--color-dead); }
