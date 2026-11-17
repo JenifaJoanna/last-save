@@ -175,6 +175,6 @@ if (DRY) {
 }
 for (const name of wanted) {
   if (!steps[name]) throw new Error(`unknown step ${name}`);
-  try { await steps[name](); } catch (e) { (["publish", "factory"].includes(name) ? recordGlobal : record)(name, { error: String(e?.message ?? e).slice(0, 500) }); process.exitCode = 1; break; }
+  try { await steps[name](); } catch (e) { (["publish", "factory"].includes(name) ? recordGlobal : record)(name, { error: String(e?.message ?? e).replace(/(?:\/Users|\/home)\/[^\s"\\]+/g, "<local path>").slice(0, 500) }); process.exitCode = 1; break; }
 }
 if (!wanted.length) process.stdout.write(`state: ${JSON.stringify({ CONTRACT, has: Object.keys(state), acct: !!(await accountState(CONTRACT)) })}\n`);
