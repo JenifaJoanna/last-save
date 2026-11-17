@@ -33,7 +33,10 @@
     "https://kiln-cdn-sbx-2.pages.dev",
     "https://emberrift-sbx-3.pages.dev",
     "https://emberrift-sbx-3.pages.dev/health",
-    "https://kiln-cdn-sbx-3.pages.dev"
+    "https://kiln-cdn-sbx-3.pages.dev",
+    "https://emberrift-sbx-4.pages.dev",
+    "https://emberrift-sbx-4.pages.dev/health",
+    "https://kiln-cdn-sbx-4.pages.dev"
   ],
   "workers": [
     "emberrift-arena",
@@ -48,7 +51,8 @@
     "emberrift-live-3-arena",
     "emberrift-sbx-1-arena",
     "emberrift-sbx-2-arena",
-    "emberrift-sbx-3-arena"
+    "emberrift-sbx-3-arena",
+    "emberrift-sbx-4-arena"
   ],
   "expected_gone": [
     "https://kiln-cdn-v2walrus.pages.dev/",
