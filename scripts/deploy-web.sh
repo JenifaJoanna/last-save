@@ -17,11 +17,12 @@ export VITE_LICENCE_CONTRACT="${VITE_LICENCE_CONTRACT:-lastsave-licence.testnet}
 export VITE_PLATFORM_URL="${VITE_PLATFORM_URL:-https://last-save.pages.dev}"
 export VITE_OFFICIAL_URL="${VITE_OFFICIAL_URL:-https://emberrift.pages.dev}"
 PROJECT="${PAGES_PROJECT:-last-save}"
+# PAGES_BRANCH=<name> deploys a preview at https://<name>.<project>.pages.dev; main (default) is the live root.
 (cd game/client && npx vite build --logLevel warn)
 (cd web && npx vite build --logLevel warn && node scripts/copy-play.mjs)
 node scripts/check-secrets.mjs
 node scripts/check-identity.mjs
 npx wrangler pages project list 2>/dev/null | grep -q " $PROJECT " || npx wrangler pages project create "$PROJECT" --production-branch main >/dev/null
-npx wrangler pages deploy web/dist --project-name "$PROJECT" --branch main --commit-dirty=true 2>&1 | grep -E "Success|Deployment complete|https://" | sed -E 's#https://[a-z0-9]+\.#https://<deploy>.#'
+npx wrangler pages deploy web/dist --project-name "$PROJECT" --branch "${PAGES_BRANCH:-main}" --commit-dirty=true 2>&1 | grep -E "Success|Deployment complete|https://" | sed -E 's#https://[a-z0-9]+\.#https://<deploy>.#'
 sleep 8
 node scripts/check-identity.mjs --live
