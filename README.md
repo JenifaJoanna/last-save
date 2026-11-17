@@ -21,7 +21,8 @@ attack the live contract and watch it refuse.
 
 | | |
 |---|---|
-| Platform | https://last-save.pages.dev (live status at `/status`, judge guide at `/judges`) |
+| Platform | https://last-save.pages.dev: since 17 Nov it opens on a **live, alive store** (`live.lastsave-factory.testnet`, official server https://emberrift-live.pages.dev) where you buy with your own NEAR wallet and play right away. Live status at `/status`, judge guide at `/judges` |
+| The judges' instance, as filmed | https://last-save.pages.dev/?instance=ember-rift (studio gone, key released; the site remembers the choice per tab, `?instance=default` goes back) |
 | Official game server (Ember Rift) | https://emberrift.pages.dev — shut down on 14 Nov as part of the demo; it stays dead by design |
 | v1 community server (the released build, hosted by a fan) | https://emberrift-community.pages.dev |
 | Licence contract v1 (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
