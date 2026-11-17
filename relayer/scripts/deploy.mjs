@@ -19,6 +19,11 @@ const die = (s) => { process.stderr.write(`${s}\n`); process.exit(1); };
 if (!base || !/^[a-z0-9][a-z0-9-]{1,40}$/.test(base)) die("usage: deploy.mjs <project-base-name> [--dry-run]");
 const need = ["RELAYER_ACCOUNT", "RELAYER_KEY", "ALLOWED_RECEIVERS", ...(dry ? [] : ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"])];
 for (const k of need) if (!process.env[k]) die(`${k} is not set in the environment`);
+// A malformed list (spaces, one joined entry) would silently stop gas-free relaying for every instance: refuse it.
+const receivers = process.env.ALLOWED_RECEIVERS.split(",").map((x) => x.trim());
+const badReceiver = receivers.find((r) => !/^[a-z0-9_-]+(\.[a-z0-9_-]+)*\.(testnet|near)$/.test(r));
+if (badReceiver !== undefined) die(`ALLOWED_RECEIVERS has an invalid account id: "${badReceiver.slice(0, 80)}" (comma-separated, no spaces)`);
+out(`allowed receivers: ${receivers.length}`);
 
 const worker = `${base}-relayer`;
 const wrangler = join(root, "node_modules", "wrangler", "bin", "wrangler.js");
