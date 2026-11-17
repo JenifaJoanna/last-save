@@ -7,6 +7,7 @@ set -uo pipefail
 cd "$(dirname "$0")/../.."
 set -a; . ./.env.local; set +a
 export NEAR_RPCS="${NEAR_RPCS:-https://near-testnet.drpc.org}"
+mkdir -p local   # step logs; a fresh worktree has no local/ yet
 for spec in ${NAMES:?NAMES is required}; do
   name="${spec%%:*}"; mode="${spec##*:}"
   ops=$([ "$mode" = prod ] && echo 1.0 || echo 0.5)

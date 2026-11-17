@@ -5,22 +5,31 @@ import { Card, Copy, LinkButton, Note, ScreenTitle, Skeleton } from "../componen
 import { FACTORY, usePoll } from "../lib/licence";
 import { view } from "../lib/near";
 
-interface Copy_ { account: string; name: string; status: string; supply: number; released: boolean }
-type State = "free" | "yours?" | "dead" | "released";
+interface Copy_ { account: string; name: string; status: string; supply: number; released: boolean; ready: boolean; createdAt: number }
+type State = "free" | "preparing" | "yours?" | "dead" | "released";
+/** A copy is created a few minutes before it can sell: escrow, attestation and its official server come after. */
+const PREP_MS = 6 * 60_000;
 
 const useCopies = () => usePoll(async () => {
   const raw = await view<unknown[]>("instances", {}, FACTORY);
-  const names = (Array.isArray(raw) ? raw : []).map((x) => String((x as { account_id?: string }).account_id ?? "")).filter((a) => /^sbx-/.test(a));
-  return Promise.all(names.sort().map(async (account): Promise<Copy_> => {
+  const rows = (Array.isArray(raw) ? raw : []).map((x) => x as { account_id?: string; created_ms?: number })
+    .filter((r) => /^sbx-/.test(String(r.account_id ?? "")));
+  return Promise.all(rows.sort((a, b) => String(a.account_id).localeCompare(String(b.account_id), undefined, { numeric: true })).map(async (r): Promise<Copy_> => {
+    const account = String(r.account_id);
     const i = await view<Record<string, unknown>>("get_info", {}, account).catch(() => null);
     const t = (i?.totals ?? {}) as { supply?: number };
-    return { account, name: account.split(".")[0], status: String(i?.status ?? "?"), supply: Number(t.supply ?? 0), released: !!i?.released_key };
+    const created = Number(r.created_ms ?? 0);
+    return { account, name: account.split(".")[0], status: String(i?.status ?? "?"), supply: Number(t.supply ?? 0), released: !!i?.released_key,
+      ready: !!i?.escrowed && !!i?.escrow_verified, createdAt: created };
   }));
 }, 10000);
 
-const stateOf = (c: Copy_): State => (c.released ? "released" : c.status === "Dead" ? "dead" : c.supply === 0 ? "free" : "yours?");
-const CHIP: Record<State, string> = { free: "border-alive/60 text-alive", "yours?": "border-gold/60 text-gold", dead: "border-dead/60 text-dead", released: "border-gold/60 text-gold" };
-const WORD: Record<State, string> = { free: "Free", "yours?": "Taken", dead: "Dead", released: "Released" };
+const stateOf = (c: Copy_): State => (c.released ? "released" : c.status === "Dead" ? "dead" : !c.ready ? "preparing" : c.supply === 0 ? "free" : "yours?");
+const CHIP: Record<State, string> = { free: "border-alive/60 text-alive", preparing: "border-cyan/60 text-cyan", "yours?": "border-gold/60 text-gold", dead: "border-dead/60 text-dead", released: "border-gold/60 text-gold" };
+const WORD: Record<State, string> = { free: "Free", preparing: "Being prepared", "yours?": "Taken", dead: "Dead", released: "Released" };
+/** Local clock time with the viewer's own zone, e.g. "10:42 IST". */
+const at = (ms: number) => new Date(ms).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
+const etaOf = (c: Copy_) => Math.max(Date.now() + 60_000, (c.createdAt || Date.now()) + PREP_MS);
 
 const STEPS: [string, string][] = [
   ["Take a copy, buy its first licence", "0.25 Ⓝ from your own wallet; 0.1 Ⓝ of it is locked for you by the contract. You are the only holder."],
@@ -35,6 +44,7 @@ export default function Own() {
   const copies = useCopies();
   const list = copies.data ?? [];
   const free = list.find((c) => stateOf(c) === "free");
+  const next = list.filter((c) => stateOf(c) === "preparing").sort((x, y) => etaOf(x) - etaOf(y))[0];
   return (
     <div className="mx-auto grid max-w-6xl gap-4">
       <ScreenTitle eyebrow="Your own copy" sub="A fresh Ember Rift licence contract with seconds-scale timers, where you are the only holder. Nothing you do here touches the live store or anyone else's licence.">Run the whole afterlife yourself</ScreenTitle>
@@ -64,16 +74,19 @@ export default function Own() {
                   return (
                     <li key={c.account} className="flex flex-wrap items-center gap-3 py-2.5">
                       <span className="mono min-w-0 flex-1 break-all text-[13px] text-text">{c.account}</span>
-                      <span className={`label border px-1.5 py-0.5 text-[10px] ${CHIP[st]}`}>{WORD[st]}{st === "yours?" ? ` · ${c.supply} holder${c.supply === 1 ? "" : "s"}` : ""}</span>
+                      <span className={`label border px-1.5 py-0.5 text-[10px] ${CHIP[st]}`}>{WORD[st]}{st === "yours?" ? ` · ${c.supply} holder${c.supply === 1 ? "" : "s"}` : st === "preparing" ? ` · ready around ${at(etaOf(c))}` : ""}</span>
                       {st === "free"
                         ? <LinkButton href={`/app/store?instance=${c.name}`} size="sm"><FlaskConical className="size-4" />Take it</LinkButton>
+                        : st === "preparing" ? null
                         : <LinkButton href={`/status?instance=${c.name}`} size="sm" variant="ghost"><CopyIcon className="size-4" />Open</LinkButton>}
                     </li>
                   );
                 })}
               </ul>
             )}
-          {list.length > 0 && !free && <p className="mt-3 text-[12.5px] text-muted">Every copy is taken right now. Open one to watch its afterlife, or check back soon: new copies are launched as they are used.</p>}
+          {list.length > 0 && !free && (
+            <div className="mt-3"><Note tone="gold">All copies are in use{next ? `; the next one is ready around ${at(etaOf(next))}` : ""}. {next ? "This list updates by itself." : "A new one is started automatically as copies are used; reopen this page in a few minutes."} Meanwhile, open any copy to watch its afterlife.</Note></div>
+          )}
         </Card>
       </div>
     </div>
