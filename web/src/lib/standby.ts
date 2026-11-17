@@ -1,6 +1,6 @@
 // Which store the root opens on. VITE_STANDBY lists alive stores in order ("live,live-2,live-3"): the root opens on the
 // first one still Alive on chain, so if judges' reports kill one, the next page load opens on the next, and the dead ones
-// are listed as stores judges killed. A tab that chose an instance (?instance= or remembered) is left alone.
+// are listed as stores judges killed. A tab that chose another instance (?instance=) still shows that one (near.ts).
 // Runs before the app loads and must not import near.ts, which fixes the contract when it is first imported.
 const LIST = ((import.meta.env.VITE_STANDBY as string | undefined) ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const FACTORY = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
@@ -24,11 +24,7 @@ async function status(account: string, signal: AbortSignal): Promise<string | nu
 /** Sets window.__lsStandby. Gives up after 2.5 s, and the build's default store opens. */
 export async function pickStandby(): Promise<void> {
   if (LIST.length < 2) return;
-  try {
-    const q = new URLSearchParams(location.search).get("instance");
-    if (q !== null && q !== "" && q !== "default") return; // this tab asked for a specific instance
-    if (q === null && sessionStorage.getItem("lastsave:instance")) return; // and remembers it
-  } catch { /* storage blocked */ }
+  // Always picked, even when this tab shows another instance: that tab's way back is the first alive store.
   const ctrl = new AbortController();
   const timer = window.setTimeout(() => ctrl.abort(), 2500);
   try {
