@@ -3,7 +3,7 @@ import { Gamepad2, Radio, Server, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Card, LinkButton, Note, ScreenTitle, Skeleton, StatusBadge } from "../../components/ui";
 import { useHosts, useInfo } from "../../lib/licence";
-import { OFFICIAL_URL, shortAcct } from "../../lib/near";
+import { CONTRACT, OFFICIAL_URL, shortAcct } from "../../lib/near";
 import { PLAY_URL } from "../Landing";
 import { PREVIEW } from "../../preview/store";
 
@@ -48,7 +48,7 @@ function ServerRow({ name, kind, url }: { name: string; kind: "official" | "comm
           ? <span className="text-alive">Online{h.players !== null ? ` · ${h.players} playing` : ""}{h.ms !== null ? ` · ${h.ms} ms` : ""}</span>
           : <span className="inline-flex items-center gap-1.5 text-dead"><WifiOff className="size-4" />Unreachable</span>}
       </div>
-      <LinkButton href={PREVIEW ? `${PLAY_URL}?practice=1` : `${PLAY_URL}?server=${encodeURIComponent(url)}`} external size="sm" variant={h?.ok ? "primary" : "ghost"}><Gamepad2 className="size-4" />Play</LinkButton>
+      <LinkButton href={PREVIEW ? `${PLAY_URL}?practice=1` : `${PLAY_URL}?server=${encodeURIComponent(url)}&contract=${encodeURIComponent(CONTRACT)}`} external size="sm" variant={h?.ok ? "primary" : "ghost"}><Gamepad2 className="size-4" />Play</LinkButton>
     </li>
   );
 }

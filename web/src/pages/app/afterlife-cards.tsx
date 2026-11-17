@@ -6,6 +6,7 @@ import { useDecode } from "../../components/terminal/effects";
 import { typing } from "../../components/terminal/nav";
 import { Bracket, Button, Card, Copy, MenuRow, Note } from "../../components/ui";
 import { useActivity, type Info, type LicenceView } from "../../lib/licence";
+import { instanceName } from "../../lib/instances";
 import { ago, duration, near, toYocto } from "../../lib/near";
 import { useWallet } from "../../lib/wallet";
 
@@ -59,15 +60,29 @@ export function HolderVote({ d, mine, refresh }: { d: Info; mine: LicenceView | 
   const { call, pending, gasless: GASLESS } = useWallet();
   const needed = d.reportsNeeded ?? Math.max(1, Math.ceil((d.liveSupply * d.quorumBps) / 10000));
   const dead = d.status === "Dead";
-  const report = async () => { if (mine && (await call("report_down", { token_id: mine.tokenId }, { gasTgas: 50, label: "Report recorded" }))) refresh(); };
+  // On a shared store a report counts toward shutting the game down for every holder, so the first tap asks once.
+  // A judge's own copy (sbx-*) skips the question: killing it is the point.
+  const shared = !instanceName().startsWith("sbx-");
+  const [asking, setAsking] = useState(false);
+  const report = async () => {
+    if (shared && !asking) { setAsking(true); return; }
+    setAsking(false);
+    if (mine && (await call("report_down", { token_id: mine.tokenId }, { gasTgas: 50, label: "Report recorded" }))) refresh();
+  };
   return (
     <Card eyebrow="Players decide" title="Report the server down">
       <div className="flex gap-1.5">{Array.from({ length: Math.max(1, needed) }, (_, i) => <span key={i} className={`h-3 flex-1 ${i < d.reportsInWindow ? "bg-amber" : "bg-white/10"}`} />)}</div>
       <p className="mt-3 text-[13px] text-muted">{d.liveSupply === 0 ? "No licences sold yet, so nobody can vote." : <><b className="num text-text">{d.reportsInWindow}/{needed}</b> holder reports within {duration(d.reportWindowMs || 0)}</>}</p>
       <p className="mt-1 text-[11.5px] text-faint">{d.quorumBps / 100}% of the {d.liveSupply} licences sold before shutdown. One report per licence per window.</p>
+      {asking && !dead && (
+        <p className="mt-4 border-l-2 border-amber bg-white/[0.025] px-3 py-2 text-[12.5px] text-muted" role="alert">
+          Is the official server really down for you? On this store your report counts toward shutting the game down for every holder. Tap again to report it.
+        </p>
+      )}
       <Button className="mt-5 w-full" variant="ghost" onClick={report} disabled={dead || !mine || mine.postDeath} loading={pending === "report_down"}>
-        <Megaphone className="size-4" />{dead ? "Vote closed" : mine ? (GASLESS ? "Report it down · gas-free" : "Report it down") : "Holders only"}
+        <Megaphone className="size-4" />{dead ? "Vote closed" : !mine ? "Holders only" : asking ? "Yes, report it down" : GASLESS ? "Report it down · gas-free" : "Report it down"}
       </Button>
+      {asking && !dead && <button className="mt-2 w-full text-[12px] text-faint hover:text-text" onClick={() => setAsking(false)}>Cancel</button>}
     </Card>
   );
 }

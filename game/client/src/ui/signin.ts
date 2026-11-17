@@ -4,14 +4,17 @@
 // made with VITE_CAPTURE_SIGNER=1, opened with ?capture=1. Users never see it.
 import type { DeniedCode } from "../../../shared/protocol";
 import { loginMessage, newSessionKey, signLoginWithKey, type Session } from "../session";
-import { walletLogin } from "../wallet";
+import { connectWallet, signLogin } from "../wallet";
+import type { NearWalletBase } from "@hot-labs/near-connect";
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector(sel) as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const hex = (u: Uint8Array) => [...u].map((b) => b.toString(16).padStart(2, "0")).join("");
 const SESSION_MS = 12 * 3600_000;
-const CAPTURE = ["localhost", "127.0.0.1"].includes(location.hostname) && import.meta.env.VITE_CAPTURE_SIGNER === "1"
-  && new URLSearchParams(location.search).has("capture");
+const CAPTURE_BUILD = import.meta.env.VITE_CAPTURE_SIGNER === "1"; // false in user builds: the bundler drops what it guards
+const CAPTURE = CAPTURE_BUILD && ["localhost", "127.0.0.1"].includes(location.hostname) && new URLSearchParams(location.search).has("capture");
+// Capture builds only: a scripted NEAR Connect wallet for e2e (see testwallet.ts). Dropped from user builds at compile time.
+if (CAPTURE_BUILD && CAPTURE) void import("../testwallet").then((m) => { (window as unknown as { __lastSaveTestWallet?: typeof m.installTestWallet }).__lastSaveTestWallet = m.installTestWallet; });
 
 export interface SigninOpts {
   host: string;
@@ -95,22 +98,18 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
     <ol class="menu"></ol><p class="err" id="err" role="alert"></p>
     <div class="actions"><button class="keycap" id="back">Back <kbd>Esc</kbd></button></div>${foot(o, "1–2 select · enter confirm")}`);
   const err = $("#err", card);
-  const fresh = () => { const k = newSessionKey(); return { ...k, message: loginMessage(o.host, k.pub, Date.now() + SESSION_MS) }; };
   const busy = (on: boolean) => card.querySelectorAll("button").forEach((b) => ((b as HTMLButtonElement).disabled = on));
   const wallet = () => async () => {
     err.className = "busy mono caret";
-    err.textContent = "> waiting for the wallet signature";
+    err.textContent = "> waiting for the wallet";
     busy(true);
-    const k = fresh();
     try {
-      const r = await walletLogin(k.message, o.contract, hex(k.secret), o.host);
-      if (r === "redirect") return;
-      hideSignin();
-      o.onSession({ account_id: r.account_id, host: o.host, login: r, secret: k.secret });
+      const { wallet: w, accountId } = await connectWallet();
+      signScreen(o, card, w, accountId);
     } catch (e) {
       err.className = "err";
       const m = e instanceof Error ? e.message : "";
-      err.textContent = /reject|cancel|closed|abort/i.test(m) ? "No wallet picked. Choose one to sign in." : m || "The wallet did not sign the login.";
+      err.textContent = /reject|cancel|closed|abort/i.test(m) ? "No wallet picked. Choose one to sign in." : m || "The wallet did not connect.";
       busy(false);
     }
   };
@@ -120,6 +119,53 @@ function walletScreen(o: SigninOpts, card: HTMLElement): void {
     ...(CAPTURE ? [{ label: "Capture signer (localhost only)", act: () => keyScreen(o, card) }] : []),
   ], back);
   $("#back", card).onclick = back;
+}
+
+/** Second tap: the connected wallet signs the login. signLogin runs inside the tap (click or Enter), so a wallet that
+ *  opens its own window is allowed to. If nothing comes back in 90 s the screen says so and the tap can be repeated. */
+function signScreen(o: SigninOpts, card: HTMLElement, w: NearWalletBase, accountId: string): void {
+  keyOff?.();
+  win(card, "Sign", `<div class="eyebrow">Sign the login</div>
+    <p class="lede">Connected as <span class="acct">${esc(accountId)}</span>. Your wallet signs one login message for this server. Nothing goes on-chain.</p>
+    <div class="actions"><button class="keycap keycap-primary" id="sign" type="button">Sign the login <kbd>Enter</kbd></button>
+      <button class="keycap" id="back" type="button">Back <kbd>Esc</kbd></button></div>
+    <p class="err" id="err" role="alert"></p>${foot(o, "enter sign · esc back")}`);
+  const err = $("#err", card);
+  const btn = $("#sign", card) as HTMLButtonElement;
+  const back = () => walletScreen(o, card);
+  let timer = 0;
+  const go = () => {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    err.className = "busy mono caret";
+    err.textContent = "> waiting for the wallet signature";
+    const k = newSessionKey();
+    const result = signLogin(w, loginMessage(o.host, k.pub, Date.now() + SESSION_MS), o.contract, hex(k.secret), o.host);
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => { err.className = "err"; err.textContent = "No signature came back from the wallet. Press Enter to ask again."; btn.disabled = false; }, 90_000);
+    result.then((r) => {
+      window.clearTimeout(timer);
+      if (r === "redirect") return;
+      keyOff?.();
+      hideSignin();
+      o.onSession({ account_id: r.account_id, host: o.host, login: r, secret: k.secret });
+    }).catch((e: unknown) => {
+      window.clearTimeout(timer);
+      err.className = "err";
+      const m = e instanceof Error ? e.message : "";
+      err.textContent = /reject|cancel|closed|abort/i.test(m) ? "You cancelled in the wallet. Press Enter to try again." : m || "The wallet did not sign the login.";
+      btn.disabled = false;
+    });
+  };
+  btn.onclick = go;
+  $("#back", card).onclick = () => { window.clearTimeout(timer); back(); };
+  const onKey = (e: KeyboardEvent) => {
+    if ((document.getElementById("signin") as HTMLElement).hidden) return;
+    if (e.key === "Enter") { e.preventDefault(); go(); } else if (e.key === "Escape") { window.clearTimeout(timer); back(); }
+  };
+  window.addEventListener("keydown", onKey);
+  keyOff = () => window.removeEventListener("keydown", onKey);
+  btn.focus();
 }
 
 function keyScreen(o: SigninOpts, card: HTMLElement): void {

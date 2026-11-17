@@ -1,0 +1,134 @@
+{
+  "contract": "live.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "cibuild",
+      "at": "2026-11-17T03:04:43.891Z",
+      "build_hash": "633f356db3b220bf514deee8ddaa8667b4152909878b0ad7f65ec321b3f856ea",
+      "attested_digest": "633f356db3b220bf514deee8ddaa8667b4152909878b0ad7f65ec321b3f856ea",
+      "artifact_sha256": "3492be636b3bd9e855234e82b684eaf38bca6e51a6b9113e7a28705a4f350ea0",
+      "size": 272674,
+      "key_commitment": "cec4cbf4bf39c295faa9835d8f8d09dbaeab41c241dd83188de4f0a60a71754a",
+      "workflow": ".github/workflows/release-build.yml",
+      "commit": "f9bb4714ffcf1224cfd8fdc4b63edb30a9eabe06",
+      "run_id": "44007413334",
+      "rekor_log_index": 3940658925,
+      "rekor_integrated_time": "2026-11-17T03:03:51.000Z"
+    },
+    {
+      "step": "walrus",
+      "at": "2026-11-17T03:04:55.132Z",
+      "blob_id": "aoDJSjHypLDPyjx_gAmCkQYK205bciq0oP1y2pXhZWU",
+      "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/aoDJSjHypLDPyjx_gAmCkQYK205bciq0oP1y2pXhZWU",
+      "end_epoch": 637,
+      "newly_created": true,
+      "readback_sha256": "3492be636b3bd9e855234e82b684eaf38bca6e51a6b9113e7a28705a4f350ea0",
+      "readback_ok": true,
+      "bytes": 272674
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-17T03:04:55.132Z",
+      "error": "CLOUDFLARE_API_TOKEN is not set (set -a; . ./.env.local)"
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-17T03:05:23.562Z",
+      "error": "pages deploy failed: \u001b[31m\u2718 \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mCannot read properties of undefined (reading 'compatibility_date')\u001b[0m\n\n\n\ud83e\udeb5  Logs were written to \"<local wrangler log>\"\n"
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-17T03:06:46.501Z",
+      "project": "kiln-cdn-live",
+      "url": "https://kiln-cdn-live.pages.dev/ember-rift-3492be636b3bd9e8.bin",
+      "status": 200,
+      "sha256_ok": true
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-17T03:06:46.504Z",
+      "release": {
+        "sha256": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-0a02917bec7e50c1.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://kiln-cdn-live.pages.dev/ember-rift-3492be636b3bd9e8.bin",
+        "https://aggregator.walrus-testnet.walrus.space/v1/blobs/aoDJSjHypLDPyjx_gAmCkQYK205bciq0oP1y2pXhZWU",
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-3492be636b3bd9e8.bin"
+      ],
+      "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-17T03:06:53.835Z",
+      "hash": "H9f2krsgVAZ4KRoH6Xad4384bPdSdeG3xTicVRpjXrdd",
+      "url": "https://testnet.nearblocks.io/txns/H9f2krsgVAZ4KRoH6Xad4384bPdSdeG3xTicVRpjXrdd",
+      "instance": "live.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "1.8737 NEAR",
+      "min_deposit": "0.3737 NEAR",
+      "evm_address": "0x97c460981Cf2D21a992977945a8b77D57c8B47a1",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-17T03:07:00.983Z",
+      "hash": "DYTvXkDeSHyD4V8tdoYkghxXKufw5TZBfn1DmCBRk5Pe",
+      "url": "https://testnet.nearblocks.io/txns/DYTvXkDeSHyD4V8tdoYkghxXKufw5TZBfn1DmCBRk5Pe",
+      "failure": null,
+      "storage_cost": "6890000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-17T03:07:13.175Z",
+      "hash": "96YETUCAKrf9QN8XR61iaYAe6tBwo2pWyXpmKvvCVzQQ",
+      "url": "https://testnet.nearblocks.io/txns/96YETUCAKrf9QN8XR61iaYAe6tBwo2pWyXpmKvvCVzQQ",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1093525000000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 250241996, time_ms: 935 }, Cost: 1093525000000000000000 yoctoNEAR, Refund: 28906475000000000000000 yoctoNEAR, Cached WASM from 2026-11-14T09:44:40.528838+00:00"
+      ]
+    },
+    {
+      "step": "snapkey",
+      "at": "2026-11-17T03:07:16.773Z",
+      "hash": "67uMHevaSegtvi9xidjSgXXH4H6vv1VNC8bA3sSPKXAe",
+      "url": "https://testnet.nearblocks.io/txns/67uMHevaSegtvi9xidjSgXXH4H6vv1VNC8bA3sSPKXAe",
+      "public_key": "ed25519:AHcb7sjY7ABrDmw5edHbbhiSMg3tdhbHkSWADLr5GF6N",
+      "methods": [
+        "post_snapshot"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-17T03:07:17.434Z",
+      "error": "Command failed: npx vite build --logLevel warn"
+    },
+    {
+      "step": "official",
+      "at": "2026-11-17T03:11:12.008Z",
+      "url": "https://emberrift-live.pages.dev",
+      "worker": "emberrift-live-arena",
+      "build_hash": "633f356db3b220bf514deee8ddaa8667b4152909878b0ad7f65ec321b3f856ea"
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-17T03:11:13.136Z",
+      "summary": "live.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x97c460981cf2d21a992977945a8b77d57c8b47a1 ops=1.5000 NEAR escrowed=true verified=true",
+      "problems": []
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useInfo, useLockedKeys } from "../../lib/licence";
+import { defaultName, instanceHref, instanceLabel, instanceName, onDefault } from "../../lib/instances";
 import { CONTRACT } from "../../lib/near";
 import { blip, setSound, soundOn } from "../../lib/sound";
 import { PREVIEW } from "../../preview/store";
@@ -116,6 +117,12 @@ export function Terminal({ children }: { children: ReactNode }) {
           </a>
           <div className="flex min-w-0 items-center gap-2">
             {PREVIEW && <Suspense fallback={null}><PreviewStrip /></Suspense>}
+            {!PREVIEW && !onDefault && (
+              <a href={instanceHref("default")} title={`${instanceLabel()} (${CONTRACT}). Back to the ${defaultName === "live" ? "live store" : "default instance"}`}
+                className="label flex h-9 min-w-0 shrink items-center gap-1.5 rounded-[5px] border border-cyan/60 px-2.5 text-[10.5px] text-cyan no-underline hover:bg-cyan/10">
+                <span className="truncate">{instanceName()}</span><span aria-hidden>✕</span>
+              </a>
+            )}
             {!PREVIEW && <AccountChip />}
             <SoundToggle />
           </div>

@@ -1,9 +1,31 @@
 // Read-only NEAR access for the platform: failover RPC with backoff, views, formatting, explorer links.
 import { PREVIEW, previewCodeHash, previewKeys, previewView } from "../preview/store";
 export const NETWORK = "testnet";
-export const CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
+const BUILD_CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
+const BUILD_FACTORY: string = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
+const INSTANCE_KEY = "lastsave:instance";
+/** The licence instance this tab shows: ?instance=<name or account> (any factory instance), remembered for the tab, else
+ *  the build's default. Picked once at load (switching reloads); ?instance=default returns to the default. */
+function pickContract(): string {
+  if (PREVIEW || typeof location === "undefined") return BUILD_CONTRACT;
+  const ok = (v: string) => v === BUILD_CONTRACT || new RegExp(`^[a-z0-9][a-z0-9-]{0,40}\\.${BUILD_FACTORY.replace(/\./g, "\\.")}$`).test(v);
+  try {
+    const q = new URLSearchParams(location.search).get("instance");
+    if (q !== null) {
+      const v = q === "" || q === "default" ? BUILD_CONTRACT : (q.includes(".") ? q : `${q}.${BUILD_FACTORY}`).toLowerCase();
+      if (ok(v)) { if (v === BUILD_CONTRACT) sessionStorage.removeItem(INSTANCE_KEY); else sessionStorage.setItem(INSTANCE_KEY, v); return v; }
+    }
+    const kept = sessionStorage.getItem(INSTANCE_KEY);
+    if (kept && ok(kept)) return kept;
+  } catch { /* storage blocked: the default instance */ }
+  return BUILD_CONTRACT;
+}
+export const CONTRACT: string = pickContract();
+export const DEFAULT_CONTRACT: string = BUILD_CONTRACT;
+export const IS_DEFAULT_INSTANCE = CONTRACT === BUILD_CONTRACT;
 export const STUDIO: string = (import.meta.env.VITE_STUDIO as string | undefined) ?? "lastsave-studio.testnet";
-export const OFFICIAL_URL: string = ((import.meta.env.VITE_OFFICIAL_URL as string | undefined) ?? "").replace(/\/$/, "");
+// Other instances read their official server from their own on-chain config (official_endpoint).
+export const OFFICIAL_URL: string = IS_DEFAULT_INSTANCE ? ((import.meta.env.VITE_OFFICIAL_URL as string | undefined) ?? "").replace(/\/$/, "") : "";
 const RPCS = ["https://near-testnet.drpc.org", "https://test.rpc.fastnear.com"];
 
 export const txUrl = (hash: string) => `https://testnet.nearblocks.io/txns/${hash}`;

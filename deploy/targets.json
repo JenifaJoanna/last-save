@@ -15,7 +15,10 @@
     "https://emberrift-community-v2.pages.dev/",
     "https://emberrift-community-v2.pages.dev/health",
     "https://emberrift-community-v2dev.pages.dev/",
-    "https://emberrift-community-v2dev.pages.dev/health"
+    "https://emberrift-community-v2dev.pages.dev/health",
+    "https://emberrift-live.pages.dev",
+    "https://emberrift-live.pages.dev/health",
+    "https://kiln-cdn-live.pages.dev"
   ],
   "workers": [
     "emberrift-arena",
@@ -24,7 +27,8 @@
     "emberrift-v2dev-arena",
     "emberrift-ember-rift-arena",
     "emberrift-community-v2-arena",
-    "emberrift-community-v2dev-arena"
+    "emberrift-community-v2dev-arena",
+    "emberrift-live-arena"
   ],
   "expected_gone": [
     "https://kiln-cdn-v2walrus.pages.dev/",

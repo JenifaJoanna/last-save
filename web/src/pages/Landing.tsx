@@ -5,10 +5,22 @@ import { PartnerLogo, SunEmblem } from "../components/brand";
 import { MENU, useHints, usePrimary, typing } from "../components/terminal/nav";
 import { Bracket, MenuRow } from "../components/ui";
 import { useHosts, useInfo, useLockedKeys } from "../lib/licence";
+import { defaultName, instanceHref, instanceLabel, JUDGES_INSTANCE, onDefault } from "../lib/instances";
 import { CONTRACT, near } from "../lib/near";
 import { blip } from "../lib/sound";
 
 export const PLAY_URL: string = (import.meta.env.VITE_PLAY_URL as string | undefined) ?? "/play/";
+
+/** Live store ↔ the judges' instance as filmed. A full load: the instance is picked once per page load. */
+function OtherInstance() {
+  const to = onDefault ? JUDGES_INSTANCE : "default";
+  const text = onDefault ? "The judges' instance, as filmed: studio gone, key released" : `You're on ${instanceLabel()}. Back to the ${defaultName === "live" ? "live store" : "default instance"}`;
+  return (
+    <a href={instanceHref(to)} className="label mt-1 flex items-start gap-1 text-[12px] text-cyan no-underline hover:underline">
+      <span>{text}</span><span aria-hidden>▸</span>
+    </a>
+  );
+}
 
 function Facts() {
   const [, navigate] = useLocation();
@@ -29,6 +41,7 @@ function Facts() {
       </ul>
       <a href="/judges" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/judges"); }}
         className="label mt-2 inline-flex items-center gap-1 text-[12px] text-gold no-underline hover:underline">Verify it on-chain<span aria-hidden>▸</span></a>
+      <OtherInstance />
     </Bracket>
   );
 }
