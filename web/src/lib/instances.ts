@@ -6,6 +6,8 @@ import { CONTRACT, DEFAULT_CONTRACT, IS_DEFAULT_INSTANCE } from "./near";
 export const JUDGES_INSTANCE = "ember-rift";
 const LABELS: Record<string, string> = {
   live: "Live store",
+  "live-2": "Live store",
+  "live-3": "Live store",
   "ember-rift": "Judges' instance, as filmed",
   v2dev: "Dev instance",
 };
@@ -18,5 +20,9 @@ export function instanceLabel(account: string = CONTRACT): string {
 export const isJudgesInstance = (account: string = CONTRACT) => instanceName(account) === JUDGES_INSTANCE;
 export const onDefault = IS_DEFAULT_INSTANCE;
 export const defaultName = instanceName(DEFAULT_CONTRACT);
+/** What the default is called in links back to it. */
+export const defaultWord = defaultName.startsWith("live") ? "live store" : "default instance";
 /** Full-page switch; "default" returns to the build's default instance. */
 export const instanceHref = (name: string, path = "/") => `${path}?instance=${encodeURIComponent(name)}`;
+/** Standby stores judges killed with their reports, found when this page loaded (lib/standby.ts). */
+export const killedStores: string[] = (typeof window !== "undefined" ? window.__lsStandby?.killed : undefined) ?? [];

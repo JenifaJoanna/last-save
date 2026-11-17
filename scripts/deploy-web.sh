@@ -15,6 +15,8 @@ if [ -n "${NAME:-}" ]; then
 fi
 export VITE_LICENCE_CONTRACT="${VITE_LICENCE_CONTRACT:-lastsave-licence.testnet}"
 export VITE_PLATFORM_URL="${VITE_PLATFORM_URL:-https://last-save.pages.dev}"
+# STANDBY=live,live-2,live-3: the root opens on the first of these still alive on chain (web/src/lib/standby.ts).
+export VITE_STANDBY="${STANDBY:-}"
 export VITE_OFFICIAL_URL="${VITE_OFFICIAL_URL:-https://emberrift.pages.dev}"
 PROJECT="${PAGES_PROJECT:-last-save}"
 # PAGES_BRANCH=<name> deploys a preview at https://<name>.<project>.pages.dev; main (default) is the live root.

@@ -1,7 +1,9 @@
 // Read-only NEAR access for the platform: failover RPC with backoff, views, formatting, explorer links.
 import { PREVIEW, previewCodeHash, previewKeys, previewView } from "../preview/store";
 export const NETWORK = "testnet";
-const BUILD_CONTRACT: string = (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
+// The default: the first alive standby store (lib/standby.ts picks it before the app loads), else the build's own.
+const BUILD_CONTRACT: string = (typeof window !== "undefined" ? window.__lsStandby?.open : undefined)
+  ?? (import.meta.env.VITE_LICENCE_CONTRACT as string | undefined) ?? "lastsave-licence.testnet";
 const BUILD_FACTORY: string = (import.meta.env.VITE_FACTORY as string | undefined) ?? "lastsave-factory.testnet";
 const INSTANCE_KEY = "lastsave:instance";
 /** The licence instance this tab shows: ?instance=<name or account> (any factory instance), remembered for the tab, else

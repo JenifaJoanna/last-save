@@ -5,7 +5,7 @@ import { PartnerLogo, SunEmblem } from "../components/brand";
 import { MENU, useHints, usePrimary, typing } from "../components/terminal/nav";
 import { Bracket, MenuRow } from "../components/ui";
 import { useHosts, useInfo, useLockedKeys } from "../lib/licence";
-import { defaultName, instanceHref, instanceLabel, JUDGES_INSTANCE, onDefault } from "../lib/instances";
+import { defaultWord, instanceHref, instanceLabel, instanceName, JUDGES_INSTANCE, killedStores, onDefault } from "../lib/instances";
 import { CONTRACT, near } from "../lib/near";
 import { blip } from "../lib/sound";
 
@@ -14,11 +14,18 @@ export const PLAY_URL: string = (import.meta.env.VITE_PLAY_URL as string | undef
 /** Live store ↔ the judges' instance as filmed. A full load: the instance is picked once per page load. */
 function OtherInstance() {
   const to = onDefault ? JUDGES_INSTANCE : "default";
-  const text = onDefault ? "The judges' instance, as filmed: studio gone, key released" : `You're on ${instanceLabel()}. Back to the ${defaultName === "live" ? "live store" : "default instance"}`;
+  const text = onDefault ? "The judges' instance, as filmed: studio gone, key released" : `You're on ${instanceLabel()}. Back to the ${defaultWord}`;
   return (
-    <a href={instanceHref(to)} className="label mt-1 flex items-start gap-1 text-[12px] text-cyan no-underline hover:underline">
-      <span>{text}</span><span aria-hidden>▸</span>
-    </a>
+    <>
+      <a href={instanceHref(to)} className="label mt-1 flex items-start gap-1 text-[12px] text-cyan no-underline hover:underline">
+        <span>{text}</span><span aria-hidden>▸</span>
+      </a>
+      {onDefault && killedStores.map((k) => (
+        <a key={k} href={instanceHref(instanceName(k))} className="label mt-1 flex items-start gap-1 text-[12px] text-dead no-underline hover:underline">
+          <span>A store judges killed with their reports: {instanceName(k)} · its afterlife</span><span aria-hidden>▸</span>
+        </a>
+      ))}
+    </>
   );
 }
 
@@ -89,6 +96,9 @@ export default function Home() {
           </nav>
           <a data-print href="/attack" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/attack"); }} className="label mt-3 flex items-center justify-between border border-dead/50 px-3 py-2.5 text-[12px] text-dead no-underline hover:bg-dead hover:text-[#1a0306]">
             <span>Try to kill it · real attacks, real refusals</span><span aria-hidden>▸</span>
+          </a>
+          <a data-print href="/own" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/own"); }} className="label mt-2 flex items-center justify-between border border-cyan/50 px-3 py-2.5 text-[12px] text-cyan no-underline hover:bg-cyan/10">
+            <span>Run the whole afterlife on your own copy</span><span aria-hidden>▸</span>
           </a>
         </div>
       </div>

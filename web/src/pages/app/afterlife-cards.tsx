@@ -76,7 +76,7 @@ export function HolderVote({ d, mine, refresh }: { d: Info; mine: LicenceView | 
       <p className="mt-1 text-[11.5px] text-faint">{d.quorumBps / 100}% of the {d.liveSupply} licences sold before shutdown. One report per licence per window.</p>
       {asking && !dead && (
         <p className="mt-4 border-l-2 border-amber bg-white/[0.025] px-3 py-2 text-[12.5px] text-muted" role="alert">
-          Is the official server really down for you? On this store your report counts toward shutting the game down for every holder. Tap again to report it.
+          Is the official server really down for you? On this store your report counts toward shutting the game down for every holder. Tap again to report it, or <a href="/own" className="text-cyan">run the whole afterlife on your own copy</a> instead.
         </p>
       )}
       <Button className="mt-5 w-full" variant="ghost" onClick={report} disabled={dead || !mine || mine.postDeath} loading={pending === "report_down"}>
