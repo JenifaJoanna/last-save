@@ -43,7 +43,7 @@ function Studios() {
         {inst.data.map((x, i) => (
           <motion.li key={x.accountId} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="grid gap-1 px-4 py-3 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-4">
             <span className="num text-sm text-faint">#{i + 1}</span>
-            <span className="min-w-0"><b>{x.title}</b> <span className="text-muted">by {x.studio}</span><span className="mono block truncate text-faint">{x.accountId}</span></span>
+            <span className="min-w-0"><b>{x.title}</b> <span className="text-muted">by {x.studio}</span><span className="mono block break-all text-faint" title={x.accountId}>{x.accountId}</span></span>
             <span className="text-sm"><span className={x.keys === 0 ? "text-alive" : "text-muted"}>{x.keys ?? "…"} access keys</span>{x.createdAt ? <span className="text-faint"> · created {ago(x.createdAt)}</span> : null}</span>
           </motion.li>
         ))}
