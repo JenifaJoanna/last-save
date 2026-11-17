@@ -67,10 +67,10 @@ export function hashOf(outcome: unknown): string | null {
 }
 
 /** Sends one function call through the connected wallet. Returns the tx hash and whether any receipt failed. */
-export async function walletCall(method: string, args: Record<string, unknown>, gasTgas: number, depositYocto: string): Promise<{ hash: string | null; failed: boolean }> {
+export async function walletCall(method: string, args: Record<string, unknown>, gasTgas: number, depositYocto: string, receiverId: string = CONTRACT): Promise<{ hash: string | null; failed: boolean }> {
   const wallet = current ?? await (await connector()).wallet(); // cached: sign straight away, inside the tap's activation
   const outcome = await wallet.signAndSendTransaction({
-    receiverId: CONTRACT,
+    receiverId,
     actions: [{ type: "FunctionCall", params: { methodName: method, args, gas: (BigInt(gasTgas) * 10n ** 12n).toString(), deposit: depositYocto } }],
   });
   const status = JSON.stringify((outcome as { status?: unknown } | undefined)?.status ?? "");

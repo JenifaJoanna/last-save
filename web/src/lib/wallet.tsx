@@ -10,7 +10,8 @@ import { gaslessCall, GASLESS_METHODS, keyUsable, loadKey, newSecret, publicKeyF
 import { accountUrl, txUrl } from "./near";
 import { useToast } from "./toast";
 
-export interface CallOpts { deposit?: string; gasTgas?: number; label: string }
+/** receiver: another contract than this licence instance (e.g. the factory); never relayed gas-free. */
+export interface CallOpts { deposit?: string; gasTgas?: number; label: string; receiver?: string }
 export type WalletKind = "near" | "evm" | "capture";
 export interface WalletState {
   ready: boolean;
@@ -129,7 +130,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const call = useCallback(async (method: string, args: Record<string, unknown>, o: CallOpts) => {
     const fail = (body: string, hash?: string | null) => { toast.push({ kind: "error", title: `${o.label} failed`, body, hash: hash ?? undefined, href: hash ? txUrl(hash) : undefined }); return null; };
     const done = (hash: string, body: string, kind: "ok" | "info" = "ok", title = o.label) => { toast.push({ kind, title, body, hash, href: txUrl(hash), linkText: "Open on NearBlocks" }); return hash; };
-    if (gaslessKey && accountId && GASLESS_METHODS.has(method) && (o.deposit ?? "0") === "0") {
+    if (gaslessKey && accountId && !o.receiver && GASLESS_METHODS.has(method) && (o.deposit ?? "0") === "0") {
       setPending(method);
       try {
         const r = await gaslessCall(accountId, gaslessKey, method, args, o.gasTgas ?? 100);
@@ -140,7 +141,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (dev) {
       setPending(method);
       try {
-        const r = await devCall(dev, method, args, o.gasTgas ?? 100, o.deposit ?? "0");
+        const r = await devCall(dev, method, args, o.gasTgas ?? 100, o.deposit ?? "0", o.receiver);
         if (r.failure) return fail(r.failure, r.hash);
         return done(r.hash, "Confirmed on NEAR testnet (capture signer).");
       } catch (e) {
@@ -152,7 +153,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (!accountId) { signIn(); return null; }
     setPending(method);
     try {
-      const { hash, failed } = await walletCall(method, args, o.gasTgas ?? 100, o.deposit ?? "0");
+      const { hash, failed } = await walletCall(method, args, o.gasTgas ?? 100, o.deposit ?? "0", o.receiver);
       if (failed) return fail("The contract refused it. Open the transaction for the reason.", hash);
       if (hash) return done(hash, "Approved in your wallet · confirmed on NEAR testnet.");
       toast.push({ kind: "ok", title: o.label, body: "Approved in your wallet · confirmed on NEAR testnet." });

@@ -1,0 +1,119 @@
+{
+  "contract": "sbx-3.lastsave-factory.testnet",
+  "steps": [
+    {
+      "step": "cibuild",
+      "at": "2026-11-17T03:58:02.732Z",
+      "build_hash": "90ae7342836c230cc27a22e38303216c5c73cc3ba8cb5b213e603fdf92a5a6b9",
+      "attested_digest": "90ae7342836c230cc27a22e38303216c5c73cc3ba8cb5b213e603fdf92a5a6b9",
+      "artifact_sha256": "7813cfc738833b3e4e808eeb743c42a0b5d76ef9667a4eb9937562af717cfc80",
+      "size": 271395,
+      "key_commitment": "aad3d854bc7a8e4995fe2e2e8722496e2e2e20e50b3ddf50c7cc71c5e84d559d",
+      "workflow": ".github/workflows/release-build.yml",
+      "commit": "5f51e564c6de29232197cd025289aaffee1813a5",
+      "run_id": "44013687762",
+      "rekor_log_index": 3941559822,
+      "rekor_integrated_time": "2026-11-17T03:57:13.000Z"
+    },
+    {
+      "step": "walrus",
+      "at": "2026-11-17T03:58:16.193Z",
+      "blob_id": "iyu2aP9S2fEDERip2RCTINC3EjZBRGoBLKERe69lOmQ",
+      "url": "https://aggregator.walrus-testnet.walrus.space/v1/blobs/iyu2aP9S2fEDERip2RCTINC3EjZBRGoBLKERe69lOmQ",
+      "end_epoch": 637,
+      "newly_created": true,
+      "readback_sha256": "7813cfc738833b3e4e808eeb743c42a0b5d76ef9667a4eb9937562af717cfc80",
+      "readback_ok": true,
+      "bytes": 271395
+    },
+    {
+      "step": "cdn",
+      "at": "2026-11-17T03:58:30.797Z",
+      "project": "kiln-cdn-sbx-3",
+      "url": "https://kiln-cdn-sbx-3.pages.dev/ember-rift-7813cfc738833b3e.bin",
+      "status": 200,
+      "sha256_ok": true
+    },
+    {
+      "step": "mirrors",
+      "at": "2026-11-17T03:58:31.850Z",
+      "release": {
+        "sha256": "0a02917bec7e50c13f460eda34fd7b3b34c2e8864304cb83725a7a4904b853ca",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-release-0a02917bec7e50c1.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-release-0a02917bec7e50c1.wasm"
+        ]
+      },
+      "probe": {
+        "sha256": "9c23f7ea5a1f438e95a052063a986ce06a7d10d28313210be8720e957a39221a",
+        "urls": [
+          "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/lastsave-probe-9c23f7ea5a1f438e.wasm",
+          "https://last-save.pages.dev/mirror/lastsave-probe-9c23f7ea5a1f438e.wasm"
+        ]
+      },
+      "artifact_urls": [
+        "https://kiln-cdn-sbx-3.pages.dev/ember-rift-7813cfc738833b3e.bin",
+        "https://aggregator.walrus-testnet.walrus.space/v1/blobs/iyu2aP9S2fEDERip2RCTINC3EjZBRGoBLKERe69lOmQ",
+        "https://raw.githubusercontent.com/JenifaJoanna/last-save/main/artifacts/ember-rift-7813cfc738833b3e.bin"
+      ],
+      "note": "commit+push artifacts/ (the GitHub raw copy) before the host fetches it; redeploy web only for new wasm"
+    },
+    {
+      "step": "instance",
+      "at": "2026-11-17T03:58:39.509Z",
+      "hash": "5kXG4itCmCXqGVsQ1VxHoQ5ukU7fSJG84yGr1LGNxJDu",
+      "url": "https://testnet.nearblocks.io/txns/5kXG4itCmCXqGVsQ1VxHoQ5ukU7fSJG84yGr1LGNxJDu",
+      "instance": "sbx-3.lastsave-factory.testnet",
+      "factory": "lastsave-factory.testnet",
+      "code_hash": "4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1",
+      "deposit": "0.8736 NEAR",
+      "min_deposit": "0.3736 NEAR",
+      "evm_address": "0x2585f5E228623D0891Ba28895de38C1a6c0c91be",
+      "path": "lastsave/host-payouts"
+    },
+    {
+      "step": "escrow",
+      "at": "2026-11-17T03:58:48.098Z",
+      "hash": "viVCkCdcQCkg5gkDULRaZqMjzxYKZVRgS67DETdx56s",
+      "url": "https://testnet.nearblocks.io/txns/viVCkCdcQCkg5gkDULRaZqMjzxYKZVRgS67DETdx56s",
+      "failure": null,
+      "storage_cost": "6910000000000000000000",
+      "escrowed": true
+    },
+    {
+      "step": "attest",
+      "at": "2026-11-17T03:59:01.044Z",
+      "hash": "7KPZF2WPE6vuJbHmSaz8mMNDARUkLhTjn5NjGxhW3EFt",
+      "url": "https://testnet.nearblocks.io/txns/7KPZF2WPE6vuJbHmSaz8mMNDARUkLhTjn5NjGxhW3EFt",
+      "failure": null,
+      "escrow_verified": true,
+      "logs": [
+        "[[yNEAR charged: \"1092524900000000000000\"]]",
+        "Execution completed successfully. Output: Json(156 bytes), Resources: { instructions: 249073982, time_ms: 925 }, Cost: 1092524900000000000000 yoctoNEAR, Refund: 28907475100000000000000 yoctoNEAR, Cached WASM from 2026-11-14T09:44:40.528838+00:00"
+      ]
+    },
+    {
+      "step": "snapkey",
+      "at": "2026-11-17T03:59:05.616Z",
+      "hash": "AaN9X4wSgcMktq7yNBEh3geZyrf7SYQXF9VNEcnDy2qu",
+      "url": "https://testnet.nearblocks.io/txns/AaN9X4wSgcMktq7yNBEh3geZyrf7SYQXF9VNEcnDy2qu",
+      "public_key": "ed25519:4NispL7VhXgNoNE4R2NvxTLqDkwVNq2DwsjUiditsk4d",
+      "methods": [
+        "post_snapshot"
+      ]
+    },
+    {
+      "step": "official",
+      "at": "2026-11-17T03:59:44.033Z",
+      "url": "https://emberrift-sbx-3.pages.dev",
+      "worker": "emberrift-sbx-3-arena",
+      "build_hash": "90ae7342836c230cc27a22e38303216c5c73cc3ba8cb5b213e603fdf92a5a6b9"
+    },
+    {
+      "step": "verify",
+      "at": "2026-11-17T03:59:45.620Z",
+      "summary": "sbx-3.lastsave-factory.testnet keys=0 code=4AwoknekGdP3CMhHFpCJyDUCXnF6Rp79snrVr23i6rt1 ok status=Alive evm=0x2585f5e228623d0891ba28895de38c1a6c0c91be ops=0.5000 NEAR escrowed=true verified=true",
+      "problems": []
+    }
+  ]
+}

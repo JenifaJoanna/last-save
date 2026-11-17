@@ -21,6 +21,7 @@ const Hosts = lazy(() => import("./pages/app/Hosts"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Attack = lazy(() => import("./pages/Attack"));
 const Own = lazy(() => import("./pages/Own"));
+const Launch = lazy(() => import("./pages/Launch"));
 const PreviewIndex = lazy(() => import("./preview/PreviewIndex"));
 const HostRun = lazy(() => import("./preview/HostRun"));
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/judges"><Judges /></Route>
           <Route path="/attack" component={Attack} />
           <Route path="/own" component={Own} />
+          <Route path="/launch" component={Launch} />
           <Route path="/status" component={Status} />
           <Route path="/app"><Redirect to="/app/library" replace /></Route>
           <Route path="/app/how"><Redirect to="/how" replace /></Route>

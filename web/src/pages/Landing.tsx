@@ -100,6 +100,9 @@ export default function Home() {
           <a data-print href="/own" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/own"); }} className="label mt-2 flex items-center justify-between border border-cyan/50 px-3 py-2.5 text-[12px] text-cyan no-underline hover:bg-cyan/10">
             <span>Run the whole afterlife on your own copy</span><span aria-hidden>▸</span>
           </a>
+          <a data-print href="/launch" onClick={(e) => { e.preventDefault(); blip("go"); navigate("/launch"); }} className="label mt-2 flex items-center justify-between border border-gold/50 px-3 py-2.5 text-[12px] text-gold no-underline hover:bg-gold/10">
+            <span>Launch your own game in one transaction</span><span aria-hidden>▸</span>
+          </a>
         </div>
       </div>
       <div data-print className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-4">

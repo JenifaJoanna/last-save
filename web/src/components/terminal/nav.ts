@@ -14,6 +14,7 @@ export const SCREENS: Screen[] = [
   { path: "/judges", title: "Judge guide", n: 6, sub: "Verify every claim in five minutes" },
   { path: "/attack", title: "Try to kill it" },
   { path: "/own", title: "Your own copy" },
+  { path: "/launch", title: "Launch your game" },
 ];
 export const MENU = SCREENS.filter((s) => s.n);
 const EXTRA: Record<string, string> = { "/signin": "Sign in", "/status": "Licence status", "/home": "Home", "/host-run": "Fan host" };

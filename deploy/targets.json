@@ -18,7 +18,22 @@
     "https://emberrift-community-v2dev.pages.dev/health",
     "https://emberrift-live.pages.dev",
     "https://emberrift-live.pages.dev/health",
-    "https://kiln-cdn-live.pages.dev"
+    "https://kiln-cdn-live.pages.dev",
+    "https://emberrift-live-2.pages.dev",
+    "https://emberrift-live-2.pages.dev/health",
+    "https://kiln-cdn-live-2.pages.dev",
+    "https://emberrift-live-3.pages.dev",
+    "https://emberrift-live-3.pages.dev/health",
+    "https://kiln-cdn-live-3.pages.dev",
+    "https://emberrift-sbx-1.pages.dev",
+    "https://emberrift-sbx-1.pages.dev/health",
+    "https://kiln-cdn-sbx-1.pages.dev",
+    "https://emberrift-sbx-2.pages.dev",
+    "https://emberrift-sbx-2.pages.dev/health",
+    "https://kiln-cdn-sbx-2.pages.dev",
+    "https://emberrift-sbx-3.pages.dev",
+    "https://emberrift-sbx-3.pages.dev/health",
+    "https://kiln-cdn-sbx-3.pages.dev"
   ],
   "workers": [
     "emberrift-arena",
@@ -28,7 +43,12 @@
     "emberrift-ember-rift-arena",
     "emberrift-community-v2-arena",
     "emberrift-community-v2dev-arena",
-    "emberrift-live-arena"
+    "emberrift-live-arena",
+    "emberrift-live-2-arena",
+    "emberrift-live-3-arena",
+    "emberrift-sbx-1-arena",
+    "emberrift-sbx-2-arena",
+    "emberrift-sbx-3-arena"
   ],
   "expected_gone": [
     "https://kiln-cdn-v2walrus.pages.dev/",
