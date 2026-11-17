@@ -23,6 +23,9 @@ attack the live contract and watch it refuse.
 |---|---|
 | Platform | https://last-save.pages.dev: since 17 Nov it opens on a **live, alive store** (`live.lastsave-factory.testnet`, official server https://emberrift-live.pages.dev) where you buy with your own NEAR wallet and play right away. Live status at `/status`, judge guide at `/judges` |
 | The judges' instance, as filmed | https://last-save.pages.dev/?instance=ember-rift (studio gone, key released; the site remembers the choice per tab, `?instance=default` goes back) |
+| Run the whole afterlife on your own copy | https://last-save.pages.dev/own: take an untouched copy (seconds-scale timers) and, as its only holder, buy, play, report it down, release the key, refund or pledge, host and claim. Nothing touches the live store |
+| Launch your own game in one transaction | https://last-save.pages.dev/launch: your wallet creates a licence contract through the factory, born locked with 0 access keys and listed by the factory; selling starts once your build is escrowed (`pnpm studio:launch`) |
+| Standby stores | If judges' reports kill the live store, the site opens on the next alive one (`live-2`, `live-3`) and lists the killed store with its afterlife; `scripts/ops/watchdog.mjs` triggers its release |
 | Official game server (Ember Rift) | https://emberrift.pages.dev — shut down on 14 Nov as part of the demo; it stays dead by design |
 | v1 community server (the released build, hosted by a fan) | https://emberrift-community.pages.dev |
 | Licence contract v1 (locked, 0 access keys) | [`lastsave-licence.testnet`](https://testnet.near.rocks/account/lastsave-licence.testnet) |
